@@ -1,67 +1,45 @@
 import { useEffect, useState } from "react";
 
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 import GoogleLoginButton from "./GoogleLoginButton.js";
 
-const signInGoogle = () => {
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
-
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
-};
-
-function App(props) {
-  const { firebaseApp } = props;
-
-  const [user, setUser] = useState(null);
-  const [database, setDatabase] = useState(null);
-  const [cookboox, setCookbook] = useState(null);
+function App() {
+  const [user, setUser] = useState();
+  const [cookbook, setCookbook] = useState();
+  const [basicFoods, setBasicFoods] = useState();
+  const [names, setNames] = useState();
+  const [shoppingList, setShoppingList] = useState();
 
   useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(getAuth(), (user) => {
       if (user) {
-        const uid = user.uid;
-        setUser(user);
+        console.log(user.displayName);
       } else {
-        console.log("out");
+        console.log("log out");
       }
+      setUser(user);
     });
   }, []);
 
   useEffect(() => {
     const database = getDatabase();
 
-    const cookbookRef = ref(database, "cookbook");
-    onValue(cookbookRef, (snapshot) => {
-      const data = snapshot.val();
-      setCookbook(data);
-      console.log(data);
+    onValue(ref(database, "cookbook"), (snapshot) => {
+      setCookbook(snapshot.val());
+    });
+
+    onValue(ref(database, "basicFoods"), (snapshot) => {
+      setBasicFoods(snapshot.val());
+    });
+
+    onValue(ref(database, "names"), (snapshot) => {
+      setNames(snapshot.val());
+    });
+
+    onValue(ref(database, "shoppingList"), (snapshot) => {
+      setShoppingList(snapshot.val());
     });
   }, []);
 
@@ -69,7 +47,7 @@ function App(props) {
     <div className="App">
       <h1>Gude Foods</h1>
       <p>Something amazing I guess</p>
-      <GoogleLoginButton handleClick={signInGoogle} />
+      <GoogleLoginButton />
     </div>
   );
 }

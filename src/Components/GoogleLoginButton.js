@@ -1,9 +1,20 @@
-function GoogleLoginButton(props) {
-  const { handleClick } = props;
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
+const signInGoogle = () => {
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      console.log(`login in ${result.user.displayName}`);
+    })
+    .catch(console.error);
+};
+
+function GoogleLoginButton() {
   return (
     <button
-      onClick={handleClick}
+      onClick={signInGoogle}
       className="googleLoginButton"
       style={{
         backgroundSize: "cover",
