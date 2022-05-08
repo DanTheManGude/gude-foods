@@ -17,7 +17,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "check": "echo 'Node Version:' && node -v && echo 'npm Version:' && npm -v",
-    "hard-update": "rm package-lock.json && rm -rf node_modules/ && npm install"
+    "hard-update": "rm package-lock.json && rm -rf node_modules/ && npm install",
+    "deploy-prod": "git push heroku-prod master",
+    "deploy-qa": "git push heroku-qa qa:master"
   },
   "eslintConfig": {
     "extends": [
