@@ -1,4 +1,13 @@
+import { useState } from "react";
+
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+const constructImageUrl = (type) =>
+  `/media/googleLogin/signin_light_${type}.png`;
+const imageSources = {
+  NORMAL: constructImageUrl("normal"),
+  PRESSED: constructImageUrl("pressed"),
+};
 
 const signInGoogle = () => {
   const auth = getAuth();
@@ -12,21 +21,21 @@ const signInGoogle = () => {
 };
 
 function GoogleLoginButton() {
+  const [imageSource, setImageSource] = useState(imageSources.NORMAL);
+
   return (
     <button
       onClick={signInGoogle}
       className="googleLoginButton"
-      style={{
-        backgroundSize: "cover",
-        backgroundImage: `${process.env.PUBLIC_URL}/media/googleLogin/signin_light_normal.png`,
-        "&:hover": {
-          backgroundImage: `${process.env.PUBLIC_URL}/media/googleLogin/signin_focus_normal.png`,
-        },
-        "&:active": {
-          backgroundImage: `${process.env.PUBLIC_URL}/media/googleLogin/signin_pressed_normal.png`,
-        },
+      onMouseDown={() => {
+        setImageSource(imageSources.PRESSED);
       }}
-    />
+      onMouseUp={() => {
+        setImageSource(imageSources.NORMAL);
+      }}
+    >
+      <img src={imageSource} />
+    </button>
   );
 }
 

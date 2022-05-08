@@ -5,3 +5,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.googleLoginButton {
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
