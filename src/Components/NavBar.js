@@ -15,15 +15,17 @@ import MenuItem from "@mui/material/MenuItem";
 
 import GoogleLoginButton from "./GoogleLoginButton.js";
 
-const pages = ["cookbook", "basicFoods", "shoppingList", "dictionary"];
+const pages = ["cookbook", "basicFoods", "shoppingList", "glossary"];
 const pagesName = {
   cookbook: "Cookbook",
   basicFoods: "Basic Foods",
   shoppingList: "Shopping List",
-  dictionary: "Dictionary",
+  glossary: "Glossary",
 };
 
-const NavBar = () => {
+const NavBar = (props) => {
+  const { pathname } = props;
+
   const [anchorElNav, setAnchorElNav] = useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -89,7 +91,12 @@ const NavBar = () => {
                 .map((page) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Link to={`/${page}`}>
-                      <Typography textAlign="center">
+                      <Typography
+                        className={
+                          pathname.includes(page) ? "avtivePageName" : ""
+                        }
+                        textAlign="center"
+                      >
                         {pagesName[page]}
                       </Typography>
                     </Link>
@@ -124,7 +131,13 @@ const NavBar = () => {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                <Link to={`/${page}`}>{pagesName[page]}</Link>
+                <Link to={`/${page}`}>
+                  <Typography
+                    className={pathname.includes(page) ? "avtivePageName" : ""}
+                  >
+                    {pagesName[page]}
+                  </Typography>
+                </Link>
               </Button>
             ))}
           </Box>

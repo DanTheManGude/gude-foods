@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -13,11 +13,11 @@ import Home from "./Home";
 import CookbookContainer from "./cookbook/CookbookContainer";
 import BasicFoodsContainer from "./basicFoods/BasicFoodsContainer";
 import ShoppingListContainer from "./shoppingList/ShoppingListContainer";
-import DictionaryContainer from "./dictionary/DictionaryContainer";
+import GlossaryContainer from "./glossary/GlossaryContainer";
 
 import NavBar from "./NavBar";
 
-function App() {
+function App(p) {
   const [user, setUser] = useState();
   const [alertList, setAlertList] = useState([]);
 
@@ -59,6 +59,11 @@ function App() {
     });
   }, []);
 
+  const usePathname = () => {
+    const location = useLocation();
+    return location.pathname;
+  };
+
   useEffect(() => {
     const database = getDatabase();
 
@@ -81,7 +86,7 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar />
+      <NavBar pathname={usePathname()} />
       <Stack
         sx={{ width: "100%", paddingTop: "10px" }}
         spacing={2}
@@ -106,7 +111,7 @@ function App() {
         <Route path="/cookbook" element={<CookbookContainer />} />
         <Route path="basicFoods" element={<BasicFoodsContainer />} />
         <Route path="shoppingList" element={<ShoppingListContainer />} />
-        <Route path="dictionary" element={<DictionaryContainer />} />
+        <Route path="glossary" element={<GlossaryContainer />} />
       </Routes>
     </div>
   );

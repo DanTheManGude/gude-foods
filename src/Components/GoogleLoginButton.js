@@ -14,7 +14,7 @@ const signInGoogle = () => {
 
   signInWithPopup(auth, provider)
     .then((result) => {
-      console.log(`login in ${result.user.displayName}`);
+      console.log(`login ${result.user.uid}`);
     })
     .catch(console.error);
 };
