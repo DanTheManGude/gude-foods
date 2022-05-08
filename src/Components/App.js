@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
 
-import GoogleLoginButton from "./GoogleLoginButton.js";
+import NavBar from "./NavBar";
 
 function App() {
   const [user, setUser] = useState();
@@ -45,9 +45,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Gude Foods</h1>
-      <p>Something amazing I guess</p>
-      <GoogleLoginButton />
+      <NavBar />
     </div>
   );
 }

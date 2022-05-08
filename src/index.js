@@ -1,12 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { initializeApp } from "firebase/app";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
+import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebaseConfig.js";
 
 import "./index.css";
 import App from "./Components/App";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 const {
   initializeAppCheck,
@@ -22,7 +29,9 @@ initializeAppCheck(firebaseApp, {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={darkTheme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );
 

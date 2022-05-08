@@ -1,9 +1,10 @@
 import { useState } from "react";
 
+import Avatar from "@mui/material/Avatar";
+
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
-const constructImageUrl = (type) =>
-  `/media/googleLogin/signin_light_${type}.png`;
+const constructImageUrl = (type) => `/media/googleLogin/${type}.png`;
 const imageSources = {
   NORMAL: constructImageUrl("normal"),
   PRESSED: constructImageUrl("pressed"),
@@ -20,21 +21,23 @@ const signInGoogle = () => {
     .catch(console.error);
 };
 
-function GoogleLoginButton() {
-  const [imageSource, setImageSource] = useState(imageSources.NORMAL);
+function GoogleLoginButton(props) {
+  const [buttonImageSource, setButtonImageSource] = useState(
+    imageSources.NORMAL
+  );
 
   return (
     <button
       onClick={signInGoogle}
       className="googleLoginButton"
       onMouseDown={() => {
-        setImageSource(imageSources.PRESSED);
+        setButtonImageSource(imageSources.PRESSED);
       }}
       onMouseUp={() => {
-        setImageSource(imageSources.NORMAL);
+        setButtonImageSource(imageSources.NORMAL);
       }}
     >
-      <img src={imageSource} />
+      <img width="180px" src={buttonImageSource} alt="Login with Google" />
     </button>
   );
 }
