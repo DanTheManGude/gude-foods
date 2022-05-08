@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { Link } from "react-router-dom";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,9 +15,15 @@ import MenuItem from "@mui/material/MenuItem";
 
 import GoogleLoginButton from "./GoogleLoginButton.js";
 
-const pages = ["Cookbook", "Basic Foods", "Shopping List", "Dictionary"];
+const pages = ["cookbook", "basicFoods", "shoppingList", "dictionary"];
+const pagesName = {
+  cookbook: "Cookbook",
+  basicFoods: "Basic Foods",
+  shoppingList: "Shopping List",
+  dictionary: "Dictionary",
+};
 
-const ResponsiveAppBar = () => {
+const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -33,7 +41,7 @@ const ResponsiveAppBar = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
+            component="span"
             href="/"
             sx={{
               mr: 2,
@@ -45,7 +53,7 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            Gude Foods
+            <Link to={`/`}>Gude Foods </Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -80,16 +88,21 @@ const ResponsiveAppBar = () => {
               {pages
                 .map((page) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
+                    <Link to={`/${page}`}>
+                      <Typography textAlign="center">
+                        {pagesName[page]}
+                      </Typography>
+                    </Link>
                   </MenuItem>
                 ))
-                .concat(<GoogleLoginButton />)}
+                .concat(<GoogleLoginButton key="googleLogin" />)}
             </Menu>
           </Box>
+
           <Typography
             variant="h5"
             noWrap
-            component="a"
+            component="span"
             href=""
             sx={{
               mr: 2,
@@ -102,7 +115,7 @@ const ResponsiveAppBar = () => {
               textDecoration: "none",
             }}
           >
-            Gude Foods
+            <Link to={`/`}>Gude Foods</Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
@@ -111,7 +124,7 @@ const ResponsiveAppBar = () => {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                <Link to={`/${page}`}>{pagesName[page]}</Link>
               </Button>
             ))}
           </Box>
@@ -124,4 +137,4 @@ const ResponsiveAppBar = () => {
     </AppBar>
   );
 };
-export default ResponsiveAppBar;
+export default NavBar;
