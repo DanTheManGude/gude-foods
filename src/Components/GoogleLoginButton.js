@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import Avatar from "@mui/material/Avatar";
-
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const constructImageUrl = (type) => `/media/googleLogin/${type}.png`;
