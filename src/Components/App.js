@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 import GoogleLoginButton from "./GoogleLoginButton.js";
 
@@ -38,17 +39,29 @@ function App(props) {
   const { firebaseApp } = props;
 
   const [user, setUser] = useState(null);
+  const [database, setDatabase] = useState(null);
+  const [cookboox, setCookbook] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        debugger;
         setUser(user);
       } else {
         console.log("out");
       }
+    });
+  }, []);
+
+  useEffect(() => {
+    const database = getDatabase();
+
+    const cookbookRef = ref(database, "cookbook");
+    onValue(cookbookRef, (snapshot) => {
+      const data = snapshot.val();
+      setCookbook(data);
+      console.log(data);
     });
   }, []);
 
