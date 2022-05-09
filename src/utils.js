@@ -3,7 +3,8 @@ const presentationNames = {
   basicFoods: "Basic Foods",
   shoppingList: "Shopping List",
   glossary: "Glossary",
-  tags: "Tags",
+  basicFoodTags: "Basic Food Tags",
+  recipeTags: "Recipe Tags",
 };
 
 export const getPresentationName = (key) => presentationNames[key];
