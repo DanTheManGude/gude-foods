@@ -8,7 +8,7 @@ const imageSources = {
   PRESSED: constructImageUrl("pressed"),
 };
 
-const signInGoogle = () => {
+const signInGoogle = (addAlert) => {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
 
@@ -16,17 +16,29 @@ const signInGoogle = () => {
     .then((result) => {
       console.log(`login ${result.user.uid}`);
     })
-    .catch(console.error);
+    .catch((error) => {
+      const { name, code } = error;
+      addAlert({
+        message: code,
+        title: name,
+        alertProps: { severity: "error" },
+      });
+    });
 };
 
 function GoogleLoginButton(props) {
+  const { addAlert, handleClick } = props;
+
   const [buttonImageSource, setButtonImageSource] = useState(
     imageSources.NORMAL
   );
 
   return (
     <button
-      onClick={signInGoogle}
+      onClick={() => {
+        handleClick();
+        signInGoogle(addAlert);
+      }}
       className="googleLoginButton"
       onMouseDown={() => {
         setButtonImageSource(imageSources.PRESSED);

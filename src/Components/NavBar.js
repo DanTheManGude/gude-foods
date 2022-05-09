@@ -19,7 +19,7 @@ import GoogleLoginButton from "./GoogleLoginButton.js";
 const pages = ["cookbook", "shoppingList", "glossary"];
 
 const NavBar = (props) => {
-  const { pathname } = props;
+  const { pathname, addAlert } = props;
 
   const [anchorElNav, setAnchorElNav] = useState(null);
 
@@ -97,7 +97,13 @@ const NavBar = (props) => {
                     </Link>
                   </MenuItem>
                 ))
-                .concat(<GoogleLoginButton key="googleLogin" />)}
+                .concat(
+                  <GoogleLoginButton
+                    key="googleLogin"
+                    handleClick={handleCloseNavMenu}
+                    addAlert={addAlert}
+                  />
+                )}
             </Menu>
           </Box>
 
@@ -140,7 +146,10 @@ const NavBar = (props) => {
           </Box>
 
           <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-            <GoogleLoginButton />
+            <GoogleLoginButton
+              handleClick={handleCloseNavMenu}
+              addAlert={addAlert}
+            />
           </Box>
         </Toolbar>
       </Container>

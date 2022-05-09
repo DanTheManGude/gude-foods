@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -18,6 +18,8 @@ import NavBar from "./NavBar";
 
 function App() {
   const [alertList, setAlertList] = useState([]);
+  const [user, setUser] = useState();
+  const prevUserRef = useRef();
 
   const addAlert = (alert, removalTime = 6001) => {
     setAlertList((prevList) => prevList.concat(alert));
@@ -29,21 +31,7 @@ function App() {
   const [glossary, setGlossary] = useState();
 
   useEffect(() => {
-    onAuthStateChanged(getAuth(), (user) => {
-      if (user) {
-        addAlert({
-          message: "Succesfully logged in with Google",
-          title: `Hello ${user.displayName}`,
-          alertProps: { severity: "success" },
-        });
-      } else {
-        addAlert({
-          message: "Succesfully logged out.",
-          title: "Farewell",
-          alertProps: { severity: "success" },
-        });
-      }
-    });
+    onAuthStateChanged(getAuth(), setUser);
   }, []);
 
   useEffect(() => {
@@ -53,22 +41,36 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    onValue(ref(getDatabase(), "glossary"), (snapshot) => {
+      setGlossary(snapshot.val());
+    });
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      addAlert({
+        message: "Succesfully logged in with Google",
+        title: `Hello ${user.displayName}`,
+        alertProps: { severity: "success" },
+      });
+    } else if (prevUserRef.current && !user) {
+      addAlert({
+        message: "Succesfully logged out.",
+        title: "Farewell",
+        alertProps: { severity: "success" },
+      });
+    }
+  }, [user]);
+
   const usePathname = () => {
     const location = useLocation();
     return location.pathname;
   };
 
-  useEffect(() => {
-    const database = getDatabase();
-
-    onValue(ref(database, "glossary"), (snapshot) => {
-      setGlossary(snapshot.val());
-    });
-  }, []);
-
   return (
     <div className="App">
-      <NavBar pathname={usePathname()} />
+      <NavBar pathname={usePathname()} addAlert={addAlert} />
       <Stack
         sx={{ width: "100%", paddingTop: "10px" }}
         spacing={2}
