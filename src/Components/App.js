@@ -93,7 +93,7 @@ function App() {
         <Route path="cookbook" element={<CookbookContainer />} />
         <Route
           path="shoppingList"
-          element={<ShoppingList glossary={glossary} />}
+          element={<ShoppingList glossary={glossary} addAlert={addAlert} />}
         />
         <Route
           path="glossary"

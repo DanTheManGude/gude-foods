@@ -7,7 +7,10 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 
 import { getDatabase, ref, child, push, update } from "firebase/database";
 
@@ -50,7 +53,7 @@ function Glossary(props) {
     if (newValue === valueComparator) {
       clearEditingEntry();
     } else {
-      setEditingEntry({ key, value: newValue, element: event.target });
+      setEditingEntry({ key, value: newValue });
     }
   };
 
@@ -68,21 +71,40 @@ function Glossary(props) {
           variant="outlined"
           label={isAddingValue ? "Add entry" : isActiveEntry && value}
           size="small"
-          defaultValue={value}
+          value={isActiveEntry ? editingValue : value}
           disabled={!!editingKey && !isActiveEntry}
+          sx={{ width: "200px" }}
+          onFocus={() => {
+            if (!isActiveEntry) {
+              setEditingEntry({ entryKey, value });
+            }
+          }}
           onChange={getInputHandler(entryKey, value)}
+          InputProps={{
+            endAdornment: isActiveEntry && (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => {
+                    setEditingEntry({ entryKey, value });
+                  }}
+                  edge="end"
+                >
+                  <UndoOutlinedIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         {isActiveEntry && (
           <Button
             color="secondary"
             variant="outlined"
+            size="small"
+            sx={{ width: "90px" }}
             onClick={() => {
               let updateEntryKey = entryKey;
 
               if (isAddingValue) {
-                editingEntry.element.value = "";
-                editingEntry.element.focus();
-
                 const db = getDatabase();
                 updateEntryKey = push(
                   child(ref(db), `glossary/${sectionKey}`)
@@ -96,9 +118,7 @@ function Glossary(props) {
               );
             }}
           >
-            {`${
-              isAddingValue ? "Add new" : isEmptyValue ? "Delete" : "Update"
-            } value`}
+            {isAddingValue ? "Add" : isEmptyValue ? "Delete" : "Update"}
           </Button>
         )}
       </Stack>
