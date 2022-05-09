@@ -16,7 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { getPresentationName } from "../utils";
 import GoogleLoginButton from "./GoogleLoginButton.js";
 
-const pages = ["cookbook", "basicFoods", "shoppingList", "glossary"];
+const pages = ["cookbook", "shoppingList", "glossary"];
 
 const NavBar = (props) => {
   const { pathname } = props;

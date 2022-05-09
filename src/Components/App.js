@@ -11,7 +11,6 @@ import { getDatabase, ref, onValue } from "firebase/database";
 
 import Home from "./Home";
 import CookbookContainer from "./cookbook/CookbookContainer";
-import BasicFoodsContainer from "./basicFoods/BasicFoodsContainer";
 import ShoppingListContainer from "./shoppingList/ShoppingListContainer";
 import GlossaryContainer from "./glossary/GlossaryContainer";
 
@@ -93,8 +92,7 @@ function App(p) {
       </Stack>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/cookbook" element={<CookbookContainer />} />
-        <Route path="basicFoods" element={<BasicFoodsContainer />} />
+        <Route path="cookbook" element={<CookbookContainer />} />
         <Route path="shoppingList" element={<ShoppingListContainer />} />
         <Route
           path="glossary"
