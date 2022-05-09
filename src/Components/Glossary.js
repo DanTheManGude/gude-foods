@@ -1,4 +1,4 @@
-import { useState, createRef } from "react";
+import { useState } from "react";
 
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
@@ -11,10 +11,10 @@ import Button from "@mui/material/Button";
 
 import { getDatabase, ref, child, push, update } from "firebase/database";
 
-import { getPresentationName } from "../../utils";
+import { getPresentationName } from "../utils";
 
-function GlossaryContainer(props) {
-  const { glossary } = props;
+function Glossary(props) {
+  const { glossary, addAlert } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});
@@ -22,7 +22,24 @@ function GlossaryContainer(props) {
   const updateRequest = (sectionKey, entryKey, value) => {
     update(ref(getDatabase()), {
       [`glossary/${sectionKey}/${entryKey}`]: value,
-    });
+    })
+      .then(() => {
+        addAlert({
+          message: (
+            <span>
+              Succesfully updated the glossary for <strong>"{value}"</strong>.
+            </span>
+          ),
+          alertProps: { severity: "success" },
+        });
+      })
+      .catch(() => {
+        addAlert({
+          message: "The request did not go through.",
+          title: "Error",
+          alertProps: { severity: "error" },
+        });
+      });
 
     clearEditingEntry();
   };
@@ -131,4 +148,4 @@ function GlossaryContainer(props) {
   );
 }
 
-export default GlossaryContainer;
+export default Glossary;

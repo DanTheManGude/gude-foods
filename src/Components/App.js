@@ -11,13 +11,12 @@ import { getDatabase, ref, onValue } from "firebase/database";
 
 import Home from "./Home";
 import CookbookContainer from "./cookbook/CookbookContainer";
-import ShoppingListContainer from "./shoppingList/ShoppingListContainer";
-import GlossaryContainer from "./glossary/GlossaryContainer";
+import ShoppingList from "./ShoppingList";
+import Glossary from "./Glossary";
 
 import NavBar from "./NavBar";
 
-function App(p) {
-  const [user, setUser] = useState();
+function App() {
   const [alertList, setAlertList] = useState([]);
 
   const addAlert = (alert, removalTime = 6001) => {
@@ -44,7 +43,6 @@ function App(p) {
           alertProps: { severity: "success" },
         });
       }
-      setUser(user);
     });
   }, []);
 
@@ -93,10 +91,13 @@ function App(p) {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="cookbook" element={<CookbookContainer />} />
-        <Route path="shoppingList" element={<ShoppingListContainer />} />
+        <Route
+          path="shoppingList"
+          element={<ShoppingList glossary={glossary} />}
+        />
         <Route
           path="glossary"
-          element={<GlossaryContainer glossary={glossary} />}
+          element={<Glossary glossary={glossary} addAlert={addAlert} />}
         />
       </Routes>
     </div>
