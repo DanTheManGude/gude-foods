@@ -13,15 +13,10 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 
+import { getPresentationName } from "../utils";
 import GoogleLoginButton from "./GoogleLoginButton.js";
 
 const pages = ["cookbook", "basicFoods", "shoppingList", "glossary"];
-const pagesName = {
-  cookbook: "Cookbook",
-  basicFoods: "Basic Foods",
-  shoppingList: "Shopping List",
-  glossary: "Glossary",
-};
 
 const NavBar = (props) => {
   const { pathname } = props;
@@ -92,12 +87,12 @@ const NavBar = (props) => {
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Link to={`/${page}`}>
                       <Typography
-                        className={
-                          pathname.includes(page) ? "avtivePageName" : ""
-                        }
+                        sx={{
+                          color: pathname.includes(page) ? "primary.main" : "",
+                        }}
                         textAlign="center"
                       >
-                        {pagesName[page]}
+                        {getPresentationName(page)}
                       </Typography>
                     </Link>
                   </MenuItem>
@@ -133,9 +128,11 @@ const NavBar = (props) => {
               >
                 <Link to={`/${page}`}>
                   <Typography
-                    className={pathname.includes(page) ? "avtivePageName" : ""}
+                    sx={{
+                      color: pathname.includes(page) ? "primary.main" : "",
+                    }}
                   >
-                    {pagesName[page]}
+                    {getPresentationName(page)}
                   </Typography>
                 </Link>
               </Button>

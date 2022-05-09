@@ -28,10 +28,7 @@ function App(p) {
     }, removalTime);
   };
 
-  const [cookbook, setCookbook] = useState();
-  const [basicFoods, setBasicFoods] = useState();
-  const [names, setNames] = useState();
-  const [shoppingList, setShoppingList] = useState();
+  const [glossary, setGlossary] = useState();
 
   useEffect(() => {
     onAuthStateChanged(getAuth(), (user) => {
@@ -67,20 +64,8 @@ function App(p) {
   useEffect(() => {
     const database = getDatabase();
 
-    onValue(ref(database, "cookbook"), (snapshot) => {
-      setCookbook(snapshot.val());
-    });
-
-    onValue(ref(database, "basicFoods"), (snapshot) => {
-      setBasicFoods(snapshot.val());
-    });
-
-    onValue(ref(database, "names"), (snapshot) => {
-      setNames(snapshot.val());
-    });
-
-    onValue(ref(database, "shoppingList"), (snapshot) => {
-      setShoppingList(snapshot.val());
+    onValue(ref(database, "glossary"), (snapshot) => {
+      setGlossary(snapshot.val());
     });
   }, []);
 
@@ -111,7 +96,10 @@ function App(p) {
         <Route path="/cookbook" element={<CookbookContainer />} />
         <Route path="basicFoods" element={<BasicFoodsContainer />} />
         <Route path="shoppingList" element={<ShoppingListContainer />} />
-        <Route path="glossary" element={<GlossaryContainer />} />
+        <Route
+          path="glossary"
+          element={<GlossaryContainer glossary={glossary} />}
+        />
       </Routes>
     </div>
   );
