@@ -10,6 +10,16 @@ import { firebaseConfig } from "./firebaseConfig.js";
 import "./index.css";
 import App from "./Components/App";
 
+const {
+  initializeAppCheck,
+  ReCaptchaV3Provider,
+} = require("firebase/app-check");
+const firebaseApp = initializeApp(firebaseConfig);
+initializeAppCheck(firebaseApp, {
+  provider: new ReCaptchaV3Provider("6LckpNMfAAAAAAQU4bt6WgEnUgFBHTzhDzQNPAmK"),
+  isTokenAutoRefreshEnabled: true,
+});
+
 const theme = createTheme({
   palette: {
     mode: "dark",
@@ -18,17 +28,6 @@ const theme = createTheme({
     tertiary: { main: "#79B2A8" },
     alt: { main: "#D6D365" },
   },
-});
-
-const {
-  initializeAppCheck,
-  ReCaptchaV3Provider,
-} = require("firebase/app-check");
-
-const firebaseApp = initializeApp(firebaseConfig);
-initializeAppCheck(firebaseApp, {
-  provider: new ReCaptchaV3Provider("6LckpNMfAAAAAAQU4bt6WgEnUgFBHTzhDzQNPAmK"),
-  isTokenAutoRefreshEnabled: true,
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
