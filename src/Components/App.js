@@ -45,6 +45,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     const db = getDatabase();
 
     onValue(ref(db, "glossary"), (snapshot) => {
@@ -54,7 +58,7 @@ function App() {
     onValue(ref(db, "basicFood-basicFoodTag"), (snapshot) => {
       setBasicFoodTagAssociation(snapshot.val());
     });
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (user) {
