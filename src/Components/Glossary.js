@@ -6,6 +6,10 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
@@ -17,7 +21,7 @@ import { getDatabase, ref, child, push, update } from "firebase/database";
 import { getPresentationName } from "../utils";
 
 function Glossary(props) {
-  const { glossary, addAlert, readOnly } = props;
+  const { glossary, basicFoodTagAssociation, addAlert, readOnly } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});
@@ -70,7 +74,7 @@ function Glossary(props) {
           color="secondary"
           variant="outlined"
           size="small"
-          sx={{ width: "90px" }}
+          sx={{ width: "115px" }}
           onClick={() => {
             let updateEntryKey = entryKey;
 
@@ -92,6 +96,57 @@ function Glossary(props) {
         </Button>
       );
     }
+
+    if (isAddingValue) {
+      return null;
+    }
+
+    if (sectionKey === "basicFoods") {
+      const basicFoodTags = glossary.basicFoodTags;
+
+      debugger;
+      return (
+        <FormControl size="small" variant="standard" sx={{ width: "115px" }}>
+          <InputLabel id={entryKey}>Tag</InputLabel>
+          <Select
+            labelId={entryKey}
+            id={entryKey}
+            value={basicFoodTagAssociation[entryKey] || ""}
+            onChange={(event) => {
+              const value = event.target.value;
+              update(ref(getDatabase()), {
+                [`basicFood-basicFoodTag/${entryKey}`]: value,
+              })
+                .then(() => {
+                  addAlert({
+                    message: (
+                      <span>
+                        Succesfully updated tag for
+                        {glossary.basicFoods[entryKey]} to
+                        <strong>"{basicFoodTags[value]}"</strong>.
+                      </span>
+                    ),
+                    alertProps: { severity: "success" },
+                  });
+                })
+                .catch(() => {
+                  addAlert({
+                    message: "The request did not go through.",
+                    title: "Error",
+                    alertProps: { severity: "error" },
+                  });
+                });
+            }}
+          >
+            {Object.keys(basicFoodTags).map((basicFoodTagKey) => (
+              <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
+                {basicFoodTags[basicFoodTagKey]}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
   };
 
   const getRenderInputButtonStack = (sectionKey) => (entryKey) => {
@@ -108,7 +163,7 @@ function Glossary(props) {
           size="small"
           value={isActiveEntry ? editingEntry.value : value}
           disabled={readOnly || (!!editingEntry.key && !isActiveEntry)}
-          sx={{ width: "200px" }}
+          sx={{ width: sectionKey === "cookbook" ? "230px" : "190px" }}
           onFocus={() => {
             if (!isActiveEntry) {
               setEditingEntry({ entryKey, value });
