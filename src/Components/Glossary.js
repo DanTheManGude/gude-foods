@@ -16,40 +16,13 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 
-import { getDatabase, ref, child, push, update } from "firebase/database";
-
-import { getPresentationName } from "../utils";
+import { getPresentationName, updateRequest, createKey } from "../utils";
 
 function Glossary(props) {
   const { glossary, basicFoodTagAssociation, addAlert, readOnly } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});
-
-  const updateRequest = (sectionKey, entryKey, value) => {
-    update(ref(getDatabase()), {
-      [`glossary/${sectionKey}/${entryKey}`]: value,
-    })
-      .then(() => {
-        addAlert({
-          message: (
-            <span>
-              Succesfully updated the glossary for <strong>"{value}"</strong>.
-            </span>
-          ),
-          alertProps: { severity: "success" },
-        });
-      })
-      .catch(() => {
-        addAlert({
-          message: "The request did not go through.",
-          title: "Error",
-          alertProps: { severity: "error" },
-        });
-      });
-
-    clearEditingEntry();
-  };
 
   const getInputHandler = (key, valueComparator) => (event) => {
     const newValue = event.target.value;
@@ -61,11 +34,13 @@ function Glossary(props) {
     }
   };
 
-  const renderAction = (isActiveEntry, sectionKey, entryKey, isAddingValue) => {
-    if (readOnly) {
-      return null;
-    }
-
+  const renderAction = (
+    isActiveEntry,
+    sectionKey,
+    entryKey,
+    isAddingValue,
+    disabled
+  ) => {
     const isEmptyValue = editingEntry.value === "";
 
     if (isActiveEntry) {
@@ -75,21 +50,25 @@ function Glossary(props) {
           variant="outlined"
           size="small"
           sx={{ width: "115px" }}
+          disabled={disabled}
           onClick={() => {
             let updateEntryKey = entryKey;
 
             if (isAddingValue) {
-              const db = getDatabase();
-              updateEntryKey = push(
-                child(ref(db), `glossary/${sectionKey}`)
-              ).key;
+              updateEntryKey = createKey(`glossary/${sectionKey}`);
             }
 
-            updateRequest(
-              sectionKey,
-              updateEntryKey,
-              isEmptyValue ? null : editingEntry.value
-            );
+            const updates = {};
+            updates[`glossary/${sectionKey}/${updateEntryKey}`] = isEmptyValue
+              ? null
+              : editingEntry.value;
+
+            if (isEmptyValue && sectionKey === "basicFoods") {
+              updates[`basicFood-basicFoodTag/${entryKey}`] = null;
+            }
+
+            updateRequest(updates, addAlert);
+            clearEditingEntry();
           }}
         >
           {isAddingValue ? "Add" : isEmptyValue ? "Delete" : "Update"}
@@ -103,46 +82,40 @@ function Glossary(props) {
 
     if (sectionKey === "basicFoods") {
       const basicFoodTags = glossary.basicFoodTags;
+      const tagId = basicFoodTagAssociation[entryKey];
 
-      debugger;
       return (
-        <FormControl size="small" variant="standard" sx={{ width: "115px" }}>
+        <FormControl
+          size="small"
+          variant="standard"
+          sx={{ width: "115px" }}
+          disabled={disabled}
+        >
           <InputLabel id={entryKey}>Tag</InputLabel>
           <Select
             labelId={entryKey}
             id={entryKey}
-            value={basicFoodTagAssociation[entryKey] || ""}
+            value={basicFoodTags.hasOwnProperty(tagId) ? tagId : ""}
             onChange={(event) => {
-              const value = event.target.value;
-              update(ref(getDatabase()), {
-                [`basicFood-basicFoodTag/${entryKey}`]: value,
-              })
-                .then(() => {
-                  addAlert({
-                    message: (
-                      <span>
-                        Succesfully updated tag for
-                        {glossary.basicFoods[entryKey]} to
-                        <strong>"{basicFoodTags[value]}"</strong>.
-                      </span>
-                    ),
-                    alertProps: { severity: "success" },
-                  });
-                })
-                .catch(() => {
-                  addAlert({
-                    message: "The request did not go through.",
-                    title: "Error",
-                    alertProps: { severity: "error" },
-                  });
-                });
+              updateRequest(
+                {
+                  [`basicFood-basicFoodTag/${entryKey}`]: event.target.value,
+                },
+                addAlert
+              );
             }}
           >
-            {Object.keys(basicFoodTags).map((basicFoodTagKey) => (
-              <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
-                {basicFoodTags[basicFoodTagKey]}
-              </MenuItem>
-            ))}
+            {Object.keys(basicFoodTags)
+              .map((basicFoodTagKey) => (
+                <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
+                  {basicFoodTags[basicFoodTagKey]}
+                </MenuItem>
+              ))
+              .concat(
+                <MenuItem value={null} key={"delete"}>
+                  <em>None</em>
+                </MenuItem>
+              )}
           </Select>
         </FormControl>
       );
@@ -151,10 +124,9 @@ function Glossary(props) {
 
   const getRenderInputButtonStack = (sectionKey) => (entryKey) => {
     const isAddingValue = sectionKey === entryKey;
-
     const value = isAddingValue ? "" : glossary[sectionKey][entryKey];
-
     const isActiveEntry = editingEntry.key === entryKey;
+    const disabled = readOnly || (!!editingEntry.key && !isActiveEntry);
     return (
       <Stack key={entryKey} direction="row" spacing={2}>
         <TextField
@@ -162,7 +134,7 @@ function Glossary(props) {
           label={isAddingValue ? "Add entry" : isActiveEntry && value}
           size="small"
           value={isActiveEntry ? editingEntry.value : value}
-          disabled={readOnly || (!!editingEntry.key && !isActiveEntry)}
+          disabled={disabled}
           sx={{ width: sectionKey === "cookbook" ? "230px" : "190px" }}
           onFocus={() => {
             if (!isActiveEntry) {
@@ -186,7 +158,13 @@ function Glossary(props) {
             ),
           }}
         />
-        {renderAction(isActiveEntry, sectionKey, entryKey, isAddingValue)}
+        {renderAction(
+          isActiveEntry,
+          sectionKey,
+          entryKey,
+          isAddingValue,
+          disabled
+        )}
       </Stack>
     );
   };
