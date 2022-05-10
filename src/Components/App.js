@@ -7,7 +7,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, child, get } from "firebase/database";
 
 import Home from "./Home";
 import CookbookContainer from "./cookbook/CookbookContainer";
@@ -19,6 +19,11 @@ import NavBar from "./NavBar";
 function App() {
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
+  const [readOnly, setReadOnly] = useState(true);
+
+  const [glossary, setGlossary] = useState();
+  const [basicFoodTagAssociation, setBasicFoodTagAssociation] = useState();
+
   const prevUserRef = useRef();
 
   const addAlert = (alert, removalTime = 6001) => {
@@ -27,8 +32,6 @@ function App() {
       setAlertList((prevList) => prevList.slice(1));
     }, removalTime);
   };
-
-  const [glossary, setGlossary] = useState();
 
   useEffect(() => {
     onAuthStateChanged(getAuth(), setUser);
@@ -42,8 +45,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    onValue(ref(getDatabase(), "glossary"), (snapshot) => {
+    const db = getDatabase();
+
+    onValue(ref(db, "glossary"), (snapshot) => {
       setGlossary(snapshot.val());
+    });
+
+    onValue(ref(db, "basicFood-basicFoodTag"), (snapshot) => {
+      setBasicFoodTagAssociation(snapshot.val());
     });
   }, []);
 
@@ -60,6 +69,26 @@ function App() {
         title: "Farewell",
         alertProps: { severity: "success" },
       });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      const dbRef = ref(getDatabase());
+      get(child(dbRef, `users/${user.uid}`))
+        .then((snapshot) => {
+          if (snapshot.exists() && snapshot.val()) {
+            setReadOnly(false);
+          } else {
+            setReadOnly(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setReadOnly(true);
+        });
+    } else {
+      setReadOnly(true);
     }
   }, [user]);
 
@@ -99,7 +128,14 @@ function App() {
         />
         <Route
           path="glossary"
-          element={<Glossary glossary={glossary} addAlert={addAlert} />}
+          element={
+            <Glossary
+              glossary={glossary}
+              basicFoodTagAssociation={basicFoodTagAssociation}
+              addAlert={addAlert}
+              readOnly={readOnly}
+            />
+          }
         />
       </Routes>
     </div>

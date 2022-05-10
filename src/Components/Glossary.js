@@ -17,7 +17,7 @@ import { getDatabase, ref, child, push, update } from "firebase/database";
 import { getPresentationName } from "../utils";
 
 function Glossary(props) {
-  const { glossary, addAlert } = props;
+  const { glossary, addAlert, readOnly } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});
@@ -57,22 +57,57 @@ function Glossary(props) {
     }
   };
 
+  const renderAction = (isActiveEntry, sectionKey, entryKey, isAddingValue) => {
+    if (readOnly) {
+      return null;
+    }
+
+    const isEmptyValue = editingEntry.value === "";
+
+    if (isActiveEntry) {
+      return (
+        <Button
+          color="secondary"
+          variant="outlined"
+          size="small"
+          sx={{ width: "90px" }}
+          onClick={() => {
+            let updateEntryKey = entryKey;
+
+            if (isAddingValue) {
+              const db = getDatabase();
+              updateEntryKey = push(
+                child(ref(db), `glossary/${sectionKey}`)
+              ).key;
+            }
+
+            updateRequest(
+              sectionKey,
+              updateEntryKey,
+              isEmptyValue ? null : editingEntry.value
+            );
+          }}
+        >
+          {isAddingValue ? "Add" : isEmptyValue ? "Delete" : "Update"}
+        </Button>
+      );
+    }
+  };
+
   const getRenderInputButtonStack = (sectionKey) => (entryKey) => {
     const isAddingValue = sectionKey === entryKey;
 
     const value = isAddingValue ? "" : glossary[sectionKey][entryKey];
-    const { key: editingKey, value: editingValue } = editingEntry;
 
-    const isActiveEntry = editingKey === entryKey;
-    const isEmptyValue = editingValue === "";
+    const isActiveEntry = editingEntry.key === entryKey;
     return (
       <Stack key={entryKey} direction="row" spacing={2}>
         <TextField
           variant="outlined"
           label={isAddingValue ? "Add entry" : isActiveEntry && value}
           size="small"
-          value={isActiveEntry ? editingValue : value}
-          disabled={!!editingKey && !isActiveEntry}
+          value={isActiveEntry ? editingEntry.value : value}
+          disabled={readOnly || (!!editingEntry.key && !isActiveEntry)}
           sx={{ width: "200px" }}
           onFocus={() => {
             if (!isActiveEntry) {
@@ -84,6 +119,7 @@ function Glossary(props) {
             endAdornment: isActiveEntry && (
               <InputAdornment position="end">
                 <IconButton
+                  sx={{ color: "alt.main" }}
                   onClick={() => {
                     setEditingEntry({ entryKey, value });
                   }}
@@ -95,39 +131,10 @@ function Glossary(props) {
             ),
           }}
         />
-        {isActiveEntry && (
-          <Button
-            color="secondary"
-            variant="outlined"
-            size="small"
-            sx={{ width: "90px" }}
-            onClick={() => {
-              let updateEntryKey = entryKey;
-
-              if (isAddingValue) {
-                const db = getDatabase();
-                updateEntryKey = push(
-                  child(ref(db), `glossary/${sectionKey}`)
-                ).key;
-              }
-
-              updateRequest(
-                sectionKey,
-                updateEntryKey,
-                isEmptyValue ? null : editingValue
-              );
-            }}
-          >
-            {isAddingValue ? "Add" : isEmptyValue ? "Delete" : "Update"}
-          </Button>
-        )}
+        {renderAction(isActiveEntry, sectionKey, entryKey, isAddingValue)}
       </Stack>
     );
   };
-
-  if (!glossary) {
-    return <span>Ope, no items in Glossary</span>;
-  }
 
   return (
     <div>
@@ -140,30 +147,34 @@ function Glossary(props) {
       >
         Glossary
       </Typography>
-      <Stack
-        sx={{ width: "100%", paddingTop: "10px" }}
-        spacing={4}
-        alignItems="center"
-      >
-        {Object.keys(glossary).map((sectionKey) => (
-          <Accordion key={sectionKey} sx={{ width: "95%" }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>{getPresentationName(sectionKey)}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack sx={{ width: "95%" }} spacing={4} alignItems="left">
-                {Object.keys(glossary[sectionKey])
-                  .concat(sectionKey)
-                  .map(getRenderInputButtonStack(sectionKey))}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      </Stack>
+      {!glossary ? (
+        <Typography>Ope, no items in Glossary</Typography>
+      ) : (
+        <Stack
+          sx={{ width: "100%", paddingTop: "10px" }}
+          spacing={2}
+          alignItems="center"
+        >
+          {Object.keys(glossary).map((sectionKey) => (
+            <Accordion key={sectionKey} sx={{ width: "95%" }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>{getPresentationName(sectionKey)}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack sx={{ width: "95%" }} spacing={3} alignItems="left">
+                  {Object.keys(glossary[sectionKey])
+                    .concat(sectionKey)
+                    .map(getRenderInputButtonStack(sectionKey))}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Stack>
+      )}
     </div>
   );
 }
