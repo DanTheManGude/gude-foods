@@ -13,9 +13,9 @@ import App from "./Components/App";
 const theme = createTheme({
   palette: {
     mode: "dark",
-    primary: {
-      main: "#ffad76",
-    },
+    primary: { main: "#ffad76" },
+    secondary: { main: "#4E256E" },
+    tertiary: { main: "#A4A12F" },
   },
 });
 
