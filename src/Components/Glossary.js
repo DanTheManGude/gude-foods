@@ -82,7 +82,9 @@ function Glossary(props) {
 
     if (sectionKey === "basicFoods") {
       const basicFoodTags = glossary.basicFoodTags;
-      const tagId = basicFoodTagAssociation[entryKey];
+      const tagId =
+        basicFoodTagAssociation && basicFoodTagAssociation[entryKey];
+      const value = basicFoodTags.hasOwnProperty(tagId) ? tagId : "";
 
       return (
         <FormControl
@@ -91,11 +93,11 @@ function Glossary(props) {
           sx={{ width: "115px" }}
           disabled={disabled}
         >
-          <InputLabel id={entryKey}>Tag</InputLabel>
+          {value === "" && <InputLabel id={entryKey}>Tag</InputLabel>}
           <Select
             labelId={entryKey}
             id={entryKey}
-            value={basicFoodTags.hasOwnProperty(tagId) ? tagId : ""}
+            value={value}
             onChange={(event) => {
               updateRequest(
                 {
