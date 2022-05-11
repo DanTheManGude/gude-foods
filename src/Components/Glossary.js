@@ -63,8 +63,13 @@ function Glossary(props) {
               ? null
               : editingEntry.value;
 
-            if (isEmptyValue && sectionKey === "basicFoods") {
-              updates[`basicFood-basicFoodTag/${entryKey}`] = null;
+            if (isEmptyValue) {
+              if (sectionKey === "basicFoods") {
+                updates[`basicFood-basicFoodTag/${entryKey}`] = null;
+              }
+              if (sectionKey === "cookbook") {
+                updates[`cookbook/${entryKey}`] = null;
+              }
             }
 
             updateRequest(updates, addAlert);
