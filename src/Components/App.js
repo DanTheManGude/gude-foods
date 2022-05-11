@@ -103,9 +103,13 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar pathname={usePathname()} addAlert={addAlert} />
       <Stack
-        sx={{ width: "100%", paddingTop: "10px" }}
+        sx={{
+          width: "100%",
+          paddingTop: "5px",
+          zIndex: 9000,
+          position: "absolute",
+        }}
         spacing={2}
         alignItems="center"
       >
@@ -123,6 +127,7 @@ function App() {
           );
         })}
       </Stack>
+      <NavBar pathname={usePathname()} addAlert={addAlert} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="cookbook" element={<CookbookContainer />} />
