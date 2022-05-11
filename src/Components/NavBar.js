@@ -19,7 +19,7 @@ import GoogleLoginButton from "./GoogleLoginButton.js";
 const pages = ["cookbook", "shoppingList", "glossary"];
 
 const NavBar = (props) => {
-  const { pathname, addAlert } = props;
+  const { addAlert } = props;
 
   const [anchorElNav, setAnchorElNav] = useState(null);
 
@@ -86,12 +86,7 @@ const NavBar = (props) => {
                 .map((page) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Link to={`/${page}`}>
-                      <Typography
-                        sx={{
-                          color: pathname.includes(page) ? "primary.main" : "",
-                        }}
-                        textAlign="center"
-                      >
+                      <Typography textAlign="center">
                         {getPresentationName(page)}
                       </Typography>
                     </Link>
@@ -133,13 +128,7 @@ const NavBar = (props) => {
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 <Link to={`/${page}`}>
-                  <Typography
-                    sx={{
-                      color: pathname.includes(page) ? "primary.main" : "",
-                    }}
-                  >
-                    {getPresentationName(page)}
-                  </Typography>
+                  <Typography>{getPresentationName(page)}</Typography>
                 </Link>
               </Button>
             ))}
