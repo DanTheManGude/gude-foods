@@ -188,7 +188,14 @@ function Glossary(props) {
         Glossary
       </Typography>
       {!glossary ? (
-        <Typography>Ope, no items in Glossary</Typography>
+        <Typography
+          sx={{
+            color: "text.primary",
+            textAlign: "center",
+          }}
+        >
+          Ope, no items in Glossary
+        </Typography>
       ) : (
         <Stack
           sx={{ width: "100%", paddingTop: "10px" }}
@@ -197,11 +204,7 @@ function Glossary(props) {
         >
           {Object.keys(glossary).map((sectionKey) => (
             <Accordion key={sectionKey} sx={{ width: "95%" }}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>{getPresentationName(sectionKey)}</Typography>
               </AccordionSummary>
               <AccordionDetails>
