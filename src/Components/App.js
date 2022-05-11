@@ -23,6 +23,8 @@ function App() {
 
   const [glossary, setGlossary] = useState();
   const [basicFoodTagAssociation, setBasicFoodTagAssociation] = useState();
+  const [shoppingList, setShoppingList] = useState();
+  const [cookbook, setCookbook] = useState();
 
   const prevUserRef = useRef();
 
@@ -57,6 +59,14 @@ function App() {
 
     onValue(ref(db, "basicFood-basicFoodTag"), (snapshot) => {
       setBasicFoodTagAssociation(snapshot.val());
+    });
+
+    onValue(ref(db, `shoppingList/${user.uid}`), (snapshot) => {
+      setShoppingList(snapshot.val());
+    });
+
+    onValue(ref(db, "cookbook"), (snapshot) => {
+      setCookbook(snapshot.val());
     });
   }, [user]);
 
@@ -133,7 +143,17 @@ function App() {
         <Route path="cookbook" element={<CookbookContainer />} />
         <Route
           path="shoppingList"
-          element={<ShoppingList glossary={glossary} addAlert={addAlert} />}
+          element={
+            <ShoppingList
+              glossary={glossary}
+              basicFoodTagAssociation={basicFoodTagAssociation}
+              shoppingList={shoppingList}
+              cookbook={cookbook}
+              updatePath={user ? `shoppingList/${user.uid}` : "foo"}
+              addAlert={addAlert}
+              readOnly={readOnly}
+            />
+          }
         />
         <Route
           path="glossary"
