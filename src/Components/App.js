@@ -4,7 +4,10 @@ import { Routes, Route, useLocation } from "react-router-dom";
 
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import Stack from "@mui/material/Stack";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Collapse from "@mui/material/Collapse";
+import { TransitionGroup } from "react-transition-group";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, onValue, child, get } from "firebase/database";
@@ -28,7 +31,7 @@ function App() {
 
   const prevUserRef = useRef();
 
-  const addAlert = (alert, removalTime = 6001) => {
+  const addAlert = (alert, removalTime = 3001) => {
     setAlertList((prevList) => prevList.concat(alert));
     setTimeout(() => {
       setAlertList((prevList) => prevList.slice(1));
@@ -113,30 +116,38 @@ function App() {
 
   return (
     <div className="App">
-      <Stack
+      <List
         sx={{
           width: "100%",
           paddingTop: "5px",
           zIndex: 9000,
           position: "absolute",
         }}
-        spacing={2}
-        alignItems="center"
+        spacing={8}
       >
-        {alertList.map((alert, index) => {
-          const { message, title, alertProps } = alert;
-          return (
-            <Alert
-              key={index}
-              sx={{ width: { xs: "85%", md: "70%" } }}
-              {...alertProps}
-            >
-              {title && <AlertTitle>{title}</AlertTitle>}
-              {message}
-            </Alert>
-          );
-        })}
-      </Stack>
+        <TransitionGroup>
+          {alertList.map((alert, index) => {
+            const { message, title, alertProps } = alert;
+            return (
+              <Collapse key={index}>
+                <ListItem
+                  sx={{
+                    justifyContent: "center",
+                  }}
+                >
+                  <Alert
+                    sx={{ width: { xs: "85%", md: "60%" } }}
+                    {...alertProps}
+                  >
+                    {title && <AlertTitle>{title}</AlertTitle>}
+                    {message}
+                  </Alert>
+                </ListItem>
+              </Collapse>
+            );
+          })}
+        </TransitionGroup>
+      </List>
       <NavBar pathname={usePathname()} addAlert={addAlert} />
       <Routes>
         <Route path="/" element={<Home />} />
