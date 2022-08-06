@@ -68,7 +68,7 @@ function App() {
       setShoppingList(snapshot.val());
     });
 
-    onValue(ref(db, "cookbook"), (snapshot) => {
+    onValue(ref(db, `cookbook/${user.uid}`), (snapshot) => {
       setCookbook(snapshot.val());
     });
   }, [user]);
