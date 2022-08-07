@@ -119,7 +119,7 @@ function App() {
       <List
         sx={{
           width: "100%",
-          paddingTop: "5px",
+          marginTop: "55px",
           zIndex: 9000,
           position: "absolute",
         }}
