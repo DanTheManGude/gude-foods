@@ -21,7 +21,9 @@ import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { updateRequest } from "../utils";
+import { updateRequest, deleteRequest } from "../utils";
+
+const UNKNOWN_TAG = "UNKNOWN_TAG";
 
 function ShoppingList(props) {
   const {
@@ -39,13 +41,20 @@ function ShoppingList(props) {
     checked: {},
   });
   const [activeEditingCollated, setActiveEditingCollated] = useState({});
-  const clearActiveEditingCollated = () => setActiveEditingCollated({});
+  const clearActiveEditingCollated = () => {
+    setActiveEditingCollated({});
+  };
 
   const [newFoodId, setNewFoodId] = useState();
   const [newFoodAmount, setNewFoodAmount] = useState("");
+  const clearNewFood = () => {
+    setNewFoodId();
+    setNewFoodAmount("");
+  };
 
   useEffect(() => {
     if (!shoppingList) {
+      setShoppingMap({ unchecked: {}, checked: {} });
       return;
     }
 
@@ -55,7 +64,11 @@ function ShoppingList(props) {
       const foodEntry = shoppingList[basicFoodId];
       const { isChecked } = foodEntry;
 
-      const tagId = basicFoodTagAssociation[basicFoodId];
+      let tagId = basicFoodTagAssociation[basicFoodId];
+
+      if (!glossary.basicFoodTags[tagId]) {
+        tagId = UNKNOWN_TAG;
+      }
 
       if (!isChecked) {
         if (!newShoppingMap.unchecked.hasOwnProperty(tagId)) {
@@ -69,7 +82,7 @@ function ShoppingList(props) {
     });
 
     setShoppingMap(newShoppingMap);
-  }, [shoppingList]);
+  }, [shoppingList, basicFoodTagAssociation, glossary]);
 
   const getInputHandler = (key, valueComparator) => (event) => {
     const newValue = event.target.value;
@@ -82,9 +95,13 @@ function ShoppingList(props) {
   };
 
   const renderBasicFoodAccordion = (basicFoodId, foodEntry) => {
-    const doesFoodExist = !!glossary.basicFoods[basicFoodId];
+    const doesFoodExist =
+      !!glossary.basicFoods[basicFoodId] &&
+      !!shoppingList &&
+      !!shoppingList[basicFoodId];
 
     if (!doesFoodExist) {
+      deleteRequest([`${updatePath}/${basicFoodId}`]);
       return null;
     }
 
@@ -138,10 +155,9 @@ function ShoppingList(props) {
                     </Typography>
                     <IconButton
                       onClick={() => {
-                        updateRequest({
-                          [`${updatePath}/${basicFoodId}/list/${recipeId}`]:
-                            null,
-                        });
+                        deleteRequest([
+                          `${updatePath}/${basicFoodId}/list/${recipeId}`,
+                        ]);
                       }}
                     >
                       <ClearIcon />
@@ -182,13 +198,18 @@ function ShoppingList(props) {
                   sx={{ width: "115px" }}
                   disabled={disabled}
                   onClick={() => {
-                    updateRequest(
-                      {
-                        [`${updatePath}/${basicFoodId}/collatedAmount`]:
-                          isEmptyValue ? null : inputValue,
-                      },
-                      addAlert
-                    );
+                    if (isEmptyValue) {
+                      deleteRequest([`${updatePath}/${basicFoodId}`], addAlert);
+                    } else {
+                      updateRequest(
+                        {
+                          [`${updatePath}/${basicFoodId}/collatedAmount`]:
+                            inputValue,
+                        },
+                        addAlert
+                      );
+                    }
+
                     clearActiveEditingCollated();
                   }}
                 >
@@ -215,7 +236,7 @@ function ShoppingList(props) {
           sx={{ width: "150px" }}
           disabled={readOnly}
           onClick={() => {
-            updateRequest({ [updatePath]: null }, addAlert);
+            deleteRequest([updatePath], addAlert);
           }}
         >
           Delete all
@@ -225,7 +246,17 @@ function ShoppingList(props) {
           size="small"
           sx={{ width: "150px" }}
           disabled={readOnly || !Object.keys(shoppingMap.checked).length}
-          onClick={() => {}}
+          onClick={() => {
+            deleteRequest(
+              Object.keys(shoppingList).reduce((acc, basicFoodId) => {
+                if (shoppingList[basicFoodId].isChecked) {
+                  acc.push(`${updatePath}/${basicFoodId}`);
+                }
+                return acc;
+              }, []),
+              addAlert
+            );
+          }}
         >
           Delete checked
         </Button>
@@ -239,7 +270,7 @@ function ShoppingList(props) {
         <FormControl
           size="small"
           variant="standard"
-          sx={{ width: "200px" }}
+          sx={{ width: "206px" }}
           disabled={readOnly}
         >
           <InputLabel id="newFood">Enter item</InputLabel>
@@ -269,7 +300,7 @@ function ShoppingList(props) {
           size="small"
           value={newFoodAmount}
           disabled={readOnly}
-          sx={{ width: "198px" }}
+          sx={{ width: "206px" }}
           onChange={(event) => {
             setNewFoodAmount(event.target.value);
           }}
@@ -303,6 +334,7 @@ function ShoppingList(props) {
               collatedAmount: newFoodAmount,
             },
           });
+          clearNewFood();
         }}
       >
         Add new item
@@ -372,7 +404,11 @@ function ShoppingList(props) {
         {Object.keys(shoppingMap.unchecked).map((tagId) => (
           <Accordion key={tagId} sx={{ width: "95%" }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>{glossary.basicFoodTags[tagId]}</Typography>
+              {tagId === UNKNOWN_TAG ? (
+                <Typography component={"em"}>Unknown Section</Typography>
+              ) : (
+                <Typography>{glossary.basicFoodTags[tagId]}</Typography>
+              )}
             </AccordionSummary>
             <AccordionDetails>
               <Stack spacing={0} alignItems="left">
