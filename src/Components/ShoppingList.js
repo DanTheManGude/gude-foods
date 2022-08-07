@@ -96,7 +96,7 @@ function ShoppingList(props) {
     const isEmptyValue = inputValue === "";
 
     return (
-      <Accordion key={basicFoodId} sx={{ width: "95%" }}>
+      <Accordion key={basicFoodId} disableGutters variant="outlined">
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Checkbox
             onChange={(event) => {
@@ -110,20 +110,26 @@ function ShoppingList(props) {
           {collatedAmount && <Typography>{collatedAmount}</Typography>}
         </AccordionSummary>
         <AccordionDetails>
-          <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+          <Stack spacing={2} alignItems="left">
             {Object.keys(recipeList)
               .map((recipeId) => {
                 if (!cookbook || !recipeId || !cookbook[recipeId]) {
                   debugger;
                 }
                 return (
-                  <Stack key={recipeId} direction="row" spacing={1}>
-                    <Typography>
-                      {cookbook[recipeId].ingredients[basicFoodId]}
+                  <Stack
+                    key={recipeId}
+                    direction="row"
+                    spacing={1}
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Typography sx={{ minWidth: "fit-content" }}>
+                      {cookbook[recipeId].ingredients[basicFoodId]}:
                     </Typography>
-                    <IconButton>
-                      <OpenInFullIcon />
-                    </IconButton>
+                    <Typography noWrap sx={{ width: "fill-available" }}>
+                      {glossary.cookbook[recipeId]}
+                    </Typography>
                     <IconButton
                       onClick={() => {
                         updateRequest({
@@ -141,31 +147,18 @@ function ShoppingList(props) {
                 <Stack key="setCollated" direction="row" spacing={1}>
                   <TextField
                     variant="outlined"
-                    label="Set collated amount"
+                    label="Set total amount"
                     size="small"
                     value={inputValue}
                     disabled={disabled}
                     sx={{ width: "190px" }}
-                    onFocus={() => {
-                      if (activeEditingCollated.key !== basicFoodId) {
-                        setActiveEditingCollated({
-                          key: basicFoodId,
-                          value: collatedAmount,
-                        });
-                      }
-                    }}
                     onChange={getInputHandler(basicFoodId, collatedAmount)}
                     InputProps={{
                       endAdornment: isActiveInput && (
                         <InputAdornment position="end">
                           <IconButton
                             sx={{ color: "alt.main" }}
-                            onClick={() => {
-                              setActiveEditingCollated({
-                                key: basicFoodId,
-                                value: collatedAmount,
-                              });
-                            }}
+                            onClick={clearActiveEditingCollated}
                             edge="end"
                           >
                             <UndoOutlinedIcon />
@@ -201,6 +194,135 @@ function ShoppingList(props) {
     );
   };
 
+  const renderDeleteButtons = () => {
+    if (!shoppingList) {
+      return null;
+    }
+
+    return (
+      <Stack direction="row" spacing={2} sx={{ paddingTop: "12px" }}>
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{ width: "150px" }}
+          disabled={readOnly}
+        >
+          Delete all
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{ width: "150px" }}
+          disabled={readOnly}
+        >
+          Delete checked
+        </Button>
+      </Stack>
+    );
+  };
+
+  const renderNewItemControls = () => (
+    <Stack direction="row" spacing={4}>
+      <Stack spacing={1}>
+        <FormControl
+          size="small"
+          variant="standard"
+          sx={{ width: "200px" }}
+          disabled={readOnly}
+        >
+          <InputLabel id="newFood">Enter item</InputLabel>
+          <Select
+            labelId={"newFood"}
+            id={"newFood"}
+            value={newFoodId || ""}
+            onChange={(event) => {
+              setNewFoodId(event.target.value);
+            }}
+          >
+            {[
+              <MenuItem value={null} key={"none"}>
+                <Typography component={"em"}>Enter item</Typography>
+              </MenuItem>,
+              ...Object.keys(glossary.basicFoods).map((basicFoodId) => (
+                <MenuItem value={basicFoodId} key={basicFoodId}>
+                  {glossary.basicFoods[basicFoodId]}
+                </MenuItem>
+              )),
+            ]}
+          </Select>
+        </FormControl>
+        <TextField
+          variant="outlined"
+          label="Set amount"
+          size="small"
+          value={newFoodAmount}
+          disabled={readOnly}
+          sx={{ width: "198px" }}
+          onChange={(event) => {
+            setNewFoodAmount(event.target.value);
+          }}
+          InputProps={{
+            endAdornment: newFoodAmount && (
+              <InputAdornment position="end">
+                <IconButton
+                  sx={{ color: "alt.main" }}
+                  onClick={() => {
+                    setNewFoodAmount("");
+                  }}
+                  edge="end"
+                >
+                  <UndoOutlinedIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Stack>
+      <Button
+        color="secondary"
+        variant="outlined"
+        size="small"
+        sx={{ width: "80px" }}
+        disabled={!(newFoodId && newFoodAmount)}
+        onClick={() => {
+          if (newFoodId && newFoodAmount) {
+            updateRequest({
+              [`${updatePath}/${newFoodId}`]: {
+                isChecked: false,
+                collatedAmount: newFoodAmount,
+              },
+            });
+          }
+        }}
+      >
+        Add new item
+      </Button>
+    </Stack>
+  );
+
+  const renderChecked = () => {
+    if (!shoppingList) {
+      return null;
+    }
+    return (
+      <Accordion key={"checked"} sx={{ width: "95%" }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Checked</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={0} alignItems="left">
+            {Object.keys(shoppingMap.checked).map((basicFoodId) =>
+              renderBasicFoodAccordion(
+                basicFoodId,
+                shoppingMap.checked[basicFoodId]
+              )
+            )}
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
+
   if (!glossary) {
     return null;
   }
@@ -218,7 +340,7 @@ function ShoppingList(props) {
       </Typography>
       <Stack
         sx={{ width: "100%", paddingTop: "10px" }}
-        spacing={2}
+        spacing={3}
         alignItems="center"
       >
         {Object.keys(shoppingMap.unchecked).map((tagId) => (
@@ -227,7 +349,7 @@ function ShoppingList(props) {
               <Typography>{glossary.basicFoodTags[tagId]}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Stack sx={{ width: "95%" }} spacing={0} alignItems="left">
+              <Stack spacing={0} alignItems="left">
                 {Object.keys(shoppingMap.unchecked[tagId]).map((basicFoodId) =>
                   renderBasicFoodAccordion(
                     basicFoodId,
@@ -238,122 +360,9 @@ function ShoppingList(props) {
             </AccordionDetails>
           </Accordion>
         ))}
-
-        {!!shoppingList && (
-          <Accordion key={"checked"} sx={{ width: "95%" }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Checked</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack sx={{ width: "95%" }} spacing={0} alignItems="left">
-                {Object.keys(shoppingMap.checked).map((basicFoodId) =>
-                  renderBasicFoodAccordion(
-                    basicFoodId,
-                    shoppingMap.checked[basicFoodId]
-                  )
-                )}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        )}
-
-        {!!shoppingList && (
-          <Stack direction="row" spacing={2}>
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ width: "150px" }}
-              disabled={readOnly}
-            >
-              Delete all
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ width: "150px" }}
-              disabled={readOnly}
-            >
-              Delete checked
-            </Button>
-          </Stack>
-        )}
-
-        <Stack direction="row" spacing={4}>
-          <Stack spacing={1}>
-            <FormControl
-              size="small"
-              variant="standard"
-              sx={{ width: "200px" }}
-              disabled={readOnly}
-            >
-              <InputLabel id="newFood">Enter item</InputLabel>
-              <Select
-                labelId={"newFood"}
-                id={"newFood"}
-                value={newFoodId || ""}
-                onChange={(event) => {
-                  setNewFoodId(event.target.value);
-                }}
-              >
-                {[
-                  <MenuItem value={null} key={"none"}>
-                    <Typography component={"em"}>Enter item</Typography>
-                  </MenuItem>,
-                  ...Object.keys(glossary.basicFoods).map((basicFoodId) => (
-                    <MenuItem value={basicFoodId} key={basicFoodId}>
-                      {glossary.basicFoods[basicFoodId]}
-                    </MenuItem>
-                  )),
-                ]}
-              </Select>
-            </FormControl>
-            <TextField
-              variant="outlined"
-              label="Set amount"
-              size="small"
-              value={newFoodAmount}
-              disabled={readOnly}
-              sx={{ width: "198px" }}
-              onChange={(event) => {
-                setNewFoodAmount(event.target.value);
-              }}
-              InputProps={{
-                endAdornment: newFoodAmount && (
-                  <InputAdornment position="end">
-                    <IconButton
-                      sx={{ color: "alt.main" }}
-                      onClick={() => {
-                        setNewFoodAmount("");
-                      }}
-                      edge="end"
-                    >
-                      <UndoOutlinedIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Stack>
-          <Button
-            color="secondary"
-            variant="outlined"
-            size="small"
-            sx={{ width: "80px" }}
-            disabled={!(newFoodId && newFoodAmount)}
-            onClick={() => {
-              if (newFoodId && newFoodAmount) {
-                updateRequest({
-                  [`${updatePath}/${newFoodId}`]: {
-                    isChecked: false,
-                    collatedAmount: newFoodAmount,
-                  },
-                });
-              }
-            }}
-          >
-            Add new item
-          </Button>
-        </Stack>
+        {renderChecked()}
+        {renderNewItemControls()}
+        {renderDeleteButtons()}
       </Stack>
     </div>
   );
