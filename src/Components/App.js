@@ -160,7 +160,7 @@ function App() {
               basicFoodTagAssociation={basicFoodTagAssociation}
               shoppingList={shoppingList}
               cookbook={cookbook}
-              updatePath={user ? `shoppingList/${user.uid}` : "foo"}
+              updatePath={user ? `shoppingList/${user.uid}` : ""}
               addAlert={addAlert}
               readOnly={readOnly}
             />
