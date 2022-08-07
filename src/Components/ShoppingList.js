@@ -1,11 +1,13 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
+import { TransitionGroup } from "react-transition-group";
+
+import Collapse from "@mui/material/Collapse";
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -14,10 +16,10 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
-import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import Checkbox from "@mui/material/Checkbox";
+import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { updateRequest } from "../utils";
 
@@ -55,11 +57,11 @@ function ShoppingList(props) {
 
       const tagId = basicFoodTagAssociation[basicFoodId];
 
-      if (!newShoppingMap.unchecked.hasOwnProperty(tagId)) {
-        newShoppingMap.unchecked[tagId] = {};
-      }
-
       if (!isChecked) {
+        if (!newShoppingMap.unchecked.hasOwnProperty(tagId)) {
+          newShoppingMap.unchecked[tagId] = {};
+        }
+
         newShoppingMap.unchecked[tagId][basicFoodId] = foodEntry;
       } else {
         newShoppingMap.checked[basicFoodId] = foodEntry;
@@ -98,25 +100,29 @@ function ShoppingList(props) {
     return (
       <Accordion key={basicFoodId} disableGutters variant="outlined">
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Checkbox
-            onChange={(event) => {
-              updateRequest({
-                [`${updatePath}/${basicFoodId}/isChecked`]:
-                  event.target.checked,
-              });
-            }}
-          />
-          <Typography>{glossary.basicFoods[basicFoodId]}</Typography>
-          {collatedAmount && <Typography>{collatedAmount}</Typography>}
+          <Stack direction="row" alignItems="center">
+            <Checkbox
+              color="primary"
+              sx={{ paddingLeft: "0" }}
+              checked={shoppingList[basicFoodId].isChecked}
+              onChange={(event) => {
+                updateRequest({
+                  [`${updatePath}/${basicFoodId}/isChecked`]:
+                    event.target.checked,
+                });
+              }}
+            />
+            <Typography component={"strong"}>
+              {glossary.basicFoods[basicFoodId]}
+            </Typography>
+            {collatedAmount && <Typography>: {collatedAmount}</Typography>}
+          </Stack>
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={2} alignItems="left">
-            {Object.keys(recipeList)
-              .map((recipeId) => {
-                if (!cookbook || !recipeId || !cookbook[recipeId]) {
-                  debugger;
-                }
-                return (
+            <TransitionGroup>
+              {Object.keys(recipeList).map((recipeId, index) => (
+                <Collapse key={index}>
                   <Stack
                     key={recipeId}
                     direction="row"
@@ -141,53 +147,53 @@ function ShoppingList(props) {
                       <DeleteIcon />
                     </IconButton>
                   </Stack>
-                );
-              })
-              .concat(
-                <Stack key="setCollated" direction="row" spacing={1}>
-                  <TextField
-                    variant="outlined"
-                    label="Set total amount"
-                    size="small"
-                    value={inputValue}
-                    disabled={disabled}
-                    sx={{ width: "190px" }}
-                    onChange={getInputHandler(basicFoodId, collatedAmount)}
-                    InputProps={{
-                      endAdornment: isActiveInput && (
-                        <InputAdornment position="end">
-                          <IconButton
-                            sx={{ color: "alt.main" }}
-                            onClick={clearActiveEditingCollated}
-                            edge="end"
-                          >
-                            <UndoOutlinedIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {isActiveInput && (
-                    <Button
-                      color="secondary"
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: "115px" }}
-                      disabled={disabled}
-                      onClick={() => {
-                        const updates = {};
-                        updates[`${updatePath}/${basicFoodId}/collatedAmount`] =
-                          isEmptyValue ? null : inputValue;
+                </Collapse>
+              ))}
+            </TransitionGroup>
 
-                        updateRequest(updates, addAlert);
-                        clearActiveEditingCollated();
-                      }}
-                    >
-                      {isEmptyValue ? "Delete" : "Update"}
-                    </Button>
-                  )}
-                </Stack>
+            <Stack key="setCollated" direction="row" spacing={1}>
+              <TextField
+                variant="outlined"
+                label="Set total amount"
+                size="small"
+                value={inputValue}
+                disabled={disabled}
+                sx={{ width: "190px" }}
+                onChange={getInputHandler(basicFoodId, collatedAmount)}
+                InputProps={{
+                  endAdornment: isActiveInput && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        sx={{ color: "alt.main" }}
+                        onClick={clearActiveEditingCollated}
+                        edge="end"
+                      >
+                        <UndoOutlinedIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {isActiveInput && (
+                <Button
+                  color="secondary"
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: "115px" }}
+                  disabled={disabled}
+                  onClick={() => {
+                    const updates = {};
+                    updates[`${updatePath}/${basicFoodId}/collatedAmount`] =
+                      isEmptyValue ? null : inputValue;
+
+                    updateRequest(updates, addAlert);
+                    clearActiveEditingCollated();
+                  }}
+                >
+                  {isEmptyValue ? "Delete" : "Update"}
+                </Button>
               )}
+            </Stack>
           </Stack>
         </AccordionDetails>
       </Accordion>
@@ -343,19 +349,25 @@ function ShoppingList(props) {
         spacing={3}
         alignItems="center"
       >
-        {Object.keys(shoppingMap.unchecked).map((tagId) => (
+        {Object.keys(shoppingMap.unchecked).map((tagId, i) => (
           <Accordion key={tagId} sx={{ width: "95%" }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography>{glossary.basicFoodTags[tagId]}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Stack spacing={0} alignItems="left">
-                {Object.keys(shoppingMap.unchecked[tagId]).map((basicFoodId) =>
-                  renderBasicFoodAccordion(
-                    basicFoodId,
-                    shoppingMap.unchecked[tagId][basicFoodId]
-                  )
-                )}
+                <TransitionGroup>
+                  {Object.keys(shoppingMap.unchecked[tagId]).map(
+                    (basicFoodId, index) => (
+                      <Collapse key={index}>
+                        {renderBasicFoodAccordion(
+                          basicFoodId,
+                          shoppingMap.unchecked[tagId][basicFoodId]
+                        )}
+                      </Collapse>
+                    )
+                  )}
+                </TransitionGroup>
               </Stack>
             </AccordionDetails>
           </Accordion>
