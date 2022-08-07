@@ -213,7 +213,7 @@ function ShoppingList(props) {
                     clearActiveEditingCollated();
                   }}
                 >
-                  {isEmptyValue ? "Delete" : "Update"}
+                  <Typography>{isEmptyValue ? "Delete" : "Update"}</Typography>
                 </Button>
               )}
             </Stack>
@@ -231,20 +231,22 @@ function ShoppingList(props) {
     return (
       <Stack direction="row" spacing={2} sx={{ paddingTop: "12px" }}>
         <Button
-          variant="outlined"
+          color="secondary"
+          variant="contained"
           size="small"
-          sx={{ width: "150px" }}
+          sx={{ width: "168px" }}
           disabled={readOnly}
           onClick={() => {
             deleteRequest([updatePath], addAlert);
           }}
         >
-          Delete all
+          <Typography>Delete all</Typography>
         </Button>
         <Button
-          variant="outlined"
+          color="secondary"
+          variant="contained"
           size="small"
-          sx={{ width: "150px" }}
+          sx={{ width: "168px" }}
           disabled={readOnly || !Object.keys(shoppingMap.checked).length}
           onClick={() => {
             deleteRequest(
@@ -258,7 +260,7 @@ function ShoppingList(props) {
             );
           }}
         >
-          Delete checked
+          <Typography>Delete checked</Typography>
         </Button>
       </Stack>
     );
@@ -322,10 +324,10 @@ function ShoppingList(props) {
         />
       </Stack>
       <Button
-        color="secondary"
+        color="primary"
         variant="outlined"
         size="small"
-        sx={{ width: "80px" }}
+        sx={{ width: "90px" }}
         disabled={!(newFoodId && newFoodAmount)}
         onClick={() => {
           updateRequest({
@@ -337,7 +339,7 @@ function ShoppingList(props) {
           clearNewFood();
         }}
       >
-        Add new item
+        <Typography>Add new item</Typography>
       </Button>
     </Stack>
   );
@@ -356,7 +358,7 @@ function ShoppingList(props) {
           expanded={false}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Checked</Typography>
+            <Typography variant="h6">Checked</Typography>
           </AccordionSummary>
         </Accordion>
       );
@@ -365,7 +367,7 @@ function ShoppingList(props) {
     return (
       <Accordion key={"checked"} sx={{ width: "95%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Checked</Typography>
+          <Typography variant="h6">Checked</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={0} alignItems="left">
@@ -405,9 +407,13 @@ function ShoppingList(props) {
           <Accordion key={tagId} sx={{ width: "95%" }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               {tagId === UNKNOWN_TAG ? (
-                <Typography component={"em"}>Unknown Section</Typography>
+                <Typography variant="h6" component={"em"}>
+                  Unknown Section
+                </Typography>
               ) : (
-                <Typography>{glossary.basicFoodTags[tagId]}</Typography>
+                <Typography variant="h6">
+                  {glossary.basicFoodTags[tagId]}
+                </Typography>
               )}
             </AccordionSummary>
             <AccordionDetails>

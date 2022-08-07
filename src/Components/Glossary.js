@@ -73,7 +73,9 @@ function Glossary(props) {
             clearEditingEntry();
           }}
         >
-          {isAddingValue ? "Add" : isEmptyValue ? "Delete" : "Update"}
+          <Typography>
+            {isAddingValue ? "Add" : isEmptyValue ? "Delete" : "Update"}
+          </Typography>
         </Button>
       );
     }
@@ -204,7 +206,9 @@ function Glossary(props) {
             .map((sectionKey) => (
               <Accordion key={sectionKey} sx={{ width: "95%" }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>{getPresentationName(sectionKey)}</Typography>
+                  <Typography variant="h6">
+                    {getPresentationName(sectionKey)}
+                  </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Stack sx={{ width: "95%" }} spacing={3} alignItems="left">
