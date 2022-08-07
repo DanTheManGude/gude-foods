@@ -16,7 +16,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
+import ClearIcon from "@mui/icons-material/Clear";
 import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -144,7 +144,7 @@ function ShoppingList(props) {
                         });
                       }}
                     >
-                      <DeleteIcon />
+                      <ClearIcon />
                     </IconButton>
                   </Stack>
                 </Collapse>
@@ -182,11 +182,13 @@ function ShoppingList(props) {
                   sx={{ width: "115px" }}
                   disabled={disabled}
                   onClick={() => {
-                    const updates = {};
-                    updates[`${updatePath}/${basicFoodId}/collatedAmount`] =
-                      isEmptyValue ? null : inputValue;
-
-                    updateRequest(updates, addAlert);
+                    updateRequest(
+                      {
+                        [`${updatePath}/${basicFoodId}/collatedAmount`]:
+                          isEmptyValue ? null : inputValue,
+                      },
+                      addAlert
+                    );
                     clearActiveEditingCollated();
                   }}
                 >
@@ -212,6 +214,9 @@ function ShoppingList(props) {
           size="small"
           sx={{ width: "150px" }}
           disabled={readOnly}
+          onClick={() => {
+            updateRequest({ [updatePath]: null }, addAlert);
+          }}
         >
           Delete all
         </Button>
@@ -219,7 +224,8 @@ function ShoppingList(props) {
           variant="outlined"
           size="small"
           sx={{ width: "150px" }}
-          disabled={readOnly}
+          disabled={readOnly || !Object.keys(shoppingMap.checked).length}
+          onClick={() => {}}
         >
           Delete checked
         </Button>
@@ -291,14 +297,12 @@ function ShoppingList(props) {
         sx={{ width: "80px" }}
         disabled={!(newFoodId && newFoodAmount)}
         onClick={() => {
-          if (newFoodId && newFoodAmount) {
-            updateRequest({
-              [`${updatePath}/${newFoodId}`]: {
-                isChecked: false,
-                collatedAmount: newFoodAmount,
-              },
-            });
-          }
+          updateRequest({
+            [`${updatePath}/${newFoodId}`]: {
+              isChecked: false,
+              collatedAmount: newFoodAmount,
+            },
+          });
         }}
       >
         Add new item
@@ -310,6 +314,22 @@ function ShoppingList(props) {
     if (!shoppingList) {
       return null;
     }
+
+    if (!Object.keys(shoppingMap.checked).length) {
+      return (
+        <Accordion
+          key={"emptyChecked"}
+          sx={{ width: "95%" }}
+          disabled={true}
+          expanded={false}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Checked</Typography>
+          </AccordionSummary>
+        </Accordion>
+      );
+    }
+
     return (
       <Accordion key={"checked"} sx={{ width: "95%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -349,7 +369,7 @@ function ShoppingList(props) {
         spacing={3}
         alignItems="center"
       >
-        {Object.keys(shoppingMap.unchecked).map((tagId, i) => (
+        {Object.keys(shoppingMap.unchecked).map((tagId) => (
           <Accordion key={tagId} sx={{ width: "95%" }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography>{glossary.basicFoodTags[tagId]}</Typography>
