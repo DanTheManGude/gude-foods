@@ -67,9 +67,6 @@ function Glossary(props) {
               if (sectionKey === "basicFoods") {
                 updates[`basicFood-basicFoodTag/${entryKey}`] = null;
               }
-              if (sectionKey === "cookbook") {
-                updates[`cookbook/${entryKey}`] = null;
-              }
             }
 
             updateRequest(updates, addAlert);
@@ -142,7 +139,7 @@ function Glossary(props) {
           size="small"
           value={isActiveEntry ? editingEntry.value : value}
           disabled={disabled}
-          sx={{ width: sectionKey === "cookbook" ? "230px" : "190px" }}
+          sx={{ width: "190px" }}
           onFocus={() => {
             if (!isActiveEntry) {
               setEditingEntry({ entryKey, value });
@@ -202,20 +199,22 @@ function Glossary(props) {
           spacing={2}
           alignItems="center"
         >
-          {Object.keys(glossary).map((sectionKey) => (
-            <Accordion key={sectionKey} sx={{ width: "95%" }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{getPresentationName(sectionKey)}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack sx={{ width: "95%" }} spacing={3} alignItems="left">
-                  {Object.keys(glossary[sectionKey])
-                    .concat(sectionKey)
-                    .map(getRenderInputButtonStack(sectionKey))}
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+          {Object.keys(glossary)
+            .filter((sectionKey) => sectionKey !== "cookbook")
+            .map((sectionKey) => (
+              <Accordion key={sectionKey} sx={{ width: "95%" }}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>{getPresentationName(sectionKey)}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Stack sx={{ width: "95%" }} spacing={3} alignItems="left">
+                    {Object.keys(glossary[sectionKey])
+                      .concat(sectionKey)
+                      .map(getRenderInputButtonStack(sectionKey))}
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+            ))}
         </Stack>
       )}
     </div>
