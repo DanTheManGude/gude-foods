@@ -14,6 +14,7 @@ import { getDatabase, ref, onValue, child, get } from "firebase/database";
 
 import Home from "./Home";
 import Cookbook from "./Cookbook";
+import Recipe from "./Recipe";
 import ShoppingList from "./ShoppingList";
 import Glossary from "./Glossary";
 
@@ -150,7 +151,7 @@ function App() {
       </List>
       <NavBar pathname={usePathname()} addAlert={addAlert} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/*" element={<Home />} />
         <Route
           path="cookbook"
           element={
@@ -158,6 +159,17 @@ function App() {
               glossary={glossary}
               cookbook={cookbook}
               updatePath={user ? `cookbook/${user.uid}` : ""}
+              addAlert={addAlert}
+              readOnly={readOnly}
+            />
+          }
+        />
+        <Route
+          path="cookbook/:recipeId"
+          element={
+            <Recipe
+              glossary={glossary}
+              cookbook={cookbook}
               addAlert={addAlert}
               readOnly={readOnly}
             />
