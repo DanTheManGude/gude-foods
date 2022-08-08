@@ -151,7 +151,7 @@ function ShoppingList(props) {
                       {cookbook[recipeId].ingredients[basicFoodId]}:
                     </Typography>
                     <Typography noWrap sx={{ width: "fill-available" }}>
-                      {cookbook[recipeId.name]}
+                      {cookbook[recipeId].name}
                     </Typography>
                     <IconButton
                       onClick={() => {
@@ -358,7 +358,9 @@ function ShoppingList(props) {
           expanded={false}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6">Checked</Typography>
+            <Typography variant="h6" component={"em"}>
+              Checked
+            </Typography>
           </AccordionSummary>
         </Accordion>
       );
@@ -367,7 +369,9 @@ function ShoppingList(props) {
     return (
       <Accordion key={"checked"} sx={{ width: "95%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Checked</Typography>
+          <Typography variant="h6" component={"em"}>
+            Checked
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={0} alignItems="left">
@@ -408,9 +412,7 @@ function ShoppingList(props) {
             <Accordion key={tagId} sx={{ width: "95%" }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 {tagId === UNKNOWN_TAG ? (
-                  <Typography variant="h6" component={"em"}>
-                    Unknown Section
-                  </Typography>
+                  <Typography variant="h6">Unknown Section</Typography>
                 ) : (
                   <Typography variant="h6">
                     {glossary.basicFoodTags[tagId]}

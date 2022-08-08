@@ -14,8 +14,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 
+import { updateRequest } from "../utils";
+
 function Cookbook(props) {
-  const { glossary, cookbook = {}, readOnly } = props;
+  const { glossary, cookbook = {}, updatePath, addAlert, readOnly } = props;
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -67,58 +69,77 @@ function Cookbook(props) {
     const recipeList = Object.keys(cookbook);
     return (
       <Stack sx={{ width: "95%" }} spacing={1}>
-        {recipeList.map((recipeId) => (
-          <Accordion key={recipeId}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">{cookbook[recipeId].name}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack spacing={3}>
-                <Stack
-                  spacing={2}
-                  direction="row"
-                  justifyContent="space-around"
-                  alignItems="center"
-                >
-                  <Button
-                    color="secondary"
-                    variant="outlined"
-                    size="small"
-                    disabled={readOnly}
+        {recipeList.map((recipeId) => {
+          const {
+            name = "Unknown name",
+            ingredients = [],
+            tags = [],
+          } = cookbook[recipeId];
+
+          return (
+            <Accordion key={recipeId}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">{name}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack spacing={3}>
+                  <Stack
+                    spacing={2}
+                    direction="row"
+                    justifyContent="space-around"
+                    alignItems="center"
                   >
-                    <Link to={`/recipe/${recipeId}/`}>
-                      <Typography color="secondary">
-                        View full recipe
-                      </Typography>
-                    </Link>
-                  </Button>
-                  <Button
-                    color="secondary"
-                    variant="outlined"
-                    size="small"
-                    disabled={readOnly}
-                    onClick={() => {}}
-                  >
-                    <Typography>Add to shopping list</Typography>
-                  </Button>
-                </Stack>
-                <Stack direction="row" spacing={1}>
-                  {cookbook[recipeId].tags.map((tagId) => (
-                    <Chip
-                      key={tagId}
-                      label={
-                        <Typography>{glossary.recipeTags[tagId]}</Typography>
-                      }
-                      size="small"
+                    <Button
+                      color="secondary"
                       variant="outlined"
-                      color="tertiary"
-                    />
-                  ))}
+                      size="small"
+                      disabled={readOnly}
+                    >
+                      <Link to={`/recipe/${recipeId}/`}>
+                        <Typography color="secondary">
+                          View full recipe
+                        </Typography>
+                      </Link>
+                    </Button>
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      size="small"
+                      disabled={readOnly}
+                      onClick={() => {
+                        updateRequest(
+                          Object.keys(ingredients).reduce(
+                            (updates, foodId) => ({
+                              ...updates,
+                              [`${updatePath}/${foodId}/list/${recipeId}`]: true,
+                            }),
+                            {}
+                          ),
+                          addAlert
+                        );
+                      }}
+                    >
+                      <Typography>Add to shopping list</Typography>
+                    </Button>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    {tags.map((tagId) => (
+                      <Chip
+                        key={tagId}
+                        label={
+                          <Typography>{glossary.recipeTags[tagId]}</Typography>
+                        }
+                        size="small"
+                        variant="outlined"
+                        color="tertiary"
+                      />
+                    ))}
+                  </Stack>
                 </Stack>
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
       </Stack>
     );
   };
