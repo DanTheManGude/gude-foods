@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -8,16 +9,44 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 
+import { createKey } from "../utils";
+
 function Recipe(props) {
-  const { glossary, readOnly } = props;
-  const { recipeId } = useParams();
+  const { glossary, cookbook = {}, readOnly } = props;
+
+  const { recipeId: pathParam } = useParams();
+  const [recipeId, setRecipeId] = useState();
+  const [recipeEntry, setRecipeEntry] = useState({
+    name: "",
+    tags: [],
+    instructions: [],
+    ingredients: {},
+  });
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (!glossary) {
+      return;
+    }
+
+    if (pathParam === "create") {
+      setIsEditing(true);
+      setRecipeId(createKey("cookbook"));
+    } else if (glossary.cookbook.hasOwnProperty(pathParam)) {
+      setRecipeId(pathParam);
+      setRecipeEntry({ ...recipeEntry, ...cookbook[pathParam] });
+    }
+  }, [pathParam, glossary, cookbook]);
 
   if (!glossary) {
     return null;
   }
 
-  const doesRecipeExist = glossary.cookbook.hasOwnProperty(recipeId);
-  if (!doesRecipeExist) {
+  console.log(recipeId);
+  console.log(isEditing);
+  console.log(recipeEntry);
+
+  if (!recipeId) {
     return (
       <Typography
         variant="h6"
