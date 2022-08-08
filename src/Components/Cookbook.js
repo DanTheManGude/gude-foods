@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -62,10 +63,6 @@ function Cookbook(props) {
     </Stack>
   );
 
-  if (!glossary) {
-    return null;
-  }
-
   const renderRecipeStack = () => {
     const recipeList = Object.keys(cookbook);
     return (
@@ -90,9 +87,12 @@ function Cookbook(props) {
                     variant="outlined"
                     size="small"
                     disabled={readOnly}
-                    onClick={() => {}}
                   >
-                    <Typography>View full recipe</Typography>
+                    <Link to={`/cookbook/${recipeId}`}>
+                      <Typography color="secondary">
+                        View full recipe
+                      </Typography>
+                    </Link>
                   </Button>
                   <Button
                     color="secondary"
@@ -124,6 +124,10 @@ function Cookbook(props) {
       </Stack>
     );
   };
+
+  if (!glossary) {
+    return null;
+  }
 
   return (
     <div>
