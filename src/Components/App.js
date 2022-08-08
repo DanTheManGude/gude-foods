@@ -13,7 +13,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, onValue, child, get } from "firebase/database";
 
 import Home from "./Home";
-import CookbookContainer from "./cookbook/CookbookContainer";
+import Cookbook from "./Cookbook";
 import ShoppingList from "./ShoppingList";
 import Glossary from "./Glossary";
 
@@ -151,7 +151,18 @@ function App() {
       <NavBar pathname={usePathname()} addAlert={addAlert} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="cookbook" element={<CookbookContainer />} />
+        <Route
+          path="cookbook"
+          element={
+            <Cookbook
+              glossary={glossary}
+              cookbook={cookbook}
+              updatePath={user ? `cookbook/${user.uid}` : ""}
+              addAlert={addAlert}
+              readOnly={readOnly}
+            />
+          }
+        />
         <Route
           path="shoppingList"
           element={
