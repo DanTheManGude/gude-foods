@@ -49,7 +49,7 @@ function Glossary(props) {
           color="secondary"
           variant="outlined"
           size="small"
-          sx={{ width: "115px" }}
+          sx={{ width: "109px" }}
           disabled={disabled}
           onClick={() => {
             let updateEntryKey = entryKey;
@@ -94,10 +94,14 @@ function Glossary(props) {
         <FormControl
           size="small"
           variant="standard"
-          sx={{ width: "115px" }}
+          sx={{ width: "110px" }}
           disabled={disabled}
         >
-          {value === "" && <InputLabel id={entryKey}>Tag</InputLabel>}
+          {value === "" && (
+            <InputLabel id={entryKey} style={{ top: "-11px" }}>
+              Tag
+            </InputLabel>
+          )}
           <Select
             labelId={entryKey}
             id={entryKey}
@@ -110,6 +114,7 @@ function Glossary(props) {
                 addAlert
               );
             }}
+            style={{ marginTop: 0, paddingTop: "5px" }}
           >
             {Object.keys(basicFoodTags)
               .map((basicFoodTagKey) => (
@@ -141,7 +146,7 @@ function Glossary(props) {
           size="small"
           value={isActiveEntry ? editingEntry.value : value}
           disabled={disabled}
-          sx={{ width: "190px" }}
+          sx={{ width: "183px" }}
           onFocus={() => {
             if (!isActiveEntry) {
               setEditingEntry({ entryKey, value });
@@ -197,8 +202,8 @@ function Glossary(props) {
         </Typography>
       ) : (
         <Stack
-          sx={{ width: "100%", paddingTop: "10px" }}
-          spacing={2}
+          sx={{ width: "100%", paddingTop: "15px" }}
+          spacing={3}
           alignItems="center"
         >
           {Object.keys(glossary)
@@ -211,7 +216,7 @@ function Glossary(props) {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Stack sx={{ width: "95%" }} spacing={3} alignItems="left">
+                  <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
                     {Object.keys(glossary[sectionKey])
                       .concat(sectionKey)
                       .map(getRenderInputButtonStack(sectionKey))}

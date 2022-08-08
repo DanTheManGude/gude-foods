@@ -24,8 +24,8 @@ const theme = createTheme({
   palette: {
     mode: "dark",
     primary: { main: "#ffad76" },
-    secondary: { main: "#AF7ADB" },
-    tertiary: { main: "#79B2A8" },
+    secondary: { main: "#AF7ADB", contrastText: "#1e201e" },
+    tertiary: { main: "#79B2A8", contrastText: "#000" },
     alt: { main: "#D6D365" },
   },
 });
