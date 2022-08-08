@@ -3,11 +3,6 @@ import { useParams } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Button from "@mui/material/Button";
 
 import { createKey } from "../utils";
 
@@ -25,26 +20,18 @@ function Recipe(props) {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (!glossary) {
-      return;
-    }
-
     if (pathParam === "create") {
       setIsEditing(true);
       setRecipeId(createKey("cookbook"));
-    } else if (glossary.cookbook.hasOwnProperty(pathParam)) {
+    } else if (cookbook.hasOwnProperty(pathParam)) {
       setRecipeId(pathParam);
       setRecipeEntry({ ...recipeEntry, ...cookbook[pathParam] });
     }
-  }, [pathParam, glossary, cookbook]);
+  }, [pathParam, cookbook]);
 
   if (!glossary) {
     return null;
   }
-
-  console.log(recipeId);
-  console.log(isEditing);
-  console.log(recipeEntry);
 
   if (!recipeId) {
     return (
@@ -69,7 +56,7 @@ function Recipe(props) {
           textAlign: "center",
         }}
       >
-        {glossary.cookbook[recipeId]}
+        {recipeEntry.name}
       </Typography>
       <Stack
         sx={{ paddingTop: "15px" }}

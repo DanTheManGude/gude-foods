@@ -70,9 +70,7 @@ function Cookbook(props) {
         {recipeList.map((recipeId) => (
           <Accordion key={recipeId}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                {glossary.cookbook[recipeId]}
-              </Typography>
+              <Typography variant="h6">{cookbook[recipeId].name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Stack spacing={3}>
