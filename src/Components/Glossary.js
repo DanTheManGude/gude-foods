@@ -206,24 +206,22 @@ function Glossary(props) {
           spacing={3}
           alignItems="center"
         >
-          {Object.keys(glossary)
-            .filter((sectionKey) => sectionKey !== "cookbook")
-            .map((sectionKey) => (
-              <Accordion key={sectionKey} sx={{ width: "95%" }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h6">
-                    {getPresentationName(sectionKey)}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-                    {Object.keys(glossary[sectionKey])
-                      .concat(sectionKey)
-                      .map(getRenderInputButtonStack(sectionKey))}
-                  </Stack>
-                </AccordionDetails>
-              </Accordion>
-            ))}
+          {Object.keys(glossary).map((sectionKey) => (
+            <Accordion key={sectionKey} sx={{ width: "95%" }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  {getPresentationName(sectionKey)}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+                  {Object.keys(glossary[sectionKey])
+                    .concat(sectionKey)
+                    .map(getRenderInputButtonStack(sectionKey))}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </Stack>
       )}
     </div>

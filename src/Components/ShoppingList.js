@@ -151,7 +151,7 @@ function ShoppingList(props) {
                       {cookbook[recipeId].ingredients[basicFoodId]}:
                     </Typography>
                     <Typography noWrap sx={{ width: "fill-available" }}>
-                      {glossary.cookbook[recipeId]}
+                      {cookbook[recipeId.name]}
                     </Typography>
                     <IconButton
                       onClick={() => {
