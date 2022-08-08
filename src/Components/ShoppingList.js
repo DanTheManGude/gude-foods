@@ -129,7 +129,7 @@ function ShoppingList(props) {
                 });
               }}
             />
-            <Typography component={"strong"}>
+            <Typography sx={{ fontWeight: 600 }}>
               {glossary.basicFoods[basicFoodId]}
             </Typography>
             {collatedAmount && <Typography>: {collatedAmount}</Typography>}
@@ -160,7 +160,7 @@ function ShoppingList(props) {
                         ]);
                       }}
                     >
-                      <ClearIcon />
+                      <ClearIcon color="secondary" />
                     </IconButton>
                   </Stack>
                 </Collapse>
@@ -399,42 +399,44 @@ function ShoppingList(props) {
         Shopping List
       </Typography>
       <Stack
-        sx={{ width: "100%", paddingTop: "10px" }}
+        sx={{ width: "100%", paddingTop: "15px" }}
         spacing={3}
         alignItems="center"
       >
-        {Object.keys(shoppingMap.unchecked).map((tagId) => (
-          <Accordion key={tagId} sx={{ width: "95%" }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              {tagId === UNKNOWN_TAG ? (
-                <Typography variant="h6" component={"em"}>
-                  Unknown Section
-                </Typography>
-              ) : (
-                <Typography variant="h6">
-                  {glossary.basicFoodTags[tagId]}
-                </Typography>
-              )}
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack spacing={0} alignItems="left">
-                <TransitionGroup>
-                  {Object.keys(shoppingMap.unchecked[tagId]).map(
-                    (basicFoodId, index) => (
-                      <Collapse key={index}>
-                        {renderBasicFoodAccordion(
-                          basicFoodId,
-                          shoppingMap.unchecked[tagId][basicFoodId]
-                        )}
-                      </Collapse>
-                    )
-                  )}
-                </TransitionGroup>
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        ))}
-        {renderChecked()}
+        <Stack sx={{ width: "95%" }} spacing={0}>
+          {Object.keys(shoppingMap.unchecked).map((tagId) => (
+            <Accordion key={tagId} sx={{ width: "95%" }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                {tagId === UNKNOWN_TAG ? (
+                  <Typography variant="h6" component={"em"}>
+                    Unknown Section
+                  </Typography>
+                ) : (
+                  <Typography variant="h6">
+                    {glossary.basicFoodTags[tagId]}
+                  </Typography>
+                )}
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack spacing={0} alignItems="left">
+                  <TransitionGroup>
+                    {Object.keys(shoppingMap.unchecked[tagId]).map(
+                      (basicFoodId, index) => (
+                        <Collapse key={index}>
+                          {renderBasicFoodAccordion(
+                            basicFoodId,
+                            shoppingMap.unchecked[tagId][basicFoodId]
+                          )}
+                        </Collapse>
+                      )
+                    )}
+                  </TransitionGroup>
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+          {renderChecked()}
+        </Stack>
         {renderNewItemControls()}
         {renderDeleteButtons()}
       </Stack>
