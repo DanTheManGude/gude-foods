@@ -88,7 +88,7 @@ function Cookbook(props) {
                     size="small"
                     disabled={readOnly}
                   >
-                    <Link to={`/cookbook/${recipeId}`}>
+                    <Link to={`/recipe/${recipeId}/`}>
                       <Typography color="secondary">
                         View full recipe
                       </Typography>
@@ -142,13 +142,10 @@ function Cookbook(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
-        <Button
-          color="primary"
-          variant="contained"
-          disabled={readOnly}
-          onClick={() => {}}
-        >
-          <Typography>Add new recipe</Typography>
+        <Button color="primary" variant="contained" disabled={readOnly}>
+          <Link to={`/recipe/create`}>
+            <Typography color="primary.contrastText">Add new recipe</Typography>
+          </Link>
         </Button>
         {renderRecipeStack()}
       </Stack>

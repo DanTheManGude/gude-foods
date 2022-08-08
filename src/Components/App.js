@@ -165,7 +165,7 @@ function App() {
           }
         />
         <Route
-          path="cookbook/:recipeId"
+          path="recipe/:recipeId"
           element={
             <Recipe
               glossary={glossary}
