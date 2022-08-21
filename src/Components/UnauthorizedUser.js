@@ -53,7 +53,6 @@ const getSendAuthorizationRequest = (user, addAlert) => () => {
 function UnauthorizedUser(props) {
   const { user, addAlert } = props;
   if (!!user) {
-    console.log(user);
     return (
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         <Typography
