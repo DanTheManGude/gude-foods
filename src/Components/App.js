@@ -19,11 +19,12 @@ import ShoppingList from "./ShoppingList";
 import Glossary from "./Glossary";
 
 import NavBar from "./NavBar";
+import UnauthorizedUser from "./UnauthorizedUser";
 
 function App() {
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
-  const [readOnly, setReadOnly] = useState(true);
+  const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
 
   const [glossary, setGlossary] = useState();
   const [basicFoodTagAssociation, setBasicFoodTagAssociation] = useState();
@@ -95,18 +96,14 @@ function App() {
       const dbRef = ref(getDatabase());
       get(child(dbRef, `users/${user.uid}`))
         .then((snapshot) => {
-          if (snapshot.exists() && snapshot.val()) {
-            setReadOnly(false);
-          } else {
-            setReadOnly(true);
-          }
+          setIsAuthorizedUser(snapshot.exists() && snapshot.val());
         })
         .catch((error) => {
           console.error(error);
-          setReadOnly(true);
+          setIsAuthorizedUser(false);
         });
     } else {
-      setReadOnly(true);
+      setIsAuthorizedUser(false);
     }
   }, [user]);
 
@@ -115,92 +112,93 @@ function App() {
     return location.pathname;
   };
 
+  const renderMessages = () => (
+    <List
+      sx={{
+        width: "100%",
+        marginTop: "55px",
+        zIndex: 9000,
+        position: "absolute",
+      }}
+      spacing={8}
+    >
+      <TransitionGroup>
+        {alertList.map((alert, index) => {
+          const { message, title, alertProps } = alert;
+          return (
+            <Collapse key={index}>
+              <ListItem
+                sx={{
+                  justifyContent: "center",
+                }}
+              >
+                <Alert sx={{ width: { xs: "85%", md: "60%" } }} {...alertProps}>
+                  {title && <AlertTitle>{title}</AlertTitle>}
+                  {message}
+                </Alert>
+              </ListItem>
+            </Collapse>
+          );
+        })}
+      </TransitionGroup>
+    </List>
+  );
+
+  const renderRoutes = () => (
+    <Routes>
+      <Route path="/*" element={<Home />} />
+      <Route
+        path="cookbook"
+        element={
+          <Cookbook
+            glossary={glossary}
+            cookbook={cookbook}
+            updatePath={user ? `shoppingList/${user.uid}` : ""}
+            addAlert={addAlert}
+          />
+        }
+      />
+      <Route
+        path="recipe/:recipeId"
+        element={
+          <Recipe glossary={glossary} cookbook={cookbook} addAlert={addAlert} />
+        }
+      />
+      <Route
+        path="shoppingList"
+        element={
+          <ShoppingList
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            shoppingList={shoppingList}
+            cookbook={cookbook}
+            updatePath={user ? `shoppingList/${user.uid}` : ""}
+            addAlert={addAlert}
+          />
+        }
+      />
+      <Route
+        path="glossary"
+        element={
+          <Glossary
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            addAlert={addAlert}
+          />
+        }
+      />
+    </Routes>
+  );
+
   return (
     <div className="App">
-      <List
-        sx={{
-          width: "100%",
-          marginTop: "55px",
-          zIndex: 9000,
-          position: "absolute",
-        }}
-        spacing={8}
-      >
-        <TransitionGroup>
-          {alertList.map((alert, index) => {
-            const { message, title, alertProps } = alert;
-            return (
-              <Collapse key={index}>
-                <ListItem
-                  sx={{
-                    justifyContent: "center",
-                  }}
-                >
-                  <Alert
-                    sx={{ width: { xs: "85%", md: "60%" } }}
-                    {...alertProps}
-                  >
-                    {title && <AlertTitle>{title}</AlertTitle>}
-                    {message}
-                  </Alert>
-                </ListItem>
-              </Collapse>
-            );
-          })}
-        </TransitionGroup>
-      </List>
+      {renderMessages()}
       <NavBar pathname={usePathname()} addAlert={addAlert} />
-      <Routes>
-        <Route path="/*" element={<Home />} />
-        <Route
-          path="cookbook"
-          element={
-            <Cookbook
-              glossary={glossary}
-              cookbook={cookbook}
-              updatePath={user ? `shoppingList/${user.uid}` : ""}
-              addAlert={addAlert}
-              readOnly={readOnly}
-            />
-          }
-        />
-        <Route
-          path="recipe/:recipeId"
-          element={
-            <Recipe
-              glossary={glossary}
-              cookbook={cookbook}
-              addAlert={addAlert}
-              readOnly={readOnly}
-            />
-          }
-        />
-        <Route
-          path="shoppingList"
-          element={
-            <ShoppingList
-              glossary={glossary}
-              basicFoodTagAssociation={basicFoodTagAssociation}
-              shoppingList={shoppingList}
-              cookbook={cookbook}
-              updatePath={user ? `shoppingList/${user.uid}` : ""}
-              addAlert={addAlert}
-              readOnly={readOnly}
-            />
-          }
-        />
-        <Route
-          path="glossary"
-          element={
-            <Glossary
-              glossary={glossary}
-              basicFoodTagAssociation={basicFoodTagAssociation}
-              addAlert={addAlert}
-              readOnly={readOnly}
-            />
-          }
-        />
-      </Routes>
+      {isAuthorizedUser ? (
+        renderRoutes()
+      ) : (
+        <UnauthorizedUser user={user} addAlert={addAlert} />
+      )}
     </div>
   );
 }
