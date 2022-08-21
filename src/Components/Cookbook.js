@@ -17,7 +17,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { updateRequest } from "../utils";
 
 function Cookbook(props) {
-  const { glossary, cookbook = {}, updatePath, addAlert, readOnly } = props;
+  const { glossary, cookbook = {}, updatePath, addAlert } = props;
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -33,7 +33,6 @@ function Cookbook(props) {
         variant="outlined"
         label={<Typography>Search</Typography>}
         value={searchTerm}
-        disabled={readOnly}
         onChange={(event) => {
           setSearchTerm(event.target.value);
         }}
@@ -57,7 +56,6 @@ function Cookbook(props) {
         color="secondary"
         variant="outlined"
         size="small"
-        disabled={readOnly}
         onClick={() => {}}
       >
         <Typography>Advanced filters</Typography>
@@ -89,12 +87,7 @@ function Cookbook(props) {
                     justifyContent="space-around"
                     alignItems="center"
                   >
-                    <Button
-                      color="secondary"
-                      variant="outlined"
-                      size="small"
-                      disabled={readOnly}
-                    >
+                    <Button color="secondary" variant="outlined" size="small">
                       <Link to={`/recipe/${recipeId}/`}>
                         <Typography color="secondary">
                           View full recipe
@@ -105,7 +98,6 @@ function Cookbook(props) {
                       color="secondary"
                       variant="outlined"
                       size="small"
-                      disabled={readOnly}
                       onClick={() => {
                         updateRequest(
                           Object.keys(ingredients).reduce(
@@ -161,7 +153,7 @@ function Cookbook(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
-        <Button color="primary" variant="contained" disabled={readOnly}>
+        <Button color="primary" variant="contained">
           <Link to={`/recipe/create`}>
             <Typography color="primary.contrastText">Add new recipe</Typography>
           </Link>
