@@ -33,7 +33,6 @@ function ShoppingList(props) {
     cookbook,
     addAlert,
     updatePath,
-    readOnly,
   } = props;
 
   const [shoppingMap, setShoppingMap] = useState({
@@ -107,8 +106,7 @@ function ShoppingList(props) {
 
     const { collatedAmount = "", list: recipeList = [] } = foodEntry;
     const isActiveInput = activeEditingCollated.key === basicFoodId;
-    const disabled =
-      readOnly || (!!activeEditingCollated.key && !isActiveInput);
+    const disabled = !!activeEditingCollated.key && !isActiveInput;
     const inputValue = isActiveInput
       ? activeEditingCollated.value
       : collatedAmount;
@@ -235,7 +233,6 @@ function ShoppingList(props) {
           variant="contained"
           size="small"
           sx={{ width: "168px" }}
-          disabled={readOnly}
           onClick={() => {
             deleteRequest([updatePath], addAlert);
           }}
@@ -247,7 +244,7 @@ function ShoppingList(props) {
           variant="contained"
           size="small"
           sx={{ width: "168px" }}
-          disabled={readOnly || !Object.keys(shoppingMap.checked).length}
+          disabled={!Object.keys(shoppingMap.checked).length}
           onClick={() => {
             deleteRequest(
               Object.keys(shoppingList).reduce((acc, basicFoodId) => {
@@ -269,12 +266,7 @@ function ShoppingList(props) {
   const renderNewItemControls = () => (
     <Stack direction="row" spacing={4}>
       <Stack spacing={1}>
-        <FormControl
-          size="small"
-          variant="standard"
-          sx={{ width: "206px" }}
-          disabled={readOnly}
-        >
+        <FormControl size="small" variant="standard" sx={{ width: "206px" }}>
           <InputLabel id="newFood">Enter item</InputLabel>
           <Select
             labelId={"newFood"}
@@ -301,7 +293,6 @@ function ShoppingList(props) {
           label="Set amount"
           size="small"
           value={newFoodAmount}
-          disabled={readOnly}
           sx={{ width: "206px" }}
           onChange={(event) => {
             setNewFoodAmount(event.target.value);

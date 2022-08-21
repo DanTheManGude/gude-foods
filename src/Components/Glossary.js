@@ -19,7 +19,7 @@ import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import { getPresentationName, updateRequest, createKey } from "../utils";
 
 function Glossary(props) {
-  const { glossary, basicFoodTagAssociation, addAlert, readOnly } = props;
+  const { glossary, basicFoodTagAssociation, addAlert } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});
@@ -137,7 +137,7 @@ function Glossary(props) {
     const isAddingValue = sectionKey === entryKey;
     const value = isAddingValue ? "" : glossary[sectionKey][entryKey];
     const isActiveEntry = editingEntry.key === entryKey;
-    const disabled = readOnly || (!!editingEntry.key && !isActiveEntry);
+    const disabled = !!editingEntry.key && !isActiveEntry;
     return (
       <Stack key={entryKey} direction="row" spacing={2}>
         <TextField

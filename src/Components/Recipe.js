@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import { createKey } from "../utils";
 
 function Recipe(props) {
-  const { glossary, cookbook = {}, readOnly } = props;
+  const { glossary, cookbook = {} } = props;
 
   const { recipeId: pathParam } = useParams();
   const [recipeId, setRecipeId] = useState();
