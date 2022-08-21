@@ -85,6 +85,20 @@ function UnauthorizedUser(props) {
       </Stack>
     );
   }
+
+  return (
+    <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+      <Typography
+        sx={{
+          color: "primary.main",
+          textAlign: "center",
+          width: "80%",
+        }}
+      >
+        Please sign in with Google to use the app.
+      </Typography>
+    </Stack>
+  );
 }
 
 export default UnauthorizedUser;
