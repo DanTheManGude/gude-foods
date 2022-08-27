@@ -1,8 +1,7 @@
 html {
-  height: max-content;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #262a38 0%, #181e36 70%, #030c25 100%);
+  background: linear-gradient(180deg, #242b42 0%, #1a2552 60%, #030c25 100%);
   background-color: #262a38;
+  background-attachment: fixed;
 }
 
 body {
@@ -11,6 +10,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin-bottom: 32px;
 }
 
 .App {

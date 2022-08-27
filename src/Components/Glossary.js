@@ -19,7 +19,7 @@ import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import { getPresentationName, updateRequest, createKey } from "../utils";
 
 function Glossary(props) {
-  const { glossary, basicFoodTagAssociation, addAlert, readOnly } = props;
+  const { glossary, basicFoodTagAssociation, addAlert } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});
@@ -49,7 +49,7 @@ function Glossary(props) {
           color="secondary"
           variant="outlined"
           size="small"
-          sx={{ width: "115px" }}
+          sx={{ width: "109px" }}
           disabled={disabled}
           onClick={() => {
             let updateEntryKey = entryKey;
@@ -67,16 +67,15 @@ function Glossary(props) {
               if (sectionKey === "basicFoods") {
                 updates[`basicFood-basicFoodTag/${entryKey}`] = null;
               }
-              if (sectionKey === "cookbook") {
-                updates[`cookbook/${entryKey}`] = null;
-              }
             }
 
             updateRequest(updates, addAlert);
             clearEditingEntry();
           }}
         >
-          {isAddingValue ? "Add" : isEmptyValue ? "Delete" : "Update"}
+          <Typography>
+            {isAddingValue ? "Add" : isEmptyValue ? "Delete" : "Update"}
+          </Typography>
         </Button>
       );
     }
@@ -95,10 +94,14 @@ function Glossary(props) {
         <FormControl
           size="small"
           variant="standard"
-          sx={{ width: "115px" }}
+          sx={{ width: "110px" }}
           disabled={disabled}
         >
-          {value === "" && <InputLabel id={entryKey}>Tag</InputLabel>}
+          {value === "" && (
+            <InputLabel id={entryKey} style={{ top: "-11px" }}>
+              Tag
+            </InputLabel>
+          )}
           <Select
             labelId={entryKey}
             id={entryKey}
@@ -111,6 +114,7 @@ function Glossary(props) {
                 addAlert
               );
             }}
+            style={{ marginTop: 0, paddingTop: "5px" }}
           >
             {Object.keys(basicFoodTags)
               .map((basicFoodTagKey) => (
@@ -133,7 +137,7 @@ function Glossary(props) {
     const isAddingValue = sectionKey === entryKey;
     const value = isAddingValue ? "" : glossary[sectionKey][entryKey];
     const isActiveEntry = editingEntry.key === entryKey;
-    const disabled = readOnly || (!!editingEntry.key && !isActiveEntry);
+    const disabled = !!editingEntry.key && !isActiveEntry;
     return (
       <Stack key={entryKey} direction="row" spacing={2}>
         <TextField
@@ -142,7 +146,7 @@ function Glossary(props) {
           size="small"
           value={isActiveEntry ? editingEntry.value : value}
           disabled={disabled}
-          sx={{ width: sectionKey === "cookbook" ? "230px" : "190px" }}
+          sx={{ width: "183px" }}
           onFocus={() => {
             if (!isActiveEntry) {
               setEditingEntry({ entryKey, value });
@@ -188,24 +192,29 @@ function Glossary(props) {
         Glossary
       </Typography>
       {!glossary ? (
-        <Typography>Ope, no items in Glossary</Typography>
+        <Typography
+          sx={{
+            color: "text.primary",
+            textAlign: "center",
+          }}
+        >
+          Ope, no items in Glossary
+        </Typography>
       ) : (
         <Stack
-          sx={{ width: "100%", paddingTop: "10px" }}
-          spacing={2}
+          sx={{ width: "100%", paddingTop: "15px" }}
+          spacing={3}
           alignItems="center"
         >
           {Object.keys(glossary).map((sectionKey) => (
             <Accordion key={sectionKey} sx={{ width: "95%" }}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>{getPresentationName(sectionKey)}</Typography>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  {getPresentationName(sectionKey)}
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Stack sx={{ width: "95%" }} spacing={3} alignItems="left">
+                <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
                   {Object.keys(glossary[sectionKey])
                     .concat(sectionKey)
                     .map(getRenderInputButtonStack(sectionKey))}

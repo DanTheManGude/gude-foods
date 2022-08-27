@@ -4,29 +4,36 @@ import { Routes, Route, useLocation } from "react-router-dom";
 
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import Stack from "@mui/material/Stack";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Collapse from "@mui/material/Collapse";
+import { TransitionGroup } from "react-transition-group";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, onValue, child, get } from "firebase/database";
 
 import Home from "./Home";
-import CookbookContainer from "./cookbook/CookbookContainer";
+import Cookbook from "./Cookbook";
+import Recipe from "./Recipe";
 import ShoppingList from "./ShoppingList";
 import Glossary from "./Glossary";
 
 import NavBar from "./NavBar";
+import UnauthorizedUser from "./UnauthorizedUser";
 
 function App() {
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
-  const [readOnly, setReadOnly] = useState(true);
+  const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
 
   const [glossary, setGlossary] = useState();
   const [basicFoodTagAssociation, setBasicFoodTagAssociation] = useState();
+  const [shoppingList, setShoppingList] = useState();
+  const [cookbook, setCookbook] = useState();
 
   const prevUserRef = useRef();
 
-  const addAlert = (alert, removalTime = 6001) => {
+  const addAlert = (alert, removalTime = 3001) => {
     setAlertList((prevList) => prevList.concat(alert));
     setTimeout(() => {
       setAlertList((prevList) => prevList.slice(1));
@@ -58,6 +65,14 @@ function App() {
     onValue(ref(db, "basicFood-basicFoodTag"), (snapshot) => {
       setBasicFoodTagAssociation(snapshot.val());
     });
+
+    onValue(ref(db, `shoppingList/${user.uid}`), (snapshot) => {
+      setShoppingList(snapshot.val());
+    });
+
+    onValue(ref(db, `cookbook/${user.uid}`), (snapshot) => {
+      setCookbook(snapshot.val());
+    });
   }, [user]);
 
   useEffect(() => {
@@ -81,18 +96,14 @@ function App() {
       const dbRef = ref(getDatabase());
       get(child(dbRef, `users/${user.uid}`))
         .then((snapshot) => {
-          if (snapshot.exists() && snapshot.val()) {
-            setReadOnly(false);
-          } else {
-            setReadOnly(true);
-          }
+          setIsAuthorizedUser(snapshot.exists() && snapshot.val());
         })
         .catch((error) => {
           console.error(error);
-          setReadOnly(true);
+          setIsAuthorizedUser(false);
         });
     } else {
-      setReadOnly(true);
+      setIsAuthorizedUser(false);
     }
   }, [user]);
 
@@ -101,52 +112,93 @@ function App() {
     return location.pathname;
   };
 
-  return (
-    <div className="App">
-      <Stack
-        sx={{
-          width: "100%",
-          paddingTop: "5px",
-          zIndex: 9000,
-          position: "absolute",
-        }}
-        spacing={2}
-        alignItems="center"
-      >
+  const renderMessages = () => (
+    <List
+      sx={{
+        width: "100%",
+        marginTop: "55px",
+        zIndex: 9000,
+        position: "absolute",
+      }}
+      spacing={8}
+    >
+      <TransitionGroup>
         {alertList.map((alert, index) => {
           const { message, title, alertProps } = alert;
           return (
-            <Alert
-              key={index}
-              sx={{ width: { xs: "85%", md: "70%" } }}
-              {...alertProps}
-            >
-              {title && <AlertTitle>{title}</AlertTitle>}
-              {message}
-            </Alert>
+            <Collapse key={index}>
+              <ListItem
+                sx={{
+                  justifyContent: "center",
+                }}
+              >
+                <Alert sx={{ width: { xs: "85%", md: "60%" } }} {...alertProps}>
+                  {title && <AlertTitle>{title}</AlertTitle>}
+                  {message}
+                </Alert>
+              </ListItem>
+            </Collapse>
           );
         })}
-      </Stack>
+      </TransitionGroup>
+    </List>
+  );
+
+  const renderRoutes = () => (
+    <Routes>
+      <Route path="/*" element={<Home />} />
+      <Route
+        path="cookbook"
+        element={
+          <Cookbook
+            glossary={glossary}
+            cookbook={cookbook}
+            updatePath={user ? `shoppingList/${user.uid}` : ""}
+            addAlert={addAlert}
+          />
+        }
+      />
+      <Route
+        path="recipe/:recipeId"
+        element={
+          <Recipe glossary={glossary} cookbook={cookbook} addAlert={addAlert} />
+        }
+      />
+      <Route
+        path="shoppingList"
+        element={
+          <ShoppingList
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            shoppingList={shoppingList}
+            cookbook={cookbook}
+            updatePath={user ? `shoppingList/${user.uid}` : ""}
+            addAlert={addAlert}
+          />
+        }
+      />
+      <Route
+        path="glossary"
+        element={
+          <Glossary
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            addAlert={addAlert}
+          />
+        }
+      />
+    </Routes>
+  );
+
+  return (
+    <div className="App">
+      {renderMessages()}
       <NavBar pathname={usePathname()} addAlert={addAlert} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="cookbook" element={<CookbookContainer />} />
-        <Route
-          path="shoppingList"
-          element={<ShoppingList glossary={glossary} addAlert={addAlert} />}
-        />
-        <Route
-          path="glossary"
-          element={
-            <Glossary
-              glossary={glossary}
-              basicFoodTagAssociation={basicFoodTagAssociation}
-              addAlert={addAlert}
-              readOnly={readOnly}
-            />
-          }
-        />
-      </Routes>
+      {isAuthorizedUser ? (
+        renderRoutes()
+      ) : (
+        <UnauthorizedUser user={user} addAlert={addAlert} />
+      )}
     </div>
   );
 }

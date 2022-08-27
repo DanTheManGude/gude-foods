@@ -28,4 +28,12 @@ export const updateRequest = (updates, addAlert = () => {}) => {
     });
 };
 
+export const deleteRequest = (deletePaths = [], addAlert) => {
+  const updates = deletePaths.reduce(
+    (acc, path) => ({ ...acc, [path]: null }),
+    {}
+  );
+  updateRequest(updates, addAlert);
+};
+
 export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
