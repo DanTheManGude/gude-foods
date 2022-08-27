@@ -1,4 +1,4 @@
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
