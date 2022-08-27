@@ -25,6 +25,7 @@ function Recipe(props) {
       setRecipeId(createKey("cookbook"));
     } else if (cookbook.hasOwnProperty(pathParam)) {
       setRecipeId(pathParam);
+
       setRecipeEntry((_recipeEntry) => ({
         ..._recipeEntry,
         ...cookbook[pathParam],
