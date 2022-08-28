@@ -36,9 +36,6 @@ const NavBar = (props) => {
       position="static"
       sx={{
         marginBottom: "10px",
-        width: "98%",
-        marginLeft: "1%",
-        marginRight: "1%",
       }}
     >
       <Container maxWidth="xl">
