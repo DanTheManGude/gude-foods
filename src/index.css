@@ -2,6 +2,8 @@ html {
   background: linear-gradient(180deg, #242b42 0%, #1a2552 60%, #030c25 100%);
   background-color: #262a38;
   background-attachment: fixed;
+  height: 100%;
+  margin: 0;
 }
 
 body {
@@ -10,12 +12,24 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  margin-bottom: 32px;
+  height: 98.5%;
+  margin: 0;
+  margin-top: 1.5%;
+}
+
+#root {
+  height: 100%;
 }
 
 .App {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
   z-index: 1;
-  position: relative;
+}
+
+.mainContent {
+  flex: 1;
 }
 
 a {

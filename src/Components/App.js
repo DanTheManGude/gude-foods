@@ -20,6 +20,7 @@ import Glossary from "./Glossary";
 
 import NavBar from "./NavBar";
 import UnauthorizedUser from "./UnauthorizedUser";
+import { Typography } from "@mui/material";
 
 function App() {
   const [alertList, setAlertList] = useState([]);
@@ -190,15 +191,33 @@ function App() {
     </Routes>
   );
 
+  const renderFooter = () => (
+    <div>
+      <Typography
+        color="primary"
+        sx={{
+          textAlign: "center",
+          paddingBottom: "15px",
+          paddingTop: "25px",
+        }}
+      >
+        Made with taste 😋
+      </Typography>
+    </div>
+  );
+
   return (
     <div className="App">
-      {renderMessages()}
-      <NavBar pathname={usePathname()} addAlert={addAlert} />
-      {isAuthorizedUser ? (
-        renderRoutes()
-      ) : (
-        <UnauthorizedUser user={user} addAlert={addAlert} />
-      )}
+      <div className="mainContent">
+        {renderMessages()}
+        <NavBar pathname={usePathname()} addAlert={addAlert} />
+        {isAuthorizedUser ? (
+          renderRoutes()
+        ) : (
+          <UnauthorizedUser user={user} addAlert={addAlert} />
+        )}
+      </div>
+      {renderFooter()}
     </div>
   );
 }
