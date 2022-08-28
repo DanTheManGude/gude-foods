@@ -17,7 +17,7 @@ function Recipe(props) {
     instructions: [],
     ingredients: {},
   });
-  const [isEditing, setIsEditing] = useState(false);
+  const [, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (pathParam === "create") {
