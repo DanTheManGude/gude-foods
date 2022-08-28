@@ -55,7 +55,7 @@ const NavBar = (props) => {
               textDecoration: "none",
             }}
           >
-            <Link to={`/`}>Gude Foods </Link>
+            <Link to={`/`}>Gude Foods</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -144,6 +144,16 @@ const NavBar = (props) => {
               handleClick={handleCloseNavMenu}
               addAlert={addAlert}
             />
+          </Box>
+          <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+            <Link to={`/`}>
+              <img
+                width="32px"
+                src={"/favicon-32x32.png"}
+                alt="App Logo"
+                style={{ borderRadius: "5px" }}
+              />
+            </Link>
           </Box>
         </Toolbar>
       </Container>
