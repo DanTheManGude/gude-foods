@@ -50,28 +50,23 @@ const getSendAuthorizationRequest = (user, addAlert) => () => {
     }
   );
 };
+
+const textStyles = {
+  color: "primary.main",
+  textAlign: "center",
+  width: "85%",
+};
+
 function UnauthorizedUser(props) {
   const { user, addAlert } = props;
   if (!!user) {
     return (
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        <Typography
-          sx={{
-            color: "primary.main",
-            textAlign: "center",
-            width: "80%",
-          }}
-        >
+        <Typography sx={textStyles}>
           You must be authorized with the admin before you are able to use the
           site.
         </Typography>
-        <Typography
-          sx={{
-            color: "primary.main",
-            textAlign: "center",
-            width: "80%",
-          }}
-        >
+        <Typography sx={textStyles}>
           You can notify the admin that you would like to be an authorized user.
         </Typography>
         <Button
@@ -87,13 +82,7 @@ function UnauthorizedUser(props) {
 
   return (
     <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-      <Typography
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          width: "80%",
-        }}
-      >
+      <Typography sx={textStyles}>
         Please sign in with Google to use the app.
       </Typography>
     </Stack>
