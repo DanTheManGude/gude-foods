@@ -124,7 +124,7 @@ function Cookbook(props) {
                     </Button>
                   </Stack>
                   <Stack direction="row" spacing={1}>
-                    {!isFavorite && (
+                    {isFavorite && (
                       <Chip
                         key={"favorite"}
                         label={<StarOutlineIcon />}
