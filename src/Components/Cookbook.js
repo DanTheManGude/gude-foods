@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 import { updateRequest } from "../utils";
 
@@ -56,6 +57,7 @@ function Cookbook(props) {
         color="secondary"
         variant="outlined"
         size="small"
+        sx={{ width: "179px" }}
         onClick={() => {}}
       >
         <Typography>Advanced filters</Typography>
@@ -72,6 +74,7 @@ function Cookbook(props) {
             name = "Unknown name",
             ingredients = [],
             tags = [],
+            isFavorite = false,
           } = cookbook[recipeId];
 
           return (
@@ -87,7 +90,12 @@ function Cookbook(props) {
                     justifyContent="space-around"
                     alignItems="center"
                   >
-                    <Button color="secondary" variant="outlined" size="small">
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      size="small"
+                      sx={{ flex: 1, maxWidth: "170px" }}
+                    >
                       <Link to={`/recipe/${recipeId}/`}>
                         <Typography color="secondary">
                           View full recipe
@@ -98,6 +106,7 @@ function Cookbook(props) {
                       color="secondary"
                       variant="outlined"
                       size="small"
+                      sx={{ flex: 1, maxWidth: "170px" }}
                       onClick={() => {
                         updateRequest(
                           Object.keys(ingredients).reduce(
@@ -115,6 +124,15 @@ function Cookbook(props) {
                     </Button>
                   </Stack>
                   <Stack direction="row" spacing={1}>
+                    {isFavorite && (
+                      <Chip
+                        key={"favorite"}
+                        label={<StarOutlineIcon />}
+                        size="small"
+                        variant="outlined"
+                        color="tertiary"
+                      />
+                    )}
                     {tags.map((tagId) => (
                       <Chip
                         key={tagId}
