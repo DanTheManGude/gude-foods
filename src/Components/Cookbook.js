@@ -56,6 +56,7 @@ function Cookbook(props) {
         color="secondary"
         variant="outlined"
         size="small"
+        sx={{ width: "179px" }}
         onClick={() => {}}
       >
         <Typography>Advanced filters</Typography>
