@@ -88,7 +88,12 @@ function Cookbook(props) {
                     justifyContent="space-around"
                     alignItems="center"
                   >
-                    <Button color="secondary" variant="outlined" size="small">
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      size="small"
+                      sx={{ flex: 1, maxWidth: "170px" }}
+                    >
                       <Link to={`/recipe/${recipeId}/`}>
                         <Typography color="secondary">
                           View full recipe
@@ -99,6 +104,7 @@ function Cookbook(props) {
                       color="secondary"
                       variant="outlined"
                       size="small"
+                      sx={{ flex: 1, maxWidth: "170px" }}
                       onClick={() => {
                         updateRequest(
                           Object.keys(ingredients).reduce(
