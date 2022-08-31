@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 import { updateRequest } from "../utils";
 
@@ -73,6 +74,7 @@ function Cookbook(props) {
             name = "Unknown name",
             ingredients = [],
             tags = [],
+            isFavorite = false,
           } = cookbook[recipeId];
 
           return (
@@ -122,6 +124,15 @@ function Cookbook(props) {
                     </Button>
                   </Stack>
                   <Stack direction="row" spacing={1}>
+                    {!isFavorite && (
+                      <Chip
+                        key={"favorite"}
+                        label={<StarOutlineIcon />}
+                        size="small"
+                        variant="outlined"
+                        color="tertiary"
+                      />
+                    )}
                     {tags.map((tagId) => (
                       <Chip
                         key={tagId}
