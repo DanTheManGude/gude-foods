@@ -16,12 +16,15 @@ function Recipe(props) {
     tags: [],
     instructions: [],
     ingredients: {},
+    isFavorited: false,
   });
-  const [, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     if (pathParam === "create") {
       setIsEditing(true);
+      setIsCreating(true);
       setRecipeId(createKey("cookbook"));
     } else if (cookbook.hasOwnProperty(pathParam)) {
       setRecipeId(pathParam);
@@ -59,7 +62,9 @@ function Recipe(props) {
           textAlign: "center",
         }}
       >
-        {recipeEntry.name}
+        {`${
+          isEditing ? (isCreating ? "Creating new" : "Editing") : "Viewing"
+        } recipe`}
       </Typography>
       <Stack
         sx={{ paddingTop: "15px" }}
