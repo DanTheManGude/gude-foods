@@ -281,28 +281,6 @@ function ShoppingList(props) {
           }}
           renderInput={(params) => <TextField {...params} label="Enter item" />}
         />
-        {/* <FormControl size="small" variant="standard" sx={{ width: "206px" }}>
-          <InputLabel id="newFood">Enter item</InputLabel>
-          <Select
-            labelId={"newFood"}
-            id={"newFood"}
-            value={newFoodId || ""}
-            onChange={(event) => {
-              setNewFoodId(event.target.value);
-            }}
-          >
-            {[
-              <MenuItem value={null} key={"none"}>
-                <Typography component={"em"}>Enter item</Typography>
-              </MenuItem>,
-              ...Object.keys(glossary.basicFoods).map((basicFoodId) => (
-                <MenuItem value={basicFoodId} key={basicFoodId}>
-                  {glossary.basicFoods[basicFoodId]}
-                </MenuItem>
-              )),
-            ]}
-          </Select>
-        </FormControl> */}
         <TextField
           variant="outlined"
           label="Set amount"
