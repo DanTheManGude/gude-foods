@@ -270,16 +270,17 @@ function ShoppingList(props) {
         <Autocomplete
           id={"newFood"}
           options={Object.keys(glossary.basicFoods)}
-          value={newFoodId}
           getOptionLabel={(option) => glossary.basicFoods[option]}
           groupBy={(option) =>
             glossary.basicFoodTags[basicFoodTagAssociation[option]]
           }
-          sx={{ width: "206px" }}
+          getOptionDisabled={(option) => shoppingList.hasOwnProperty(option)}
+          value={newFoodId}
           onChange={(event, selectedOption) => {
             setNewFoodId(selectedOption);
           }}
           renderInput={(params) => <TextField {...params} label="Enter item" />}
+          sx={{ width: "206px" }}
         />
         <TextField
           variant="outlined"
