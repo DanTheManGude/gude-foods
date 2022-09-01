@@ -8,6 +8,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
+import Autocomplete from "@mui/material/Autocomplete";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -44,10 +45,10 @@ function ShoppingList(props) {
     setActiveEditingCollated({});
   };
 
-  const [newFoodId, setNewFoodId] = useState();
+  const [newFoodId, setNewFoodId] = useState(null);
   const [newFoodAmount, setNewFoodAmount] = useState("");
   const clearNewFood = () => {
-    setNewFoodId();
+    setNewFoodId(null);
     setNewFoodAmount("");
   };
 
@@ -266,7 +267,19 @@ function ShoppingList(props) {
   const renderNewItemControls = () => (
     <Stack direction="row" spacing={4}>
       <Stack spacing={1}>
-        <FormControl size="small" variant="standard" sx={{ width: "206px" }}>
+        <Autocomplete
+          id={"newFood"}
+          options={Object.keys(glossary.basicFoods)}
+          value={newFoodId}
+          getOptionLabel={(option) => glossary.basicFoods[option]}
+          //groupBy={(option) => option.firstLetter}
+          sx={{ width: "206px" }}
+          onChange={(event, selectedOption) => {
+            setNewFoodId(selectedOption);
+          }}
+          renderInput={(params) => <TextField {...params} label="Enter item" />}
+        />
+        {/* <FormControl size="small" variant="standard" sx={{ width: "206px" }}>
           <InputLabel id="newFood">Enter item</InputLabel>
           <Select
             labelId={"newFood"}
@@ -287,7 +300,7 @@ function ShoppingList(props) {
               )),
             ]}
           </Select>
-        </FormControl>
+        </FormControl> */}
         <TextField
           variant="outlined"
           label="Set amount"
