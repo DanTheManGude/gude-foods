@@ -9,10 +9,6 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
@@ -25,6 +21,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { updateRequest, deleteRequest } from "../utils";
 
 const UNKNOWN_TAG = "UNKNOWN_TAG";
+const unknownSectionName = "Unknown Section";
 
 function ShoppingList(props) {
   const {
@@ -272,9 +269,12 @@ function ShoppingList(props) {
           options={Object.keys(glossary.basicFoods)}
           getOptionLabel={(option) => glossary.basicFoods[option]}
           groupBy={(option) =>
-            glossary.basicFoodTags[basicFoodTagAssociation[option]]
+            glossary.basicFoodTags[basicFoodTagAssociation[option]] ||
+            unknownSectionName
           }
-          getOptionDisabled={(option) => shoppingList.hasOwnProperty(option)}
+          getOptionDisabled={(option) =>
+            shoppingList && shoppingList.hasOwnProperty(option)
+          }
           value={newFoodId}
           onChange={(event, selectedOption) => {
             setNewFoodId(selectedOption);
@@ -397,7 +397,7 @@ function ShoppingList(props) {
             <Accordion key={tagId} sx={{ width: "95%" }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 {tagId === UNKNOWN_TAG ? (
-                  <Typography variant="h6">Unknown Section</Typography>
+                  <Typography variant="h6">{unknownSectionName}</Typography>
                 ) : (
                   <Typography variant="h6">
                     {glossary.basicFoodTags[tagId]}
