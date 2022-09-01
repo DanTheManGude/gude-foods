@@ -272,7 +272,9 @@ function ShoppingList(props) {
           options={Object.keys(glossary.basicFoods)}
           value={newFoodId}
           getOptionLabel={(option) => glossary.basicFoods[option]}
-          //groupBy={(option) => option.firstLetter}
+          groupBy={(option) =>
+            glossary.basicFoodTags[basicFoodTagAssociation[option]]
+          }
           sx={{ width: "206px" }}
           onChange={(event, selectedOption) => {
             setNewFoodId(selectedOption);
