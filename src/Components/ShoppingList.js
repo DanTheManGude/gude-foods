@@ -8,10 +8,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
@@ -24,6 +21,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { updateRequest, deleteRequest } from "../utils";
 
 const UNKNOWN_TAG = "UNKNOWN_TAG";
+const unknownSectionName = "Unknown Section";
 
 function ShoppingList(props) {
   const {
@@ -44,10 +42,10 @@ function ShoppingList(props) {
     setActiveEditingCollated({});
   };
 
-  const [newFoodId, setNewFoodId] = useState();
+  const [newFoodId, setNewFoodId] = useState(null);
   const [newFoodAmount, setNewFoodAmount] = useState("");
   const clearNewFood = () => {
-    setNewFoodId();
+    setNewFoodId(null);
     setNewFoodAmount("");
   };
 
@@ -266,28 +264,24 @@ function ShoppingList(props) {
   const renderNewItemControls = () => (
     <Stack direction="row" spacing={4}>
       <Stack spacing={1}>
-        <FormControl size="small" variant="standard" sx={{ width: "206px" }}>
-          <InputLabel id="newFood">Enter item</InputLabel>
-          <Select
-            labelId={"newFood"}
-            id={"newFood"}
-            value={newFoodId || ""}
-            onChange={(event) => {
-              setNewFoodId(event.target.value);
-            }}
-          >
-            {[
-              <MenuItem value={null} key={"none"}>
-                <Typography component={"em"}>Enter item</Typography>
-              </MenuItem>,
-              ...Object.keys(glossary.basicFoods).map((basicFoodId) => (
-                <MenuItem value={basicFoodId} key={basicFoodId}>
-                  {glossary.basicFoods[basicFoodId]}
-                </MenuItem>
-              )),
-            ]}
-          </Select>
-        </FormControl>
+        <Autocomplete
+          id={"newFood"}
+          options={Object.keys(glossary.basicFoods)}
+          getOptionLabel={(option) => glossary.basicFoods[option]}
+          groupBy={(option) =>
+            glossary.basicFoodTags[basicFoodTagAssociation[option]] ||
+            unknownSectionName
+          }
+          getOptionDisabled={(option) =>
+            shoppingList && shoppingList.hasOwnProperty(option)
+          }
+          value={newFoodId}
+          onChange={(event, selectedOption) => {
+            setNewFoodId(selectedOption);
+          }}
+          renderInput={(params) => <TextField {...params} label="Enter item" />}
+          sx={{ width: "206px" }}
+        />
         <TextField
           variant="outlined"
           label="Set amount"
@@ -403,7 +397,7 @@ function ShoppingList(props) {
             <Accordion key={tagId} sx={{ width: "95%" }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 {tagId === UNKNOWN_TAG ? (
-                  <Typography variant="h6">Unknown Section</Typography>
+                  <Typography variant="h6">{unknownSectionName}</Typography>
                 ) : (
                   <Typography variant="h6">
                     {glossary.basicFoodTags[tagId]}
