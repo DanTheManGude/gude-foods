@@ -30,12 +30,12 @@ export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
     });
 };
 
-export const deleteRequest = (deletePaths = [], addAlert) => {
+export const deleteRequest = (deletePaths = [], onSuccess, onFailure) => {
   const updates = deletePaths.reduce(
     (acc, path) => ({ ...acc, [path]: null }),
     {}
   );
-  updateRequest(updates, addAlert);
+  updateRequest(updates, onSuccess, onFailure);
 };
 
 export const createKey = (path) => push(child(ref(getDatabase()), path)).key;

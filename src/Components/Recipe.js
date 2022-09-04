@@ -1,15 +1,20 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
 
-import { createKey, updateRequest } from "../utils";
+import { createKey, updateRequest, deleteRequest } from "../utils";
 
 function Recipe(props) {
   const { glossary, cookbook = {}, updatePath, addAlert } = props;
 
+  let navigate = useNavigate();
   const { recipeId: pathParam } = useParams();
   const [recipeId, setRecipeId] = useState();
   const [recipeEntry, setRecipeEntry] = useState({
@@ -21,6 +26,7 @@ function Recipe(props) {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   useEffect(() => {
     if (pathParam === "create") {
@@ -51,7 +57,7 @@ function Recipe(props) {
     );
   }
 
-  const handleSaveRecipe = () => {
+  const handleSave = () => {
     const { name, instructions, ingredients } = recipeEntry;
 
     if (!(!!name.length && !!instructions.length && !!ingredients.length)) {
@@ -73,6 +79,17 @@ function Recipe(props) {
     );
   };
 
+  const handleDelete = () => {
+    deleteRequest(
+      [`${updatePath}/${recipeId}`],
+      (successAlert) => {
+        addAlert(successAlert);
+        navigate(`/cookbook`);
+      },
+      addAlert
+    );
+  };
+
   return (
     <div>
       <Stack
@@ -87,19 +104,46 @@ function Recipe(props) {
           sx={{ width: "95%" }}
           spacing={3}
         >
-          <Button color="secondary" variant="outlined" size="small">
-            <Link to={`/cookbook`}>
-              <Typography color="secondary">Back to cookbook</Typography>
-            </Link>
-          </Button>
+          {!isCreating && isEditing ? (
+            <React.Fragment>
+              <Button
+                color="error"
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  setOpenDeleteDialog(true);
+                }}
+              >
+                <Typography>Delete</Typography>
+              </Button>
+              <Button
+                color="warning"
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  setRecipeEntry(cookbook[pathParam]);
+                  setIsEditing(false);
+                }}
+              >
+                <Typography>Cancel</Typography>
+              </Button>
+            </React.Fragment>
+          ) : (
+            <Button color="secondary" variant="outlined" size="small">
+              <Link to={`/cookbook`}>
+                <Typography color="secondary">Back to cookbook</Typography>
+              </Link>
+            </Button>
+          )}
+
           {isEditing ? (
             <Button
-              color="secondary"
+              color="success"
               variant="outlined"
               size="small"
-              onClick={handleSaveRecipe}
+              onClick={handleSave}
             >
-              <Typography>Save recipe</Typography>
+              <Typography>Save</Typography>
             </Button>
           ) : (
             <Button
@@ -126,6 +170,30 @@ function Recipe(props) {
           } recipe`}
         </Typography>
       </Stack>
+      <Dialog
+        sx={{ "& .MuiDialog-paper": { width: "80%" } }}
+        maxWidth="xs"
+        open={openDeleteDialog}
+        keepMounted
+      >
+        <DialogTitle color="primary">Confirm delete recipe</DialogTitle>
+        <DialogContent dividers>
+          <Typography>Do you want to delete this recipe?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            onClick={() => {
+              setOpenDeleteDialog(false);
+            }}
+          >
+            <Typography color="secondary">Cancel</Typography>
+          </Button>
+          <Button onClick={handleDelete}>
+            <Typography color="error.main">Delete</Typography>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
