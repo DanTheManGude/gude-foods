@@ -73,6 +73,7 @@ function Cookbook(props) {
         size="small"
         sx={{ width: "179px" }}
         onClick={() => {}}
+        disabled={true}
       >
         <Typography>Advanced filters</Typography>
       </Button>
