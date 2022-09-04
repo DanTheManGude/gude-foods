@@ -5,10 +5,10 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-import { createKey } from "../utils";
+import { createKey, updateRequest } from "../utils";
 
 function Recipe(props) {
-  const { glossary, cookbook = {} } = props;
+  const { glossary, cookbook = {}, updatePath, addAlert } = props;
 
   const { recipeId: pathParam } = useParams();
   const [recipeId, setRecipeId] = useState();
@@ -52,10 +52,25 @@ function Recipe(props) {
   }
 
   const handleSaveRecipe = () => {
-    console.log("saving");
+    const { name, instructions, ingredients } = recipeEntry;
 
-    setIsCreating(false);
-    setIsEditing(false);
+    if (!(!!name.length && !!instructions.length && !!ingredients.length)) {
+      addAlert({
+        message: <span>Please fill out the required fields.</span>,
+        alertProps: { severity: "warning" },
+      });
+      return;
+    }
+
+    updateRequest(
+      { [`${updatePath}/${recipeId}`]: recipeEntry },
+      (successAlert) => {
+        addAlert(successAlert);
+        setIsCreating(false);
+        setIsEditing(false);
+      },
+      addAlert
+    );
   };
 
   return (

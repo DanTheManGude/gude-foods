@@ -165,7 +165,12 @@ function App() {
       <Route
         path="recipe/:recipeId"
         element={
-          <Recipe glossary={glossary} cookbook={cookbook} addAlert={addAlert} />
+          <Recipe
+            glossary={glossary}
+            cookbook={cookbook}
+            updatePath={user ? `cookbook/${user.uid}` : ""}
+            addAlert={addAlert}
+          />
         }
       />
       <Route
