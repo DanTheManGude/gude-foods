@@ -31,6 +31,8 @@ function App() {
   const [shoppingList, setShoppingList] = useState();
   const [cookbook, setCookbook] = useState();
 
+  const [filteringOptions, setFilteringOptions] = useState();
+
   const prevUserRef = useRef();
 
   const addAlert = (alert, removalTime = 3001) => {
@@ -155,6 +157,8 @@ function App() {
             cookbook={cookbook}
             updatePath={user ? `shoppingList/${user.uid}` : ""}
             addAlert={addAlert}
+            filteringOptions={filteringOptions}
+            setFilteringOptions={setFilteringOptions}
           />
         }
       />

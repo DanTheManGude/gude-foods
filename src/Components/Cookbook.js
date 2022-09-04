@@ -18,9 +18,16 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { updateRequest } from "../utils";
 
 function Cookbook(props) {
-  const { glossary, cookbook = {}, updatePath, addAlert } = props;
+  const {
+    glossary,
+    cookbook = {},
+    updatePath,
+    addAlert,
+    filteringOptions = {},
+    setFilteringOptions,
+  } = props;
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const { searchTerm = "" } = filteringOptions;
 
   const renderSearchAndFilters = () => (
     <Stack
@@ -31,11 +38,15 @@ function Cookbook(props) {
       sx={{ width: "95%" }}
     >
       <TextField
+        key="search"
         variant="outlined"
         label={<Typography>Search</Typography>}
         value={searchTerm}
         onChange={(event) => {
-          setSearchTerm(event.target.value);
+          setFilteringOptions((_filteringOptions) => ({
+            ..._filteringOptions,
+            searchTerm: event.target.value,
+          }));
         }}
         InputProps={{
           endAdornment: searchTerm && (
@@ -43,7 +54,10 @@ function Cookbook(props) {
               <IconButton
                 sx={{ color: "alt.main" }}
                 onClick={() => {
-                  setSearchTerm("");
+                  setFilteringOptions((_filteringOptions) => ({
+                    ..._filteringOptions,
+                    searchTerm: "",
+                  }));
                 }}
                 edge="end"
               >
