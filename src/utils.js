@@ -11,16 +11,18 @@ const presentationNames = {
 
 export const getPresentationName = (key) => presentationNames[key];
 
-export const updateRequest = (updates, addAlert = () => {}) => {
+export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
     .then(() => {
-      addAlert({
+      onSuccess({
         message: <span>Succesfully completed updates.</span>,
         alertProps: { severity: "success" },
       });
     })
     .catch(() => {
-      addAlert({
+      const errorHandler = onFailure || onSuccess;
+
+      errorHandler({
         message: "The request did not go through.",
         title: "Error",
         alertProps: { severity: "error" },
