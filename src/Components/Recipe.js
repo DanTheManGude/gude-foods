@@ -12,7 +12,7 @@ import Dialog from "@mui/material/Dialog";
 import { createKey, updateRequest, deleteRequest } from "../utils";
 
 function Recipe(props) {
-  const { glossary, cookbook = {}, updatePath, addAlert } = props;
+  const { glossary, cookbook = {}, cookbookPath, addAlert } = props;
 
   let navigate = useNavigate();
   const { recipeId: pathParam } = useParams();
@@ -32,7 +32,7 @@ function Recipe(props) {
     if (pathParam === "create") {
       setIsEditing(true);
       setIsCreating(true);
-      setRecipeId(createKey("cookbook"));
+      setRecipeId(createKey(cookbookPath));
     } else if (cookbook.hasOwnProperty(pathParam)) {
       setRecipeId(pathParam);
       setRecipeEntry(cookbook[pathParam]);
@@ -69,7 +69,7 @@ function Recipe(props) {
     }
 
     updateRequest(
-      { [`${updatePath}/${recipeId}`]: recipeEntry },
+      { [`${cookbookPath}/${recipeId}`]: recipeEntry },
       (successAlert) => {
         addAlert(successAlert);
         setIsCreating(false);
@@ -81,7 +81,7 @@ function Recipe(props) {
 
   const handleDelete = () => {
     deleteRequest(
-      [`${updatePath}/${recipeId}`],
+      [`${cookbookPath}/${recipeId}`],
       (successAlert) => {
         addAlert(successAlert);
         navigate(`/cookbook`);

@@ -168,7 +168,7 @@ function App() {
           <Recipe
             glossary={glossary}
             cookbook={cookbook}
-            updatePath={user ? `cookbook/${user.uid}` : ""}
+            cookbookPath={user ? `cookbook/${user.uid}` : ""}
             addAlert={addAlert}
           />
         }
