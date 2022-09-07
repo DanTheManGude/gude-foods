@@ -15,7 +15,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Chip from "@mui/material/Chip";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import StarIcon from "@mui/icons-material/Star";
 
 import { createKey, updateRequest, deleteRequest } from "../utils";
 
@@ -255,7 +255,17 @@ function Recipe(props) {
         {isFavorite && (
           <Chip
             key={"favorite"}
-            label={<StarOutlineIcon />}
+            label={
+              <StarIcon
+                sx={{
+                  "&&": {
+                    color: "alt.main",
+                    margin: 0,
+                    marginLeft: "50%",
+                  },
+                }}
+              />
+            }
             size="small"
             variant="outlined"
             color="tertiary"

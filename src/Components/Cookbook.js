@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import StarIcon from "@mui/icons-material/Star";
 
 import { updateRequest } from "../utils";
 
@@ -141,7 +141,17 @@ function Cookbook(props) {
                     {isFavorite && (
                       <Chip
                         key={"favorite"}
-                        label={<StarOutlineIcon />}
+                        icon={
+                          <StarIcon
+                            sx={{
+                              "&&": {
+                                color: "alt.main",
+                                margin: 0,
+                                marginLeft: "50%",
+                              },
+                            }}
+                          />
+                        }
                         size="small"
                         variant="outlined"
                         color="tertiary"
