@@ -19,7 +19,13 @@ import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import { getPresentationName, updateRequest, createKey } from "../utils";
 
 function Glossary(props) {
-  const { glossary, basicFoodTagAssociation, addAlert } = props;
+  const {
+    glossary,
+    basicFoodTagAssociation,
+    addAlert,
+    glossaryUpdatePath,
+    basicFoodTagAssociationPath,
+  } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});
@@ -55,17 +61,16 @@ function Glossary(props) {
             let updateEntryKey = entryKey;
 
             if (isAddingValue) {
-              updateEntryKey = createKey(`glossary/${sectionKey}`);
+              updateEntryKey = createKey(`${glossaryUpdatePath}/${sectionKey}`);
             }
 
             const updates = {};
-            updates[`glossary/${sectionKey}/${updateEntryKey}`] = isEmptyValue
-              ? null
-              : editingEntry.value;
+            updates[`${glossaryUpdatePath}/${sectionKey}/${updateEntryKey}`] =
+              isEmptyValue ? null : editingEntry.value;
 
             if (isEmptyValue) {
               if (sectionKey === "basicFoods") {
-                updates[`basicFood-basicFoodTag/${entryKey}`] = null;
+                updates[`${basicFoodTagAssociationPath}/${entryKey}`] = null;
               }
             }
 

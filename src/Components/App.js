@@ -60,11 +60,11 @@ function App() {
 
     const db = getDatabase();
 
-    onValue(ref(db, "glossary"), (snapshot) => {
+    onValue(ref(db, `glossary/${user.uid}`), (snapshot) => {
       setGlossary(snapshot.val());
     });
 
-    onValue(ref(db, "basicFood-basicFoodTag"), (snapshot) => {
+    onValue(ref(db, `basicFood-basicFoodTag/${user.uid}`), (snapshot) => {
       setBasicFoodTagAssociation(snapshot.val());
     });
 
@@ -187,6 +187,10 @@ function App() {
           <Glossary
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
+            glossaryUpdatePath={user ? `glossary/${user.uid}` : ""}
+            basicFoodTagAssociationPath={
+              user ? `basicFood-basicFoodTag/${user.uid}` : ""
+            }
             addAlert={addAlert}
           />
         }
