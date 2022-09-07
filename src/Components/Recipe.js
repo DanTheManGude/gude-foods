@@ -7,6 +7,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -167,7 +168,7 @@ function Recipe(props) {
     const { ingredients } = recipeEntry;
 
     return (
-      <Accordion key={"ingredients"} sx={{ width: "95%", marginY: 1 }}>
+      <Accordion key={"ingredients"} sx={{ width: "100%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Ingredients</Typography>
         </AccordionSummary>
@@ -190,7 +191,7 @@ function Recipe(props) {
     const { instructions } = recipeEntry;
 
     return (
-      <Accordion key={"instructions"} sx={{ width: "95%" }}>
+      <Accordion key={"instructions"} sx={{ width: "100%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Instructions</Typography>
         </AccordionSummary>
@@ -207,15 +208,26 @@ function Recipe(props) {
     );
   };
 
+  const renderNotes = () => {
+    const { notes } = recipeEntry;
+
+    if (!!notes.size) {
+      return null;
+    }
+    return (
+      <Paper elevation={2} sx={{ width: "100%" }}>
+        <Box sx={{ padding: 2 }}>
+          <Typography variant="h6">Notes:</Typography>
+          <Typography fontFamily={"Bradley Hand"}>{notes}</Typography>
+        </Box>
+      </Paper>
+    );
+  };
+
   const renderTags = () => {
     const { tags, isFavorite } = recipeEntry;
     return (
-      <Stack
-        direction="row"
-        spacing={1}
-        key="tags"
-        sx={{ marginY: 2, width: "95%" }}
-      >
+      <Stack direction="row" spacing={1} key="tags" sx={{ width: "95%" }}>
         {isFavorite && (
           <Chip
             key={"favorite"}
@@ -235,18 +247,6 @@ function Recipe(props) {
           />
         ))}
       </Stack>
-    );
-  };
-
-  const renderNotes = () => {
-    const { notes } = recipeEntry;
-
-    return (
-      <Paper elevation={2} sx={{ width: "95%" }}>
-        <Typography sx={{ padding: 2 }} fontFamily={"cursive"}>
-          {notes}
-        </Typography>
-      </Paper>
     );
   };
 
@@ -299,10 +299,12 @@ function Recipe(props) {
             isCreating ? "Creating new" : isEditing ? "Editing" : "Viewing"
           } recipe`}
         </Typography>
-        {renderIngredients()}
-        {renderInstructions()}
-        {renderTags()}
-        {renderNotes()}
+        <Stack key="contents" spacing={2} sx={{ width: "95%" }}>
+          {renderIngredients()}
+          {renderInstructions()}
+          {renderNotes()}
+          {renderTags()}
+        </Stack>
       </Stack>
       {renderDeleteDialog()}
     </div>
