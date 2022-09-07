@@ -118,9 +118,9 @@ function App() {
     <List
       sx={{
         width: "100%",
-        marginTop: "55px",
         zIndex: 9000,
-        position: "absolute",
+        top: "55px",
+        position: "fixed",
       }}
       spacing={8}
     >
