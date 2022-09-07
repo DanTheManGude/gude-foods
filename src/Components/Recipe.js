@@ -30,7 +30,7 @@ function Recipe(props) {
     tags: [],
     instructions: [],
     ingredients: {},
-    isFavorited: false,
+    isFavorite: false,
     notes: "",
   });
   const [isEditing, setIsEditing] = useState(false);
@@ -46,7 +46,7 @@ function Recipe(props) {
       setRecipeId(pathParam);
       setRecipeEntry(cookbook[pathParam]);
     }
-  }, [pathParam, cookbook]);
+  }, [pathParam, cookbook, cookbookPath]);
 
   if (!glossary) {
     return null;
@@ -171,7 +171,7 @@ function Recipe(props) {
   );
 
   const renderName = () => {
-    const { name } = recipeEntry;
+    const { name = "" } = recipeEntry;
 
     return (
       <Typography
@@ -181,6 +181,7 @@ function Recipe(props) {
           color: "primary.main",
           textAlign: "left",
           width: "100%",
+          marginBottom: 1,
         }}
       >
         {name}
@@ -189,7 +190,7 @@ function Recipe(props) {
   };
 
   const renderIngredients = () => {
-    const { ingredients } = recipeEntry;
+    const { ingredients = {} } = recipeEntry;
 
     return (
       <Accordion key={"ingredients"} sx={{ width: "100%" }}>
@@ -212,7 +213,7 @@ function Recipe(props) {
   };
 
   const renderInstructions = () => {
-    const { instructions } = recipeEntry;
+    const { instructions = [] } = recipeEntry;
 
     return (
       <Accordion key={"instructions"} sx={{ width: "100%" }}>
@@ -233,9 +234,9 @@ function Recipe(props) {
   };
 
   const renderNotes = () => {
-    const { notes } = recipeEntry;
+    const { notes = "" } = recipeEntry;
 
-    if (!!notes.size) {
+    if (!notes.length) {
       return null;
     }
     return (
@@ -249,7 +250,7 @@ function Recipe(props) {
   };
 
   const renderTags = () => {
-    const { tags, isFavorite } = recipeEntry;
+    const { tags = [], isFavorite = false } = recipeEntry;
     return (
       <Stack direction="row" spacing={1} key="tags" sx={{ width: "95%" }}>
         {isFavorite && (
@@ -260,10 +261,10 @@ function Recipe(props) {
                 sx={{
                   "&&": {
                     color: "alt.main",
-                    margin: 0,
-                    marginLeft: "50%",
+                    verticalAlign: "bottom",
                   },
                 }}
+                fontSize="small"
               />
             }
             size="small"

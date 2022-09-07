@@ -141,15 +141,15 @@ function Cookbook(props) {
                     {isFavorite && (
                       <Chip
                         key={"favorite"}
-                        icon={
+                        label={
                           <StarIcon
                             sx={{
                               "&&": {
                                 color: "alt.main",
-                                margin: 0,
-                                marginLeft: "50%",
+                                verticalAlign: "bottom",
                               },
                             }}
+                            fontSize="small"
                           />
                         }
                         size="small"
