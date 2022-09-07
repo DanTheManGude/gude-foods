@@ -172,6 +172,7 @@ function Recipe(props) {
               <Typography sx={{ fontWeight: 700 }}>
                 {glossary.basicFoods[ingredientId]}:
               </Typography>
+              &nbsp;
               <Typography>{ingredients[ingredientId]}</Typography>
             </Stack>
           ))}
@@ -180,7 +181,26 @@ function Recipe(props) {
     );
   };
 
-  const renderInstructions = () => null;
+  const renderInstructions = () => {
+    const { instructions } = recipeEntry;
+
+    return (
+      <Accordion key={"ingredients"} sx={{ width: "95%" }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Instructions</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {instructions.map((instructionText, index) => (
+            <Stack key={index} direction="row">
+              <Typography sx={{ fontWeight: 700 }}>{index + 1}:</Typography>
+              &nbsp;
+              <Typography>{instructionText}</Typography>
+            </Stack>
+          ))}
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
 
   const renderTags = () => null;
 
@@ -233,6 +253,7 @@ function Recipe(props) {
             isCreating ? "Creating new" : isEditing ? "Editing" : "Viewing"
           } recipe`}
         </Typography>
+
         {renderIngredients()}
         {renderInstructions()}
         {renderTags()}
