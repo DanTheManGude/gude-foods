@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import Paper from "@mui/material/Paper";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -29,6 +30,7 @@ function Recipe(props) {
     instructions: [],
     ingredients: {},
     isFavorited: false,
+    notes: "",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -236,7 +238,17 @@ function Recipe(props) {
     );
   };
 
-  const renderNotes = () => null;
+  const renderNotes = () => {
+    const { notes } = recipeEntry;
+
+    return (
+      <Paper elevation={2} sx={{ width: "95%" }}>
+        <Typography sx={{ padding: 2 }} fontFamily={"cursive"}>
+          {notes}
+        </Typography>
+      </Paper>
+    );
+  };
 
   const renderDeleteDialog = () => (
     <Dialog
