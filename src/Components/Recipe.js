@@ -174,7 +174,7 @@ function Recipe(props) {
         <AccordionDetails>
           {Object.keys(ingredients).map((ingredientId) => (
             <Stack key={ingredientId} direction="row">
-              <Typography sx={{ fontWeight: 700 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
                 {glossary.basicFoods[ingredientId]}:
               </Typography>
               &nbsp;

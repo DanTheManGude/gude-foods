@@ -125,7 +125,7 @@ function ShoppingList(props) {
                 });
               }}
             />
-            <Typography sx={{ fontWeight: 600 }}>
+            <Typography sx={{ fontWeight: "medium" }}>
               {glossary.basicFoods[basicFoodId]}
             </Typography>
             {collatedAmount && <Typography>: {collatedAmount}</Typography>}
@@ -225,7 +225,12 @@ function ShoppingList(props) {
     }
 
     return (
-      <Stack direction="row" spacing={2} sx={{ paddingTop: "12px" }}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ paddingTop: "12px" }}
+        alignItems="center"
+      >
         <Button
           color="secondary"
           variant="contained"
@@ -338,7 +343,7 @@ function ShoppingList(props) {
       return (
         <Accordion
           key={"emptyChecked"}
-          sx={{ width: "95%" }}
+          sx={{ width: "100%" }}
           disabled={true}
           expanded={false}
         >
@@ -352,7 +357,7 @@ function ShoppingList(props) {
     }
 
     return (
-      <Accordion key={"checked"} sx={{ width: "95%" }}>
+      <Accordion key={"checked"} sx={{ width: "100%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6" component={"em"}>
             Checked
@@ -394,7 +399,7 @@ function ShoppingList(props) {
       >
         <Stack sx={{ width: "95%" }} spacing={0}>
           {Object.keys(shoppingMap.unchecked).map((tagId) => (
-            <Accordion key={tagId} sx={{ width: "95%" }}>
+            <Accordion key={tagId} sx={{ width: "100%" }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 {tagId === UNKNOWN_TAG ? (
                   <Typography variant="h6">{unknownSectionName}</Typography>
