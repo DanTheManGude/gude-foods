@@ -90,6 +90,98 @@ function Recipe(props) {
     );
   };
 
+  const renderTopButtonControls = () => (
+    <Stack
+      direction="row"
+      justifyContent="space-around"
+      alignItems="center"
+      sx={{ width: "95%" }}
+      spacing={3}
+    >
+      {!isCreating && isEditing ? (
+        <React.Fragment>
+          <Button
+            color="error"
+            variant="outlined"
+            size="small"
+            onClick={() => {
+              setOpenDeleteDialog(true);
+            }}
+          >
+            <Typography>Delete</Typography>
+          </Button>
+          <Button
+            color="warning"
+            variant="outlined"
+            size="small"
+            onClick={() => {
+              setRecipeEntry(cookbook[pathParam]);
+              setIsEditing(false);
+            }}
+          >
+            <Typography>Cancel</Typography>
+          </Button>
+        </React.Fragment>
+      ) : (
+        <Button color="secondary" variant="outlined" size="small">
+          <Link to={`/cookbook`}>
+            <Typography color="secondary">Back to cookbook</Typography>
+          </Link>
+        </Button>
+      )}
+
+      {isEditing ? (
+        <Button
+          color="success"
+          variant="outlined"
+          size="small"
+          onClick={handleSave}
+        >
+          <Typography>Save</Typography>
+        </Button>
+      ) : (
+        <Button
+          color="secondary"
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            setIsEditing(true);
+          }}
+        >
+          <Typography>Edit recipe</Typography>
+        </Button>
+      )}
+    </Stack>
+  );
+
+  const renderDeleteDialog = () => (
+    <Dialog
+      sx={{ "& .MuiDialog-paper": { width: "80%" } }}
+      maxWidth="xs"
+      open={openDeleteDialog}
+      keepMounted
+    >
+      <DialogTitle color="primary">Confirm delete recipe</DialogTitle>
+      <DialogContent dividers>
+        <Typography>Do you want to delete this recipe?</Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          autoFocus
+          onClick={() => {
+            setOpenDeleteDialog(false);
+          }}
+          color="secondary"
+        >
+          <Typography>Cancel</Typography>
+        </Button>
+        <Button onClick={handleDelete} color="error">
+          <Typography>Delete</Typography>
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   return (
     <div>
       <Stack
@@ -97,67 +189,7 @@ function Recipe(props) {
         spacing={3}
         alignItems="center"
       >
-        <Stack
-          direction="row"
-          justifyContent="space-around"
-          alignItems="center"
-          sx={{ width: "95%" }}
-          spacing={3}
-        >
-          {!isCreating && isEditing ? (
-            <React.Fragment>
-              <Button
-                color="error"
-                variant="outlined"
-                size="small"
-                onClick={() => {
-                  setOpenDeleteDialog(true);
-                }}
-              >
-                <Typography>Delete</Typography>
-              </Button>
-              <Button
-                color="warning"
-                variant="outlined"
-                size="small"
-                onClick={() => {
-                  setRecipeEntry(cookbook[pathParam]);
-                  setIsEditing(false);
-                }}
-              >
-                <Typography>Cancel</Typography>
-              </Button>
-            </React.Fragment>
-          ) : (
-            <Button color="secondary" variant="outlined" size="small">
-              <Link to={`/cookbook`}>
-                <Typography color="secondary">Back to cookbook</Typography>
-              </Link>
-            </Button>
-          )}
-
-          {isEditing ? (
-            <Button
-              color="success"
-              variant="outlined"
-              size="small"
-              onClick={handleSave}
-            >
-              <Typography>Save</Typography>
-            </Button>
-          ) : (
-            <Button
-              color="secondary"
-              variant="outlined"
-              size="small"
-              onClick={() => {
-                setIsEditing(true);
-              }}
-            >
-              <Typography>Edit recipe</Typography>
-            </Button>
-          )}
-        </Stack>
+        {renderTopButtonControls()}
         <Typography
           variant="h4"
           sx={{
@@ -170,30 +202,7 @@ function Recipe(props) {
           } recipe`}
         </Typography>
       </Stack>
-      <Dialog
-        sx={{ "& .MuiDialog-paper": { width: "80%" } }}
-        maxWidth="xs"
-        open={openDeleteDialog}
-        keepMounted
-      >
-        <DialogTitle color="primary">Confirm delete recipe</DialogTitle>
-        <DialogContent dividers>
-          <Typography>Do you want to delete this recipe?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            autoFocus
-            onClick={() => {
-              setOpenDeleteDialog(false);
-            }}
-          >
-            <Typography color="secondary">Cancel</Typography>
-          </Button>
-          <Button onClick={handleDelete}>
-            <Typography color="error.main">Delete</Typography>
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {renderDeleteDialog()}
     </div>
   );
 }
