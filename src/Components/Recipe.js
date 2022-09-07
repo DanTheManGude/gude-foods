@@ -96,6 +96,7 @@ function Recipe(props) {
 
   const renderTopButtonControls = () => (
     <Stack
+      key="buttonControl"
       direction="row"
       justifyContent="space-around"
       alignItems="center"
@@ -185,7 +186,7 @@ function Recipe(props) {
     const { instructions } = recipeEntry;
 
     return (
-      <Accordion key={"ingredients"} sx={{ width: "95%" }}>
+      <Accordion key={"instructions"} sx={{ width: "95%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Instructions</Typography>
         </AccordionSummary>
@@ -238,22 +239,23 @@ function Recipe(props) {
     <div>
       <Stack
         sx={{ paddingTop: "15px", width: "100%" }}
-        spacing={3}
+        spacing={0}
         alignItems="center"
       >
         {renderTopButtonControls()}
         <Typography
+          key="title"
           variant="h4"
           sx={{
             color: "primary.main",
             textAlign: "center",
+            marginY: 3,
           }}
         >
           {`${
             isCreating ? "Creating new" : isEditing ? "Editing" : "Viewing"
           } recipe`}
         </Typography>
-
         {renderIngredients()}
         {renderInstructions()}
         {renderTags()}
