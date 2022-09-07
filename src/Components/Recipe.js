@@ -69,7 +69,13 @@ function Recipe(props) {
   const handleSave = () => {
     const { name, instructions, ingredients } = recipeEntry;
 
-    if (!(!!name.length && !!instructions.length && !!ingredients.length)) {
+    if (
+      !(
+        !!name.length &&
+        !!instructions.length &&
+        !!Object.keys(ingredients).length
+      )
+    ) {
       addAlert({
         message: <span>Please fill out the required fields.</span>,
         alertProps: { severity: "warning" },
