@@ -12,6 +12,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import Chip from "@mui/material/Chip";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 import { createKey, updateRequest, deleteRequest } from "../utils";
 
@@ -163,7 +165,7 @@ function Recipe(props) {
     const { ingredients } = recipeEntry;
 
     return (
-      <Accordion key={"ingredients"} sx={{ width: "95%" }}>
+      <Accordion key={"ingredients"} sx={{ width: "95%", marginY: 1 }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Ingredients</Typography>
         </AccordionSummary>
@@ -203,7 +205,36 @@ function Recipe(props) {
     );
   };
 
-  const renderTags = () => null;
+  const renderTags = () => {
+    const { tags, isFavorite } = recipeEntry;
+    return (
+      <Stack
+        direction="row"
+        spacing={1}
+        key="tags"
+        sx={{ marginY: 2, width: "95%" }}
+      >
+        {isFavorite && (
+          <Chip
+            key={"favorite"}
+            label={<StarOutlineIcon />}
+            size="small"
+            variant="outlined"
+            color="tertiary"
+          />
+        )}
+        {tags.map((tagId) => (
+          <Chip
+            key={tagId}
+            label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
+            size="small"
+            variant="outlined"
+            color="tertiary"
+          />
+        ))}
+      </Stack>
+    );
+  };
 
   const renderNotes = () => null;
 
