@@ -3,6 +3,10 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -154,6 +158,34 @@ function Recipe(props) {
     </Stack>
   );
 
+  const renderIngredients = () => {
+    const { ingredients } = recipeEntry;
+
+    return (
+      <Accordion key={"ingredients"} sx={{ width: "95%" }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Ingredients</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {Object.keys(ingredients).map((ingredientId) => (
+            <Stack key={ingredientId} direction="row">
+              <Typography sx={{ fontWeight: 700 }}>
+                {glossary.basicFoods[ingredientId]}:
+              </Typography>
+              <Typography>{ingredients[ingredientId]}</Typography>
+            </Stack>
+          ))}
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
+
+  const renderInstructions = () => null;
+
+  const renderTags = () => null;
+
+  const renderNotes = () => null;
+
   const renderDeleteDialog = () => (
     <Dialog
       sx={{ "& .MuiDialog-paper": { width: "80%" } }}
@@ -201,6 +233,10 @@ function Recipe(props) {
             isCreating ? "Creating new" : isEditing ? "Editing" : "Viewing"
           } recipe`}
         </Typography>
+        {renderIngredients()}
+        {renderInstructions()}
+        {renderTags()}
+        {renderNotes()}
       </Stack>
       {renderDeleteDialog()}
     </div>
