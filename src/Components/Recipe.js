@@ -164,6 +164,24 @@ function Recipe(props) {
     </Stack>
   );
 
+  const renderName = () => {
+    const { name } = recipeEntry;
+
+    return (
+      <Typography
+        key="title"
+        variant="h5"
+        sx={{
+          color: "primary.main",
+          textAlign: "left",
+          width: "100%",
+        }}
+      >
+        {name}
+      </Typography>
+    );
+  };
+
   const renderIngredients = () => {
     const { ingredients } = recipeEntry;
 
@@ -286,20 +304,8 @@ function Recipe(props) {
         alignItems="center"
       >
         {renderTopButtonControls()}
-        <Typography
-          key="title"
-          variant="h4"
-          sx={{
-            color: "primary.main",
-            textAlign: "center",
-            marginY: 3,
-          }}
-        >
-          {`${
-            isCreating ? "Creating new" : isEditing ? "Editing" : "Viewing"
-          } recipe`}
-        </Typography>
-        <Stack key="contents" spacing={2} sx={{ width: "95%" }}>
+        <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
+          {renderName()}
           {renderIngredients()}
           {renderInstructions()}
           {renderNotes()}
