@@ -15,6 +15,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
 import Chip from "@mui/material/Chip";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
@@ -57,11 +58,14 @@ function Recipe(props) {
       ...setter(_recipeEntry),
     }));
   };
+  const updateNotes = (notes) => {
+    updateRecipe({ notes });
+  };
+  const updateIsFavorite = (isFavorite) => {
+    updateRecipe({ isFavorite });
+  };
   const updateTags = (setter) => {
     updateRecipe((_recipeEntry) => ({ tags: setter(_recipeEntry.tags) }));
-  };
-  const updateIsFavorite = (newIsFavorite) => {
-    updateRecipe({ isFavorite: newIsFavorite });
   };
 
   if (!glossary) {
@@ -252,14 +256,28 @@ function Recipe(props) {
   const renderNotes = () => {
     const { notes = "" } = recipeEntry;
 
-    if (!notes.length) {
+    if (!notes.length && !isEditing) {
       return null;
     }
+
     return (
       <Paper elevation={2} sx={{ width: "100%" }}>
         <Box sx={{ padding: 2 }}>
-          <Typography variant="h6">Notes:</Typography>
-          <Typography fontFamily={"Bradley Hand"}>{notes}</Typography>
+          {isEditing ? (
+            <TextField
+              label="Enter Notes"
+              fullWidth
+              multiline
+              value={notes}
+              onChange={(event) => {
+                updateNotes(event.target.value);
+              }}
+              variant="standard"
+              InputProps={{ sx: { fontFamily: "Bradley Hand" } }}
+            />
+          ) : (
+            <Typography fontFamily={"Bradley Hand"}>{notes}</Typography>
+          )}
         </Box>
       </Paper>
     );
