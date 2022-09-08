@@ -249,6 +249,18 @@ function Recipe(props) {
     );
   };
 
+  const getTagOnDelete = (tagId) => {
+    if (!isEditing) {
+      return undefined;
+    }
+    return () => {
+      setRecipeEntry((_recipeEntry) => ({
+        ..._recipeEntry,
+        tags: _recipeEntry.tags.filter((tag) => tag !== tagId),
+      }));
+    };
+  };
+
   const renderTags = () => {
     const { tags = [], isFavorite = false } = recipeEntry;
     return (
@@ -279,6 +291,7 @@ function Recipe(props) {
             size="small"
             variant="outlined"
             color="tertiary"
+            onDelete={getTagOnDelete(tagId)}
           />
         ))}
       </Stack>
