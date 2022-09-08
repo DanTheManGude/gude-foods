@@ -16,6 +16,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
@@ -61,6 +63,11 @@ function Recipe(props) {
   const updateName = (name) => {
     updateRecipe({ name });
   };
+  const updateInstructions = (setter) => {
+    updateRecipe((_recipeEntry) => ({
+      instructions: setter(_recipeEntry.instructions),
+    }));
+  };
   const updateNotes = (notes) => {
     updateRecipe({ notes });
   };
@@ -69,6 +76,18 @@ function Recipe(props) {
   };
   const updateTags = (setter) => {
     updateRecipe((_recipeEntry) => ({ tags: setter(_recipeEntry.tags) }));
+  };
+
+  const updateStep = (index, value) => {
+    updateInstructions((_instructions) => {
+      _instructions[index] = value;
+      return _instructions;
+    });
+  };
+  const moveStep = (oldIndex, newIndex) => {
+    updateInstructions((_instructions) => {
+      return _instructions;
+    });
   };
 
   if (!glossary) {
@@ -138,7 +157,7 @@ function Recipe(props) {
       spacing={3}
     >
       {!isCreating && isEditing ? (
-        <React.Fragment>
+        <>
           <Button
             color="error"
             variant="outlined"
@@ -160,7 +179,7 @@ function Recipe(props) {
           >
             <Typography>Cancel</Typography>
           </Button>
-        </React.Fragment>
+        </>
       ) : (
         <Button color="secondary" variant="outlined" size="small">
           <Link to={`/cookbook`}>
@@ -261,13 +280,49 @@ function Recipe(props) {
           <Typography variant="h6">Instructions</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {instructions.map((instructionText, index) => (
-            <Stack key={index} direction="row">
-              <Typography sx={{ fontWeight: 700 }}>{index + 1}:</Typography>
-              &nbsp;
-              <Typography>{instructionText}</Typography>
-            </Stack>
-          ))}
+          <Stack spacing={isEditing ? 2 : 1}>
+            {instructions.map((instructionText, index) => (
+              <Stack key={index} direction="row" alignItems="center">
+                {isEditing ? (
+                  <>
+                    <Select
+                      size="small"
+                      value={index}
+                      onChange={(event) => {
+                        moveStep(index, event.target.value);
+                      }}
+                    >
+                      {instructions.map((t, i) => (
+                        <MenuItem key={i} value={i}>
+                          {i + 1}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <Typography sx={{ fontWeight: 700 }}>:</Typography>
+                    &nbsp;
+                    <TextField
+                      placeholder="Edit step"
+                      value={instructionText}
+                      onChange={(event) => {
+                        updateStep(index, event.target.value);
+                      }}
+                      size="small"
+                      fullWidth={true}
+                      variant="outlined"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {index + 1}:
+                    </Typography>
+                    &nbsp;
+                    <Typography>{instructionText}</Typography>
+                  </>
+                )}
+              </Stack>
+            ))}
+          </Stack>
         </AccordionDetails>
       </Accordion>
     );
