@@ -86,6 +86,9 @@ function Recipe(props) {
   };
   const moveStep = (oldIndex, newIndex) => {
     updateInstructions((_instructions) => {
+      const step = _instructions[oldIndex];
+      _instructions.splice(oldIndex, 1);
+      _instructions.splice(newIndex, 0, step);
       return _instructions;
     });
   };
@@ -281,47 +284,54 @@ function Recipe(props) {
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={isEditing ? 2 : 1}>
-            {instructions.map((instructionText, index) => (
-              <Stack key={index} direction="row" alignItems="center">
-                {isEditing ? (
-                  <>
-                    <Select
-                      size="small"
-                      value={index}
-                      onChange={(event) => {
-                        moveStep(index, event.target.value);
-                      }}
-                    >
-                      {instructions.map((t, i) => (
-                        <MenuItem key={i} value={i}>
-                          {i + 1}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <Typography sx={{ fontWeight: 700 }}>:</Typography>
-                    &nbsp;
-                    <TextField
-                      placeholder="Edit step"
-                      value={instructionText}
-                      onChange={(event) => {
-                        updateStep(index, event.target.value);
-                      }}
-                      size="small"
-                      fullWidth={true}
-                      variant="outlined"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Typography sx={{ fontWeight: 700 }}>
-                      {index + 1}:
-                    </Typography>
-                    &nbsp;
-                    <Typography>{instructionText}</Typography>
-                  </>
-                )}
-              </Stack>
-            ))}
+            {instructions.map((instructionText, index) => {
+              return (
+                <Stack key={index} direction="row" alignItems="center">
+                  {isEditing ? (
+                    <>
+                      <Select
+                        size="small"
+                        value={index}
+                        onChange={(event) => {
+                          moveStep(index, event.target.value);
+                        }}
+                        onClose={() => {
+                          setTimeout(() => {
+                            document.activeElement.blur();
+                          }, 100);
+                        }}
+                      >
+                        {instructions.map((t, i) => (
+                          <MenuItem key={i} value={i}>
+                            {i + 1}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <Typography sx={{ fontWeight: 700 }}>:</Typography>
+                      &nbsp;
+                      <TextField
+                        placeholder="Edit step"
+                        value={instructionText}
+                        onChange={(event) => {
+                          updateStep(index, event.target.value);
+                        }}
+                        size="small"
+                        fullWidth={true}
+                        variant="outlined"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Typography sx={{ fontWeight: 700 }}>
+                        {index + 1}:
+                      </Typography>
+                      &nbsp;
+                      <Typography>{instructionText}</Typography>
+                    </>
+                  )}
+                </Stack>
+              );
+            })}
           </Stack>
         </AccordionDetails>
       </Accordion>
