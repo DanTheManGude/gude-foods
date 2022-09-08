@@ -42,6 +42,8 @@ function Recipe(props) {
   const [isCreating, setIsCreating] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
+  const [newStep, setNewStep] = useState("");
+
   useEffect(() => {
     if (pathParam === "create") {
       setIsEditing(true);
@@ -91,6 +93,12 @@ function Recipe(props) {
       _instructions.splice(newIndex, 0, step);
       return _instructions;
     });
+  };
+  const addStep = () => {
+    updateInstructions((_instructions) => {
+      return _instructions.concat(newStep);
+    });
+    setNewStep("");
   };
 
   if (!glossary) {
@@ -284,54 +292,83 @@ function Recipe(props) {
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={isEditing ? 2 : 1}>
-            {instructions.map((instructionText, index) => {
-              return (
-                <Stack key={index} direction="row" alignItems="center">
-                  {isEditing ? (
+            {instructions
+              .map((instructionText, index) => {
+                return (
+                  <Stack key={index} direction="row" alignItems="center">
+                    {isEditing ? (
+                      <>
+                        <Select
+                          size="small"
+                          value={index}
+                          onChange={(event) => {
+                            moveStep(index, event.target.value);
+                          }}
+                          onClose={() => {
+                            setTimeout(() => {
+                              document.activeElement.blur();
+                            }, 100);
+                          }}
+                        >
+                          {instructions.map((t, i) => (
+                            <MenuItem key={i} value={i}>
+                              {i + 1}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <Typography sx={{ fontWeight: 700 }}>:</Typography>
+                        &nbsp;
+                        <TextField
+                          placeholder="Edit step"
+                          value={instructionText}
+                          onChange={(event) => {
+                            setNewStep(index, event.target.value);
+                          }}
+                          size="small"
+                          fullWidth={true}
+                          variant="outlined"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Typography sx={{ fontWeight: 700 }}>
+                          {index + 1}:
+                        </Typography>
+                        &nbsp;
+                        <Typography>{instructionText}</Typography>
+                      </>
+                    )}
+                  </Stack>
+                );
+              })
+              .concat(
+                isEditing ? (
+                  <Stack key={"addStep"} direction="row" alignItems="center">
                     <>
-                      <Select
+                      <Button
+                        color="secondary"
+                        variant="outlined"
                         size="small"
-                        value={index}
-                        onChange={(event) => {
-                          moveStep(index, event.target.value);
-                        }}
-                        onClose={() => {
-                          setTimeout(() => {
-                            document.activeElement.blur();
-                          }, 100);
-                        }}
+                        onClick={addStep}
+                        sx={{ minWidth: "55px", height: "40px" }}
                       >
-                        {instructions.map((t, i) => (
-                          <MenuItem key={i} value={i}>
-                            {i + 1}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      <Typography sx={{ fontWeight: 700 }}>:</Typography>
-                      &nbsp;
+                        <Typography>Add</Typography>
+                      </Button>
+                      &nbsp; &nbsp;
                       <TextField
-                        placeholder="Edit step"
-                        value={instructionText}
+                        placeholder="Enter new step"
                         onChange={(event) => {
-                          updateStep(index, event.target.value);
+                          setNewStep(event.target.value);
                         }}
                         size="small"
                         fullWidth={true}
                         variant="outlined"
+                        value={newStep}
                       />
                     </>
-                  ) : (
-                    <>
-                      <Typography sx={{ fontWeight: 700 }}>
-                        {index + 1}:
-                      </Typography>
-                      &nbsp;
-                      <Typography>{instructionText}</Typography>
-                    </>
-                  )}
-                </Stack>
-              );
-            })}
+                  </Stack>
+                ) : null
+              )}
           </Stack>
         </AccordionDetails>
       </Accordion>
