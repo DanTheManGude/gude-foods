@@ -58,6 +58,9 @@ function Recipe(props) {
       ...setter(_recipeEntry),
     }));
   };
+  const updateName = (name) => {
+    updateRecipe({ name });
+  };
   const updateNotes = (notes) => {
     updateRecipe({ notes });
   };
@@ -193,6 +196,23 @@ function Recipe(props) {
   const renderName = () => {
     const { name = "" } = recipeEntry;
 
+    if (isEditing) {
+      const error = !name.length;
+      return (
+        <TextField
+          label="Title"
+          variant="filled"
+          error={error}
+          helperText={error && "Enter something"}
+          multiline={true}
+          value={name}
+          onChange={(event) => {
+            updateName(event.target.value);
+          }}
+        />
+      );
+    }
+
     return (
       <Typography
         key="title"
@@ -266,8 +286,8 @@ function Recipe(props) {
           {isEditing ? (
             <TextField
               label="Enter Notes"
-              fullWidth
-              multiline
+              fullWidth={true}
+              multiline={true}
               value={notes}
               onChange={(event) => {
                 updateNotes(event.target.value);
