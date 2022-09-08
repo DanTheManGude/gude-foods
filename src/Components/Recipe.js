@@ -80,17 +80,13 @@ function Recipe(props) {
     updateRecipe((_recipeEntry) => ({ tags: setter(_recipeEntry.tags) }));
   };
 
-  const updateStep = (index, value) => {
-    updateInstructions((_instructions) => {
-      _instructions[index] = value;
-      return _instructions;
-    });
-  };
   const moveStep = (oldIndex, newIndex) => {
     updateInstructions((_instructions) => {
       const step = _instructions[oldIndex];
       _instructions.splice(oldIndex, 1);
-      _instructions.splice(newIndex, 0, step);
+      if (newIndex >= 0) {
+        _instructions.splice(newIndex, 0, step);
+      }
       return _instructions;
     });
   };
@@ -310,11 +306,17 @@ function Recipe(props) {
                             }, 100);
                           }}
                         >
-                          {instructions.map((t, i) => (
-                            <MenuItem key={i} value={i}>
-                              {i + 1}
-                            </MenuItem>
-                          ))}
+                          {instructions
+                            .map((t, i) => (
+                              <MenuItem key={i} value={i}>
+                                {i + 1}
+                              </MenuItem>
+                            ))
+                            .concat(
+                              <MenuItem key={"delete"} value={-1}>
+                                Remove
+                              </MenuItem>
+                            )}
                         </Select>
                         <Typography sx={{ fontWeight: 700 }}>:</Typography>
                         &nbsp;
