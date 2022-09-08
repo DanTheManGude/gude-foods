@@ -9,6 +9,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -47,6 +48,20 @@ function Recipe(props) {
       setRecipeEntry(cookbook[pathParam]);
     }
   }, [pathParam, cookbook, cookbookPath]);
+
+  const updateRecipe = (param) => {
+    const setter = typeof param === "function" ? param : () => param;
+    setRecipeEntry((_recipeEntry) => ({
+      ..._recipeEntry,
+      ...setter(_recipeEntry),
+    }));
+  };
+  const updateTags = (setter) => {
+    updateRecipe((_recipeEntry) => ({ tags: setter(_recipeEntry.tags) }));
+  };
+  const updateIsFavorite = (newIsFavorite) => {
+    updateRecipe({ isFavorite: newIsFavorite });
+  };
 
   if (!glossary) {
     return null;
@@ -249,41 +264,60 @@ function Recipe(props) {
     );
   };
 
+  const renderFavorite = () => {
+    const { isFavorite = false } = recipeEntry;
+
+    if (isEditing) {
+      return (
+        <Switch
+          checked={isFavorite}
+          onChange={(event) => {
+            updateIsFavorite(event.target.checked);
+          }}
+          inputProps={{ "aria-label": "controlled" }}
+        />
+      );
+    }
+
+    if (isFavorite) {
+      return (
+        <Chip
+          key={"favorite"}
+          label={
+            <StarIcon
+              sx={{
+                "&&": {
+                  color: "alt.main",
+                  verticalAlign: "bottom",
+                },
+              }}
+              fontSize="small"
+            />
+          }
+          size="small"
+          variant="outlined"
+          color="tertiary"
+        />
+      );
+    }
+
+    return null;
+  };
+
   const getTagOnDelete = (tagId) => {
     if (!isEditing) {
       return undefined;
     }
     return () => {
-      setRecipeEntry((_recipeEntry) => ({
-        ..._recipeEntry,
-        tags: _recipeEntry.tags.filter((tag) => tag !== tagId),
-      }));
+      updateTags((_tags) => _tags.filter((tag) => tag !== tagId));
     };
   };
 
   const renderTags = () => {
-    const { tags = [], isFavorite = false } = recipeEntry;
+    const { tags = [] } = recipeEntry;
     return (
       <Stack direction="row" spacing={1} key="tags" sx={{ width: "95%" }}>
-        {isFavorite && (
-          <Chip
-            key={"favorite"}
-            label={
-              <StarIcon
-                sx={{
-                  "&&": {
-                    color: "alt.main",
-                    verticalAlign: "bottom",
-                  },
-                }}
-                fontSize="small"
-              />
-            }
-            size="small"
-            variant="outlined"
-            color="tertiary"
-          />
-        )}
+        {renderFavorite()}
         {tags.map((tagId) => (
           <Chip
             key={tagId}
