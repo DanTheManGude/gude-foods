@@ -17,6 +17,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Chip from "@mui/material/Chip";
 import StarIcon from "@mui/icons-material/Star";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 import { createKey, updateRequest, deleteRequest } from "../utils";
 
@@ -268,13 +269,43 @@ function Recipe(props) {
     const { isFavorite = false } = recipeEntry;
 
     if (isEditing) {
+      const iconSwitchStyles = {
+        color: "alt.main",
+        padding: 0,
+        marginTop: "1px",
+        borderColor: "alt.main",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderRadius: "12px",
+      };
       return (
         <Switch
           checked={isFavorite}
           onChange={(event) => {
             updateIsFavorite(event.target.checked);
           }}
-          inputProps={{ "aria-label": "controlled" }}
+          color="tertiary"
+          checkedIcon={
+            <StarIcon
+              sx={{ ...iconSwitchStyles, transform: "translateX(7px)" }}
+              fontSize="small"
+            />
+          }
+          icon={
+            <StarOutlineIcon
+              sx={{
+                ...iconSwitchStyles,
+                transform: "translateX(1px)",
+              }}
+              fontSize="small"
+            />
+          }
+          sx={{
+            padding: 0,
+            height: "24px",
+            width: "50px",
+            borderRadius: "12px",
+          }}
         />
       );
     }
@@ -316,7 +347,13 @@ function Recipe(props) {
   const renderTags = () => {
     const { tags = [] } = recipeEntry;
     return (
-      <Stack direction="row" spacing={1} key="tags" sx={{ width: "95%" }}>
+      <Stack
+        direction="row"
+        spacing={1}
+        key="tags"
+        sx={{ width: "95%" }}
+        alignItems={"center"}
+      >
         {renderFavorite()}
         {tags.map((tagId) => (
           <Chip
