@@ -271,8 +271,6 @@ function Recipe(props) {
     if (isEditing) {
       const iconSwitchStyles = {
         color: "alt.main",
-        padding: 0,
-        marginTop: "1px",
         borderColor: "alt.main",
         borderWidth: "1px",
         borderStyle: "solid",
@@ -287,7 +285,10 @@ function Recipe(props) {
           color="tertiary"
           checkedIcon={
             <StarIcon
-              sx={{ ...iconSwitchStyles, transform: "translateX(7px)" }}
+              sx={{
+                ...iconSwitchStyles,
+                transform: "translate(-2px, -8px)",
+              }}
               fontSize="small"
             />
           }
@@ -295,7 +296,7 @@ function Recipe(props) {
             <StarOutlineIcon
               sx={{
                 ...iconSwitchStyles,
-                transform: "translateX(1px)",
+                transform: "translate(-8px, -8px)",
               }}
               fontSize="small"
             />
