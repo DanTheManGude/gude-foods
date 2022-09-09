@@ -65,6 +65,11 @@ function Recipe(props) {
   const updateName = (name) => {
     updateRecipe({ name });
   };
+  const updateIngredients = (setter) => {
+    updateRecipe((_recipeEntry) => ({
+      ingredients: setter(_recipeEntry.ingredients),
+    }));
+  };
   const updateInstructions = (setter) => {
     updateRecipe((_recipeEntry) => ({
       instructions: setter(_recipeEntry.instructions),
@@ -80,6 +85,12 @@ function Recipe(props) {
     updateRecipe((_recipeEntry) => ({ tags: setter(_recipeEntry.tags) }));
   };
 
+  const setIngredient = (ingredientId, value) => {
+    updateIngredients((_ingredients) => ({
+      ..._ingredients,
+      [ingredientId]: value,
+    }));
+  };
   const moveStep = (oldIndex, newIndex) => {
     updateInstructions((_instructions) => {
       const step = _instructions[oldIndex];
@@ -265,12 +276,37 @@ function Recipe(props) {
         </AccordionSummary>
         <AccordionDetails>
           {Object.keys(ingredients).map((ingredientId) => (
-            <Stack key={ingredientId} direction="row">
-              <Typography sx={{ fontWeight: "bold" }}>
-                {glossary.basicFoods[ingredientId]}:
-              </Typography>
-              &nbsp;
-              <Typography>{ingredients[ingredientId]}</Typography>
+            <Stack
+              key={ingredientId}
+              direction="row"
+              spacing={isEditing ? 2 : 1}
+              alignItems="center"
+            >
+              {isEditing ? (
+                <>
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    {glossary.basicFoods[ingredientId]}:
+                  </Typography>
+                  <TextField
+                    placeholder="Edit amount"
+                    value={ingredients[ingredientId]}
+                    onChange={(event) => {
+                      setIngredient(ingredientId, event.target.value);
+                    }}
+                    size="small"
+                    fullWidth={true}
+                    variant="outlined"
+                  />
+                </>
+              ) : (
+                <>
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    {glossary.basicFoods[ingredientId]}:
+                  </Typography>
+                  &nbsp;
+                  <Typography>{ingredients[ingredientId]}</Typography>
+                </>
+              )}
             </Stack>
           ))}
         </AccordionDetails>
