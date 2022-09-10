@@ -111,9 +111,7 @@ function Recipe(props) {
     updateInstructions((_instructions) => {
       const step = _instructions[oldIndex];
       _instructions.splice(oldIndex, 1);
-      if (newIndex >= 0) {
-        _instructions.splice(newIndex, 0, step);
-      }
+      _instructions.splice(newIndex, 0, step);
       return _instructions;
     });
   };
@@ -122,6 +120,12 @@ function Recipe(props) {
       return _instructions.concat(newStep);
     });
     setNewStep("");
+  };
+  const getRemoveStep = (index) => () => {
+    updateInstructions((_instructions) => {
+      _instructions.splice(index, 1);
+      return _instructions;
+    });
   };
   const addIngredient = () => {
     updateIngredients((_ingredients) => {
@@ -389,7 +393,7 @@ function Recipe(props) {
                           size="small"
                         />
                       )}
-                      sx={{ width: "180px" }}
+                      fullWidth
                     />
                     <Button
                       color="secondary"
@@ -397,6 +401,7 @@ function Recipe(props) {
                       size="small"
                       onClick={addIngredient}
                       disabled={!newIngredientId}
+                      sx={{ minWidth: "fit-content" }}
                     >
                       <Typography>Add item</Typography>
                     </Button>
@@ -422,7 +427,12 @@ function Recipe(props) {
             {instructions
               .map((instructionText, index) => {
                 return (
-                  <Stack key={index} direction="row" alignItems="center">
+                  <Stack
+                    key={index}
+                    direction="row"
+                    alignItems="center"
+                    spacing={1}
+                  >
                     {isEditing ? (
                       <>
                         <Select
@@ -437,20 +447,12 @@ function Recipe(props) {
                             }, 100);
                           }}
                         >
-                          {instructions
-                            .map((t, i) => (
-                              <MenuItem key={i} value={i}>
-                                {i + 1}
-                              </MenuItem>
-                            ))
-                            .concat(
-                              <MenuItem key={"delete"} value={-1}>
-                                Remove
-                              </MenuItem>
-                            )}
+                          {instructions.map((t, i) => (
+                            <MenuItem key={i} value={i}>
+                              {i + 1}
+                            </MenuItem>
+                          ))}
                         </Select>
-                        <Typography sx={{ fontWeight: 700 }}>:</Typography>
-                        &nbsp;
                         <TextField
                           placeholder="Edit step"
                           value={instructionText}
@@ -461,11 +463,15 @@ function Recipe(props) {
                           fullWidth={true}
                           variant="outlined"
                         />
+                        <HighlightOffIcon
+                          color="secondary"
+                          onClick={getRemoveStep(index)}
+                        />
                       </>
                     ) : (
                       <>
                         <Typography sx={{ fontWeight: 700 }}>
-                          {index + 1}:
+                          {index + 1}.
                         </Typography>
                         &nbsp;
                         <Typography>{instructionText}</Typography>
