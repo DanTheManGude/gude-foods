@@ -22,6 +22,7 @@ import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 import {
   createKey,
@@ -127,6 +128,12 @@ function Recipe(props) {
       return { ..._ingredients, [newIngredientId]: "" };
     });
     setNewIngredientId(null);
+  };
+  const getRemoveIngredient = (ingredientId) => () => {
+    updateIngredients((_ingredients) => {
+      delete _ingredients[ingredientId];
+      return _ingredients;
+    });
   };
 
   if (!glossary) {
@@ -308,7 +315,7 @@ function Recipe(props) {
                 <Stack
                   key={ingredientId}
                   direction="row"
-                  spacing={isEditing ? 2 : 1}
+                  spacing={1}
                   alignItems="center"
                 >
                   {isEditing ? (
@@ -325,6 +332,10 @@ function Recipe(props) {
                         size="small"
                         fullWidth={true}
                         variant="outlined"
+                      />
+                      <HighlightOffIcon
+                        color="secondary"
+                        onClick={getRemoveIngredient(ingredientId)}
                       />
                     </>
                   ) : (
@@ -385,6 +396,7 @@ function Recipe(props) {
                       variant="outlined"
                       size="small"
                       onClick={addIngredient}
+                      disabled={!newIngredientId}
                     >
                       <Typography>Add item</Typography>
                     </Button>
@@ -472,6 +484,7 @@ function Recipe(props) {
                         size="small"
                         onClick={addStep}
                         sx={{ minWidth: "55px", height: "40px" }}
+                        disabled={!newStep}
                       >
                         <Typography>Add</Typography>
                       </Button>
@@ -609,25 +622,27 @@ function Recipe(props) {
   const renderTags = () => {
     const { tags = [] } = recipeEntry;
     return (
-      <Stack
-        direction="row"
-        spacing={1}
-        key="tags"
-        sx={{ width: "95%" }}
-        alignItems={"center"}
-      >
-        {renderFavorite()}
-        {tags.map((tagId) => (
-          <Chip
-            key={tagId}
-            label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
-            size="small"
-            variant="outlined"
-            color="tertiary"
-            onDelete={getTagOnDelete(tagId)}
-          />
-        ))}
-      </Stack>
+      <>
+        <Stack
+          direction="row"
+          spacing={1}
+          key="tags"
+          sx={{ width: "95%" }}
+          alignItems={"center"}
+        >
+          {renderFavorite()}
+          {tags.map((tagId) => (
+            <Chip
+              key={tagId}
+              label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
+              size="small"
+              variant="outlined"
+              color="tertiary"
+              onDelete={getTagOnDelete(tagId)}
+            />
+          ))}
+        </Stack>
+      </>
     );
   };
 
