@@ -101,6 +101,12 @@ function Recipe(props) {
     updateRecipe((_recipeEntry) => ({ tags: setter(_recipeEntry.tags) }));
   };
 
+  const deleteTag = (tagId) => {
+    updateTags((_tags) => _tags.filter((tag) => tag !== tagId));
+  };
+  const addTag = (tagId) => {
+    updateTags((_tags) => _tags.concat(tagId));
+  };
   const setIngredient = (ingredientId, value) => {
     updateIngredients((_ingredients) => ({
       ..._ingredients,
@@ -616,15 +622,6 @@ function Recipe(props) {
     return null;
   };
 
-  const getTagOnDelete = (tagId) => {
-    if (!isEditing) {
-      return undefined;
-    }
-    return () => {
-      updateTags((_tags) => _tags.filter((tag) => tag !== tagId));
-    };
-  };
-
   const renderTags = () => {
     const { tags = [] } = recipeEntry;
     return (
@@ -644,10 +641,34 @@ function Recipe(props) {
               size="small"
               variant="outlined"
               color="tertiary"
-              onDelete={getTagOnDelete(tagId)}
+              onDelete={
+                isEditing
+                  ? () => {
+                      deleteTag(tagId);
+                    }
+                  : undefined
+              }
             />
           ))}
         </Stack>
+        {isEditing ? (
+          <Autocomplete
+            id={"addtagSelect"}
+            options={Object.keys(glossary.recipeTags)}
+            getOptionLabel={(option) => glossary.recipeTags[option]}
+            getOptionDisabled={(option) => tags.includes(option)}
+            value={null}
+            onChange={(event, selectedOption) => {
+              addTag(selectedOption);
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Enter tag" size="small" />
+            )}
+            onClose={() => {
+              document.activeElement.blur();
+            }}
+          />
+        ) : null}
       </>
     );
   };
