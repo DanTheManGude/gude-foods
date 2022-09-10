@@ -101,7 +101,7 @@ function Recipe(props) {
     updateRecipe((_recipeEntry) => ({ tags: setter(_recipeEntry.tags) }));
   };
 
-  const deleteTag = (tagId) => {
+  const getDeleteTag = (tagId) => () => {
     updateTags((_tags) => _tags.filter((tag) => tag !== tagId));
   };
   const addTag = (tagId) => {
@@ -126,6 +126,12 @@ function Recipe(props) {
       return _instructions.concat(newStep);
     });
     setNewStep("");
+  };
+  const updateStep = (index, step) => {
+    updateInstructions((_instructions) => {
+      _instructions.splice(index, 1, step);
+      return _instructions;
+    });
   };
   const getRemoveStep = (index) => () => {
     updateInstructions((_instructions) => {
@@ -465,7 +471,7 @@ function Recipe(props) {
                           placeholder="Edit step"
                           value={instructionText}
                           onChange={(event) => {
-                            setNewStep(index, event.target.value);
+                            updateStep(index, event.target.value);
                           }}
                           size="small"
                           fullWidth={true}
@@ -643,13 +649,7 @@ function Recipe(props) {
               size="small"
               variant="outlined"
               color="tertiary"
-              onDelete={
-                isEditing
-                  ? () => {
-                      deleteTag(tagId);
-                    }
-                  : undefined
-              }
+              onDelete={isEditing ? getDeleteTag(tagId) : undefined}
             />
           ))}
         </Stack>
