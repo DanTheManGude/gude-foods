@@ -361,9 +361,7 @@ function Recipe(props) {
                           },
                           {}
                         )
-                      ).reduce((acc, foodLists) => {
-                        return acc.concat(foodLists);
-                      }, [])}
+                      ).reduce((acc, foodLists) => acc.concat(foodLists), [])}
                       getOptionLabel={(option) => glossary.basicFoods[option]}
                       groupBy={calculateFoodSectionForOptions}
                       getOptionDisabled={(option) =>

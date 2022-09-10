@@ -293,10 +293,7 @@ function ShoppingList(props) {
                 }
                 return acc;
               }, {})
-            ).reduce((acc, foodLists) => {
-              debugger;
-              return acc.concat(foodLists);
-            }, [])}
+            ).reduce((acc, foodLists) => acc.concat(foodLists), [])}
             getOptionLabel={(option) => glossary.basicFoods[option]}
             groupBy={calculateFoodSectionForOptions}
             getOptionDisabled={(option) =>
