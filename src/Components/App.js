@@ -167,6 +167,7 @@ function App() {
         element={
           <Recipe
             glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
             cookbook={cookbook}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
             addAlert={addAlert}

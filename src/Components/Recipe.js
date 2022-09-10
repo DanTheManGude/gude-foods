@@ -19,13 +19,27 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import Autocomplete from "@mui/material/Autocomplete";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
-import { createKey, updateRequest, deleteRequest } from "../utils";
+import {
+  createKey,
+  updateRequest,
+  deleteRequest,
+  getCalculateFoodSectionForOptions,
+} from "../utils";
+
+const unknownSectionName = "Unknown Section";
 
 function Recipe(props) {
-  const { glossary, cookbook = {}, cookbookPath, addAlert } = props;
+  const {
+    glossary,
+    basicFoodTagAssociation,
+    cookbook = {},
+    cookbookPath,
+    addAlert,
+  } = props;
 
   let navigate = useNavigate();
   const { recipeId: pathParam } = useParams();
@@ -43,6 +57,7 @@ function Recipe(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const [newStep, setNewStep] = useState("");
+  const [newIngredientId, setNewIngredientId] = useState(null);
 
   useEffect(() => {
     if (pathParam === "create") {
@@ -106,6 +121,12 @@ function Recipe(props) {
       return _instructions.concat(newStep);
     });
     setNewStep("");
+  };
+  const addIngredient = () => {
+    updateIngredients((_ingredients) => {
+      return { ..._ingredients, [newIngredientId]: "" };
+    });
+    setNewIngredientId(null);
   };
 
   if (!glossary) {
@@ -269,46 +290,110 @@ function Recipe(props) {
   const renderIngredients = () => {
     const { ingredients = {} } = recipeEntry;
 
+    const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
+      glossary,
+      basicFoodTagAssociation,
+      unknownSectionName
+    );
+
     return (
       <Accordion key={"ingredients"} sx={{ width: "100%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Ingredients</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {Object.keys(ingredients).map((ingredientId) => (
-            <Stack
-              key={ingredientId}
-              direction="row"
-              spacing={isEditing ? 2 : 1}
-              alignItems="center"
-            >
-              {isEditing ? (
-                <>
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    {glossary.basicFoods[ingredientId]}:
-                  </Typography>
-                  <TextField
-                    placeholder="Edit amount"
-                    value={ingredients[ingredientId]}
-                    onChange={(event) => {
-                      setIngredient(ingredientId, event.target.value);
-                    }}
-                    size="small"
-                    fullWidth={true}
-                    variant="outlined"
-                  />
-                </>
-              ) : (
-                <>
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    {glossary.basicFoods[ingredientId]}:
-                  </Typography>
-                  &nbsp;
-                  <Typography>{ingredients[ingredientId]}</Typography>
-                </>
+          <Stack spacing={isEditing ? 2 : 1}>
+            {Object.keys(ingredients)
+              .map((ingredientId) => (
+                <Stack
+                  key={ingredientId}
+                  direction="row"
+                  spacing={isEditing ? 2 : 1}
+                  alignItems="center"
+                >
+                  {isEditing ? (
+                    <>
+                      <Typography sx={{ fontWeight: "bold", minWidth: "90px" }}>
+                        {glossary.basicFoods[ingredientId]}:
+                      </Typography>
+                      <TextField
+                        placeholder="Edit amount"
+                        value={ingredients[ingredientId]}
+                        onChange={(event) => {
+                          setIngredient(ingredientId, event.target.value);
+                        }}
+                        size="small"
+                        fullWidth={true}
+                        variant="outlined"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        {glossary.basicFoods[ingredientId]}:
+                      </Typography>
+                      <Typography>{ingredients[ingredientId]}</Typography>
+                    </>
+                  )}
+                </Stack>
+              ))
+              .concat(
+                isEditing ? (
+                  <Stack
+                    key={"addIngredient"}
+                    direction="row"
+                    spacing={2}
+                    alignItems="center"
+                  >
+                    <Autocomplete
+                      id={"addIngredientSelect"}
+                      options={Object.values(
+                        Object.keys(glossary.basicFoods).reduce(
+                          (acc, foodId) => {
+                            const foodSectionForOptions =
+                              calculateFoodSectionForOptions(foodId);
+                            if (acc.hasOwnProperty(foodSectionForOptions)) {
+                              acc[foodSectionForOptions].push(foodId);
+                            } else {
+                              acc[foodSectionForOptions] = [foodId];
+                            }
+                            return acc;
+                          },
+                          {}
+                        )
+                      ).reduce((acc, foodLists) => {
+                        return acc.concat(foodLists);
+                      }, [])}
+                      getOptionLabel={(option) => glossary.basicFoods[option]}
+                      groupBy={calculateFoodSectionForOptions}
+                      getOptionDisabled={(option) =>
+                        ingredients && ingredients.hasOwnProperty(option)
+                      }
+                      value={newIngredientId}
+                      onChange={(event, selectedOption) => {
+                        setNewIngredientId(selectedOption);
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Enter item"
+                          size="small"
+                        />
+                      )}
+                      sx={{ width: "180px" }}
+                    />
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      size="small"
+                      onClick={addIngredient}
+                    >
+                      <Typography>Add item</Typography>
+                    </Button>
+                  </Stack>
+                ) : null
               )}
-            </Stack>
-          ))}
+          </Stack>
         </AccordionDetails>
       </Accordion>
     );
