@@ -165,7 +165,13 @@ function App() {
       <Route
         path="recipe/:recipeId"
         element={
-          <Recipe glossary={glossary} cookbook={cookbook} addAlert={addAlert} />
+          <Recipe
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            cookbook={cookbook}
+            cookbookPath={user ? `cookbook/${user.uid}` : ""}
+            addAlert={addAlert}
+          />
         }
       />
       <Route

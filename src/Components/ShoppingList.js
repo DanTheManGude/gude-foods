@@ -18,7 +18,11 @@ import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { updateRequest, deleteRequest } from "../utils";
+import {
+  updateRequest,
+  deleteRequest,
+  getCalculateFoodSectionForOptions,
+} from "../utils";
 
 const UNKNOWN_TAG = "UNKNOWN_TAG";
 const unknownSectionName = "Unknown Section";
@@ -125,7 +129,7 @@ function ShoppingList(props) {
                 });
               }}
             />
-            <Typography sx={{ fontWeight: 600 }}>
+            <Typography sx={{ fontWeight: "medium" }}>
               {glossary.basicFoods[basicFoodId]}
             </Typography>
             {collatedAmount && <Typography>: {collatedAmount}</Typography>}
@@ -225,7 +229,12 @@ function ShoppingList(props) {
     }
 
     return (
-      <Stack direction="row" spacing={2} sx={{ paddingTop: "12px" }}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ paddingTop: "12px" }}
+        alignItems="center"
+      >
         <Button
           color="secondary"
           variant="contained"
@@ -261,73 +270,91 @@ function ShoppingList(props) {
     );
   };
 
-  const renderNewItemControls = () => (
-    <Stack direction="row" spacing={4}>
-      <Stack spacing={1}>
-        <Autocomplete
-          id={"newFood"}
-          options={Object.keys(glossary.basicFoods)}
-          getOptionLabel={(option) => glossary.basicFoods[option]}
-          groupBy={(option) =>
-            glossary.basicFoodTags[basicFoodTagAssociation[option]] ||
-            unknownSectionName
-          }
-          getOptionDisabled={(option) =>
-            shoppingList && shoppingList.hasOwnProperty(option)
-          }
-          value={newFoodId}
-          onChange={(event, selectedOption) => {
-            setNewFoodId(selectedOption);
-          }}
-          renderInput={(params) => <TextField {...params} label="Enter item" />}
-          sx={{ width: "206px" }}
-        />
-        <TextField
+  const renderNewItemControls = () => {
+    const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
+      glossary,
+      basicFoodTagAssociation,
+      unknownSectionName
+    );
+
+    return (
+      <Stack direction="row" spacing={4}>
+        <Stack spacing={1}>
+          <Autocomplete
+            id={"newFood"}
+            options={Object.values(
+              Object.keys(glossary.basicFoods).reduce((acc, foodId) => {
+                const foodSectionForOptions =
+                  calculateFoodSectionForOptions(foodId);
+                if (acc.hasOwnProperty(foodSectionForOptions)) {
+                  acc[foodSectionForOptions].push(foodId);
+                } else {
+                  acc[foodSectionForOptions] = [foodId];
+                }
+                return acc;
+              }, {})
+            ).reduce((acc, foodLists) => acc.concat(foodLists), [])}
+            getOptionLabel={(option) => glossary.basicFoods[option]}
+            groupBy={calculateFoodSectionForOptions}
+            getOptionDisabled={(option) =>
+              shoppingList && shoppingList.hasOwnProperty(option)
+            }
+            value={newFoodId}
+            onChange={(event, selectedOption) => {
+              setNewFoodId(selectedOption);
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Enter item" size="small" />
+            )}
+            sx={{ width: "206px" }}
+          />
+          <TextField
+            variant="outlined"
+            label="Set amount"
+            size="small"
+            value={newFoodAmount}
+            sx={{ width: "206px" }}
+            onChange={(event) => {
+              setNewFoodAmount(event.target.value);
+            }}
+            InputProps={{
+              endAdornment: newFoodAmount && (
+                <InputAdornment position="end">
+                  <IconButton
+                    sx={{ color: "alt.main" }}
+                    onClick={() => {
+                      setNewFoodAmount("");
+                    }}
+                    edge="end"
+                  >
+                    <UndoOutlinedIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
+        <Button
+          color="primary"
           variant="outlined"
-          label="Set amount"
           size="small"
-          value={newFoodAmount}
-          sx={{ width: "206px" }}
-          onChange={(event) => {
-            setNewFoodAmount(event.target.value);
+          sx={{ width: "90px" }}
+          disabled={!(newFoodId && newFoodAmount)}
+          onClick={() => {
+            updateRequest({
+              [`${updatePath}/${newFoodId}`]: {
+                isChecked: false,
+                collatedAmount: newFoodAmount,
+              },
+            });
+            clearNewFood();
           }}
-          InputProps={{
-            endAdornment: newFoodAmount && (
-              <InputAdornment position="end">
-                <IconButton
-                  sx={{ color: "alt.main" }}
-                  onClick={() => {
-                    setNewFoodAmount("");
-                  }}
-                  edge="end"
-                >
-                  <UndoOutlinedIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        >
+          <Typography>Add new item</Typography>
+        </Button>
       </Stack>
-      <Button
-        color="primary"
-        variant="outlined"
-        size="small"
-        sx={{ width: "90px" }}
-        disabled={!(newFoodId && newFoodAmount)}
-        onClick={() => {
-          updateRequest({
-            [`${updatePath}/${newFoodId}`]: {
-              isChecked: false,
-              collatedAmount: newFoodAmount,
-            },
-          });
-          clearNewFood();
-        }}
-      >
-        <Typography>Add new item</Typography>
-      </Button>
-    </Stack>
-  );
+    );
+  };
 
   const renderChecked = () => {
     if (!shoppingList) {
@@ -338,7 +365,7 @@ function ShoppingList(props) {
       return (
         <Accordion
           key={"emptyChecked"}
-          sx={{ width: "95%" }}
+          sx={{ width: "100%" }}
           disabled={true}
           expanded={false}
         >
@@ -352,7 +379,7 @@ function ShoppingList(props) {
     }
 
     return (
-      <Accordion key={"checked"} sx={{ width: "95%" }}>
+      <Accordion key={"checked"} sx={{ width: "100%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6" component={"em"}>
             Checked
@@ -394,7 +421,7 @@ function ShoppingList(props) {
       >
         <Stack sx={{ width: "95%" }} spacing={0}>
           {Object.keys(shoppingMap.unchecked).map((tagId) => (
-            <Accordion key={tagId} sx={{ width: "95%" }}>
+            <Accordion key={tagId} sx={{ width: "100%" }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 {tagId === UNKNOWN_TAG ? (
                   <Typography variant="h6">{unknownSectionName}</Typography>
