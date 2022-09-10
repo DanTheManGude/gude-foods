@@ -272,7 +272,7 @@ function Recipe(props) {
     const { name = "" } = recipeEntry;
 
     if (isEditing) {
-      const error = !name.length;
+      const error = !isCreating && !name.length;
       return (
         <TextField
           label="Title"
@@ -330,7 +330,9 @@ function Recipe(props) {
                 >
                   {isEditing ? (
                     <>
-                      <Typography sx={{ fontWeight: "bold", minWidth: "90px" }}>
+                      <Typography
+                        sx={{ fontWeight: "bold", minWidth: "130px" }}
+                      >
                         {glossary.basicFoods[ingredientId]}:
                       </Typography>
                       <TextField
