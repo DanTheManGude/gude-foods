@@ -78,6 +78,7 @@ function Recipe(props) {
       ...setter(_recipeEntry),
     }));
   };
+
   const updateName = (name) => {
     updateRecipe({ name });
   };
@@ -107,12 +108,26 @@ function Recipe(props) {
   const addTag = (tagId) => {
     updateTags((_tags) => _tags.concat(tagId));
   };
+
   const setIngredient = (ingredientId, value) => {
     updateIngredients((_ingredients) => ({
       ..._ingredients,
       [ingredientId]: value,
     }));
   };
+  const addIngredient = () => {
+    updateIngredients((_ingredients) => {
+      return { ..._ingredients, [newIngredientId]: "" };
+    });
+    setNewIngredientId(null);
+  };
+  const getRemoveIngredient = (ingredientId) => () => {
+    updateIngredients((_ingredients) => {
+      delete _ingredients[ingredientId];
+      return _ingredients;
+    });
+  };
+
   const moveStep = (oldIndex, newIndex) => {
     updateInstructions((_instructions) => {
       const step = _instructions[oldIndex];
@@ -137,18 +152,6 @@ function Recipe(props) {
     updateInstructions((_instructions) => {
       _instructions.splice(index, 1);
       return _instructions;
-    });
-  };
-  const addIngredient = () => {
-    updateIngredients((_ingredients) => {
-      return { ..._ingredients, [newIngredientId]: "" };
-    });
-    setNewIngredientId(null);
-  };
-  const getRemoveIngredient = (ingredientId) => () => {
-    updateIngredients((_ingredients) => {
-      delete _ingredients[ingredientId];
-      return _ingredients;
     });
   };
 
