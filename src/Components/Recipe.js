@@ -68,7 +68,6 @@ function Recipe(props) {
       setRecipeId(createKey(cookbookPath));
     } else if (cookbook.hasOwnProperty(pathParam)) {
       const _originalRecipe = cookbook[pathParam];
-      console.log(_originalRecipe);
       setOriginalRecipe(_originalRecipe);
       setRecipeEntry(JSON.parse(JSON.stringify(_originalRecipe)));
       setRecipeId(pathParam);
