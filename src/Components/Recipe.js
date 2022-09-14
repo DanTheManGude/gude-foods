@@ -556,10 +556,9 @@ function Recipe(props) {
                 updateNotes(event.target.value);
               }}
               variant="standard"
-              InputProps={{ sx: { fontFamily: "Bradley Hand" } }}
             />
           ) : (
-            <Typography fontFamily={"Bradley Hand"}>{notes}</Typography>
+            <Typography>{notes}</Typography>
           )}
         </Box>
       </Paper>
