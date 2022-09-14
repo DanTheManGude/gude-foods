@@ -170,6 +170,7 @@ function App() {
             basicFoodTagAssociation={basicFoodTagAssociation}
             cookbook={cookbook}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
+            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             addAlert={addAlert}
           />
         }
