@@ -45,6 +45,7 @@ function Recipe(props) {
   let navigate = useNavigate();
   const { recipeId: pathParam } = useParams();
   const [recipeId, setRecipeId] = useState();
+  const [originalRecipe, setOriginalRecipe] = useState();
   const [recipeEntry, setRecipeEntry] = useState({
     name: "",
     tags: [],
@@ -66,8 +67,11 @@ function Recipe(props) {
       setIsCreating(true);
       setRecipeId(createKey(cookbookPath));
     } else if (cookbook.hasOwnProperty(pathParam)) {
+      const _originalRecipe = cookbook[pathParam];
+      console.log(_originalRecipe);
+      setOriginalRecipe(_originalRecipe);
+      setRecipeEntry(JSON.parse(JSON.stringify(_originalRecipe)));
       setRecipeId(pathParam);
-      setRecipeEntry(cookbook[pathParam]);
     }
   }, [pathParam, cookbook, cookbookPath]);
 
@@ -238,7 +242,7 @@ function Recipe(props) {
             variant="outlined"
             size="small"
             onClick={() => {
-              setRecipeEntry(cookbook[pathParam]);
+              setRecipeEntry(JSON.parse(JSON.stringify(originalRecipe)));
               setIsEditing(false);
             }}
           >
