@@ -39,6 +39,7 @@ function Recipe(props) {
     basicFoodTagAssociation,
     cookbook = {},
     cookbookPath,
+    shoppingListPath,
     addAlert,
   } = props;
 
@@ -68,7 +69,6 @@ function Recipe(props) {
       setRecipeId(createKey(cookbookPath));
     } else if (cookbook.hasOwnProperty(pathParam)) {
       const _originalRecipe = cookbook[pathParam];
-      console.log(_originalRecipe);
       setOriginalRecipe(_originalRecipe);
       setRecipeEntry(JSON.parse(JSON.stringify(_originalRecipe)));
       setRecipeId(pathParam);
@@ -223,7 +223,7 @@ function Recipe(props) {
       justifyContent="space-around"
       alignItems="center"
       sx={{ width: "95%" }}
-      spacing={3}
+      spacing={2}
     >
       {!isCreating && isEditing ? (
         <>
@@ -252,7 +252,12 @@ function Recipe(props) {
       ) : (
         <Button color="secondary" variant="outlined" size="small">
           <Link to={`/cookbook`}>
-            <Typography color="secondary">Back to cookbook</Typography>
+            <Typography
+              color="secondary"
+              sx={{ ...(isCreating ? {} : { fontSize: "14.4px" }) }}
+            >
+              Back to cookbook
+            </Typography>
           </Link>
         </Button>
       )}
@@ -267,16 +272,40 @@ function Recipe(props) {
           <Typography>Save</Typography>
         </Button>
       ) : (
-        <Button
-          color="secondary"
-          variant="outlined"
-          size="small"
-          onClick={() => {
-            setIsEditing(true);
-          }}
-        >
-          <Typography>Edit recipe</Typography>
-        </Button>
+        <>
+          <Button
+            color="secondary"
+            variant="outlined"
+            size="small"
+            onClick={() => {
+              updateRequest(
+                Object.keys(originalRecipe.ingredients).reduce(
+                  (updates, foodId) => ({
+                    ...updates,
+                    [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
+                  }),
+                  {}
+                ),
+                addAlert
+              );
+            }}
+          >
+            <Typography sx={{ fontSize: "14.4px" }}>
+              Add to shopping list
+            </Typography>
+          </Button>
+          <Button
+            color="success"
+            variant="outlined"
+            size="small"
+            sx={{ height: "50px" }}
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            <Typography>Edit</Typography>
+          </Button>
+        </>
       )}
     </Stack>
   );
