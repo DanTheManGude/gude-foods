@@ -5,7 +5,7 @@ const presentationNames = {
   basicFoods: "Basic Foods",
   shoppingList: "Shopping List",
   glossary: "Glossary",
-  basicFoodTags: "Basic Food Tags",
+  basicFoodTags: "Departments",
   recipeTags: "Recipe Tags",
 };
 

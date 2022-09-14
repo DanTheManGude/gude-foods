@@ -104,7 +104,7 @@ function Glossary(props) {
         >
           {value === "" && (
             <InputLabel id={entryKey} style={{ top: "-11px" }}>
-              Tag
+              Dept.
             </InputLabel>
           )}
           <Select
@@ -114,7 +114,8 @@ function Glossary(props) {
             onChange={(event) => {
               updateRequest(
                 {
-                  [`basicFood-basicFoodTag/${entryKey}`]: event.target.value,
+                  [`${basicFoodTagAssociationPath}/${entryKey}`]:
+                    event.target.value,
                 },
                 addAlert
               );
