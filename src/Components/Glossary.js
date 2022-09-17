@@ -69,8 +69,19 @@ function Glossary(props) {
               isEmptyValue ? null : editingEntry.value;
 
             if (isEmptyValue) {
-              if (sectionKey === "basicFoods") {
-                updates[`${basicFoodTagAssociationPath}/${entryKey}`] = null;
+              switch (sectionKey) {
+                case "basicFoods":
+                  updates[`${basicFoodTagAssociationPath}/${entryKey}`] = null;
+                  //TODO remove basic food from shopping list and recipes
+                  break;
+                case "basicFoodTags":
+                  //TODO remove entries in basicFoodTagAssociationPath with tag as value
+                  break;
+                case "recipeTags":
+                  //TODO remove tags in recipes
+                  break;
+                default:
+                  break;
               }
             }
 
