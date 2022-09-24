@@ -699,22 +699,24 @@ function Recipe(props) {
           ))}
         </Stack>
         {isEditing ? (
-          <Autocomplete
-            id={"addtagSelect"}
-            options={Object.keys(glossary.recipeTags)}
-            getOptionLabel={(option) => glossary.recipeTags[option]}
-            getOptionDisabled={(option) => tags.includes(option)}
-            value={null}
-            onChange={(event, selectedOption) => {
-              addTag(selectedOption);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="Enter tag" size="small" />
-            )}
-            onClose={() => {
-              document.activeElement.blur();
-            }}
-          />
+          glossary && glossary.recipeTags ? (
+            <Autocomplete
+              id={"addtagSelect"}
+              options={Object.keys(glossary.recipeTags)}
+              getOptionLabel={(option) => glossary.recipeTags[option]}
+              getOptionDisabled={(option) => tags.includes(option)}
+              value={null}
+              onChange={(event, selectedOption) => {
+                addTag(selectedOption);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Enter tag" size="small" />
+              )}
+              onClose={() => {
+                document.activeElement.blur();
+              }}
+            />
+          ) : null //TODO include input to create new recipeTag
         ) : null}
       </>
     );
