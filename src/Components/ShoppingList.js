@@ -96,16 +96,6 @@ function ShoppingList(props) {
   };
 
   const renderBasicFoodAccordion = (basicFoodId, foodEntry) => {
-    const doesFoodExist =
-      !!glossary.basicFoods[basicFoodId] &&
-      !!shoppingList &&
-      !!shoppingList[basicFoodId];
-
-    if (!doesFoodExist) {
-      deleteRequest([`${updatePath}/${basicFoodId}`]);
-      return null;
-    }
-
     const { collatedAmount = "", list: recipeList = [] } = foodEntry;
     const isActiveInput = activeEditingCollated.key === basicFoodId;
     const disabled = !!activeEditingCollated.key && !isActiveInput;
