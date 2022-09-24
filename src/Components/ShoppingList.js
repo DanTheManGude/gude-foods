@@ -279,34 +279,37 @@ function ShoppingList(props) {
     return (
       <Stack direction="row" spacing={4}>
         <Stack spacing={1}>
-          <Autocomplete
-            id={"newFood"}
-            options={Object.values(
-              Object.keys(glossary.basicFoods).reduce((acc, foodId) => {
-                const foodSectionForOptions =
-                  calculateFoodSectionForOptions(foodId);
-                if (acc.hasOwnProperty(foodSectionForOptions)) {
-                  acc[foodSectionForOptions].push(foodId);
-                } else {
-                  acc[foodSectionForOptions] = [foodId];
+          {
+            glossary && glossary.basicFoods ? (
+              <Autocomplete
+                options={Object.values(
+                  Object.keys(glossary.basicFoods).reduce((acc, foodId) => {
+                    const foodSectionForOptions =
+                      calculateFoodSectionForOptions(foodId);
+                    if (acc.hasOwnProperty(foodSectionForOptions)) {
+                      acc[foodSectionForOptions].push(foodId);
+                    } else {
+                      acc[foodSectionForOptions] = [foodId];
+                    }
+                    return acc;
+                  }, {})
+                ).reduce((acc, foodLists) => acc.concat(foodLists), [])}
+                getOptionLabel={(option) => glossary.basicFoods[option]}
+                groupBy={calculateFoodSectionForOptions}
+                getOptionDisabled={(option) =>
+                  shoppingList && shoppingList.hasOwnProperty(option)
                 }
-                return acc;
-              }, {})
-            ).reduce((acc, foodLists) => acc.concat(foodLists), [])}
-            getOptionLabel={(option) => glossary.basicFoods[option]}
-            groupBy={calculateFoodSectionForOptions}
-            getOptionDisabled={(option) =>
-              shoppingList && shoppingList.hasOwnProperty(option)
-            }
-            value={newFoodId}
-            onChange={(event, selectedOption) => {
-              setNewFoodId(selectedOption);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="Enter item" size="small" />
-            )}
-            sx={{ width: "206px" }}
-          />
+                value={newFoodId}
+                onChange={(event, selectedOption) => {
+                  setNewFoodId(selectedOption);
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Enter item" size="small" />
+                )}
+                sx={{ width: "206px" }}
+              />
+            ) : null //TODO include input to create new basicFood
+          }
           <TextField
             variant="outlined"
             label="Set amount"
@@ -397,10 +400,6 @@ function ShoppingList(props) {
       </Accordion>
     );
   };
-
-  if (!glossary) {
-    return null;
-  }
 
   return (
     <div>

@@ -188,10 +188,6 @@ function Cookbook(props) {
     );
   };
 
-  if (!glossary) {
-    return null;
-  }
-
   return (
     <div>
       <Typography
