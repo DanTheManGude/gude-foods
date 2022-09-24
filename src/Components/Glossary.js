@@ -18,6 +18,9 @@ import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 
 import { updateRequest, createKey } from "../utils";
 
+const UNKNOWN_TAG = "UNKNOWN_TAG";
+const unknownSectionName = "Unknown Section";
+
 function Glossary(props) {
   const {
     glossary,
@@ -139,10 +142,9 @@ function Glossary(props) {
     }
 
     if (sectionKey === "basicFoods") {
-      const basicFoodTags = glossary.basicFoodTags;
+      const basicFoodTags = glossary.basicFoodTags || [];
       const tagId =
-        basicFoodTagAssociation && basicFoodTagAssociation[entryKey];
-      const value = basicFoodTags.hasOwnProperty(tagId) ? tagId : "";
+        (basicFoodTagAssociation && basicFoodTagAssociation[entryKey]) || "";
 
       return (
         <FormControl
@@ -151,7 +153,7 @@ function Glossary(props) {
           sx={{ width: "110px" }}
           disabled={disabled}
         >
-          {value === "" && (
+          {tagId === "" && (
             <InputLabel id={entryKey} style={{ top: "-11px" }}>
               Dept.
             </InputLabel>
@@ -159,7 +161,7 @@ function Glossary(props) {
           <Select
             labelId={entryKey}
             id={entryKey}
-            value={value}
+            value={tagId}
             onChange={(event) => {
               updateRequest(
                 {
@@ -254,6 +256,44 @@ function Glossary(props) {
   );
 
   const renderBasicFoods = () => {
+    if (
+      !glossary ||
+      !glossary.basicFoods ||
+      !glossary.basicFoodTags ||
+      !basicFoodTagAssociation
+    ) {
+      return (
+        <Accordion key={"basicFoodsEmpty"} sx={{ width: "95%" }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Basic Foods</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+              {(glossary && glossary.basicFoods
+                ? Object.keys(glossary.basicFoods)
+                : []
+              )
+                .concat("basicFoods")
+                .map(getRenderInputButtonStack("basicFoods"))}
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
+      );
+    }
+
+    const basicFoodTagsList = Object.keys(glossary.basicFoodTags);
+
+    const basicFoodMap = Object.keys(glossary.basicFoods).reduce(
+      (acc, foodId) => {
+        const tagId = basicFoodTagAssociation[foodId] || UNKNOWN_TAG;
+        return { ...acc, [tagId]: acc[tagId].concat(foodId) };
+      },
+      basicFoodTagsList.reduce((acc, tagId) => ({ ...acc, [tagId]: [] }), {
+        UNKNOWN_TAG: [],
+      })
+    );
+
+    console.log(basicFoodMap);
     return null;
   };
 
