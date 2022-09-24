@@ -193,11 +193,15 @@ function App() {
         element={
           <Glossary
             glossary={glossary}
+            shoppingList={shoppingList}
+            cookbook={cookbook}
             basicFoodTagAssociation={basicFoodTagAssociation}
-            glossaryUpdatePath={user ? `glossary/${user.uid}` : ""}
+            glossaryPath={user ? `glossary/${user.uid}` : ""}
             basicFoodTagAssociationPath={
               user ? `basicFood-basicFoodTag/${user.uid}` : ""
             }
+            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
+            cookbookPath={user ? `cookbook/${user.uid}` : ""}
             addAlert={addAlert}
           />
         }

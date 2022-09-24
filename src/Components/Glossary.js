@@ -21,9 +21,13 @@ import { getPresentationName, updateRequest, createKey } from "../utils";
 function Glossary(props) {
   const {
     glossary,
+    shoppingList,
+    cookbook,
     basicFoodTagAssociation,
     addAlert,
-    glossaryUpdatePath,
+    glossaryPath,
+    shoppingListPath,
+    cookbookPath,
     basicFoodTagAssociationPath,
   } = props;
 
@@ -61,16 +65,58 @@ function Glossary(props) {
             let updateEntryKey = entryKey;
 
             if (isAddingValue) {
-              updateEntryKey = createKey(`${glossaryUpdatePath}/${sectionKey}`);
+              updateEntryKey = createKey(`${glossaryPath}/${sectionKey}`);
             }
 
             const updates = {};
-            updates[`${glossaryUpdatePath}/${sectionKey}/${updateEntryKey}`] =
+            updates[`${glossaryPath}/${sectionKey}/${updateEntryKey}`] =
               isEmptyValue ? null : editingEntry.value;
 
             if (isEmptyValue) {
-              if (sectionKey === "basicFoods") {
-                updates[`${basicFoodTagAssociationPath}/${entryKey}`] = null;
+              switch (sectionKey) {
+                case "basicFoods":
+                  updates[`${basicFoodTagAssociationPath}/${entryKey}`] = null;
+                  if (shoppingList) {
+                    updates[`${shoppingListPath}/${entryKey}`] = null;
+                  }
+                  if (cookbook) {
+                    Object.keys(cookbook).map((recipeId) => {
+                      if (
+                        cookbook[recipeId].ingredients.hasOwnProperty(entryKey)
+                      ) {
+                        updates[
+                          `${cookbookPath}/${recipeId}/ingredients/${entryKey}`
+                        ] = null;
+                      }
+                    });
+                  }
+                  break;
+                case "basicFoodTags":
+                  if (basicFoodTagAssociation) {
+                    Object.keys(basicFoodTagAssociation).map((basicFoodId) => {
+                      if (basicFoodTagAssociation[basicFoodId] === entryKey) {
+                        updates[`${basicFoodTagAssociationPath}/basicFoodId`] =
+                          null;
+                      }
+                    });
+                  }
+                  break;
+                case "recipeTags":
+                  if (cookbook) {
+                    Object.keys(cookbook).map((recipeId) => {
+                      if (cookbook[recipeId].hasOwnProperty("tags")) {
+                        if (cookbook[recipeId].tags.includes(entryKey)) {
+                          updates[`${cookbookPath}/${recipeId}/tags`] =
+                            cookbook[recipeId].tags.filter(
+                              (tag) => tag !== entryKey
+                            );
+                        }
+                      }
+                    });
+                  }
+                  break;
+                default:
+                  break;
               }
             }
 

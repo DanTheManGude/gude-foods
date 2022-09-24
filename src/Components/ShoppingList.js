@@ -102,7 +102,6 @@ function ShoppingList(props) {
       !!shoppingList[basicFoodId];
 
     if (!doesFoodExist) {
-      deleteRequest([`${updatePath}/${basicFoodId}`]);
       return null;
     }
 
