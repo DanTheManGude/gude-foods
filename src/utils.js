@@ -42,5 +42,7 @@ export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
 
 export const getCalculateFoodSectionForOptions =
   (glossary, basicFoodTagAssociation, unknownSectionName) => (option) =>
-    glossary.basicFoodTags[basicFoodTagAssociation[option]] ||
+    (glossary &&
+      basicFoodTagAssociation &&
+      glossary.basicFoodTags[basicFoodTagAssociation[option]]) ||
     unknownSectionName;
