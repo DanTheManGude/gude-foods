@@ -16,7 +16,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 
-import { getPresentationName, updateRequest, createKey } from "../utils";
+import { updateRequest, createKey } from "../utils";
 
 function Glossary(props) {
   const {
@@ -235,6 +235,46 @@ function Glossary(props) {
     );
   };
 
+  const renderBasicFoodTags = () => (
+    <Accordion key={"basicFoodTags"} sx={{ width: "95%" }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="h6">Departments</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+          {(glossary && glossary.basicFoodTags
+            ? Object.keys(glossary.basicFoodTags)
+            : []
+          )
+            .concat("basicFoodTags")
+            .map(getRenderInputButtonStack("basicFoodTags"))}
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
+  );
+
+  const renderBasicFoods = () => {
+    return null;
+  };
+
+  const renderRecipeTags = () => (
+    <Accordion key={"recipeTags"} sx={{ width: "95%" }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="h6">Recipe Tags</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+          {(glossary && glossary.recipeTags
+            ? Object.keys(glossary.recipeTags)
+            : []
+          )
+            .concat("recipeTags")
+            .map(getRenderInputButtonStack("recipeTags"))}
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
+  );
+
   return (
     <div>
       <Typography
@@ -246,39 +286,16 @@ function Glossary(props) {
       >
         Glossary
       </Typography>
-      {!glossary ? (
-        <Typography
-          sx={{
-            color: "text.primary",
-            textAlign: "center",
-          }}
-        >
-          Ope, no items in Glossary
-        </Typography>
-      ) : (
-        <Stack
-          sx={{ width: "100%", paddingTop: "15px" }}
-          spacing={3}
-          alignItems="center"
-        >
-          {Object.keys(glossary).map((sectionKey) => (
-            <Accordion key={sectionKey} sx={{ width: "95%" }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">
-                  {getPresentationName(sectionKey)}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-                  {Object.keys(glossary[sectionKey])
-                    .concat(sectionKey)
-                    .map(getRenderInputButtonStack(sectionKey))}
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Stack>
-      )}
+
+      <Stack
+        sx={{ width: "100%", paddingTop: "15px" }}
+        spacing={3}
+        alignItems="center"
+      >
+        {renderBasicFoodTags()}
+        {renderBasicFoods()}
+        {renderRecipeTags()}
+      </Stack>
     </div>
   );
 }
