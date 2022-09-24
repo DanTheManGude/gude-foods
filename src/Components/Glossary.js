@@ -80,7 +80,7 @@ function Glossary(props) {
                     updates[`${shoppingListPath}/${entryKey}`] = null;
                   }
                   if (cookbook) {
-                    Object.keys(cookbook).map((recipeId) => {
+                    Object.keys(cookbook).forEach((recipeId) => {
                       if (
                         cookbook[recipeId].ingredients.hasOwnProperty(entryKey)
                       ) {
@@ -93,17 +93,20 @@ function Glossary(props) {
                   break;
                 case "basicFoodTags":
                   if (basicFoodTagAssociation) {
-                    Object.keys(basicFoodTagAssociation).map((basicFoodId) => {
-                      if (basicFoodTagAssociation[basicFoodId] === entryKey) {
-                        updates[`${basicFoodTagAssociationPath}/basicFoodId`] =
-                          null;
+                    Object.keys(basicFoodTagAssociation).forEach(
+                      (basicFoodId) => {
+                        if (basicFoodTagAssociation[basicFoodId] === entryKey) {
+                          updates[
+                            `${basicFoodTagAssociationPath}/basicFoodId`
+                          ] = null;
+                        }
                       }
-                    });
+                    );
                   }
                   break;
                 case "recipeTags":
                   if (cookbook) {
-                    Object.keys(cookbook).map((recipeId) => {
+                    Object.keys(cookbook).forEach((recipeId) => {
                       if (cookbook[recipeId].hasOwnProperty("tags")) {
                         if (cookbook[recipeId].tags.includes(entryKey)) {
                           updates[`${cookbookPath}/${recipeId}/tags`] =
