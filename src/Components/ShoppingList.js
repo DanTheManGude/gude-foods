@@ -15,12 +15,21 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import Checkbox from "@mui/material/Checkbox";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
   updateRequest,
   deleteRequest,
+  createKey,
   getCalculateFoodSectionForOptions,
 } from "../utils";
 
@@ -34,7 +43,9 @@ function ShoppingList(props) {
     shoppingList,
     cookbook,
     addAlert,
-    updatePath,
+    shoppingListPath,
+    glossaryPath,
+    basicFoodTagAssociationPath,
   } = props;
 
   const [shoppingMap, setShoppingMap] = useState({
@@ -52,6 +63,10 @@ function ShoppingList(props) {
     setNewFoodId(null);
     setNewFoodAmount("");
   };
+
+  const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
+    useState(false);
+  const [createBasicFood, setCreateBasicFood] = useState({});
 
   useEffect(() => {
     if (!shoppingList) {
@@ -123,7 +138,7 @@ function ShoppingList(props) {
               checked={shoppingList[basicFoodId].isChecked}
               onChange={(event) => {
                 updateRequest({
-                  [`${updatePath}/${basicFoodId}/isChecked`]:
+                  [`${shoppingListPath}/${basicFoodId}/isChecked`]:
                     event.target.checked,
                 });
               }}
@@ -155,7 +170,7 @@ function ShoppingList(props) {
                     <IconButton
                       onClick={() => {
                         deleteRequest([
-                          `${updatePath}/${basicFoodId}/list/${recipeId}`,
+                          `${shoppingListPath}/${basicFoodId}/list/${recipeId}`,
                         ]);
                       }}
                     >
@@ -198,11 +213,14 @@ function ShoppingList(props) {
                   disabled={disabled}
                   onClick={() => {
                     if (isEmptyValue) {
-                      deleteRequest([`${updatePath}/${basicFoodId}`], addAlert);
+                      deleteRequest(
+                        [`${shoppingListPath}/${basicFoodId}`],
+                        addAlert
+                      );
                     } else {
                       updateRequest(
                         {
-                          [`${updatePath}/${basicFoodId}/collatedAmount`]:
+                          [`${shoppingListPath}/${basicFoodId}/collatedAmount`]:
                             inputValue,
                         },
                         addAlert
@@ -240,7 +258,7 @@ function ShoppingList(props) {
           size="small"
           sx={{ width: "168px" }}
           onClick={() => {
-            deleteRequest([updatePath], addAlert);
+            deleteRequest([shoppingListPath], addAlert);
           }}
         >
           <Typography>Delete all</Typography>
@@ -255,7 +273,7 @@ function ShoppingList(props) {
             deleteRequest(
               Object.keys(shoppingList).reduce((acc, basicFoodId) => {
                 if (shoppingList[basicFoodId].isChecked) {
-                  acc.push(`${updatePath}/${basicFoodId}`);
+                  acc.push(`${shoppingListPath}/${basicFoodId}`);
                 }
                 return acc;
               }, []),
@@ -280,35 +298,86 @@ function ShoppingList(props) {
       <Stack direction="row" spacing={4}>
         <Stack spacing={1}>
           {
-            glossary && glossary.basicFoods ? (
-              <Autocomplete
-                options={Object.values(
-                  Object.keys(glossary.basicFoods).reduce((acc, foodId) => {
-                    const foodSectionForOptions =
-                      calculateFoodSectionForOptions(foodId);
-                    if (acc.hasOwnProperty(foodSectionForOptions)) {
-                      acc[foodSectionForOptions].push(foodId);
-                    } else {
-                      acc[foodSectionForOptions] = [foodId];
-                    }
-                    return acc;
-                  }, {})
-                ).reduce((acc, foodLists) => acc.concat(foodLists), [])}
-                getOptionLabel={(option) => glossary.basicFoods[option]}
-                groupBy={calculateFoodSectionForOptions}
-                getOptionDisabled={(option) =>
-                  shoppingList && shoppingList.hasOwnProperty(option)
+            <Autocomplete
+              options={
+                glossary && glossary.basicFoods
+                  ? Object.values(
+                      Object.keys(glossary.basicFoods).reduce((acc, foodId) => {
+                        const foodSectionForOptions =
+                          calculateFoodSectionForOptions(foodId);
+                        if (acc.hasOwnProperty(foodSectionForOptions)) {
+                          acc[foodSectionForOptions].push(foodId);
+                        } else {
+                          acc[foodSectionForOptions] = [foodId];
+                        }
+                        return acc;
+                      }, {})
+                    ).reduce(
+                      (acc, foodLists) =>
+                        acc.concat(
+                          foodLists.map((foodId) => ({
+                            foodId,
+                            title: glossary.basicFoods[foodId],
+                          }))
+                        ),
+                      []
+                    )
+                  : []
+              }
+              getOptionLabel={(option) => option.title}
+              groupBy={(option) =>
+                option.foodId
+                  ? calculateFoodSectionForOptions(option.foodId)
+                  : null
+              }
+              isOptionEqualToValue={(optionA, optionB) =>
+                optionA.foodId === optionB.foodId
+              }
+              getOptionDisabled={(option) =>
+                shoppingList && shoppingList.hasOwnProperty(option.foodId)
+              }
+              filterOptions={(options, params) => {
+                const { inputValue, getOptionLabel } = params;
+                const filtered = options.filter((option) =>
+                  getOptionLabel(option).includes(inputValue)
+                );
+                const isExisting = options.some(
+                  (option) => inputValue === option.title
+                );
+                if (inputValue !== "" && !isExisting) {
+                  filtered.push({
+                    inputValue,
+                    title: `Create "${inputValue}"`,
+                  });
                 }
-                value={newFoodId}
-                onChange={(event, selectedOption) => {
-                  setNewFoodId(selectedOption);
-                }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Enter item" size="small" />
-                )}
-                sx={{ width: "206px" }}
-              />
-            ) : null //TODO include input to create new basicFood
+                return filtered;
+              }}
+              value={
+                newFoodId && {
+                  foodId: newFoodId,
+                  title: glossary.basicFoods[newFoodId],
+                }
+              }
+              onChange={(event, selectedOption = {}) => {
+                if (!selectedOption) {
+                  setNewFoodId(null);
+                  return;
+                }
+
+                const { foodId, inputValue } = selectedOption;
+
+                if (inputValue) {
+                  setOpenCreateBasicFoodDialog(true);
+                  setCreateBasicFood({ name: inputValue });
+                } else {
+                  setNewFoodId(foodId);
+                }
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Enter item" size="small" />
+              )}
+              sx={{ width: "206px" }}
+            />
           }
           <TextField
             variant="outlined"
@@ -344,7 +413,7 @@ function ShoppingList(props) {
           disabled={!(newFoodId && newFoodAmount)}
           onClick={() => {
             updateRequest({
-              [`${updatePath}/${newFoodId}`]: {
+              [`${shoppingListPath}/${newFoodId}`]: {
                 isChecked: false,
                 collatedAmount: newFoodAmount,
               },
@@ -401,6 +470,100 @@ function ShoppingList(props) {
     );
   };
 
+  const renderCreateBasicFoodDialog = () => (
+    <Dialog
+      open={openCreateBasicFoodDialog}
+      sx={{ "& .MuiDialog-paper": { width: "80%" } }}
+      maxWidth="xs"
+    >
+      <DialogTitle color="primary">Create a new basic food</DialogTitle>
+      <DialogContent dividers>
+        <Stack
+          key={"createBasicFood"}
+          direction="row"
+          justifyContent="space-around"
+          alignItems="center"
+          spacing={2}
+        >
+          <TextField
+            variant="outlined"
+            label={"Food name"}
+            size="small"
+            sx={{ width: "150px" }}
+            value={createBasicFood.name || ""}
+            onChange={(event) => {
+              setCreateBasicFood((previous) => ({
+                ...previous,
+                name: event.target.value,
+              }));
+            }}
+          />
+          <FormControl size="small" variant="standard">
+            <InputLabel id="tag" style={{ top: "-11px" }}>
+              Dept.
+            </InputLabel>
+            <Select
+              labelId="tag"
+              id="tag"
+              value={createBasicFood.tagId || ""}
+              onChange={(event) => {
+                setCreateBasicFood((previous) => ({
+                  ...previous,
+                  tagId: event.target.value,
+                }));
+              }}
+              style={{ marginTop: 0, paddingTop: "5px", width: "110px" }}
+            >
+              {(glossary && glossary.basicFoodTags
+                ? Object.keys(glossary.basicFoodTags).map((basicFoodTagKey) => (
+                    <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
+                      {glossary.basicFoodTags[basicFoodTagKey]}
+                    </MenuItem>
+                  ))
+                : []
+              ).concat(
+                <MenuItem value={""} key={"delete"}>
+                  <em>None</em>
+                </MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color="secondary"
+          onClick={() => {
+            setOpenCreateBasicFoodDialog(false);
+            setCreateBasicFood({});
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          color="success"
+          disabled={!createBasicFood.name}
+          onClick={() => {
+            const foodId = createKey(`${glossaryPath}/basicFoods`);
+            const updates = {};
+            updates[`${glossaryPath}/basicFoods/${foodId}`] =
+              createBasicFood.name;
+            if (createBasicFood.tagId) {
+              updates[`${basicFoodTagAssociationPath}/${foodId}`] =
+                createBasicFood.tagId;
+            }
+            updateRequest(updates);
+            setNewFoodId(foodId);
+            setOpenCreateBasicFoodDialog(false);
+            setCreateBasicFood({});
+          }}
+        >
+          Create
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   return (
     <div>
       <Typography
@@ -452,6 +615,7 @@ function ShoppingList(props) {
         {renderNewItemControls()}
         {renderDeleteButtons()}
       </Stack>
+      {renderCreateBasicFoodDialog()}
     </div>
   );
 }

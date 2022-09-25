@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -35,6 +35,8 @@ function App() {
 
   const prevUserRef = useRef();
 
+  let navigate = useNavigate();
+
   const addAlert = (alert, removalTime = 3001) => {
     setAlertList((prevList) => prevList.concat(alert));
     setTimeout(() => {
@@ -54,11 +56,29 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (prevUserRef.current && prevUserRef.current !== user) {
+      navigate("/home");
+    }
+    prevUserRef.current = user;
+  }, [user, navigate]);
+
+  useEffect(() => {
     if (!user) {
+      setIsAuthorizedUser(false);
       return;
     }
 
     const db = getDatabase();
+
+    const dbRef = ref(db);
+    get(child(dbRef, `users/${user.uid}`))
+      .then((snapshot) => {
+        setIsAuthorizedUser(snapshot.exists() && snapshot.val());
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsAuthorizedUser(false);
+      });
 
     onValue(ref(db, `glossary/${user.uid}`), (snapshot) => {
       setGlossary(snapshot.val());
@@ -75,38 +95,12 @@ function App() {
     onValue(ref(db, `cookbook/${user.uid}`), (snapshot) => {
       setCookbook(snapshot.val());
     });
-  }, [user]);
 
-  useEffect(() => {
-    if (user) {
-      addAlert({
-        message: "Succesfully logged in with Google",
-        title: `Hello ${user.displayName}`,
-        alertProps: { severity: "success" },
-      });
-    } else if (prevUserRef.current && !user) {
-      addAlert({
-        message: "Succesfully logged out.",
-        title: "Farewell",
-        alertProps: { severity: "success" },
-      });
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user) {
-      const dbRef = ref(getDatabase());
-      get(child(dbRef, `users/${user.uid}`))
-        .then((snapshot) => {
-          setIsAuthorizedUser(snapshot.exists() && snapshot.val());
-        })
-        .catch((error) => {
-          console.error(error);
-          setIsAuthorizedUser(false);
-        });
-    } else {
-      setIsAuthorizedUser(false);
-    }
+    addAlert({
+      message: "Succesfully logged in with Google",
+      title: `Hello ${user.displayName}`,
+      alertProps: { severity: "success" },
+    });
   }, [user]);
 
   const usePathname = () => {
@@ -171,6 +165,10 @@ function App() {
             cookbook={cookbook}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
+            glossaryPath={user ? `glossary/${user.uid}` : ""}
+            basicFoodTagAssociationPath={
+              user ? `basicFood-basicFoodTag/${user.uid}` : ""
+            }
             addAlert={addAlert}
           />
         }
@@ -183,7 +181,11 @@ function App() {
             basicFoodTagAssociation={basicFoodTagAssociation}
             shoppingList={shoppingList}
             cookbook={cookbook}
-            updatePath={user ? `shoppingList/${user.uid}` : ""}
+            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
+            glossaryPath={user ? `glossary/${user.uid}` : ""}
+            basicFoodTagAssociationPath={
+              user ? `basicFood-basicFoodTag/${user.uid}` : ""
+            }
             addAlert={addAlert}
           />
         }
