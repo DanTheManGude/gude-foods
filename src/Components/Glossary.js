@@ -28,11 +28,13 @@ function Glossary(props) {
     shoppingList,
     cookbook,
     basicFoodTagAssociation,
+    basicFoodTagOrder,
     addAlert,
     glossaryPath,
     shoppingListPath,
     cookbookPath,
     basicFoodTagAssociationPath,
+    basicFoodTagOrderPath,
   } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
@@ -187,6 +189,32 @@ function Glossary(props) {
               )}
           </Select>
         </FormControl>
+      );
+    } else if (sectionKey === "basicFoodTags") {
+      const order = [...(basicFoodTagOrder || [])];
+      const index = order.indexOf(entryKey);
+
+      return (
+        <Select
+          size="small"
+          value={index}
+          onChange={(event) => {
+            order.splice(index, 1);
+            order.splice(event.target.value, 0, entryKey);
+            updateRequest({ [basicFoodTagOrderPath]: order });
+          }}
+          onClose={() => {
+            setTimeout(() => {
+              document.activeElement.blur();
+            }, 100);
+          }}
+        >
+          {order.map((t, i) => (
+            <MenuItem key={i} value={i}>
+              {i + 1}
+            </MenuItem>
+          ))}
+        </Select>
       );
     }
   };
