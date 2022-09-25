@@ -15,6 +15,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
+import Box from "@mui/material/Box";
 
 import { updateRequest, createKey } from "../utils";
 
@@ -255,7 +256,7 @@ function Glossary(props) {
     </Accordion>
   );
 
-  const renderBasicFoods = () => {
+  const renderBasicFoodContents = () => {
     if (
       !glossary ||
       !glossary.basicFoods ||
@@ -263,39 +264,82 @@ function Glossary(props) {
       !basicFoodTagAssociation
     ) {
       return (
-        <Accordion key={"basicFoodsEmpty"} sx={{ width: "95%" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6">Basic Foods</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-              {(glossary && glossary.basicFoods
-                ? Object.keys(glossary.basicFoods)
-                : []
-              )
-                .concat("basicFoods")
-                .map(getRenderInputButtonStack("basicFoods"))}
-            </Stack>
-          </AccordionDetails>
-        </Accordion>
+        <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+          {(glossary && glossary.basicFoods
+            ? Object.keys(glossary.basicFoods)
+            : []
+          )
+            .concat("basicFoods")
+            .map(getRenderInputButtonStack("basicFoods"))}
+        </Stack>
       );
     }
 
-    const basicFoodTagsList = Object.keys(glossary.basicFoodTags);
+    const basicFoodTagsList = Object.keys(glossary.basicFoodTags).concat(
+      UNKNOWN_TAG
+    );
 
     const basicFoodMap = Object.keys(glossary.basicFoods).reduce(
       (acc, foodId) => {
         const tagId = basicFoodTagAssociation[foodId] || UNKNOWN_TAG;
         return { ...acc, [tagId]: acc[tagId].concat(foodId) };
       },
-      basicFoodTagsList.reduce((acc, tagId) => ({ ...acc, [tagId]: [] }), {
-        UNKNOWN_TAG: [],
-      })
+      basicFoodTagsList.reduce((acc, tagId) => ({ ...acc, [tagId]: [] }), {})
     );
 
-    console.log(basicFoodMap);
-    return null;
+    return (
+      <Stack spacing={0}>
+        {basicFoodTagsList.map((tagId) => {
+          const isEmpty = !basicFoodMap[tagId].length;
+
+          if (isEmpty) {
+            return (
+              <Accordion
+                key={`basicFoods-empty-${tagId}`}
+                variant="outlined"
+                disabled={true}
+                expanded={false}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">
+                    {glossary.basicFoodTags[tagId] || unknownSectionName}
+                  </Typography>
+                </AccordionSummary>
+              </Accordion>
+            );
+          }
+          return (
+            <Accordion key={`basicFoods-${tagId}`} variant="outlined">
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  {glossary.basicFoodTags[tagId] || unknownSectionName}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+                  {basicFoodMap[tagId].map(
+                    getRenderInputButtonStack("basicFoods")
+                  )}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
+        <Box sx={{ paddingTop: 3 }}>
+          {getRenderInputButtonStack("basicFoods")("basicFoods")}
+        </Box>
+      </Stack>
+    );
   };
+
+  const renderBasicFoods = () => (
+    <Accordion key={"basicFoods"} sx={{ width: "95%" }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="h6">Basic Foods</Typography>
+      </AccordionSummary>
+      <AccordionDetails>{renderBasicFoodContents()}</AccordionDetails>
+    </Accordion>
+  );
 
   const renderRecipeTags = () => (
     <Accordion key={"recipeTags"} sx={{ width: "95%" }}>
