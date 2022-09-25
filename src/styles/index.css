@@ -14,8 +14,8 @@ body {
 }
 
 @font-face {
-  font-family: "PermanentMarker";
-  src: url("./PermanentMarker-Regular.ttf");
+  font-family: "DancingScript";
+  src: url("./DancingScript.ttf");
 }
 
 .App {

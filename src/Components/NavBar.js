@@ -46,14 +46,15 @@ const NavBar = (props) => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="span"
             href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "PermanentMarker",
+              fontFamily: "DancingScript",
+              fontWeight: "bold",
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
@@ -112,7 +113,7 @@ const NavBar = (props) => {
           </Box>
 
           <Typography
-            variant="h5"
+            variant="h4"
             noWrap
             component="span"
             href=""
@@ -120,7 +121,8 @@ const NavBar = (props) => {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "PermanentMarker",
+              fontFamily: "DancingScript",
+              fontWeight: "bold",
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
