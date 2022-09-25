@@ -181,7 +181,11 @@ function App() {
             basicFoodTagAssociation={basicFoodTagAssociation}
             shoppingList={shoppingList}
             cookbook={cookbook}
-            updatePath={user ? `shoppingList/${user.uid}` : ""}
+            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
+            glossaryPath={user ? `glossary/${user.uid}` : ""}
+            basicFoodTagAssociationPath={
+              user ? `basicFood-basicFoodTag/${user.uid}` : ""
+            }
             addAlert={addAlert}
           />
         }

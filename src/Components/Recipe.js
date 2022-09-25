@@ -492,6 +492,10 @@ function Recipe(props) {
                           }
                         }
                         onChange={(event, selectedOption) => {
+                          if (!selectedOption) {
+                            setNewIngredientId(null);
+                            return;
+                          }
                           const { foodId, inputValue } = selectedOption;
 
                           if (inputValue) {
@@ -869,11 +873,11 @@ function Recipe(props) {
             <Select
               labelId="tag"
               id="tag"
-              value={createBasicFood.tag || ""}
+              value={createBasicFood.tagId || ""}
               onChange={(event) => {
                 setCreateBasicFood((previous) => ({
                   ...previous,
-                  tag: event.target.value,
+                  tagId: event.target.value,
                 }));
               }}
               style={{ marginTop: 0, paddingTop: "5px", width: "110px" }}
