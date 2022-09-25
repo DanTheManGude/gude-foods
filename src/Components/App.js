@@ -154,6 +154,7 @@ function App() {
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             shoppingList={shoppingList}
+            cookbook={cookbook}
           />
         }
       />

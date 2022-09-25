@@ -9,7 +9,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
 function Home(props) {
-  const { glossary, basicFoodTagAssociation, shoppingList } = props;
+  const { glossary, basicFoodTagAssociation, shoppingList, cookbook } = props;
 
   const renderGlossaryCard = () => {
     const count =
@@ -102,6 +102,36 @@ function Home(props) {
     );
   };
 
+  const renderCookbookCard = () => {
+    const count = cookbook && Object.keys(cookbook).length;
+
+    if (!count) {
+      return null;
+    }
+
+    return (
+      <Box sx={{ width: "90%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Cookbook
+            </Typography>
+            <Typography>
+              There are <strong>{count}</strong> recipes in the cookbook.
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button color="secondary" variant="outlined">
+              <Link to={`/cookbook`}>
+                <Typography color="secondary">Go to Cookbook</Typography>
+              </Link>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
+
   return (
     <div>
       <Typography
@@ -117,8 +147,8 @@ function Home(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderGlossaryCard()}
         {renderShoppingListCard()}
-        {/* {renderCookbookCard()}
-        {renderRecipeCard()} */}
+        {renderCookbookCard()}
+        {/* {renderRecipeCard()} */}
       </Stack>
     </div>
   );
