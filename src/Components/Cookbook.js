@@ -28,58 +28,62 @@ function Cookbook(props) {
 
   const { searchTerm = "" } = filteringOptions;
 
-  const renderSearchAndFilters = () => (
-    <Stack
-      direction="row"
-      spacing={2}
-      justifyContent="space-around"
-      alignItems="center"
-      sx={{ width: "95%" }}
-    >
-      <TextField
-        key="search"
-        variant="outlined"
-        label={<Typography>Search</Typography>}
-        value={searchTerm}
-        onChange={(event) => {
-          setFilteringOptions((_filteringOptions) => ({
-            ..._filteringOptions,
-            searchTerm: event.target.value.toUpperCase(),
-          }));
-        }}
-        InputProps={{
-          endAdornment: searchTerm && (
-            <InputAdornment position="end">
-              <IconButton
-                sx={{ color: "alt.main" }}
-                onClick={() => {
-                  setFilteringOptions((_filteringOptions) => ({
-                    ..._filteringOptions,
-                    searchTerm: "",
-                  }));
-                }}
-                edge="end"
-              >
-                <ClearIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-      <Button
-        color="secondary"
-        variant="outlined"
-        size="small"
-        sx={{ width: "179px" }}
-        onClick={() => {}}
-        disabled={true}
+  const renderSearchAndFilters = () =>
+    !cookbook ? null : (
+      <Stack
+        direction="row"
+        spacing={2}
+        justifyContent="space-around"
+        alignItems="center"
+        sx={{ width: "95%" }}
       >
-        <Typography>Advanced filters</Typography>
-      </Button>
-    </Stack>
-  );
+        <TextField
+          key="search"
+          variant="outlined"
+          label={<Typography>Search</Typography>}
+          value={searchTerm}
+          onChange={(event) => {
+            setFilteringOptions((_filteringOptions) => ({
+              ..._filteringOptions,
+              searchTerm: event.target.value.toUpperCase(),
+            }));
+          }}
+          InputProps={{
+            endAdornment: searchTerm && (
+              <InputAdornment position="end">
+                <IconButton
+                  sx={{ color: "alt.main" }}
+                  onClick={() => {
+                    setFilteringOptions((_filteringOptions) => ({
+                      ..._filteringOptions,
+                      searchTerm: "",
+                    }));
+                  }}
+                  edge="end"
+                >
+                  <ClearIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Button
+          color="secondary"
+          variant="outlined"
+          size="small"
+          sx={{ width: "179px" }}
+          onClick={() => {}}
+          disabled={true}
+        >
+          <Typography>Advanced filters</Typography>
+        </Button>
+      </Stack>
+    );
 
   const renderRecipeStack = () => {
+    if (!cookbook) {
+      return null;
+    }
     const recipeList = Object.keys(cookbook);
     return (
       <Stack sx={{ width: "95%" }} spacing={1}>
@@ -183,10 +187,6 @@ function Cookbook(props) {
       </Stack>
     );
   };
-
-  if (!glossary) {
-    return null;
-  }
 
   return (
     <div>

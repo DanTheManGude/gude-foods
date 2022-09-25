@@ -169,10 +169,6 @@ function Recipe(props) {
     });
   };
 
-  if (!glossary) {
-    return null;
-  }
-
   if (!recipeId) {
     return (
       <Typography
@@ -420,41 +416,50 @@ function Recipe(props) {
                     spacing={2}
                     alignItems="center"
                   >
-                    <Autocomplete
-                      id={"addIngredientSelect"}
-                      options={Object.values(
-                        Object.keys(glossary.basicFoods).reduce(
-                          (acc, foodId) => {
-                            const foodSectionForOptions =
-                              calculateFoodSectionForOptions(foodId);
-                            if (acc.hasOwnProperty(foodSectionForOptions)) {
-                              acc[foodSectionForOptions].push(foodId);
-                            } else {
-                              acc[foodSectionForOptions] = [foodId];
-                            }
-                            return acc;
-                          },
-                          {}
-                        )
-                      ).reduce((acc, foodLists) => acc.concat(foodLists), [])}
-                      getOptionLabel={(option) => glossary.basicFoods[option]}
-                      groupBy={calculateFoodSectionForOptions}
-                      getOptionDisabled={(option) =>
-                        ingredients && ingredients.hasOwnProperty(option)
-                      }
-                      value={newIngredientId}
-                      onChange={(event, selectedOption) => {
-                        setNewIngredientId(selectedOption);
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Enter item"
-                          size="small"
+                    {
+                      glossary && glossary.basicFoods ? (
+                        <Autocomplete
+                          id={"addIngredientSelect"}
+                          options={Object.values(
+                            Object.keys(glossary.basicFoods).reduce(
+                              (acc, foodId) => {
+                                const foodSectionForOptions =
+                                  calculateFoodSectionForOptions(foodId);
+                                if (acc.hasOwnProperty(foodSectionForOptions)) {
+                                  acc[foodSectionForOptions].push(foodId);
+                                } else {
+                                  acc[foodSectionForOptions] = [foodId];
+                                }
+                                return acc;
+                              },
+                              {}
+                            )
+                          ).reduce(
+                            (acc, foodLists) => acc.concat(foodLists),
+                            []
+                          )}
+                          getOptionLabel={(option) =>
+                            glossary.basicFoods[option]
+                          }
+                          groupBy={calculateFoodSectionForOptions}
+                          getOptionDisabled={(option) =>
+                            ingredients && ingredients.hasOwnProperty(option)
+                          }
+                          value={newIngredientId}
+                          onChange={(event, selectedOption) => {
+                            setNewIngredientId(selectedOption);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Enter item"
+                              size="small"
+                            />
+                          )}
+                          fullWidth
                         />
-                      )}
-                      fullWidth
-                    />
+                      ) : null //TODO include input to create new basicFood
+                    }
                     <Button
                       color="secondary"
                       variant="outlined"
@@ -699,22 +704,24 @@ function Recipe(props) {
           ))}
         </Stack>
         {isEditing ? (
-          <Autocomplete
-            id={"addtagSelect"}
-            options={Object.keys(glossary.recipeTags)}
-            getOptionLabel={(option) => glossary.recipeTags[option]}
-            getOptionDisabled={(option) => tags.includes(option)}
-            value={null}
-            onChange={(event, selectedOption) => {
-              addTag(selectedOption);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="Enter tag" size="small" />
-            )}
-            onClose={() => {
-              document.activeElement.blur();
-            }}
-          />
+          glossary && glossary.recipeTags ? (
+            <Autocomplete
+              id={"addtagSelect"}
+              options={Object.keys(glossary.recipeTags)}
+              getOptionLabel={(option) => glossary.recipeTags[option]}
+              getOptionDisabled={(option) => tags.includes(option)}
+              value={null}
+              onChange={(event, selectedOption) => {
+                addTag(selectedOption);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Enter tag" size="small" />
+              )}
+              onClose={() => {
+                document.activeElement.blur();
+              }}
+            />
+          ) : null //TODO include input to create new recipeTag
         ) : null}
       </>
     );

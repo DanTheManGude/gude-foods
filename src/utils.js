@@ -1,16 +1,5 @@
 import { getDatabase, ref, child, push, update } from "firebase/database";
 
-const presentationNames = {
-  cookbook: "Cookbook",
-  basicFoods: "Basic Foods",
-  shoppingList: "Shopping List",
-  glossary: "Glossary",
-  basicFoodTags: "Departments",
-  recipeTags: "Recipe Tags",
-};
-
-export const getPresentationName = (key) => presentationNames[key];
-
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
     .then(() => {
@@ -42,5 +31,7 @@ export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
 
 export const getCalculateFoodSectionForOptions =
   (glossary, basicFoodTagAssociation, unknownSectionName) => (option) =>
-    glossary.basicFoodTags[basicFoodTagAssociation[option]] ||
+    (glossary &&
+      basicFoodTagAssociation &&
+      glossary.basicFoodTags[basicFoodTagAssociation[option]]) ||
     unknownSectionName;

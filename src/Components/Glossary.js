@@ -15,8 +15,12 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
+import Box from "@mui/material/Box";
 
-import { getPresentationName, updateRequest, createKey } from "../utils";
+import { updateRequest, createKey } from "../utils";
+
+const UNKNOWN_TAG = "UNKNOWN_TAG";
+const unknownSectionName = "Unknown Section";
 
 function Glossary(props) {
   const {
@@ -80,7 +84,7 @@ function Glossary(props) {
                     updates[`${shoppingListPath}/${entryKey}`] = null;
                   }
                   if (cookbook) {
-                    Object.keys(cookbook).map((recipeId) => {
+                    Object.keys(cookbook).forEach((recipeId) => {
                       if (
                         cookbook[recipeId].ingredients.hasOwnProperty(entryKey)
                       ) {
@@ -93,17 +97,20 @@ function Glossary(props) {
                   break;
                 case "basicFoodTags":
                   if (basicFoodTagAssociation) {
-                    Object.keys(basicFoodTagAssociation).map((basicFoodId) => {
-                      if (basicFoodTagAssociation[basicFoodId] === entryKey) {
-                        updates[`${basicFoodTagAssociationPath}/basicFoodId`] =
-                          null;
+                    Object.keys(basicFoodTagAssociation).forEach(
+                      (basicFoodId) => {
+                        if (basicFoodTagAssociation[basicFoodId] === entryKey) {
+                          updates[
+                            `${basicFoodTagAssociationPath}/basicFoodId`
+                          ] = null;
+                        }
                       }
-                    });
+                    );
                   }
                   break;
                 case "recipeTags":
                   if (cookbook) {
-                    Object.keys(cookbook).map((recipeId) => {
+                    Object.keys(cookbook).forEach((recipeId) => {
                       if (cookbook[recipeId].hasOwnProperty("tags")) {
                         if (cookbook[recipeId].tags.includes(entryKey)) {
                           updates[`${cookbookPath}/${recipeId}/tags`] =
@@ -136,10 +143,9 @@ function Glossary(props) {
     }
 
     if (sectionKey === "basicFoods") {
-      const basicFoodTags = glossary.basicFoodTags;
+      const basicFoodTags = glossary.basicFoodTags || [];
       const tagId =
-        basicFoodTagAssociation && basicFoodTagAssociation[entryKey];
-      const value = basicFoodTags.hasOwnProperty(tagId) ? tagId : "";
+        (basicFoodTagAssociation && basicFoodTagAssociation[entryKey]) || "";
 
       return (
         <FormControl
@@ -148,7 +154,7 @@ function Glossary(props) {
           sx={{ width: "110px" }}
           disabled={disabled}
         >
-          {value === "" && (
+          {tagId === "" && (
             <InputLabel id={entryKey} style={{ top: "-11px" }}>
               Dept.
             </InputLabel>
@@ -156,7 +162,7 @@ function Glossary(props) {
           <Select
             labelId={entryKey}
             id={entryKey}
-            value={value}
+            value={tagId}
             onChange={(event) => {
               updateRequest(
                 {
@@ -232,6 +238,127 @@ function Glossary(props) {
     );
   };
 
+  const renderBasicFoodTags = () => (
+    <Accordion key={"basicFoodTags"} sx={{ width: "95%" }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="h6">Departments</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+          {(glossary && glossary.basicFoodTags
+            ? Object.keys(glossary.basicFoodTags)
+            : []
+          )
+            .concat("basicFoodTags")
+            .map(getRenderInputButtonStack("basicFoodTags"))}
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
+  );
+
+  const renderBasicFoodContents = () => {
+    if (
+      !glossary ||
+      !glossary.basicFoods ||
+      !glossary.basicFoodTags ||
+      !basicFoodTagAssociation
+    ) {
+      return (
+        <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+          {(glossary && glossary.basicFoods
+            ? Object.keys(glossary.basicFoods)
+            : []
+          )
+            .concat("basicFoods")
+            .map(getRenderInputButtonStack("basicFoods"))}
+        </Stack>
+      );
+    }
+
+    const basicFoodTagsList = Object.keys(glossary.basicFoodTags).concat(
+      UNKNOWN_TAG
+    );
+
+    const basicFoodMap = Object.keys(glossary.basicFoods).reduce(
+      (acc, foodId) => {
+        const tagId = basicFoodTagAssociation[foodId] || UNKNOWN_TAG;
+        return { ...acc, [tagId]: acc[tagId].concat(foodId) };
+      },
+      basicFoodTagsList.reduce((acc, tagId) => ({ ...acc, [tagId]: [] }), {})
+    );
+
+    return (
+      <Stack spacing={0}>
+        {basicFoodTagsList.map((tagId) => {
+          const isEmpty = !basicFoodMap[tagId].length;
+
+          if (isEmpty) {
+            return (
+              <Accordion
+                key={`basicFoods-empty-${tagId}`}
+                variant="outlined"
+                disabled={true}
+                expanded={false}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">
+                    {glossary.basicFoodTags[tagId] || unknownSectionName}
+                  </Typography>
+                </AccordionSummary>
+              </Accordion>
+            );
+          }
+          return (
+            <Accordion key={`basicFoods-${tagId}`} variant="outlined">
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  {glossary.basicFoodTags[tagId] || unknownSectionName}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+                  {basicFoodMap[tagId].map(
+                    getRenderInputButtonStack("basicFoods")
+                  )}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
+        <Box sx={{ paddingTop: 3 }}>
+          {getRenderInputButtonStack("basicFoods")("basicFoods")}
+        </Box>
+      </Stack>
+    );
+  };
+
+  const renderBasicFoods = () => (
+    <Accordion key={"basicFoods"} sx={{ width: "95%" }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="h6">Basic Foods</Typography>
+      </AccordionSummary>
+      <AccordionDetails>{renderBasicFoodContents()}</AccordionDetails>
+    </Accordion>
+  );
+
+  const renderRecipeTags = () => (
+    <Accordion key={"recipeTags"} sx={{ width: "95%" }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="h6">Recipe Tags</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+          {(glossary && glossary.recipeTags
+            ? Object.keys(glossary.recipeTags)
+            : []
+          )
+            .concat("recipeTags")
+            .map(getRenderInputButtonStack("recipeTags"))}
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
+  );
+
   return (
     <div>
       <Typography
@@ -243,39 +370,16 @@ function Glossary(props) {
       >
         Glossary
       </Typography>
-      {!glossary ? (
-        <Typography
-          sx={{
-            color: "text.primary",
-            textAlign: "center",
-          }}
-        >
-          Ope, no items in Glossary
-        </Typography>
-      ) : (
-        <Stack
-          sx={{ width: "100%", paddingTop: "15px" }}
-          spacing={3}
-          alignItems="center"
-        >
-          {Object.keys(glossary).map((sectionKey) => (
-            <Accordion key={sectionKey} sx={{ width: "95%" }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">
-                  {getPresentationName(sectionKey)}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-                  {Object.keys(glossary[sectionKey])
-                    .concat(sectionKey)
-                    .map(getRenderInputButtonStack(sectionKey))}
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Stack>
-      )}
+
+      <Stack
+        sx={{ width: "100%", paddingTop: "15px" }}
+        spacing={3}
+        alignItems="center"
+      >
+        {renderBasicFoodTags()}
+        {renderBasicFoods()}
+        {renderRecipeTags()}
+      </Stack>
     </div>
   );
 }

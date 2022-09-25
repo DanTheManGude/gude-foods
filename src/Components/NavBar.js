@@ -13,8 +13,13 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 
-import { getPresentationName } from "../utils";
 import GoogleLoginButton from "./GoogleLoginButton.js";
+
+const presentationNames = {
+  cookbook: "Cookbook",
+  shoppingList: "Shopping List",
+  glossary: "Glossary",
+};
 
 const pages = ["cookbook", "shoppingList", "glossary"];
 
@@ -92,7 +97,7 @@ const NavBar = (props) => {
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Link to={`/${page}`}>
                       <Typography textAlign="center">
-                        {getPresentationName(page)}
+                        {presentationNames[page]}
                       </Typography>
                     </Link>
                   </MenuItem>
@@ -133,7 +138,7 @@ const NavBar = (props) => {
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 <Link to={`/${page}`}>
-                  <Typography>{getPresentationName(page)}</Typography>
+                  <Typography>{presentationNames[page]}</Typography>
                 </Link>
               </Button>
             ))}
