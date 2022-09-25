@@ -246,6 +246,7 @@ function Recipe(props) {
             color="error"
             variant="outlined"
             size="small"
+            sx={{ flexGrow: "1" }}
             onClick={() => {
               setOpenDeleteDialog(true);
             }}
@@ -256,6 +257,7 @@ function Recipe(props) {
             color="warning"
             variant="outlined"
             size="small"
+            sx={{ flexGrow: "1" }}
             onClick={() => {
               setRecipeEntry(JSON.parse(JSON.stringify(originalRecipe)));
               setIsEditing(false);
@@ -265,13 +267,17 @@ function Recipe(props) {
           </Button>
         </>
       ) : (
-        <Button color="secondary" variant="outlined" size="small">
+        <Button
+          color="secondary"
+          variant="outlined"
+          size="small"
+          sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "1" }}
+        >
           <Link to={`/cookbook`}>
-            <Typography
-              color="secondary"
-              sx={{ ...(isCreating ? {} : { fontSize: "14.4px" }) }}
-            >
-              Back to cookbook
+            <Typography color="secondary">
+              <span>Back to</span>
+              <br />
+              <span>cookbook</span>
             </Typography>
           </Link>
         </Button>
@@ -283,6 +289,7 @@ function Recipe(props) {
           variant="outlined"
           size="small"
           onClick={handleSave}
+          sx={{ flexGrow: "1" }}
         >
           <Typography>Save</Typography>
         </Button>
@@ -292,6 +299,7 @@ function Recipe(props) {
             color="secondary"
             variant="outlined"
             size="small"
+            sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
               updateRequest(
                 Object.keys(originalRecipe.ingredients).reduce(
@@ -305,15 +313,17 @@ function Recipe(props) {
               );
             }}
           >
-            <Typography sx={{ fontSize: "14.4px" }}>
-              Add to shopping list
+            <Typography>
+              <span>Add to</span>
+              <br />
+              <span>shopping list</span>
             </Typography>
           </Button>
           <Button
             color="success"
             variant="outlined"
             size="small"
-            sx={{ height: "50px" }}
+            sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
               setIsEditing(true);
             }}
