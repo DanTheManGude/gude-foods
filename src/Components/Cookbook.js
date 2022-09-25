@@ -70,8 +70,7 @@ function Cookbook(props) {
         <Button
           color="secondary"
           variant="outlined"
-          size="small"
-          sx={{ width: "179px" }}
+          sx={{ width: "179px", height: "56px" }}
           onClick={() => {}}
           disabled={true}
         >
