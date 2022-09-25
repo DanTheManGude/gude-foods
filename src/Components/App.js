@@ -171,6 +171,7 @@ function App() {
             cookbook={cookbook}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
+            glossaryPath={user ? `glossary/${user.uid}` : ""}
             addAlert={addAlert}
           />
         }
