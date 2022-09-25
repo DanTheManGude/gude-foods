@@ -28,6 +28,22 @@ const theme = createTheme({
     tertiary: { main: "#79B2A8", contrastText: "#000" },
     alt: { main: "#D6D365" },
   },
+  typography: {
+    fontFamily: [
+      "Dosis",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      "Segoe UI",
+      "Roboto",
+      "Oxygen",
+      "Ubuntu",
+      "Cantarell",
+      "Fira Sans",
+      "Droid Sans",
+      "Helvetica Neue",
+      "sans-serif",
+    ].join(","),
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
