@@ -7,7 +7,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebaseConfig.js";
 
-import "./index.css";
+import "./styles/index.css";
 import App from "./Components/App";
 
 const {

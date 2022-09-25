@@ -13,6 +13,11 @@ body {
   margin-bottom: 32px;
 }
 
+@font-face {
+  font-family: "PermanentMarker";
+  src: url("./PermanentMarker-Regular.ttf");
+}
+
 .App {
   z-index: 1;
   position: relative;
