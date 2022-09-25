@@ -554,6 +554,7 @@ function ShoppingList(props) {
         sx={{
           color: "primary.main",
           textAlign: "center",
+          paddingY: 2,
         }}
       >
         Shopping List

@@ -198,6 +198,7 @@ function Glossary(props) {
         <Select
           size="small"
           value={index}
+          sx={{ width: "60px" }}
           onChange={(event) => {
             order.splice(index, 1);
             order.splice(event.target.value, 0, entryKey);
@@ -210,7 +211,7 @@ function Glossary(props) {
           }}
         >
           {order.map((t, i) => (
-            <MenuItem key={i} value={i}>
+            <MenuItem key={i} value={i} disabled={i === index}>
               {i + 1}
             </MenuItem>
           ))}
@@ -392,6 +393,7 @@ function Glossary(props) {
         sx={{
           color: "primary.main",
           textAlign: "center",
+          paddingY: 2,
         }}
       >
         Glossary

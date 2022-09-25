@@ -40,6 +40,7 @@ function Cookbook(props) {
         <TextField
           key="search"
           variant="outlined"
+          sx={{ flexGrow: "1" }}
           label={<Typography>Search</Typography>}
           value={searchTerm}
           onChange={(event) => {
@@ -70,12 +71,15 @@ function Cookbook(props) {
         <Button
           color="secondary"
           variant="outlined"
-          size="small"
-          sx={{ width: "179px" }}
           onClick={() => {}}
           disabled={true}
+          sx={{ flexGrow: "3", maxWidth: "40%" }}
         >
-          <Typography>Advanced filters</Typography>
+          <Typography>
+            <span>Advanced</span>
+            <br />
+            <span>filters</span>
+          </Typography>
         </Button>
       </Stack>
     );
@@ -115,8 +119,8 @@ function Cookbook(props) {
                       <Button
                         color="secondary"
                         variant="outlined"
-                        size="small"
-                        sx={{ flex: 1, maxWidth: "170px" }}
+                        size="large"
+                        sx={{ flex: 1 }}
                       >
                         <Link to={`/recipe/${recipeId}/`}>
                           <Typography color="secondary">
@@ -127,8 +131,8 @@ function Cookbook(props) {
                       <Button
                         color="secondary"
                         variant="outlined"
-                        size="small"
-                        sx={{ flex: 1, maxWidth: "170px" }}
+                        size="large"
+                        sx={{ flex: 1 }}
                         onClick={() => {
                           updateRequest(
                             Object.keys(ingredients).reduce(
@@ -195,6 +199,7 @@ function Cookbook(props) {
         sx={{
           color: "primary.main",
           textAlign: "center",
+          paddingY: 2,
         }}
       >
         Cookbook

@@ -7,6 +7,7 @@ function Home() {
       sx={{
         color: "primary.main",
         textAlign: "center",
+        paddingY: 2,
       }}
     >
       Home
