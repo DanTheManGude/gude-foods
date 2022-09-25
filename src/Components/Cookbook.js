@@ -114,8 +114,8 @@ function Cookbook(props) {
                       <Button
                         color="secondary"
                         variant="outlined"
-                        size="small"
-                        sx={{ flex: 1, maxWidth: "170px" }}
+                        size="large"
+                        sx={{ flex: 1 }}
                       >
                         <Link to={`/recipe/${recipeId}/`}>
                           <Typography color="secondary">
@@ -126,8 +126,8 @@ function Cookbook(props) {
                       <Button
                         color="secondary"
                         variant="outlined"
-                        size="small"
-                        sx={{ flex: 1, maxWidth: "170px" }}
+                        size="large"
+                        sx={{ flex: 1 }}
                         onClick={() => {
                           updateRequest(
                             Object.keys(ingredients).reduce(
