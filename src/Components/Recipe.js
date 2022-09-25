@@ -31,6 +31,7 @@ import {
   updateRequest,
   deleteRequest,
   getCalculateFoodSectionForOptions,
+  constructBasicFoodOptions,
 } from "../utils";
 
 const unknownSectionName = "Unknown Section";
@@ -40,6 +41,7 @@ function Recipe(props) {
     glossary,
     basicFoodTagAssociation,
     cookbook = {},
+    basicFoodTagOrder,
     cookbookPath,
     shoppingListPath,
     glossaryPath,
@@ -426,36 +428,12 @@ function Recipe(props) {
                     {
                       <Autocomplete
                         id={"addIngredientSelect"}
-                        options={
-                          glossary && glossary.basicFoods
-                            ? Object.values(
-                                Object.keys(glossary.basicFoods).reduce(
-                                  (acc, foodId) => {
-                                    const foodSectionForOptions =
-                                      calculateFoodSectionForOptions(foodId);
-                                    if (
-                                      acc.hasOwnProperty(foodSectionForOptions)
-                                    ) {
-                                      acc[foodSectionForOptions].push(foodId);
-                                    } else {
-                                      acc[foodSectionForOptions] = [foodId];
-                                    }
-                                    return acc;
-                                  },
-                                  {}
-                                )
-                              ).reduce(
-                                (acc, foodLists) =>
-                                  acc.concat(
-                                    foodLists.map((foodId) => ({
-                                      foodId,
-                                      title: glossary.basicFoods[foodId],
-                                    }))
-                                  ),
-                                []
-                              )
-                            : []
-                        }
+                        options={constructBasicFoodOptions(
+                          glossary,
+                          basicFoodTagOrder,
+                          unknownSectionName,
+                          calculateFoodSectionForOptions
+                        )}
                         getOptionLabel={(option) => option.title}
                         groupBy={(option) =>
                           option.foodId
@@ -883,7 +861,7 @@ function Recipe(props) {
               style={{ marginTop: 0, paddingTop: "5px", width: "110px" }}
             >
               {(glossary && glossary.basicFoodTags
-                ? Object.keys(glossary.basicFoodTags).map((basicFoodTagKey) => (
+                ? basicFoodTagOrder.map((basicFoodTagKey) => (
                     <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
                       {glossary.basicFoodTags[basicFoodTagKey]}
                     </MenuItem>

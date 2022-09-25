@@ -168,6 +168,7 @@ function App() {
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             cookbook={cookbook}
+            basicFoodTagOrder={basicFoodTagOrder}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             glossaryPath={user ? `glossary/${user.uid}` : ""}
@@ -186,6 +187,7 @@ function App() {
             basicFoodTagAssociation={basicFoodTagAssociation}
             shoppingList={shoppingList}
             cookbook={cookbook}
+            basicFoodTagOrder={basicFoodTagOrder}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             glossaryPath={user ? `glossary/${user.uid}` : ""}
             basicFoodTagAssociationPath={
