@@ -153,6 +153,7 @@ function App() {
           <Home
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
+            shoppingList={shoppingList}
           />
         }
       />
