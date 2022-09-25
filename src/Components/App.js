@@ -166,6 +166,9 @@ function App() {
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             glossaryPath={user ? `glossary/${user.uid}` : ""}
+            basicFoodTagAssociationPath={
+              user ? `basicFood-basicFoodTag/${user.uid}` : ""
+            }
             addAlert={addAlert}
           />
         }

@@ -16,7 +16,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -41,6 +43,7 @@ function Recipe(props) {
     cookbookPath,
     shoppingListPath,
     glossaryPath,
+    basicFoodTagAssociationPath,
     addAlert,
   } = props;
 
@@ -59,6 +62,9 @@ function Recipe(props) {
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
+    useState(false);
+  const [createBasicFood, setCreateBasicFood] = useState({});
 
   const [newStep, setNewStep] = useState("");
   const [newIngredientId, setNewIngredientId] = useState(null);
@@ -130,9 +136,9 @@ function Recipe(props) {
       [ingredientId]: value,
     }));
   };
-  const addIngredient = () => {
+  const addIngredient = (ingredientId) => {
     updateIngredients((_ingredients) => {
-      return { ..._ingredients, [newIngredientId]: "" };
+      return { ..._ingredients, [ingredientId]: "" };
     });
     setNewIngredientId(null);
   };
@@ -418,54 +424,98 @@ function Recipe(props) {
                     alignItems="center"
                   >
                     {
-                      glossary && glossary.basicFoods ? (
-                        <Autocomplete
-                          id={"addIngredientSelect"}
-                          options={Object.values(
-                            Object.keys(glossary.basicFoods).reduce(
-                              (acc, foodId) => {
-                                const foodSectionForOptions =
-                                  calculateFoodSectionForOptions(foodId);
-                                if (acc.hasOwnProperty(foodSectionForOptions)) {
-                                  acc[foodSectionForOptions].push(foodId);
-                                } else {
-                                  acc[foodSectionForOptions] = [foodId];
-                                }
-                                return acc;
-                              },
-                              {}
-                            )
-                          ).reduce(
-                            (acc, foodLists) => acc.concat(foodLists),
-                            []
-                          )}
-                          getOptionLabel={(option) =>
-                            glossary.basicFoods[option]
+                      <Autocomplete
+                        id={"addIngredientSelect"}
+                        options={
+                          glossary && glossary.basicFoods
+                            ? Object.values(
+                                Object.keys(glossary.basicFoods).reduce(
+                                  (acc, foodId) => {
+                                    const foodSectionForOptions =
+                                      calculateFoodSectionForOptions(foodId);
+                                    if (
+                                      acc.hasOwnProperty(foodSectionForOptions)
+                                    ) {
+                                      acc[foodSectionForOptions].push(foodId);
+                                    } else {
+                                      acc[foodSectionForOptions] = [foodId];
+                                    }
+                                    return acc;
+                                  },
+                                  {}
+                                )
+                              ).reduce(
+                                (acc, foodLists) =>
+                                  acc.concat(
+                                    foodLists.map((foodId) => ({
+                                      foodId,
+                                      title: glossary.basicFoods[foodId],
+                                    }))
+                                  ),
+                                []
+                              )
+                            : []
+                        }
+                        getOptionLabel={(option) => option.title}
+                        groupBy={(option) =>
+                          option.foodId
+                            ? calculateFoodSectionForOptions(option.foodId)
+                            : null
+                        }
+                        getOptionDisabled={(option) =>
+                          ingredients &&
+                          ingredients.hasOwnProperty(option.foodId)
+                        }
+                        isOptionEqualToValue={(optionA, optionB) =>
+                          optionA.foodId === optionB.foodId
+                        }
+                        filterOptions={(options, params) => {
+                          const { inputValue, getOptionLabel } = params;
+                          const filtered = options.filter((option) =>
+                            getOptionLabel(option).includes(inputValue)
+                          );
+                          const isExisting = options.some(
+                            (option) => inputValue === option.title
+                          );
+                          if (inputValue !== "" && !isExisting) {
+                            filtered.push({
+                              inputValue,
+                              title: `Create "${inputValue}"`,
+                            });
                           }
-                          groupBy={calculateFoodSectionForOptions}
-                          getOptionDisabled={(option) =>
-                            ingredients && ingredients.hasOwnProperty(option)
+                          return filtered;
+                        }}
+                        value={
+                          newIngredientId && {
+                            foodId: newIngredientId,
+                            title: glossary.basicFoods[newIngredientId],
                           }
-                          value={newIngredientId}
-                          onChange={(event, selectedOption) => {
-                            setNewIngredientId(selectedOption);
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Enter item"
-                              size="small"
-                            />
-                          )}
-                          fullWidth
-                        />
-                      ) : null //TODO include input to create new basicFood
+                        }
+                        onChange={(event, selectedOption) => {
+                          const { foodId, inputValue } = selectedOption;
+
+                          if (inputValue) {
+                            setOpenCreateBasicFoodDialog(true);
+                            setCreateBasicFood({ name: inputValue });
+                          } else {
+                            setNewIngredientId(foodId);
+                          }
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Enter item"
+                            size="small"
+                          />
+                        )}
+                        fullWidth
+                      />
                     }
                     <Button
                       color="secondary"
                       variant="outlined"
                       size="small"
-                      onClick={addIngredient}
+                      onClick={() => addIngredient(newIngredientId)}
                       disabled={!newIngredientId}
                       sx={{ minWidth: "fit-content" }}
                     >
@@ -728,7 +778,7 @@ function Recipe(props) {
               if (inputValue !== "" && !isExisting) {
                 filtered.push({
                   inputValue,
-                  title: `Add "${inputValue}"`,
+                  title: `Create "${inputValue}"`,
                 });
               }
               return filtered;
@@ -784,6 +834,100 @@ function Recipe(props) {
     </Dialog>
   );
 
+  const renderCreateBasicFoodDialog = () => (
+    <Dialog
+      open={openCreateBasicFoodDialog}
+      sx={{ "& .MuiDialog-paper": { width: "80%" } }}
+      maxWidth="xs"
+    >
+      <DialogTitle color="primary">Create a new basic food</DialogTitle>
+      <DialogContent dividers>
+        <Stack
+          key={"createBasicFood"}
+          direction="row"
+          justifyContent="space-around"
+          alignItems="center"
+          spacing={2}
+        >
+          <TextField
+            variant="outlined"
+            label={"Food name"}
+            size="small"
+            sx={{ width: "150px" }}
+            value={createBasicFood.name || ""}
+            onChange={(event) => {
+              setCreateBasicFood((previous) => ({
+                ...previous,
+                name: event.target.value,
+              }));
+            }}
+          />
+          <FormControl size="small" variant="standard">
+            <InputLabel id="tag" style={{ top: "-11px" }}>
+              Dept.
+            </InputLabel>
+            <Select
+              labelId="tag"
+              id="tag"
+              value={createBasicFood.tag || ""}
+              onChange={(event) => {
+                setCreateBasicFood((previous) => ({
+                  ...previous,
+                  tag: event.target.value,
+                }));
+              }}
+              style={{ marginTop: 0, paddingTop: "5px", width: "110px" }}
+            >
+              {(glossary && glossary.basicFoodTags
+                ? Object.keys(glossary.basicFoodTags).map((basicFoodTagKey) => (
+                    <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
+                      {glossary.basicFoodTags[basicFoodTagKey]}
+                    </MenuItem>
+                  ))
+                : []
+              ).concat(
+                <MenuItem value={""} key={"delete"}>
+                  <em>None</em>
+                </MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color="secondary"
+          onClick={() => {
+            setOpenCreateBasicFoodDialog(false);
+            setCreateBasicFood({});
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          color="success"
+          disabled={!createBasicFood.name}
+          onClick={() => {
+            const foodId = createKey(`${glossaryPath}/basicFoods`);
+            const updates = {};
+            updates[`${glossaryPath}/basicFoods/${foodId}`] =
+              createBasicFood.name;
+            if (createBasicFood.tagId) {
+              updates[`${basicFoodTagAssociationPath}/${foodId}`] =
+                createBasicFood.tagId;
+            }
+            updateRequest(updates);
+            addIngredient(foodId);
+            setOpenCreateBasicFoodDialog(false);
+            setCreateBasicFood({});
+          }}
+        >
+          Create
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   return (
     <div>
       <Stack
@@ -801,6 +945,7 @@ function Recipe(props) {
         </Stack>
       </Stack>
       {renderDeleteDialog()}
+      {renderCreateBasicFoodDialog()}
     </div>
   );
 }
