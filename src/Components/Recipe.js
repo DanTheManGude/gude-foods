@@ -546,7 +546,7 @@ function Recipe(props) {
                           }}
                         >
                           {instructions.map((t, i) => (
-                            <MenuItem key={i} value={i}>
+                            <MenuItem key={i} value={i} disabled={i === index}>
                               {i + 1}
                             </MenuItem>
                           ))}
