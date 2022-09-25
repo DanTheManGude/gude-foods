@@ -28,11 +28,13 @@ function Glossary(props) {
     shoppingList,
     cookbook,
     basicFoodTagAssociation,
+    basicFoodTagOrder,
     addAlert,
     glossaryPath,
     shoppingListPath,
     cookbookPath,
     basicFoodTagAssociationPath,
+    basicFoodTagOrderPath,
   } = props;
 
   const [editingEntry, setEditingEntry] = useState({});
@@ -174,7 +176,7 @@ function Glossary(props) {
             }}
             style={{ marginTop: 0, paddingTop: "5px" }}
           >
-            {Object.keys(basicFoodTags)
+            {basicFoodTagOrder
               .map((basicFoodTagKey) => (
                 <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
                   {basicFoodTags[basicFoodTagKey]}
@@ -187,6 +189,32 @@ function Glossary(props) {
               )}
           </Select>
         </FormControl>
+      );
+    } else if (sectionKey === "basicFoodTags") {
+      const order = [...(basicFoodTagOrder || [])];
+      const index = order.indexOf(entryKey);
+
+      return (
+        <Select
+          size="small"
+          value={index}
+          onChange={(event) => {
+            order.splice(index, 1);
+            order.splice(event.target.value, 0, entryKey);
+            updateRequest({ [basicFoodTagOrderPath]: order });
+          }}
+          onClose={() => {
+            setTimeout(() => {
+              document.activeElement.blur();
+            }, 100);
+          }}
+        >
+          {order.map((t, i) => (
+            <MenuItem key={i} value={i}>
+              {i + 1}
+            </MenuItem>
+          ))}
+        </Select>
       );
     }
   };
@@ -245,8 +273,8 @@ function Glossary(props) {
       </AccordionSummary>
       <AccordionDetails>
         <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-          {(glossary && glossary.basicFoodTags
-            ? Object.keys(glossary.basicFoodTags)
+          {(glossary && glossary.basicFoodTags && basicFoodTagOrder
+            ? basicFoodTagOrder
             : []
           )
             .concat("basicFoodTags")
@@ -275,9 +303,7 @@ function Glossary(props) {
       );
     }
 
-    const basicFoodTagsList = Object.keys(glossary.basicFoodTags).concat(
-      UNKNOWN_TAG
-    );
+    const basicFoodTagsList = basicFoodTagOrder.concat(UNKNOWN_TAG);
 
     const basicFoodMap = Object.keys(glossary.basicFoods).reduce(
       (acc, foodId) => {

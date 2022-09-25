@@ -31,6 +31,7 @@ import {
   deleteRequest,
   createKey,
   getCalculateFoodSectionForOptions,
+  constructBasicFoodOptions,
 } from "../utils";
 
 const UNKNOWN_TAG = "UNKNOWN_TAG";
@@ -42,6 +43,7 @@ function ShoppingList(props) {
     basicFoodTagAssociation,
     shoppingList,
     cookbook,
+    basicFoodTagOrder,
     addAlert,
     shoppingListPath,
     glossaryPath,
@@ -299,31 +301,12 @@ function ShoppingList(props) {
         <Stack spacing={1}>
           {
             <Autocomplete
-              options={
-                glossary && glossary.basicFoods
-                  ? Object.values(
-                      Object.keys(glossary.basicFoods).reduce((acc, foodId) => {
-                        const foodSectionForOptions =
-                          calculateFoodSectionForOptions(foodId);
-                        if (acc.hasOwnProperty(foodSectionForOptions)) {
-                          acc[foodSectionForOptions].push(foodId);
-                        } else {
-                          acc[foodSectionForOptions] = [foodId];
-                        }
-                        return acc;
-                      }, {})
-                    ).reduce(
-                      (acc, foodLists) =>
-                        acc.concat(
-                          foodLists.map((foodId) => ({
-                            foodId,
-                            title: glossary.basicFoods[foodId],
-                          }))
-                        ),
-                      []
-                    )
-                  : []
-              }
+              options={constructBasicFoodOptions(
+                glossary,
+                basicFoodTagOrder,
+                unknownSectionName,
+                calculateFoodSectionForOptions
+              )}
               getOptionLabel={(option) => option.title}
               groupBy={(option) =>
                 option.foodId
@@ -515,7 +498,7 @@ function ShoppingList(props) {
               style={{ marginTop: 0, paddingTop: "5px", width: "110px" }}
             >
               {(glossary && glossary.basicFoodTags
-                ? Object.keys(glossary.basicFoodTags).map((basicFoodTagKey) => (
+                ? basicFoodTagOrder.map((basicFoodTagKey) => (
                     <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
                       {glossary.basicFoodTags[basicFoodTagKey]}
                     </MenuItem>
@@ -581,35 +564,37 @@ function ShoppingList(props) {
         alignItems="center"
       >
         <Stack sx={{ width: "95%" }} spacing={0}>
-          {Object.keys(shoppingMap.unchecked).map((tagId) => (
-            <Accordion key={tagId} sx={{ width: "100%" }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                {tagId === UNKNOWN_TAG ? (
-                  <Typography variant="h6">{unknownSectionName}</Typography>
-                ) : (
-                  <Typography variant="h6">
-                    {glossary.basicFoodTags[tagId]}
-                  </Typography>
-                )}
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack spacing={0} alignItems="left">
-                  <TransitionGroup>
-                    {Object.keys(shoppingMap.unchecked[tagId]).map(
-                      (basicFoodId, index) => (
-                        <Collapse key={index}>
-                          {renderBasicFoodAccordion(
-                            basicFoodId,
-                            shoppingMap.unchecked[tagId][basicFoodId]
-                          )}
-                        </Collapse>
-                      )
-                    )}
-                  </TransitionGroup>
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+          {basicFoodTagOrder
+            .filter((tagId) => shoppingMap.unchecked.hasOwnProperty(tagId))
+            .map((tagId) => (
+              <Accordion key={tagId} sx={{ width: "100%" }}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  {tagId === UNKNOWN_TAG ? (
+                    <Typography variant="h6">{unknownSectionName}</Typography>
+                  ) : (
+                    <Typography variant="h6">
+                      {glossary.basicFoodTags[tagId]}
+                    </Typography>
+                  )}
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Stack spacing={0} alignItems="left">
+                    <TransitionGroup>
+                      {Object.keys(shoppingMap.unchecked[tagId]).map(
+                        (basicFoodId, index) => (
+                          <Collapse key={index}>
+                            {renderBasicFoodAccordion(
+                              basicFoodId,
+                              shoppingMap.unchecked[tagId][basicFoodId]
+                            )}
+                          </Collapse>
+                        )
+                      )}
+                    </TransitionGroup>
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+            ))}
           {renderChecked()}
         </Stack>
         {renderNewItemControls()}

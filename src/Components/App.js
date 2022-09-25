@@ -28,6 +28,7 @@ function App() {
 
   const [glossary, setGlossary] = useState();
   const [basicFoodTagAssociation, setBasicFoodTagAssociation] = useState();
+  const [basicFoodTagOrder, setBasicFoodTagOrder] = useState();
   const [shoppingList, setShoppingList] = useState();
   const [cookbook, setCookbook] = useState();
 
@@ -86,6 +87,10 @@ function App() {
 
     onValue(ref(db, `basicFood-basicFoodTag/${user.uid}`), (snapshot) => {
       setBasicFoodTagAssociation(snapshot.val());
+    });
+
+    onValue(ref(db, `basicFoodTagOrder/${user.uid}`), (snapshot) => {
+      setBasicFoodTagOrder(snapshot.val());
     });
 
     onValue(ref(db, `shoppingList/${user.uid}`), (snapshot) => {
@@ -163,6 +168,7 @@ function App() {
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             cookbook={cookbook}
+            basicFoodTagOrder={basicFoodTagOrder}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             glossaryPath={user ? `glossary/${user.uid}` : ""}
@@ -181,6 +187,7 @@ function App() {
             basicFoodTagAssociation={basicFoodTagAssociation}
             shoppingList={shoppingList}
             cookbook={cookbook}
+            basicFoodTagOrder={basicFoodTagOrder}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             glossaryPath={user ? `glossary/${user.uid}` : ""}
             basicFoodTagAssociationPath={
@@ -198,10 +205,12 @@ function App() {
             shoppingList={shoppingList}
             cookbook={cookbook}
             basicFoodTagAssociation={basicFoodTagAssociation}
+            basicFoodTagOrder={basicFoodTagOrder}
             glossaryPath={user ? `glossary/${user.uid}` : ""}
             basicFoodTagAssociationPath={
               user ? `basicFood-basicFoodTag/${user.uid}` : ""
             }
+            basicFoodTagOrderPath={user ? `basicFoodTagOrder/${user.uid}` : ""}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
             addAlert={addAlert}
