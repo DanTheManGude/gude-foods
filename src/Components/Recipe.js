@@ -19,7 +19,7 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import Autocomplete from "@mui/material/Autocomplete";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -705,50 +705,52 @@ function Recipe(props) {
           ))}
         </Stack>
         {isEditing ? (
-          glossary && glossary.recipeTags ? (
-            <Autocomplete
-              id={"addtagSelect"}
-              options={Object.keys(glossary.recipeTags).map((tagId) => ({
-                tagId,
-                title: glossary.recipeTags[tagId],
-              }))}
-              getOptionLabel={(option) => option.title}
-              getOptionDisabled={(option) => tags.includes(option.tagId)}
-              filterOptions={(options, params) => {
-                const { inputValue, getOptionLabel } = params;
-                const filtered = options.filter((option) =>
-                  getOptionLabel(option).includes(inputValue)
-                );
-                const isExisting = options.some(
-                  (option) => inputValue === option.title
-                );
-                if (inputValue !== "" && !isExisting) {
-                  filtered.push({
-                    inputValue,
-                    title: `Add "${inputValue}"`,
-                  });
-                }
-                return filtered;
-              }}
-              value={null}
-              onChange={(event, selectedOption) => {
-                const { tagId: _tagId, inputValue } = selectedOption;
-                let tagId = _tagId;
-                if (inputValue) {
-                  tagId = createKey(`${glossaryPath}/recipeTags`);
-                  updateRequest({
-                    [`${glossaryPath}/recipeTags/${tagId}`]: inputValue,
-                  });
-                }
-                addTag(tagId);
-              }}
-              renderInput={(params) => (
-                <TextField {...params} label="Enter tag" size="small" />
-              )}
-              blurOnSelect={true}
-              clearOnBlur={true}
-            />
-          ) : null //TODO include input to create new recipeTag
+          <Autocomplete
+            id={"addtagSelect"}
+            options={
+              glossary && glossary.recipeTags
+                ? Object.keys(glossary.recipeTags).map((tagId) => ({
+                    tagId,
+                    title: glossary.recipeTags[tagId],
+                  }))
+                : []
+            }
+            getOptionLabel={(option) => option.title}
+            getOptionDisabled={(option) => tags.includes(option.tagId)}
+            filterOptions={(options, params) => {
+              const { inputValue, getOptionLabel } = params;
+              const filtered = options.filter((option) =>
+                getOptionLabel(option).includes(inputValue)
+              );
+              const isExisting = options.some(
+                (option) => inputValue === option.title
+              );
+              if (inputValue !== "" && !isExisting) {
+                filtered.push({
+                  inputValue,
+                  title: `Add "${inputValue}"`,
+                });
+              }
+              return filtered;
+            }}
+            value={null}
+            onChange={(event, selectedOption) => {
+              const { tagId: _tagId, inputValue } = selectedOption;
+              let tagId = _tagId;
+              if (inputValue) {
+                tagId = createKey(`${glossaryPath}/recipeTags`);
+                updateRequest({
+                  [`${glossaryPath}/recipeTags/${tagId}`]: inputValue,
+                });
+              }
+              addTag(tagId);
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Enter tag" size="small" />
+            )}
+            blurOnSelect={true}
+            clearOnBlur={true}
+          />
         ) : null}
       </>
     );
