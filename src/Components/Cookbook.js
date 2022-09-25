@@ -195,6 +195,7 @@ function Cookbook(props) {
         sx={{
           color: "primary.main",
           textAlign: "center",
+          paddingY: 2,
         }}
       >
         Cookbook

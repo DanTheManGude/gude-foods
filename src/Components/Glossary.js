@@ -392,6 +392,7 @@ function Glossary(props) {
         sx={{
           color: "primary.main",
           textAlign: "center",
+          paddingY: 2,
         }}
       >
         Glossary
