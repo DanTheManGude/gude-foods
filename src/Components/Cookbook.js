@@ -40,6 +40,7 @@ function Cookbook(props) {
         <TextField
           key="search"
           variant="outlined"
+          sx={{ flexGrow: "1" }}
           label={<Typography>Search</Typography>}
           value={searchTerm}
           onChange={(event) => {
@@ -70,11 +71,15 @@ function Cookbook(props) {
         <Button
           color="secondary"
           variant="outlined"
-          sx={{ width: "179px", height: "56px" }}
           onClick={() => {}}
           disabled={true}
+          sx={{ flexGrow: "3", maxWidth: "40%" }}
         >
-          <Typography>Advanced filters</Typography>
+          <Typography>
+            <span>Advanced</span>
+            <br />
+            <span>filters</span>
+          </Typography>
         </Button>
       </Stack>
     );
