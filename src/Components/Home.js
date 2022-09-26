@@ -11,6 +11,80 @@ import Button from "@mui/material/Button";
 function Home(props) {
   const { glossary, basicFoodTagAssociation, shoppingList, cookbook } = props;
 
+  const renderRecipeCard = () => {
+    let messageContent = null;
+    let buttonContent = null;
+
+    if (!cookbook) {
+      messageContent = (
+        <Typography>
+          There are <strong>NO</strong> recipes in the cookbook.
+        </Typography>
+      );
+
+      buttonContent = (
+        <Link to={`/recipe/create`}>
+          <Typography color="secondary">Create a recipe</Typography>
+        </Link>
+      );
+    } else {
+      const recipeList = Object.keys(cookbook);
+      const recipeId =
+        recipeList[Math.floor(Math.random() * recipeList.length)];
+
+      const { name, ingredients, isFavorite, tags = [] } = cookbook[recipeId];
+
+      messageContent = (
+        <>
+          <Typography>
+            Checkout this recipe <strong>{name}.</strong>
+          </Typography>
+          <Typography>
+            Ingredients:&nbsp;
+            {Object.keys(ingredients)
+              .map((foodId) => glossary.basicFoods[foodId])
+              .join(", ")}
+          </Typography>
+          {(tags || isFavorite) && (
+            <Typography>
+              Tags:&nbsp;
+              {[
+                ...(isFavorite ? ["favorite"] : []),
+                ...(tags
+                  ? tags.map((tagId) => glossary.recipeTags[tagId])
+                  : []),
+              ].join(", ")}
+            </Typography>
+          )}
+        </>
+      );
+
+      buttonContent = (
+        <Link to={`/recipe/${recipeId}`}>
+          <Typography color="secondary">Go to recipe</Typography>
+        </Link>
+      );
+    }
+
+    return (
+      <Box sx={{ width: "90%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Recipe
+            </Typography>
+            {messageContent}
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button color="secondary" variant="outlined">
+              {buttonContent}
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
+
   const renderGlossaryCard = () => {
     const count =
       glossary &&
@@ -145,10 +219,10 @@ function Home(props) {
         Home
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+        {renderRecipeCard()}
         {renderGlossaryCard()}
         {renderShoppingListCard()}
         {renderCookbookCard()}
-        {/* {renderRecipeCard()} */}
       </Stack>
     </div>
   );
