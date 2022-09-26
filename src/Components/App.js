@@ -147,7 +147,17 @@ function App() {
 
   const renderRoutes = () => (
     <Routes>
-      <Route path="/*" element={<Home />} />
+      <Route
+        path="/*"
+        element={
+          <Home
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            shoppingList={shoppingList}
+            cookbook={cookbook}
+          />
+        }
+      />
       <Route
         path="cookbook"
         element={
