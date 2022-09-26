@@ -70,11 +70,17 @@ function Glossary(props) {
           onClick={() => {
             let updateEntryKey = entryKey;
 
+            const updates = {};
+
             if (isAddingValue) {
               updateEntryKey = createKey(`${glossaryPath}/${sectionKey}`);
+
+              if (sectionKey === "basicFoodTags") {
+                updates[basicFoodTagOrderPath] =
+                  basicFoodTagOrder.concat(updateEntryKey);
+              }
             }
 
-            const updates = {};
             updates[`${glossaryPath}/${sectionKey}/${updateEntryKey}`] =
               isEmptyValue ? null : editingEntry.value;
 
@@ -109,6 +115,9 @@ function Glossary(props) {
                       }
                     );
                   }
+                  updates[basicFoodTagOrderPath] = basicFoodTagOrder.filter(
+                    (tagId) => tagId !== entryKey
+                  );
                   break;
                 case "recipeTags":
                   if (cookbook) {
