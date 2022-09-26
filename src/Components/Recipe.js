@@ -275,9 +275,15 @@ function Recipe(props) {
         >
           <Link to={`/cookbook`}>
             <Typography color="secondary">
-              <span>Back to</span>
-              <br />
-              <span>cookbook</span>
+              {isCreating ? (
+                "Back to cookbook"
+              ) : (
+                <>
+                  <span>Back to</span>
+                  <br />
+                  <span>cookbook</span>
+                </>
+              )}
             </Typography>
           </Link>
         </Button>
@@ -289,7 +295,7 @@ function Recipe(props) {
           variant="outlined"
           size="small"
           onClick={handleSave}
-          sx={{ flexGrow: "1" }}
+          sx={{ flexGrow: "2" }}
         >
           <Typography>Save</Typography>
         </Button>
