@@ -32,7 +32,7 @@ function Home(props) {
       const recipeId =
         recipeList[Math.floor(Math.random() * recipeList.length)];
 
-      const { name, ingredients, isFavorite, tags = [] } = cookbook[recipeId];
+      const { name, ingredients, isFavorite, tags } = cookbook[recipeId];
 
       messageContent = (
         <>
