@@ -215,6 +215,7 @@ function Recipe(props) {
         addAlert(successAlert);
         setIsCreating(false);
         setIsEditing(false);
+        navigate(`/recipe/${recipeId}`);
       },
       addAlert
     );
