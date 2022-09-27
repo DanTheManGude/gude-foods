@@ -76,7 +76,7 @@ function Recipe(props) {
       setIsEditing(true);
       setIsCreating(true);
       setRecipeId(createKey(cookbookPath));
-    } else if (cookbook.hasOwnProperty(pathParam)) {
+    } else if (cookbook && cookbook.hasOwnProperty(pathParam)) {
       const _originalRecipe = {
         ...{
           name: "",
@@ -215,6 +215,7 @@ function Recipe(props) {
         addAlert(successAlert);
         setIsCreating(false);
         setIsEditing(false);
+        navigate(`/recipe/${recipeId}`);
       },
       addAlert
     );
@@ -446,7 +447,7 @@ function Recipe(props) {
                         id={"addIngredientSelect"}
                         options={constructBasicFoodOptions(
                           glossary,
-                          basicFoodTagOrder,
+                          basicFoodTagOrder || [],
                           unknownSectionName,
                           calculateFoodSectionForOptions
                         )}

@@ -32,7 +32,7 @@ function Home(props) {
       const recipeId =
         recipeList[Math.floor(Math.random() * recipeList.length)];
 
-      const { name, ingredients, isFavorite, tags = [] } = cookbook[recipeId];
+      const { name, ingredients, isFavorite, tags } = cookbook[recipeId];
 
       messageContent = (
         <>
@@ -89,9 +89,10 @@ function Home(props) {
     const count =
       glossary &&
       glossary.basicFoods &&
-      basicFoodTagAssociation &&
       Object.keys(glossary.basicFoods).filter(
-        (foodId) => !basicFoodTagAssociation.hasOwnProperty(foodId)
+        (foodId) =>
+          !basicFoodTagAssociation ||
+          !basicFoodTagAssociation.hasOwnProperty(foodId)
       ).length;
 
     if (!count) {
