@@ -76,7 +76,7 @@ function Recipe(props) {
       setIsEditing(true);
       setIsCreating(true);
       setRecipeId(createKey(cookbookPath));
-    } else if (cookbook.hasOwnProperty(pathParam)) {
+    } else if (cookbook && cookbook.hasOwnProperty(pathParam)) {
       const _originalRecipe = {
         ...{
           name: "",
