@@ -82,11 +82,9 @@ function ShoppingList(props) {
       const foodEntry = shoppingList[basicFoodId];
       const { isChecked } = foodEntry;
 
-      let tagId = basicFoodTagAssociation[basicFoodId];
-
-      if (!glossary.basicFoodTags[tagId]) {
-        tagId = UNKNOWN_TAG;
-      }
+      const tagId =
+        (basicFoodTagAssociation && basicFoodTagAssociation[basicFoodId]) ||
+        UNKNOWN_TAG;
 
       if (!isChecked) {
         if (!newShoppingMap.unchecked.hasOwnProperty(tagId)) {
@@ -303,7 +301,7 @@ function ShoppingList(props) {
             <Autocomplete
               options={constructBasicFoodOptions(
                 glossary,
-                basicFoodTagOrder,
+                basicFoodTagOrder || [],
                 unknownSectionName,
                 calculateFoodSectionForOptions
               )}
@@ -565,7 +563,8 @@ function ShoppingList(props) {
         alignItems="center"
       >
         <Stack sx={{ width: "95%" }} spacing={0}>
-          {basicFoodTagOrder
+          {(basicFoodTagOrder || [])
+            .concat(UNKNOWN_TAG)
             .filter((tagId) => shoppingMap.unchecked.hasOwnProperty(tagId))
             .map((tagId) => (
               <Accordion key={tagId} sx={{ width: "100%" }}>
