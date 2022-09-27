@@ -89,9 +89,10 @@ function Home(props) {
     const count =
       glossary &&
       glossary.basicFoods &&
-      basicFoodTagAssociation &&
       Object.keys(glossary.basicFoods).filter(
-        (foodId) => !basicFoodTagAssociation.hasOwnProperty(foodId)
+        (foodId) =>
+          !basicFoodTagAssociation ||
+          !basicFoodTagAssociation.hasOwnProperty(foodId)
       ).length;
 
     if (!count) {

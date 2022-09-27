@@ -446,7 +446,7 @@ function Recipe(props) {
                         id={"addIngredientSelect"}
                         options={constructBasicFoodOptions(
                           glossary,
-                          basicFoodTagOrder,
+                          basicFoodTagOrder || [],
                           unknownSectionName,
                           calculateFoodSectionForOptions
                         )}

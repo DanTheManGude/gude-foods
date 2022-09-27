@@ -185,7 +185,7 @@ function Glossary(props) {
             }}
             style={{ marginTop: 0, paddingTop: "5px" }}
           >
-            {basicFoodTagOrder
+            {(basicFoodTagOrder || [])
               .map((basicFoodTagKey) => (
                 <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
                   {basicFoodTags[basicFoodTagKey]}
