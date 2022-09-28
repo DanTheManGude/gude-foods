@@ -9,6 +9,23 @@ import Button from "@mui/material/Button";
 function Settings(props) {
   const { addAlert } = props;
 
+  const renderAppCard = () => {
+    return (
+      <Box sx={{ width: "90%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Application
+            </Typography>
+            <Typography>
+              Current version: <strong>{process.env.REACT_APP_VERSION}</strong>
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  };
+
   const renderDownloadData = () => {
     return (
       <Box sx={{ width: "90%" }}>
@@ -90,6 +107,7 @@ function Settings(props) {
         Settings
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+        {renderAppCard()}
         {renderDownloadData()}
         {renderImportData()}
         {renderDeleteData()}
