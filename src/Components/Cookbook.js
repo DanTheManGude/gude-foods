@@ -91,7 +91,7 @@ function Cookbook(props) {
                 disableTouchListener
                 arrow
                 placement="top"
-                title="Advanced filters coming soon"
+                title="Advanced Filters coming soon"
               >
                 <span
                   onClick={() => {
@@ -110,7 +110,7 @@ function Cookbook(props) {
                     <Typography>
                       <span>Advanced</span>
                       <br />
-                      <span>filters</span>
+                      <span>Filters</span>
                     </Typography>
                   </Button>
                 </span>
