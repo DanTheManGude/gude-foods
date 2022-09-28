@@ -17,6 +17,7 @@ import Cookbook from "./Cookbook";
 import Recipe from "./Recipe";
 import ShoppingList from "./ShoppingList";
 import Glossary from "./Glossary";
+import Settings from "./Settings";
 
 import NavBar from "./NavBar";
 import UnauthorizedUser from "./UnauthorizedUser";
@@ -216,6 +217,27 @@ function App() {
             cookbook={cookbook}
             basicFoodTagAssociation={basicFoodTagAssociation}
             basicFoodTagOrder={basicFoodTagOrder}
+            glossaryPath={user ? `glossary/${user.uid}` : ""}
+            basicFoodTagAssociationPath={
+              user ? `basicFood-basicFoodTag/${user.uid}` : ""
+            }
+            basicFoodTagOrderPath={user ? `basicFoodTagOrder/${user.uid}` : ""}
+            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
+            cookbookPath={user ? `cookbook/${user.uid}` : ""}
+            addAlert={addAlert}
+          />
+        }
+      />
+      <Route
+        path="settings"
+        element={
+          <Settings
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            basicFoodTagOrder={basicFoodTagOrder}
+            shoppingList={shoppingList}
+            cookbook={cookbook}
+            user={user}
             glossaryPath={user ? `glossary/${user.uid}` : ""}
             basicFoodTagAssociationPath={
               user ? `basicFood-basicFoodTag/${user.uid}` : ""
