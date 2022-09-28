@@ -5,6 +5,8 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 function Settings(props) {
   const { addAlert } = props;
@@ -19,6 +21,23 @@ function Settings(props) {
             </Typography>
             <Typography>
               Current version: <strong>{process.env.REACT_APP_VERSION}</strong>
+            </Typography>
+            <Typography>
+              The source code for this website is hosted&nbsp;
+              <Link
+                underline="none"
+                href="https://github.com/DanTheManGude/gude-foods"
+                target="_blank"
+                rel="noopener"
+                color="secondary"
+              >
+                here{" "}
+                <OpenInNewIcon
+                  fontSize="inherit"
+                  sx={{ verticalAlign: "sub" }}
+                />
+              </Link>
+              .
             </Typography>
           </CardContent>
         </Card>
@@ -39,7 +58,7 @@ function Settings(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="info" variant="outlined">
+            <Button color="secondary" variant="outlined">
               Download
             </Button>
           </CardActions>
