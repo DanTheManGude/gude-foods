@@ -17,6 +17,7 @@ import Cookbook from "./Cookbook";
 import Recipe from "./Recipe";
 import ShoppingList from "./ShoppingList";
 import Glossary from "./Glossary";
+import Settings from "./Settings";
 
 import NavBar from "./NavBar";
 import UnauthorizedUser from "./UnauthorizedUser";
@@ -227,6 +228,7 @@ function App() {
           />
         }
       />
+      <Route path="settings" element={<Settings addAlert={addAlert} />} />
     </Routes>
   );
 

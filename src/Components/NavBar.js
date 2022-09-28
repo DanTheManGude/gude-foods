@@ -19,9 +19,10 @@ const presentationNames = {
   cookbook: "Cookbook",
   shoppingList: "Shopping List",
   glossary: "Glossary",
+  settings: "Settings",
 };
 
-const pages = ["cookbook", "shoppingList", "glossary"];
+const pages = ["cookbook", "shoppingList", "glossary", "settings"];
 
 const NavBar = (props) => {
   const { addAlert } = props;
