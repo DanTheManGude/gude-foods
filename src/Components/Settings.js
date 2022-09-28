@@ -99,7 +99,7 @@ function Settings(props) {
 
   const renderAppCard = () => {
     return (
-      <Box sx={{ width: "90%" }}>
+      <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -133,14 +133,14 @@ function Settings(props) {
 
   const renderDownloadData = () => {
     return (
-      <Box sx={{ width: "90%" }}>
+      <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
               Download Data
             </Typography>
             <Typography>
-              Download all data that is stored relating to you account.
+              Download all data that is stored relating to your account.
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
@@ -155,7 +155,7 @@ function Settings(props) {
 
   const renderImportData = () => {
     return (
-      <Box sx={{ width: "90%" }}>
+      <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -189,15 +189,15 @@ function Settings(props) {
 
   const renderDeleteData = () => {
     return (
-      <Box sx={{ width: "90%" }}>
+      <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
               Delete Data
             </Typography>
             <Typography>
-              Delete all data on your account. We recomend downloading a copy
-              for youself as this action is not undoable.
+              Delete all data on your account. It is recomended to download a
+              copy for youself before deleting.
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
