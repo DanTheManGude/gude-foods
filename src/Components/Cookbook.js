@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -13,6 +14,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import StarIcon from "@mui/icons-material/Star";
+import Tooltip from "@mui/material/Tooltip";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Box from "@mui/material/Box";
 
 import { updateRequest } from "../utils";
 
@@ -26,6 +30,8 @@ function Cookbook(props) {
     setFilteringOptions,
   } = props;
 
+  const [advancedFiltersTooltipOpen, setAdvancedFiltersTooltipOpen] =
+    useState(false);
   const { searchTerm = "" } = filteringOptions;
 
   const renderSearchAndFilters = () =>
@@ -68,19 +74,50 @@ function Cookbook(props) {
             ),
           }}
         />
-        <Button
-          color="secondary"
-          variant="outlined"
-          onClick={() => {}}
-          disabled={true}
-          sx={{ flexGrow: "3", maxWidth: "40%" }}
-        >
-          <Typography>
-            <span>Advanced</span>
-            <br />
-            <span>filters</span>
-          </Typography>
-        </Button>
+        <Box sx={{ flexGrow: "3", maxWidth: "40%" }}>
+          <ClickAwayListener
+            onClickAway={() => {
+              setAdvancedFiltersTooltipOpen(false);
+            }}
+          >
+            <Box sx={{ width: "100%" }}>
+              <Tooltip
+                PopperProps={{
+                  disablePortal: true,
+                }}
+                open={advancedFiltersTooltipOpen}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                arrow
+                placement="top"
+                title="Advanced filters coming soon"
+              >
+                <span
+                  onClick={() => {
+                    setAdvancedFiltersTooltipOpen(
+                      (_advancedFiltersTooltipOpen) =>
+                        !_advancedFiltersTooltipOpen
+                    );
+                  }}
+                >
+                  <Button
+                    color="secondary"
+                    variant="outlined"
+                    disabled={true}
+                    sx={{ width: "100%" }}
+                  >
+                    <Typography>
+                      <span>Advanced</span>
+                      <br />
+                      <span>filters</span>
+                    </Typography>
+                  </Button>
+                </span>
+              </Tooltip>
+            </Box>
+          </ClickAwayListener>
+        </Box>
       </Stack>
     );
 
