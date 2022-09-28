@@ -67,7 +67,7 @@ function Home(props) {
     }
 
     return (
-      <Box sx={{ width: "90%" }}>
+      <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -100,7 +100,7 @@ function Home(props) {
     }
 
     return (
-      <Box sx={{ width: "90%" }}>
+      <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -157,7 +157,7 @@ function Home(props) {
     }
 
     return (
-      <Box sx={{ width: "90%" }}>
+      <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -185,7 +185,7 @@ function Home(props) {
     }
 
     return (
-      <Box sx={{ width: "90%" }}>
+      <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
