@@ -41,6 +41,7 @@ function Recipe(props) {
     glossary,
     basicFoodTagAssociation,
     cookbook = {},
+    shoppingList,
     basicFoodTagOrder,
     cookbookPath,
     shoppingListPath,
@@ -222,8 +223,15 @@ function Recipe(props) {
   };
 
   const handleDelete = () => {
+    const shoppingListDeletes = Object.keys(shoppingList)
+      .filter((foodId) => {
+        const foodEntry = shoppingList[foodId];
+        return foodEntry.list && foodEntry.list[recipeId];
+      })
+      .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`);
+
     deleteRequest(
-      [`${cookbookPath}/${recipeId}`],
+      [`${cookbookPath}/${recipeId}`, ...shoppingListDeletes],
       (successAlert) => {
         addAlert(successAlert);
         navigate(`/cookbook`);

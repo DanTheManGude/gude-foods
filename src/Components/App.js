@@ -179,6 +179,7 @@ function App() {
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             cookbook={cookbook}
+            shoppingList={shoppingList}
             basicFoodTagOrder={basicFoodTagOrder}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
