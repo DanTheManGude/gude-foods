@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -10,10 +10,11 @@ import Button from "@mui/material/Button";
 
 function Home(props) {
   const { glossary, basicFoodTagAssociation, shoppingList, cookbook } = props;
+  let navigate = useNavigate();
 
   const renderRecipeCard = () => {
     let messageContent = null;
-    let buttonContent = null;
+    let renderedButton = null;
 
     if (!cookbook) {
       messageContent = (
@@ -22,10 +23,16 @@ function Home(props) {
         </Typography>
       );
 
-      buttonContent = (
-        <Link to={`/recipe/create`}>
+      renderedButton = (
+        <Button
+          color="secondary"
+          variant="outlined"
+          onClick={() => {
+            navigate(`/recipe/create`);
+          }}
+        >
           <Typography color="secondary">Create a recipe</Typography>
-        </Link>
+        </Button>
       );
     } else {
       const recipeList = Object.keys(cookbook);
@@ -59,10 +66,16 @@ function Home(props) {
         </>
       );
 
-      buttonContent = (
-        <Link to={`/recipe/${recipeId}`}>
+      renderedButton = (
+        <Button
+          color="secondary"
+          variant="outlined"
+          onClick={() => {
+            navigate(`/recipe/${recipeId}`);
+          }}
+        >
           <Typography color="secondary">Go to recipe</Typography>
-        </Link>
+        </Button>
       );
     }
 
@@ -76,9 +89,7 @@ function Home(props) {
             {messageContent}
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="secondary" variant="outlined">
-              {buttonContent}
-            </Button>
+            {renderedButton}
           </CardActions>
         </Card>
       </Box>
@@ -111,10 +122,14 @@ function Home(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="secondary" variant="outlined">
-              <Link to={`/glossary`}>
-                <Typography color="secondary">Go to Glossary</Typography>
-              </Link>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={() => {
+                navigate(`/glossary`);
+              }}
+            >
+              <Typography color="secondary">Go to Glossary</Typography>
             </Button>
           </CardActions>
         </Card>
@@ -166,10 +181,14 @@ function Home(props) {
             {messageContent}
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="secondary" variant="outlined">
-              <Link to={`/shoppingList`}>
-                <Typography color="secondary">Go to Shopping List</Typography>
-              </Link>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={() => {
+                navigate(`/shoppingList`);
+              }}
+            >
+              <Typography color="secondary">Go to Shopping List</Typography>
             </Button>
           </CardActions>
         </Card>
@@ -196,10 +215,14 @@ function Home(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="secondary" variant="outlined">
-              <Link to={`/cookbook`}>
-                <Typography color="secondary">Go to Cookbook</Typography>
-              </Link>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={() => {
+                navigate(`/cookbook`);
+              }}
+            >
+              <Typography color="secondary">Go to Cookbook</Typography>
             </Button>
           </CardActions>
         </Card>
