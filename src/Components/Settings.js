@@ -117,7 +117,7 @@ function Settings(props) {
                 rel="noopener"
                 color="secondary"
               >
-                here{" "}
+                {"here "}
                 <OpenInNewIcon
                   fontSize="inherit"
                   sx={{ verticalAlign: "sub" }}

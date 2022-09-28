@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -281,20 +281,21 @@ function Recipe(props) {
           variant="outlined"
           size="small"
           sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "1" }}
+          onClick={() => {
+            navigate(`/cookbook`);
+          }}
         >
-          <Link to={`/cookbook`}>
-            <Typography color="secondary">
-              {isCreating ? (
-                "Back to cookbook"
-              ) : (
-                <>
-                  <span>Back to</span>
-                  <br />
-                  <span>cookbook</span>
-                </>
-              )}
-            </Typography>
-          </Link>
+          <Typography color="secondary">
+            {isCreating ? (
+              "Back to cookbook"
+            ) : (
+              <>
+                <span>Back to</span>
+                <br />
+                <span>cookbook</span>
+              </>
+            )}
+          </Typography>
         </Button>
       )}
 

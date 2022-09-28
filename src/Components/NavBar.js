@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -26,6 +26,7 @@ const pages = ["cookbook", "shoppingList", "glossary", "settings"];
 
 const NavBar = (props) => {
   const { addAlert } = props;
+  let navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState(null);
 
@@ -95,12 +96,16 @@ const NavBar = (props) => {
             >
               {pages
                 .map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Link to={`/${page}`}>
-                      <Typography textAlign="center">
-                        {presentationNames[page]}
-                      </Typography>
-                    </Link>
+                  <MenuItem
+                    key={page}
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      navigate(`/${page}`);
+                    }}
+                  >
+                    <Typography textAlign="center">
+                      {presentationNames[page]}
+                    </Typography>
                   </MenuItem>
                 ))
                 .concat(
@@ -135,12 +140,13 @@ const NavBar = (props) => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate(`/${page}`);
+                }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                <Link to={`/${page}`}>
-                  <Typography>{presentationNames[page]}</Typography>
-                </Link>
+                <Typography>{presentationNames[page]}</Typography>
               </Button>
             ))}
           </Box>
