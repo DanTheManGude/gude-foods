@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -29,6 +29,8 @@ function Cookbook(props) {
     filteringOptions = {},
     setFilteringOptions,
   } = props;
+
+  let navigate = useNavigate();
 
   const [advancedFiltersTooltipOpen, setAdvancedFiltersTooltipOpen] =
     useState(false);
@@ -158,12 +160,13 @@ function Cookbook(props) {
                         variant="outlined"
                         size="large"
                         sx={{ flex: 1 }}
+                        onClick={() => {
+                          navigate(`/recipe/${recipeId}`);
+                        }}
                       >
-                        <Link to={`/recipe/${recipeId}/`}>
-                          <Typography color="secondary">
-                            View full recipe
-                          </Typography>
-                        </Link>
+                        <Typography color="secondary">
+                          View full recipe
+                        </Typography>
                       </Button>
                       <Button
                         color="secondary"
@@ -243,10 +246,14 @@ function Cookbook(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
-        <Button color="primary" variant="contained">
-          <Link to={`/recipe/create`}>
-            <Typography color="primary.contrastText">Add new recipe</Typography>
-          </Link>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            navigate(`/recipe/create`);
+          }}
+        >
+          <Typography color="primary.contrastText">Add new recipe</Typography>
         </Button>
         {renderRecipeStack()}
       </Stack>
