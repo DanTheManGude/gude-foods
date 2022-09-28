@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -6,9 +8,13 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import { updateRequest } from "../utils";
+import { updateRequest, deleteRequest } from "../utils";
 
 function Settings(props) {
   const {
@@ -25,6 +31,22 @@ function Settings(props) {
     shoppingListPath,
     cookbookPath,
   } = props;
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleDelete = () => {
+    setOpenDeleteDialog(false);
+    deleteRequest(
+      [
+        glossaryPath,
+        basicFoodTagAssociationPath,
+        basicFoodTagOrderPath,
+        shoppingListPath,
+        cookbookPath,
+      ],
+      addAlert
+    );
+  };
 
   const handeFileImport = (file) => {
     let reader = new FileReader();
@@ -179,7 +201,13 @@ function Settings(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="error" variant="outlined">
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => {
+                setOpenDeleteDialog(true);
+              }}
+            >
               Delete
             </Button>
           </CardActions>
@@ -187,6 +215,36 @@ function Settings(props) {
       </Box>
     );
   };
+
+  const renderDeleteDialog = () => (
+    <Dialog
+      sx={{ "& .MuiDialog-paper": { width: "80%" } }}
+      maxWidth="xs"
+      open={openDeleteDialog}
+      keepMounted
+    >
+      <DialogTitle color="primary">Confirm delete data</DialogTitle>
+      <DialogContent dividers>
+        <Typography>
+          Do you want to delete all data associated with this account?
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          autoFocus
+          onClick={() => {
+            setOpenDeleteDialog(false);
+          }}
+          color="secondary"
+        >
+          <Typography>Cancel</Typography>
+        </Button>
+        <Button onClick={handleDelete} color="error">
+          <Typography>Delete</Typography>
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   return (
     <div>
@@ -206,6 +264,7 @@ function Settings(props) {
         {renderImportData()}
         {renderDeleteData()}
       </Stack>
+      {renderDeleteDialog()}
     </div>
   );
 }
