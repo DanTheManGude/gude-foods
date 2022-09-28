@@ -8,6 +8,8 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
+import { updateRequest } from "../utils";
+
 function Settings(props) {
   const {
     addAlert,
@@ -17,7 +19,41 @@ function Settings(props) {
     shoppingList,
     cookbook,
     user,
+    glossaryPath,
+    basicFoodTagAssociationPath,
+    basicFoodTagOrderPath,
+    shoppingListPath,
+    cookbookPath,
   } = props;
+
+  const handeFileImport = (file) => {
+    let reader = new FileReader();
+
+    reader.readAsText(file);
+
+    reader.onload = () => {
+      const data = JSON.parse(reader.result);
+
+      updateRequest(
+        {
+          [glossaryPath]: data.glossary,
+          [basicFoodTagAssociationPath]: data.basicFoodTagAssociation,
+          [basicFoodTagOrderPath]: data.basicFoodTagOrder,
+          [shoppingListPath]: data.shoppingList,
+          [cookbookPath]: data.cookbook,
+        },
+        addAlert
+      );
+    };
+
+    reader.onerror = () => {
+      addAlert({
+        message: reader.error,
+        title: "Error with importing file",
+        alertProps: { severity: "error" },
+      });
+    };
+  };
 
   const onDownload = () => {
     const data = JSON.stringify(
@@ -109,9 +145,20 @@ function Settings(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="warning" variant="outlined">
-              Import
-            </Button>
+            <input
+              accept=".json"
+              style={{ display: "none" }}
+              id="import-button-file"
+              type="file"
+              onChange={(event) => {
+                handeFileImport(event.target.files[0]);
+              }}
+            />
+            <label htmlFor="import-button-file">
+              <Button variant="outlined" color="secondary" component="span">
+                Import
+              </Button>
+            </label>
           </CardActions>
         </Card>
       </Box>
