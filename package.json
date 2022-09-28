@@ -16,8 +16,8 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "REACT_APP_VERSION=$(node -pe 'require(\"./package.json\").version') react-scripts start",
+    "build": "REACT_APP_VERSION=$(node -pe 'require(\"./package.json\").version') react-scripts build",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "vercel --prod",
