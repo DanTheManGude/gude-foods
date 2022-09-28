@@ -9,7 +9,35 @@ import Link from "@mui/material/Link";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 function Settings(props) {
-  const { addAlert } = props;
+  const {
+    addAlert,
+    glossary,
+    basicFoodTagAssociation,
+    basicFoodTagOrder,
+    shoppingList,
+    cookbook,
+    user,
+  } = props;
+
+  const onDownload = () => {
+    const data = JSON.stringify(
+      {
+        user: { email: user.email, uid: user.uid },
+        glossary,
+        basicFoodTagAssociation,
+        basicFoodTagOrder,
+        shoppingList,
+        cookbook,
+      },
+      null,
+      2
+    );
+
+    const element = document.createElement("a");
+    element.download = `gudefoods-download.json`;
+    element.href = `data:text/json;charset=utf-8,${encodeURIComponent(data)}`;
+    element.click();
+  };
 
   const renderAppCard = () => {
     return (
@@ -58,7 +86,7 @@ function Settings(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="secondary" variant="outlined">
+            <Button color="secondary" variant="outlined" onClick={onDownload}>
               Download
             </Button>
           </CardActions>

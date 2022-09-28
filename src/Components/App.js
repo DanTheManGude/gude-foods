@@ -228,7 +228,20 @@ function App() {
           />
         }
       />
-      <Route path="settings" element={<Settings addAlert={addAlert} />} />
+      <Route
+        path="settings"
+        element={
+          <Settings
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            basicFoodTagOrder={basicFoodTagOrder}
+            shoppingList={shoppingList}
+            cookbook={cookbook}
+            user={user}
+            addAlert={addAlert}
+          />
+        }
+      />
     </Routes>
   );
 
