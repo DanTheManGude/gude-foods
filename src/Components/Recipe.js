@@ -560,8 +560,8 @@ function Recipe(props) {
                     {isEditing ? (
                       <>
                         <Select
-                          size="small"
                           value={index}
+                          sx={{ minWidth: "64px", height: "40px" }}
                           onChange={(event) => {
                             moveStep(index, event.target.value);
                           }}
@@ -594,7 +594,7 @@ function Recipe(props) {
                       </>
                     ) : (
                       <>
-                        <Typography sx={{ fontWeight: 700 }}>
+                        <Typography sx={{ fontWeight: 700, width: "17px" }}>
                           {index + 1}.
                         </Typography>
                         &nbsp;
@@ -613,7 +613,7 @@ function Recipe(props) {
                         variant="outlined"
                         size="small"
                         onClick={addStep}
-                        sx={{ minWidth: "55px", height: "40px" }}
+                        sx={{ minWidth: "64px", height: "40px" }}
                         disabled={!newStep}
                       >
                         <Typography>Add</Typography>
