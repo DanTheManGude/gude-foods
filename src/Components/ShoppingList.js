@@ -320,7 +320,9 @@ function ShoppingList(props) {
               filterOptions={(options, params) => {
                 const { inputValue, getOptionLabel } = params;
                 const filtered = options.filter((option) =>
-                  getOptionLabel(option).includes(inputValue)
+                  getOptionLabel(option)
+                    .toLocaleUpperCase()
+                    .includes(inputValue.toUpperCase())
                 );
                 const isExisting = options.some(
                   (option) => inputValue === option.title
