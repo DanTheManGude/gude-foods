@@ -611,16 +611,24 @@ function Recipe(props) {
                 isEditing ? (
                   <Stack key={"addStep"} direction="row" alignItems="center">
                     <>
-                      <Button
-                        color="secondary"
-                        variant="outlined"
-                        size="small"
-                        onClick={addStep}
-                        sx={{ minWidth: "64px", height: "40px" }}
-                        disabled={!newStep}
+                      <span
+                        onClick={() => {
+                          if (!newStep) {
+                            document.getElementById("newStepInput").focus();
+                          }
+                        }}
                       >
-                        <Typography>Add</Typography>
-                      </Button>
+                        <Button
+                          color="secondary"
+                          variant="outlined"
+                          size="small"
+                          onClick={addStep}
+                          sx={{ minWidth: "64px", height: "40px" }}
+                          disabled={!newStep}
+                        >
+                          <Typography>Add</Typography>
+                        </Button>
+                      </span>
                       &nbsp; &nbsp;
                       <TextField
                         id="newStepInput"
@@ -637,7 +645,7 @@ function Recipe(props) {
                             <InputAdornment position="end">
                               <IconButton
                                 sx={{ color: "alt.main" }}
-                                onClick={(event) => {
+                                onClick={() => {
                                   setNewStep("");
                                   document
                                     .getElementById("newStepInput")
