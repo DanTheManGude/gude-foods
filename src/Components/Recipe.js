@@ -407,6 +407,28 @@ function Recipe(props) {
         <AccordionDetails>
           <Stack spacing={isEditing ? 2 : 1}>
             {Object.keys(ingredients)
+              .sort((ingredientIdA, ingredientIdB) => {
+                if (!basicFoodTagAssociation || !basicFoodTagOrder) {
+                  return 0;
+                }
+                const tagA = basicFoodTagAssociation[ingredientIdA];
+                const tagB = basicFoodTagAssociation[ingredientIdB];
+
+                if (!tagA) {
+                  if (!tagB) {
+                    return 0;
+                  }
+                  return 1;
+                }
+                if (!tagB) {
+                  return -1;
+                }
+
+                const indexA = basicFoodTagOrder.indexOf(tagA);
+                const indexB = basicFoodTagOrder.indexOf(tagB);
+
+                return indexA - indexB;
+              })
               .map((ingredientId) => (
                 <Stack
                   key={ingredientId}
