@@ -25,6 +25,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import {
   createKey,
@@ -620,6 +623,7 @@ function Recipe(props) {
                       </Button>
                       &nbsp; &nbsp;
                       <TextField
+                        id="newStepInput"
                         placeholder="Enter new step"
                         onChange={(event) => {
                           setNewStep(event.target.value);
@@ -628,6 +632,24 @@ function Recipe(props) {
                         fullWidth={true}
                         variant="outlined"
                         value={newStep}
+                        InputProps={{
+                          endAdornment: newStep && (
+                            <InputAdornment position="end">
+                              <IconButton
+                                sx={{ color: "alt.main" }}
+                                onClick={(event) => {
+                                  setNewStep("");
+                                  document
+                                    .getElementById("newStepInput")
+                                    .focus();
+                                }}
+                                edge="end"
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                     </>
                   </Stack>
