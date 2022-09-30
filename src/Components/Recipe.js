@@ -283,7 +283,7 @@ function Recipe(props) {
           color="secondary"
           variant="outlined"
           size="small"
-          sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "1" }}
+          sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "2" }}
           onClick={() => {
             navigate(`/cookbook`);
           }}
