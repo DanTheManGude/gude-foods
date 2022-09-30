@@ -25,6 +25,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import {
   createKey,
@@ -280,7 +283,7 @@ function Recipe(props) {
           color="secondary"
           variant="outlined"
           size="small"
-          sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "1" }}
+          sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "2" }}
           onClick={() => {
             navigate(`/cookbook`);
           }}
@@ -404,6 +407,28 @@ function Recipe(props) {
         <AccordionDetails>
           <Stack spacing={isEditing ? 2 : 1}>
             {Object.keys(ingredients)
+              .sort((ingredientIdA, ingredientIdB) => {
+                if (!basicFoodTagAssociation || !basicFoodTagOrder) {
+                  return 0;
+                }
+                const tagA = basicFoodTagAssociation[ingredientIdA];
+                const tagB = basicFoodTagAssociation[ingredientIdB];
+
+                if (!tagA) {
+                  if (!tagB) {
+                    return 0;
+                  }
+                  return 1;
+                }
+                if (!tagB) {
+                  return -1;
+                }
+
+                const indexA = basicFoodTagOrder.indexOf(tagA);
+                const indexB = basicFoodTagOrder.indexOf(tagB);
+
+                return indexA - indexB;
+              })
               .map((ingredientId) => (
                 <Stack
                   key={ingredientId}
@@ -476,7 +501,9 @@ function Recipe(props) {
                         filterOptions={(options, params) => {
                           const { inputValue, getOptionLabel } = params;
                           const filtered = options.filter((option) =>
-                            getOptionLabel(option).includes(inputValue)
+                            getOptionLabel(option)
+                              .toLocaleUpperCase()
+                              .includes(inputValue.toUpperCase())
                           );
                           const isExisting = options.some(
                             (option) => inputValue === option.title
@@ -560,8 +587,8 @@ function Recipe(props) {
                     {isEditing ? (
                       <>
                         <Select
-                          size="small"
                           value={index}
+                          sx={{ minWidth: "64px", height: "40px" }}
                           onChange={(event) => {
                             moveStep(index, event.target.value);
                           }}
@@ -594,7 +621,7 @@ function Recipe(props) {
                       </>
                     ) : (
                       <>
-                        <Typography sx={{ fontWeight: 700 }}>
+                        <Typography sx={{ fontWeight: 700, width: "17px" }}>
                           {index + 1}.
                         </Typography>
                         &nbsp;
@@ -608,18 +635,27 @@ function Recipe(props) {
                 isEditing ? (
                   <Stack key={"addStep"} direction="row" alignItems="center">
                     <>
-                      <Button
-                        color="secondary"
-                        variant="outlined"
-                        size="small"
-                        onClick={addStep}
-                        sx={{ minWidth: "55px", height: "40px" }}
-                        disabled={!newStep}
+                      <span
+                        onClick={() => {
+                          if (!newStep) {
+                            document.getElementById("newStepInput").focus();
+                          }
+                        }}
                       >
-                        <Typography>Add</Typography>
-                      </Button>
+                        <Button
+                          color="secondary"
+                          variant="outlined"
+                          size="small"
+                          onClick={addStep}
+                          sx={{ minWidth: "64px", height: "40px" }}
+                          disabled={!newStep}
+                        >
+                          <Typography>Add</Typography>
+                        </Button>
+                      </span>
                       &nbsp; &nbsp;
                       <TextField
+                        id="newStepInput"
                         placeholder="Enter new step"
                         onChange={(event) => {
                           setNewStep(event.target.value);
@@ -628,6 +664,24 @@ function Recipe(props) {
                         fullWidth={true}
                         variant="outlined"
                         value={newStep}
+                        InputProps={{
+                          endAdornment: newStep && (
+                            <InputAdornment position="end">
+                              <IconButton
+                                sx={{ color: "alt.main" }}
+                                onClick={() => {
+                                  setNewStep("");
+                                  document
+                                    .getElementById("newStepInput")
+                                    .focus();
+                                }}
+                                edge="end"
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                     </>
                   </Stack>
@@ -778,7 +832,9 @@ function Recipe(props) {
             filterOptions={(options, params) => {
               const { inputValue, getOptionLabel } = params;
               const filtered = options.filter((option) =>
-                getOptionLabel(option).includes(inputValue)
+                getOptionLabel(option)
+                  .toLocaleUpperCase()
+                  .includes(inputValue.toUpperCase())
               );
               const isExisting = options.some(
                 (option) => inputValue === option.title
