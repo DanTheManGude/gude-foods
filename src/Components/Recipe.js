@@ -39,6 +39,26 @@ import {
 
 const unknownSectionName = "Unknown Section";
 
+function waitForElm(selector) {
+  return new Promise((resolve) => {
+    if (document.querySelector(selector)) {
+      return resolve(document.querySelector(selector));
+    }
+
+    const observer = new MutationObserver(() => {
+      if (document.querySelector(selector)) {
+        resolve(document.querySelector(selector));
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  });
+}
+
 function Recipe(props) {
   const {
     glossary,
@@ -145,6 +165,10 @@ function Recipe(props) {
   const addIngredient = (ingredientId) => {
     updateIngredients((_ingredients) => {
       return { ..._ingredients, [ingredientId]: "" };
+    });
+
+    waitForElm(`#${ingredientId}-amount-input`).then((elm) => {
+      elm.focus();
     });
     setNewIngredientId(null);
   };
@@ -444,6 +468,7 @@ function Recipe(props) {
                         {glossary.basicFoods[ingredientId]}:
                       </Typography>
                       <TextField
+                        id={`${ingredientId}-amount-input`}
                         placeholder="Edit amount"
                         value={ingredients[ingredientId]}
                         onChange={(event) => {
@@ -547,6 +572,7 @@ function Recipe(props) {
                       />
                     }
                     <Button
+                      id={`add-ingredient-button`}
                       color="secondary"
                       variant="outlined"
                       size="small"
