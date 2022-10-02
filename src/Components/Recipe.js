@@ -477,6 +477,9 @@ function Recipe(props) {
                         size="small"
                         fullWidth={true}
                         variant="outlined"
+                        inputProps={{
+                          autoCapitalize: "none",
+                        }}
                       />
                       <HighlightOffIcon
                         color="secondary"
