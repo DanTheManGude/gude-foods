@@ -47,14 +47,14 @@ function Home(props) {
             Checkout this recipe <strong>{name}.</strong>
           </Typography>
           <Typography>
-            Ingredients:&nbsp;
+            <strong>Ingredients:</strong>&nbsp;
             {Object.keys(ingredients)
               .map((foodId) => glossary.basicFoods[foodId])
               .join(", ")}
           </Typography>
           {(tags || isFavorite) && (
             <Typography>
-              Tags:&nbsp;
+              <strong>Tags:</strong>&nbsp;
               {[
                 ...(isFavorite ? ["favorite"] : []),
                 ...(tags
@@ -156,11 +156,11 @@ function Home(props) {
       messageContent = (
         <>
           <Typography>
-            There are <strong>{counts.unchecked}</strong> unchecked items on the
+            There are <strong>{counts.unchecked} unchecked</strong> items on the
             list.
           </Typography>
           <Typography>
-            There are <strong>{counts.checked}</strong> checked items on the
+            There are <strong>{counts.checked} checked</strong> items on the
             list.
           </Typography>
         </>
@@ -211,7 +211,7 @@ function Home(props) {
               Cookbook
             </Typography>
             <Typography>
-              There are <strong>{count}</strong> recipes in the cookbook.
+              There are <strong>{count} recipes</strong> in the cookbook.
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
