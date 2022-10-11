@@ -1,6 +1,7 @@
 import { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
+
+import styled from "@emotion/styled";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -24,6 +25,8 @@ const presentationNames = {
 
 const pages = ["cookbook", "shoppingList", "glossary", "settings"];
 
+const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
+
 const NavBar = (props) => {
   const { addAlert } = props;
   let navigate = useNavigate();
@@ -39,137 +42,135 @@ const NavBar = (props) => {
   };
 
   return (
-    <AppBar
-      position="static"
-      sx={{
-        marginBottom: "10px",
-      }}
-    >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h5"
-            noWrap
-            component="span"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "DancingScript",
-              fontWeight: "bold",
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <Link to={`/`}>Gude Foods</Link>
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+    <>
+      <AppBar position="fixed" sx={{ left: "2%", width: "96%" }}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <Typography
+              variant="h5"
+              noWrap
+              component="span"
+              href="/"
               sx={{
-                display: { xs: "block", md: "none" },
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "DancingScript",
+                fontWeight: "bold",
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
-              {pages
-                .map((page) => (
-                  <MenuItem
-                    key={page}
-                    onClick={() => {
-                      handleCloseNavMenu();
-                      navigate(`/${page}`);
-                    }}
-                  >
-                    <Typography textAlign="center">
-                      {presentationNames[page]}
-                    </Typography>
-                  </MenuItem>
-                ))
-                .concat(
-                  <GoogleLoginButton
-                    key="googleLogin"
-                    handleClick={handleCloseNavMenu}
-                    addAlert={addAlert}
-                  />
-                )}
-            </Menu>
-          </Box>
+              <Link to={`/`}>Gude Foods</Link>
+            </Typography>
 
-          <Typography
-            variant="h4"
-            noWrap
-            component="span"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "DancingScript",
-              fontWeight: "bold",
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <Link to={`/`}>Gude Foods</Link>
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={() => {
-                  handleCloseNavMenu();
-                  navigate(`/${page}`);
-                }}
-                sx={{ my: 2, color: "white", display: "block" }}
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
               >
-                <Typography>{presentationNames[page]}</Typography>
-              </Button>
-            ))}
-          </Box>
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: "block", md: "none" },
+                }}
+              >
+                {pages
+                  .map((page) => (
+                    <MenuItem
+                      key={page}
+                      onClick={() => {
+                        handleCloseNavMenu();
+                        navigate(`/${page}`);
+                      }}
+                    >
+                      <Typography textAlign="center">
+                        {presentationNames[page]}
+                      </Typography>
+                    </MenuItem>
+                  ))
+                  .concat(
+                    <GoogleLoginButton
+                      key="googleLogin"
+                      handleClick={handleCloseNavMenu}
+                      addAlert={addAlert}
+                    />
+                  )}
+              </Menu>
+            </Box>
 
-          <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-            <GoogleLoginButton
-              handleClick={handleCloseNavMenu}
-              addAlert={addAlert}
-            />
-          </Box>
-          <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
-            <Link to={`/`}>
-              <img
-                width="32px"
-                src={"/favicon-32x32.png"}
-                alt="App Logo"
-                style={{ borderRadius: "5px" }}
+            <Typography
+              variant="h4"
+              noWrap
+              component="span"
+              href=""
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "DancingScript",
+                fontWeight: "bold",
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              <Link to={`/`}>Gude Foods</Link>
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              {pages.map((page) => (
+                <Button
+                  key={page}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    navigate(`/${page}`);
+                  }}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  <Typography>{presentationNames[page]}</Typography>
+                </Button>
+              ))}
+            </Box>
+
+            <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+              <GoogleLoginButton
+                handleClick={handleCloseNavMenu}
+                addAlert={addAlert}
               />
-            </Link>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            </Box>
+            <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+              <Link to={`/`}>
+                <img
+                  width="32px"
+                  src={"/favicon-32x32.png"}
+                  alt="App Logo"
+                  style={{ borderRadius: "5px" }}
+                />
+              </Link>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <Offset />
+    </>
   );
 };
 export default NavBar;
