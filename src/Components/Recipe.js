@@ -956,6 +956,9 @@ function Recipe(props) {
                 name: event.target.value,
               }));
             }}
+            inputProps={{
+              autoCapitalize: "none",
+            }}
           />
           <FormControl size="small" variant="standard">
             <InputLabel id="tag" style={{ top: "-11px" }}>
