@@ -24,7 +24,9 @@ function Cookbook(props) {
   const {
     glossary,
     cookbook = {},
-    updatePath,
+    recipeOrder = [],
+    recipeOrderPath,
+    shoppingListPath,
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
@@ -35,6 +37,12 @@ function Cookbook(props) {
   const [advancedFiltersTooltipOpen, setAdvancedFiltersTooltipOpen] =
     useState(false);
   const { searchTerm = "" } = filteringOptions;
+
+  const calculateRecipeList = () => {
+    return recipeOrder.filter((recipeId) =>
+      cookbook[recipeId].name.toUpperCase().includes(searchTerm)
+    );
+  };
 
   const renderSearchAndFilters = () =>
     !cookbook ? null : (
@@ -127,107 +135,109 @@ function Cookbook(props) {
     if (!cookbook) {
       return null;
     }
-    const recipeList = Object.keys(cookbook);
+    const recipeList = calculateRecipeList();
     return (
       <Stack sx={{ width: "95%" }} spacing={1}>
-        {recipeList
-          .filter((recipeId) =>
-            cookbook[recipeId].name.toUpperCase().includes(searchTerm)
-          )
-          .map((recipeId) => {
-            const {
-              name = "Unknown name",
-              ingredients = [],
-              tags = [],
-              isFavorite = false,
-            } = cookbook[recipeId];
+        {recipeList.map((recipeId) => {
+          const {
+            name = "Unknown name",
+            ingredients = [],
+            tags = [],
+            isFavorite = false,
+          } = cookbook[recipeId];
 
-            return (
-              <Accordion key={recipeId}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h6">{name}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Stack spacing={3}>
-                    <Stack
-                      spacing={2}
-                      direction="row"
-                      justifyContent="space-around"
-                      alignItems="center"
+          return (
+            <Accordion key={recipeId}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">{name}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack spacing={3}>
+                  <Stack
+                    spacing={2}
+                    direction="row"
+                    justifyContent="space-around"
+                    alignItems="center"
+                  >
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      size="large"
+                      sx={{ flex: 1 }}
+                      onClick={() => {
+                        navigate(`/recipe/${recipeId}`);
+                      }}
                     >
-                      <Button
-                        color="secondary"
-                        variant="outlined"
-                        size="large"
-                        sx={{ flex: 1 }}
-                        onClick={() => {
-                          navigate(`/recipe/${recipeId}`);
-                        }}
-                      >
-                        <Typography color="secondary">
-                          View full recipe
-                        </Typography>
-                      </Button>
-                      <Button
-                        color="secondary"
-                        variant="outlined"
-                        size="large"
-                        sx={{ flex: 1 }}
-                        onClick={() => {
-                          updateRequest(
-                            Object.keys(ingredients).reduce(
+                      <Typography color="secondary">
+                        View full recipe
+                      </Typography>
+                    </Button>
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      size="large"
+                      sx={{ flex: 1 }}
+                      onClick={() => {
+                        updateRequest(
+                          {
+                            ...Object.keys(ingredients).reduce(
                               (updates, foodId) => ({
                                 ...updates,
-                                [`${updatePath}/${foodId}/list/${recipeId}`]: true,
+                                [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
                               }),
                               {}
                             ),
-                            addAlert
-                          );
-                        }}
-                      >
-                        <Typography>Add to shopping list</Typography>
-                      </Button>
-                    </Stack>
-                    <Stack direction="row" spacing={1}>
-                      {isFavorite && (
-                        <Chip
-                          key={"favorite"}
-                          label={
-                            <StarIcon
-                              sx={{
-                                "&&": {
-                                  color: "alt.main",
-                                  verticalAlign: "bottom",
-                                },
-                              }}
-                              fontSize="small"
-                            />
-                          }
-                          size="small"
-                          variant="outlined"
-                          color="tertiary"
-                        />
-                      )}
-                      {tags.map((tagId) => (
-                        <Chip
-                          key={tagId}
-                          label={
-                            <Typography>
-                              {glossary.recipeTags[tagId]}
-                            </Typography>
-                          }
-                          size="small"
-                          variant="outlined"
-                          color="tertiary"
-                        />
-                      ))}
-                    </Stack>
+                            [recipeOrderPath]: [
+                              recipeId,
+                              ...recipeOrder.filter(
+                                (_recipeId) => recipeId !== _recipeId
+                              ),
+                            ],
+                          },
+                          addAlert
+                        );
+                      }}
+                    >
+                      <Typography>Add to shopping list</Typography>
+                    </Button>
                   </Stack>
-                </AccordionDetails>
-              </Accordion>
-            );
-          })}
+                  <Stack direction="row" spacing={1}>
+                    {isFavorite && (
+                      <Chip
+                        key={"favorite"}
+                        label={
+                          <StarIcon
+                            sx={{
+                              "&&": {
+                                color: "alt.main",
+                                verticalAlign: "bottom",
+                              },
+                            }}
+                            fontSize="small"
+                          />
+                        }
+                        size="small"
+                        variant="outlined"
+                        color="tertiary"
+                      />
+                    )}
+                    {tags.map((tagId) => (
+                      <Chip
+                        key={tagId}
+                        label={
+                          <Typography>{glossary.recipeTags[tagId]}</Typography>
+                        }
+                        size="small"
+                        variant="outlined"
+                        color="tertiary"
+                      />
+                    ))}
+                  </Stack>
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
       </Stack>
     );
   };

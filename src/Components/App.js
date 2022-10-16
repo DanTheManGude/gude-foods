@@ -32,6 +32,7 @@ function App() {
   const [basicFoodTagOrder, setBasicFoodTagOrder] = useState();
   const [shoppingList, setShoppingList] = useState();
   const [cookbook, setCookbook] = useState();
+  const [recipeOrder, setRecipeOrder] = useState();
 
   const [filteringOptions, setFilteringOptions] = useState();
 
@@ -102,6 +103,10 @@ function App() {
       setCookbook(snapshot.val());
     });
 
+    onValue(ref(db, `recipeOrder/${user.uid}`), (snapshot) => {
+      setRecipeOrder(snapshot.val());
+    });
+
     addAlert({
       message: "Succesfully logged in with Google",
       title: `Hello ${user.displayName}`,
@@ -165,7 +170,9 @@ function App() {
           <Cookbook
             glossary={glossary}
             cookbook={cookbook}
-            updatePath={user ? `shoppingList/${user.uid}` : ""}
+            recipeOrder={recipeOrder}
+            recipeOrderPath={user ? `recipeOrder/${user.uid}` : ""}
+            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             addAlert={addAlert}
             filteringOptions={filteringOptions}
             setFilteringOptions={setFilteringOptions}
@@ -179,9 +186,11 @@ function App() {
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             cookbook={cookbook}
+            recipeOrder={recipeOrder}
             shoppingList={shoppingList}
             basicFoodTagOrder={basicFoodTagOrder}
             cookbookPath={user ? `cookbook/${user.uid}` : ""}
+            recipeOrderPath={user ? `recipeOrder/${user.uid}` : ""}
             shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
             glossaryPath={user ? `glossary/${user.uid}` : ""}
             basicFoodTagAssociationPath={
