@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Accordion, { accordionClasses } from "@mui/material/Accordion";
+import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Paper from "@mui/material/Paper";
@@ -32,7 +32,6 @@ import ClearIcon from "@mui/icons-material/Clear";
 import {
   createKey,
   updateRequest,
-  deleteRequest,
   getCalculateFoodSectionForOptions,
   constructBasicFoodOptions,
 } from "../utils";
