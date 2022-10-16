@@ -239,8 +239,16 @@ function Recipe(props) {
       return;
     }
 
+    const updates = {
+      [`${cookbookPath}/${recipeId}`]: recipeEntry,
+    };
+
+    if (isCreating) {
+      updates[recipeOrderPath] = [recipeId, ...recipeOrder];
+    }
+
     updateRequest(
-      { [`${cookbookPath}/${recipeId}`]: recipeEntry },
+      updates,
       (successAlert) => {
         addAlert(successAlert);
         setIsCreating(false);
