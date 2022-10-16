@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Accordion from "@mui/material/Accordion";
+import Accordion, { accordionClasses } from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Paper from "@mui/material/Paper";
@@ -269,8 +269,15 @@ function Recipe(props) {
           .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
       : [];
 
-    deleteRequest(
-      [`${cookbookPath}/${recipeId}`, ...shoppingListDeletes],
+    updateRequest(
+      [`${cookbookPath}/${recipeId}`, ...shoppingListDeletes].reduce(
+        (acc, deletePath) => ({ ...acc, [deletePath]: null }),
+        {
+          [recipeOrderPath]: recipeOrder.filter(
+            (_recipeId) => recipeId !== _recipeId
+          ),
+        }
+      ),
       (successAlert) => {
         addAlert(successAlert);
         navigate(`/cookbook`);
