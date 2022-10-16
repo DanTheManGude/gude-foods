@@ -64,9 +64,11 @@ function Recipe(props) {
     glossary,
     basicFoodTagAssociation,
     cookbook = {},
+    recipeOrder = [],
     shoppingList,
     basicFoodTagOrder,
     cookbookPath,
+    recipeOrderPath,
     shoppingListPath,
     glossaryPath,
     basicFoodTagAssociationPath,
@@ -347,13 +349,21 @@ function Recipe(props) {
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
               updateRequest(
-                Object.keys(originalRecipe.ingredients).reduce(
-                  (updates, foodId) => ({
-                    ...updates,
-                    [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
-                  }),
-                  {}
-                ),
+                {
+                  ...Object.keys(originalRecipe.ingredients).reduce(
+                    (updates, foodId) => ({
+                      ...updates,
+                      [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
+                    }),
+                    {}
+                  ),
+                  [recipeOrderPath]: [
+                    recipeId,
+                    ...recipeOrder.filter(
+                      (_recipeId) => recipeId !== _recipeId
+                    ),
+                  ],
+                },
                 addAlert
               );
             }}
