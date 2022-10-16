@@ -250,12 +250,14 @@ function Recipe(props) {
   };
 
   const handleDelete = () => {
-    const shoppingListDeletes = Object.keys(shoppingList)
-      .filter((foodId) => {
-        const foodEntry = shoppingList[foodId];
-        return foodEntry.list && foodEntry.list[recipeId];
-      })
-      .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`);
+    const shoppingListDeletes = shoppingList
+      ? Object.keys(shoppingList)
+          .filter((foodId) => {
+            const foodEntry = shoppingList[foodId];
+            return foodEntry.list && foodEntry.list[recipeId];
+          })
+          .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
+      : [];
 
     deleteRequest(
       [`${cookbookPath}/${recipeId}`, ...shoppingListDeletes],
