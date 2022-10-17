@@ -239,12 +239,14 @@ function Glossary(props) {
                 </IconButton>
               </InputAdornment>
             ),
-            autoCapitalize: sectionKey !== "basicFoodTags" && "none",
+            autoCapitalize: sectionKey === "basicFoodTags" ? "none" : "",
           }}
           inputProps={
-            sectionKey !== "basicFoodTags" && {
-              autoCapitalize: "none",
-            }
+            sectionKey === "basicFoodTags"
+              ? {
+                  autoCapitalize: "none",
+                }
+              : {}
           }
         />
         {renderAction(
