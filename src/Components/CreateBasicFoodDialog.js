@@ -23,6 +23,7 @@ function CreateBasicFoodDialog(props) {
     basicFoodTagAssociationPath,
   } = props;
 
+  console.log(createBasicFood);
   return (
     <Dialog
       open={open}

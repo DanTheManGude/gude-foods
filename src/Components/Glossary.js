@@ -281,7 +281,8 @@ function Glossary(props) {
       !glossary ||
       !glossary.basicFoods ||
       !glossary.basicFoodTags ||
-      !basicFoodTagAssociation
+      !basicFoodTagAssociation ||
+      !basicFoodTagOrder
     ) {
       return (
         <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">

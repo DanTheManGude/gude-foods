@@ -12,9 +12,11 @@ function DepartmentFormControl(props) {
       sx={{ width: "110px" }}
       disabled={disabled}
     >
-      <InputLabel id={id} style={{ top: "-11px" }}>
-        Dept.
-      </InputLabel>
+      {value ? null : (
+        <InputLabel id={id} style={{ top: "-11px" }}>
+          Dept.
+        </InputLabel>
+      )}
       <Select
         labelId={id}
         id={id}

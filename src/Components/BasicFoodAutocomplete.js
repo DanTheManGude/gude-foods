@@ -79,7 +79,7 @@ function BasicFoodAutocomplete(props) {
         const { foodId, inputValue } = selectedOption;
 
         if (inputValue) {
-          handleInputvalue(handleInputvalue);
+          handleInputvalue(inputValue);
         } else {
           setNewFoodId(foodId);
         }
