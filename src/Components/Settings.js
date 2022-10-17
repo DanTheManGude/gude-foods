@@ -18,18 +18,22 @@ import { updateRequest, deleteRequest } from "../utils";
 
 function Settings(props) {
   const {
+    database: {
+      glossary,
+      basicFoodTagAssociation,
+      basicFoodTagOrder,
+      shoppingList,
+      cookbook,
+    },
+    dataPaths: {
+      glossaryPath,
+      basicFoodTagAssociationPath,
+      basicFoodTagOrderPath,
+      shoppingListPath,
+      cookbookPath,
+    },
     addAlert,
-    glossary,
-    basicFoodTagAssociation,
-    basicFoodTagOrder,
-    shoppingList,
-    cookbook,
     user,
-    glossaryPath,
-    basicFoodTagAssociationPath,
-    basicFoodTagOrderPath,
-    shoppingListPath,
-    cookbookPath,
   } = props;
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

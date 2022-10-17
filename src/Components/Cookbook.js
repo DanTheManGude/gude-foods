@@ -22,15 +22,14 @@ import { updateRequest } from "../utils";
 
 function Cookbook(props) {
   const {
-    glossary,
-    cookbook = {},
-    recipeOrder = [],
-    recipeOrderPath,
-    shoppingListPath,
+    database: { glossary, cookbook = {}, recipeOrder = [] },
+    dataPaths: { recipeOrderPath, shoppingListPath },
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
   } = props;
+
+  console.log(props.database);
 
   let navigate = useNavigate();
 

@@ -9,7 +9,9 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
 function Home(props) {
-  const { glossary, basicFoodTagAssociation, shoppingList, cookbook } = props;
+  const {
+    database: { glossary, basicFoodTagAssociation, shoppingList, cookbook },
+  } = props;
   let navigate = useNavigate();
 
   const renderRecipeCard = () => {

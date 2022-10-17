@@ -19,22 +19,25 @@ import Box from "@mui/material/Box";
 
 import { updateRequest, createKey } from "../utils";
 
-const UNKNOWN_TAG = "UNKNOWN_TAG";
-const unknownSectionName = "Unknown Section";
+import { unknownSectionName, UNKNOWN_TAG } from "../constants";
 
 function Glossary(props) {
   const {
-    glossary,
-    shoppingList,
-    cookbook,
-    basicFoodTagAssociation,
-    basicFoodTagOrder,
+    database: {
+      glossary,
+      shoppingList,
+      cookbook,
+      basicFoodTagAssociation,
+      basicFoodTagOrder,
+    },
+    dataPaths: {
+      glossaryPath,
+      shoppingListPath,
+      cookbookPath,
+      basicFoodTagAssociationPath,
+      basicFoodTagOrderPath,
+    },
     addAlert,
-    glossaryPath,
-    shoppingListPath,
-    cookbookPath,
-    basicFoodTagAssociationPath,
-    basicFoodTagOrderPath,
   } = props;
 
   const [editingEntry, setEditingEntry] = useState({});

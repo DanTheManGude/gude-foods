@@ -34,20 +34,19 @@ import {
   constructBasicFoodOptions,
 } from "../utils";
 
-const UNKNOWN_TAG = "UNKNOWN_TAG";
-const unknownSectionName = "Unknown Section";
+import { unknownSectionName, UNKNOWN_TAG } from "../constants";
 
 function ShoppingList(props) {
   const {
-    glossary,
-    basicFoodTagAssociation,
-    shoppingList,
-    cookbook,
-    basicFoodTagOrder,
+    database: {
+      glossary,
+      basicFoodTagAssociation,
+      shoppingList,
+      cookbook,
+      basicFoodTagOrder,
+    },
+    dataPaths: { shoppingListPath, glossaryPath, basicFoodTagAssociationPath },
     addAlert,
-    shoppingListPath,
-    glossaryPath,
-    basicFoodTagAssociationPath,
   } = props;
 
   const [shoppingMap, setShoppingMap] = useState({

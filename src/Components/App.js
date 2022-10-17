@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -10,14 +10,9 @@ import Collapse from "@mui/material/Collapse";
 import { TransitionGroup } from "react-transition-group";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, onValue, child, get } from "firebase/database";
+import { getDatabase, ref, child, get } from "firebase/database";
 
-import Home from "./Home";
-import Cookbook from "./Cookbook";
-import Recipe from "./Recipe";
-import ShoppingList from "./ShoppingList";
-import Glossary from "./Glossary";
-import Settings from "./Settings";
+import PagesContainer from "./PagesContainer";
 
 import NavBar from "./NavBar";
 import UnauthorizedUser from "./UnauthorizedUser";
@@ -26,15 +21,6 @@ function App() {
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
-
-  const [glossary, setGlossary] = useState();
-  const [basicFoodTagAssociation, setBasicFoodTagAssociation] = useState();
-  const [basicFoodTagOrder, setBasicFoodTagOrder] = useState();
-  const [shoppingList, setShoppingList] = useState();
-  const [cookbook, setCookbook] = useState();
-  const [recipeOrder, setRecipeOrder] = useState();
-
-  const [filteringOptions, setFilteringOptions] = useState();
 
   const prevUserRef = useRef();
 
@@ -71,10 +57,7 @@ function App() {
       return;
     }
 
-    const db = getDatabase();
-
-    const dbRef = ref(db);
-    get(child(dbRef, `users/${user.uid}`))
+    get(child(ref(getDatabase()), `users/${user.uid}`))
       .then((snapshot) => {
         setIsAuthorizedUser(snapshot.exists() && snapshot.val());
       })
@@ -82,30 +65,6 @@ function App() {
         console.error(error);
         setIsAuthorizedUser(false);
       });
-
-    onValue(ref(db, `glossary/${user.uid}`), (snapshot) => {
-      setGlossary(snapshot.val());
-    });
-
-    onValue(ref(db, `basicFood-basicFoodTag/${user.uid}`), (snapshot) => {
-      setBasicFoodTagAssociation(snapshot.val());
-    });
-
-    onValue(ref(db, `basicFoodTagOrder/${user.uid}`), (snapshot) => {
-      setBasicFoodTagOrder(snapshot.val());
-    });
-
-    onValue(ref(db, `shoppingList/${user.uid}`), (snapshot) => {
-      setShoppingList(snapshot.val());
-    });
-
-    onValue(ref(db, `cookbook/${user.uid}`), (snapshot) => {
-      setCookbook(snapshot.val());
-    });
-
-    onValue(ref(db, `recipeOrder/${user.uid}`), (snapshot) => {
-      setRecipeOrder(snapshot.val());
-    });
 
     addAlert({
       message: "Succesfully logged in with Google",
@@ -151,123 +110,12 @@ function App() {
     </List>
   );
 
-  const renderRoutes = () => (
-    <Routes>
-      <Route
-        path="/*"
-        element={
-          <Home
-            glossary={glossary}
-            basicFoodTagAssociation={basicFoodTagAssociation}
-            shoppingList={shoppingList}
-            cookbook={cookbook}
-          />
-        }
-      />
-      <Route
-        path="cookbook"
-        element={
-          <Cookbook
-            glossary={glossary}
-            cookbook={cookbook}
-            recipeOrder={recipeOrder}
-            recipeOrderPath={user ? `recipeOrder/${user.uid}` : ""}
-            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
-            addAlert={addAlert}
-            filteringOptions={filteringOptions}
-            setFilteringOptions={setFilteringOptions}
-          />
-        }
-      />
-      <Route
-        path="recipe/:recipeId"
-        element={
-          <Recipe
-            glossary={glossary}
-            basicFoodTagAssociation={basicFoodTagAssociation}
-            cookbook={cookbook}
-            recipeOrder={recipeOrder}
-            shoppingList={shoppingList}
-            basicFoodTagOrder={basicFoodTagOrder}
-            cookbookPath={user ? `cookbook/${user.uid}` : ""}
-            recipeOrderPath={user ? `recipeOrder/${user.uid}` : ""}
-            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
-            glossaryPath={user ? `glossary/${user.uid}` : ""}
-            basicFoodTagAssociationPath={
-              user ? `basicFood-basicFoodTag/${user.uid}` : ""
-            }
-            addAlert={addAlert}
-          />
-        }
-      />
-      <Route
-        path="shoppingList"
-        element={
-          <ShoppingList
-            glossary={glossary}
-            basicFoodTagAssociation={basicFoodTagAssociation}
-            shoppingList={shoppingList}
-            cookbook={cookbook}
-            basicFoodTagOrder={basicFoodTagOrder}
-            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
-            glossaryPath={user ? `glossary/${user.uid}` : ""}
-            basicFoodTagAssociationPath={
-              user ? `basicFood-basicFoodTag/${user.uid}` : ""
-            }
-            addAlert={addAlert}
-          />
-        }
-      />
-      <Route
-        path="glossary"
-        element={
-          <Glossary
-            glossary={glossary}
-            shoppingList={shoppingList}
-            cookbook={cookbook}
-            basicFoodTagAssociation={basicFoodTagAssociation}
-            basicFoodTagOrder={basicFoodTagOrder}
-            glossaryPath={user ? `glossary/${user.uid}` : ""}
-            basicFoodTagAssociationPath={
-              user ? `basicFood-basicFoodTag/${user.uid}` : ""
-            }
-            basicFoodTagOrderPath={user ? `basicFoodTagOrder/${user.uid}` : ""}
-            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
-            cookbookPath={user ? `cookbook/${user.uid}` : ""}
-            addAlert={addAlert}
-          />
-        }
-      />
-      <Route
-        path="settings"
-        element={
-          <Settings
-            glossary={glossary}
-            basicFoodTagAssociation={basicFoodTagAssociation}
-            basicFoodTagOrder={basicFoodTagOrder}
-            shoppingList={shoppingList}
-            cookbook={cookbook}
-            user={user}
-            glossaryPath={user ? `glossary/${user.uid}` : ""}
-            basicFoodTagAssociationPath={
-              user ? `basicFood-basicFoodTag/${user.uid}` : ""
-            }
-            basicFoodTagOrderPath={user ? `basicFoodTagOrder/${user.uid}` : ""}
-            shoppingListPath={user ? `shoppingList/${user.uid}` : ""}
-            cookbookPath={user ? `cookbook/${user.uid}` : ""}
-            addAlert={addAlert}
-          />
-        }
-      />
-    </Routes>
-  );
-
   return (
     <div className="App">
       {renderMessages()}
       <NavBar pathname={usePathname()} addAlert={addAlert} />
       {isAuthorizedUser ? (
-        renderRoutes()
+        <PagesContainer user={user} addAlert={addAlert} />
       ) : (
         <UnauthorizedUser user={user} addAlert={addAlert} />
       )}

@@ -36,7 +36,7 @@ import {
   constructBasicFoodOptions,
 } from "../utils";
 
-const unknownSectionName = "Unknown Section";
+import { unknownSectionName } from "../constants";
 
 function waitForElm(selector) {
   return new Promise((resolve) => {
@@ -60,17 +60,21 @@ function waitForElm(selector) {
 
 function Recipe(props) {
   const {
-    glossary,
-    basicFoodTagAssociation,
-    cookbook = {},
-    recipeOrder = [],
-    shoppingList,
-    basicFoodTagOrder,
-    cookbookPath,
-    recipeOrderPath,
-    shoppingListPath,
-    glossaryPath,
-    basicFoodTagAssociationPath,
+    database: {
+      glossary,
+      basicFoodTagAssociation,
+      cookbook = {},
+      recipeOrder = [],
+      shoppingList,
+      basicFoodTagOrder,
+    },
+    dataPaths: {
+      cookbookPath,
+      recipeOrderPath,
+      shoppingListPath,
+      glossaryPath,
+      basicFoodTagAssociationPath,
+    },
     addAlert,
   } = props;
 
