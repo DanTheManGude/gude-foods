@@ -6,12 +6,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 
 import { updateRequest, createKey } from "../utils";
+import DepartmentFormControl from "./DepartmentFormControl";
 
 function CreateBasicFoodDialog(props) {
   const {
@@ -57,36 +54,18 @@ function CreateBasicFoodDialog(props) {
               autoCapitalize: "none",
             }}
           />
-          <FormControl size="small" variant="standard">
-            <InputLabel id="tag" style={{ top: "-11px" }}>
-              Dept.
-            </InputLabel>
-            <Select
-              labelId="tag"
-              id="tag"
-              value={createBasicFood.tagId || ""}
-              onChange={(event) => {
-                setCreateBasicFood((previous) => ({
-                  ...previous,
-                  tagId: event.target.value,
-                }));
-              }}
-              style={{ marginTop: 0, paddingTop: "5px", width: "110px" }}
-            >
-              {(glossary && glossary.basicFoodTags
-                ? basicFoodTagOrder.map((basicFoodTagKey) => (
-                    <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
-                      {glossary.basicFoodTags[basicFoodTagKey]}
-                    </MenuItem>
-                  ))
-                : []
-              ).concat(
-                <MenuItem value={""} key={"delete"}>
-                  <em>None</em>
-                </MenuItem>
-              )}
-            </Select>
-          </FormControl>
+          <DepartmentFormControl
+            id="tag"
+            value={createBasicFood.tagId || ""}
+            onChange={(event) => {
+              setCreateBasicFood((previous) => ({
+                ...previous,
+                tagId: event.target.value,
+              }));
+            }}
+            glossary={glossary}
+            basicFoodTagOrder={basicFoodTagOrder}
+          />
         </Stack>
       </DialogContent>
       <DialogActions>

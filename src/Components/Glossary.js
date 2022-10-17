@@ -6,9 +6,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -18,8 +16,8 @@ import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import Box from "@mui/material/Box";
 
 import { updateRequest, createKey } from "../utils";
-
 import { unknownSectionName, UNKNOWN_TAG } from "../constants";
+import DepartmentFormControl from "./DepartmentFormControl";
 
 function Glossary(props) {
   const {
@@ -157,50 +155,25 @@ function Glossary(props) {
     }
 
     if (sectionKey === "basicFoods") {
-      const basicFoodTags = glossary.basicFoodTags || [];
-      const tagId =
-        (basicFoodTagAssociation && basicFoodTagAssociation[entryKey]) || "";
-
       return (
-        <FormControl
-          size="small"
-          variant="standard"
-          sx={{ width: "110px" }}
+        <DepartmentFormControl
           disabled={disabled}
-        >
-          {tagId === "" && (
-            <InputLabel id={entryKey} style={{ top: "-11px" }}>
-              Dept.
-            </InputLabel>
-          )}
-          <Select
-            labelId={entryKey}
-            id={entryKey}
-            value={tagId}
-            onChange={(event) => {
-              updateRequest(
-                {
-                  [`${basicFoodTagAssociationPath}/${entryKey}`]:
-                    event.target.value,
-                },
-                addAlert
-              );
-            }}
-            style={{ marginTop: 0, paddingTop: "5px" }}
-          >
-            {(basicFoodTagOrder || [])
-              .map((basicFoodTagKey) => (
-                <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
-                  {basicFoodTags[basicFoodTagKey]}
-                </MenuItem>
-              ))
-              .concat(
-                <MenuItem value={null} key={"delete"}>
-                  <em>None</em>
-                </MenuItem>
-              )}
-          </Select>
-        </FormControl>
+          id={entryKey}
+          value={
+            (basicFoodTagAssociation && basicFoodTagAssociation[entryKey]) || ""
+          }
+          onChange={(event) => {
+            updateRequest(
+              {
+                [`${basicFoodTagAssociationPath}/${entryKey}`]:
+                  event.target.value,
+              },
+              addAlert
+            );
+          }}
+          glossary={glossary}
+          basicFoodTagOrder={basicFoodTagOrder}
+        />
       );
     } else if (sectionKey === "basicFoodTags") {
       const order = [...(basicFoodTagOrder || [])];
