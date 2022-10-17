@@ -27,16 +27,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import {
-  createKey,
-  updateRequest,
-  getCalculateFoodSectionForOptions,
-  constructBasicFoodOptions,
-  waitForElm,
-} from "../utils";
+import { createKey, updateRequest, waitForElm } from "../utils";
 
-import { unknownSectionName } from "../constants";
 import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
+import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
 
 function Recipe(props) {
   const {
@@ -427,12 +421,6 @@ function Recipe(props) {
   const renderIngredients = () => {
     const { ingredients = {} } = recipeEntry;
 
-    const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
-      glossary,
-      basicFoodTagAssociation,
-      unknownSectionName
-    );
-
     return (
       <Accordion key={"ingredients"} sx={{ width: "100%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -514,76 +502,20 @@ function Recipe(props) {
                     spacing={2}
                     alignItems="center"
                   >
-                    {
-                      <Autocomplete
-                        id={"addIngredientSelect"}
-                        options={constructBasicFoodOptions(
-                          glossary,
-                          basicFoodTagOrder || [],
-                          unknownSectionName,
-                          calculateFoodSectionForOptions
-                        )}
-                        getOptionLabel={(option) => option.title}
-                        groupBy={(option) =>
-                          option.foodId
-                            ? calculateFoodSectionForOptions(option.foodId)
-                            : null
-                        }
-                        getOptionDisabled={(option) =>
-                          ingredients &&
-                          ingredients.hasOwnProperty(option.foodId)
-                        }
-                        isOptionEqualToValue={(optionA, optionB) =>
-                          optionA.foodId === optionB.foodId
-                        }
-                        filterOptions={(options, params) => {
-                          const { inputValue, getOptionLabel } = params;
-                          const filtered = options.filter((option) =>
-                            getOptionLabel(option)
-                              .toLocaleUpperCase()
-                              .includes(inputValue.toUpperCase())
-                          );
-                          const isExisting = options.some(
-                            (option) => inputValue === option.title
-                          );
-                          if (inputValue !== "" && !isExisting) {
-                            filtered.push({
-                              inputValue,
-                              title: `Create "${inputValue}"`,
-                            });
-                          }
-                          return filtered;
-                        }}
-                        value={
-                          newIngredientId && {
-                            foodId: newIngredientId,
-                            title: glossary.basicFoods[newIngredientId],
-                          }
-                        }
-                        onChange={(event, selectedOption) => {
-                          if (!selectedOption) {
-                            setNewIngredientId(null);
-                            return;
-                          }
-                          const { foodId, inputValue } = selectedOption;
-
-                          if (inputValue) {
-                            setOpenCreateBasicFoodDialog(true);
-                            setCreateBasicFood({ name: inputValue });
-                          } else {
-                            setNewIngredientId(foodId);
-                          }
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Enter item"
-                            size="small"
-                          />
-                        )}
-                        fullWidth
-                      />
-                    }
+                    <BasicFoodAutocomplete
+                      id="addIngredientSelect"
+                      foodMap={ingredients}
+                      newFoodId={newIngredientId}
+                      setNewFoodId={setNewIngredientId}
+                      handleInputvalue={(inputValue) => {
+                        setOpenCreateBasicFoodDialog(true);
+                        setCreateBasicFood({ name: inputValue });
+                      }}
+                      extraProps={{ fullWidth: true }}
+                      glossary={glossary}
+                      basicFoodTagAssociation={basicFoodTagAssociation}
+                      basicFoodTagOrder={basicFoodTagOrder}
+                    />
                     <Button
                       id={`add-ingredient-button`}
                       color="secondary"

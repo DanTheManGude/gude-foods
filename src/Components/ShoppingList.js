@@ -8,7 +8,6 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
@@ -18,16 +17,12 @@ import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import {
-  updateRequest,
-  deleteRequest,
-  getCalculateFoodSectionForOptions,
-  constructBasicFoodOptions,
-} from "../utils";
+import { updateRequest, deleteRequest } from "../utils";
 
 import { unknownSectionName, UNKNOWN_TAG } from "../constants";
 
 import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
+import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
 
 function ShoppingList(props) {
   const {
@@ -280,80 +275,23 @@ function ShoppingList(props) {
   };
 
   const renderNewItemControls = () => {
-    const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
-      glossary,
-      basicFoodTagAssociation,
-      unknownSectionName
-    );
-
     return (
       <Stack direction="row" spacing={4}>
         <Stack spacing={1}>
-          {
-            <Autocomplete
-              options={constructBasicFoodOptions(
-                glossary,
-                basicFoodTagOrder || [],
-                unknownSectionName,
-                calculateFoodSectionForOptions
-              )}
-              getOptionLabel={(option) => option.title}
-              groupBy={(option) =>
-                option.foodId
-                  ? calculateFoodSectionForOptions(option.foodId)
-                  : null
-              }
-              isOptionEqualToValue={(optionA, optionB) =>
-                optionA.foodId === optionB.foodId
-              }
-              getOptionDisabled={(option) =>
-                shoppingList && shoppingList.hasOwnProperty(option.foodId)
-              }
-              filterOptions={(options, params) => {
-                const { inputValue, getOptionLabel } = params;
-                const filtered = options.filter((option) =>
-                  getOptionLabel(option)
-                    .toLocaleUpperCase()
-                    .includes(inputValue.toUpperCase())
-                );
-                const isExisting = options.some(
-                  (option) => inputValue === option.title
-                );
-                if (inputValue !== "" && !isExisting) {
-                  filtered.push({
-                    inputValue,
-                    title: `Create "${inputValue}"`,
-                  });
-                }
-                return filtered;
-              }}
-              value={
-                newFoodId && {
-                  foodId: newFoodId,
-                  title: glossary.basicFoods[newFoodId],
-                }
-              }
-              onChange={(event, selectedOption = {}) => {
-                if (!selectedOption) {
-                  setNewFoodId(null);
-                  return;
-                }
-
-                const { foodId, inputValue } = selectedOption;
-
-                if (inputValue) {
-                  setOpenCreateBasicFoodDialog(true);
-                  setCreateBasicFood({ name: inputValue });
-                } else {
-                  setNewFoodId(foodId);
-                }
-              }}
-              renderInput={(params) => (
-                <TextField {...params} label="Enter item" size="small" />
-              )}
-              sx={{ width: "206px" }}
-            />
-          }
+          <BasicFoodAutocomplete
+            id="addSelect"
+            foodMap={shoppingList}
+            newFoodId={newFoodId}
+            setNewFoodId={setNewFoodId}
+            handleInputvalue={(inputValue) => {
+              setOpenCreateBasicFoodDialog(true);
+              setCreateBasicFood({ name: inputValue });
+            }}
+            extraProps={{ sx: { width: "206px" } }}
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            basicFoodTagOrder={basicFoodTagOrder}
+          />
           <TextField
             variant="outlined"
             label="Set amount"
