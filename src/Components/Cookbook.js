@@ -29,8 +29,6 @@ function Cookbook(props) {
     setFilteringOptions,
   } = props;
 
-  console.log(props.database);
-
   let navigate = useNavigate();
 
   const [advancedFiltersTooltipOpen, setAdvancedFiltersTooltipOpen] =
