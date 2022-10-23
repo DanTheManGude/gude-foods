@@ -11,10 +11,6 @@ import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import Dialog from "@mui/material/Dialog";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -30,6 +26,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { createKey, updateRequest, waitForElm } from "../../utils";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
+import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
 function Recipe(props) {
@@ -841,34 +838,6 @@ function Recipe(props) {
     );
   };
 
-  const renderDeleteDialog = () => (
-    <Dialog
-      sx={{ "& .MuiDialog-paper": { width: "80%" } }}
-      maxWidth="xs"
-      open={openDeleteDialog}
-      keepMounted
-    >
-      <DialogTitle color="primary">Confirm delete recipe</DialogTitle>
-      <DialogContent dividers>
-        <Typography>Do you want to delete this recipe?</Typography>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          autoFocus
-          onClick={() => {
-            setOpenDeleteDialog(false);
-          }}
-          color="secondary"
-        >
-          <Typography>Cancel</Typography>
-        </Button>
-        <Button onClick={handleDelete} color="error">
-          <Typography>Delete</Typography>
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-
   return (
     <div>
       <Stack
@@ -885,7 +854,15 @@ function Recipe(props) {
           {renderTags()}
         </Stack>
       </Stack>
-      {renderDeleteDialog()}
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={() => {
+          setOpenDeleteDialog(false);
+        }}
+        titleDO="recipe"
+        comfirmationMessageDO={`"${recipeEntry.name}"`}
+        handleDelete={handleDelete}
+      />
       <CreateBasicFoodDialog
         open={openCreateBasicFoodDialog}
         createBasicFood={createBasicFood}
