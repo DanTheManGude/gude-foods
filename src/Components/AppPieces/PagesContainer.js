@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
 
-import { databasePaths } from "../constants";
+import { databasePaths } from "../../constants";
 
-import Home from "./Home";
-import Cookbook from "./Cookbook";
-import Recipe from "./Recipe";
-import ShoppingList from "./ShoppingList";
-import Glossary from "./Glossary";
-import Settings from "./Settings";
+import Home from "../Pages/Home";
+import Cookbook from "../Pages/Cookbook";
+import Recipe from "../Pages/Recipe";
+import ShoppingList from "../Pages/ShoppingList";
+import Glossary from "../Pages/Glossary";
+import Settings from "../Pages/Settings";
 
 function PagesContainer(props) {
   const { user, addAlert } = props;

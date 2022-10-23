@@ -4,8 +4,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-import { getEmailLink } from "../utils";
-import { emailConfig } from "../constants";
+import { getEmailLink } from "../../utils";
+import { emailConfig } from "../../constants";
 
 const getSendAuthorizationRequest = (user, addAlert) => () => {
   const { serviceId, templateId, userId } = emailConfig;

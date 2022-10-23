@@ -12,10 +12,10 @@ import { TransitionGroup } from "react-transition-group";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, child, get } from "firebase/database";
 
-import PagesContainer from "./PagesContainer";
+import PagesContainer from "./AppPieces/PagesContainer";
 
-import NavBar from "./NavBar";
-import UnauthorizedUser from "./UnauthorizedUser";
+import NavBar from "./AppPieces/NavBar";
+import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
 
 function App() {
   const [alertList, setAlertList] = useState([]);

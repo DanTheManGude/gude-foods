@@ -27,10 +27,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import { createKey, updateRequest, waitForElm } from "../utils";
+import { createKey, updateRequest, waitForElm } from "../../utils";
 
-import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
-import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
+import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
+import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
 function Recipe(props) {
   const {

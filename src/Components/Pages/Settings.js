@@ -14,7 +14,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import { updateRequest, deleteRequest } from "../utils";
+import { updateRequest, deleteRequest } from "../../utils";
 
 function Settings(props) {
   const {

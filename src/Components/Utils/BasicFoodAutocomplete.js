@@ -4,9 +4,9 @@ import TextField from "@mui/material/TextField";
 import {
   getCalculateFoodSectionForOptions,
   constructBasicFoodOptions,
-} from "../utils";
+} from "../../utils";
 
-import { unknownSectionName } from "../constants";
+import { unknownSectionName } from "../../constants";
 
 function BasicFoodAutocomplete(props) {
   const {

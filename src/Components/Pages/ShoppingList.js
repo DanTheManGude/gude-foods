@@ -17,12 +17,12 @@ import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { updateRequest, deleteRequest } from "../utils";
+import { updateRequest, deleteRequest } from "../../utils";
 
-import { unknownSectionName, UNKNOWN_TAG } from "../constants";
+import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
-import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
-import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
+import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
+import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
 function ShoppingList(props) {
   const {
