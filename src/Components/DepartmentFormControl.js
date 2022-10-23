@@ -22,7 +22,7 @@ function DepartmentFormControl(props) {
         id={id}
         value={value || ""}
         onChange={onChange}
-        style={{ marginTop: 0, paddingTop: "5px" }}
+        xs={{ marginTop: 0, paddingTop: "5px" }}
       >
         {(glossary && glossary.basicFoodTags
           ? basicFoodTagOrder.map((basicFoodTagKey) => (
