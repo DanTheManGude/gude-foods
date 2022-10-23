@@ -384,23 +384,39 @@ function ShoppingList(props) {
     }
 
     return (
-      <Accordion key={"checked"} sx={{ width: "100%" }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6" component={"em"}>
-            Checked
+      <>
+        {!Object.keys(shoppingMap.unchecked).length ? (
+          <Typography
+            color="#fff"
+            sx={{
+              paddingBottom: 1.5,
+              textAlign: "center",
+              fontWeight: "500",
+              fontSize: "1.1rem",
+            }}
+          >
+            Good job bud! You completed all of your shopping.
           </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={0} alignItems="left">
-            {Object.keys(shoppingMap.checked).map((basicFoodId) =>
-              renderBasicFoodAccordion(
-                basicFoodId,
-                shoppingMap.checked[basicFoodId]
-              )
-            )}
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
+        ) : null}
+
+        <Accordion key={"checked"} sx={{ width: "100%" }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6" component={"em"}>
+              Checked
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Stack spacing={0} alignItems="left">
+              {Object.keys(shoppingMap.checked).map((basicFoodId) =>
+                renderBasicFoodAccordion(
+                  basicFoodId,
+                  shoppingMap.checked[basicFoodId]
+                )
+              )}
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
+      </>
     );
   };
 
