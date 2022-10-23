@@ -18,11 +18,16 @@ import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { updateRequest, deleteRequest } from "../../utils";
-
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
+import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
+
+const deleteKeys = {
+  ALL: "the entire shopping list",
+  CHECKED: "the checked items",
+};
 
 function ShoppingList(props) {
   const {
@@ -56,6 +61,11 @@ function ShoppingList(props) {
   const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
     useState(false);
   const [createBasicFood, setCreateBasicFood] = useState({});
+
+  const [deleteDialog, setDeleteDialog] = useState(null);
+  const closeDeleteDialog = () => {
+    setDeleteDialog(null);
+  };
 
   useEffect(() => {
     if (!shoppingList) {
@@ -227,6 +237,25 @@ function ShoppingList(props) {
     );
   };
 
+  const handleDelete = () => {
+    let deletePaths = [];
+
+    if (deleteDialog === deleteKeys.ALL) {
+      deletePaths = [shoppingListPath];
+    }
+
+    if (deleteDialog === deleteKeys.CHECKED) {
+      deletePaths = Object.keys(shoppingList).reduce((acc, basicFoodId) => {
+        if (shoppingList[basicFoodId].isChecked) {
+          acc.push(`${shoppingListPath}/${basicFoodId}`);
+        }
+        return acc;
+      }, []);
+    }
+
+    deleteRequest(deletePaths, addAlert);
+  };
+
   const renderDeleteButtons = () => {
     if (!shoppingList) {
       return null;
@@ -245,7 +274,7 @@ function ShoppingList(props) {
           size="small"
           sx={{ width: "168px" }}
           onClick={() => {
-            deleteRequest([shoppingListPath], addAlert);
+            setDeleteDialog(deleteKeys.ALL);
           }}
         >
           <Typography>Delete all</Typography>
@@ -257,15 +286,7 @@ function ShoppingList(props) {
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.checked).length}
           onClick={() => {
-            deleteRequest(
-              Object.keys(shoppingList).reduce((acc, basicFoodId) => {
-                if (shoppingList[basicFoodId].isChecked) {
-                  acc.push(`${shoppingListPath}/${basicFoodId}`);
-                }
-                return acc;
-              }, []),
-              addAlert
-            );
+            setDeleteDialog(deleteKeys.CHECKED);
           }}
         >
           <Typography>Delete checked</Typography>
@@ -438,6 +459,16 @@ function ShoppingList(props) {
         {renderNewItemControls()}
         {renderDeleteButtons()}
       </Stack>
+      <DeleteDialog
+        open={!!deleteDialog}
+        onClose={closeDeleteDialog}
+        titleDO="shopping list"
+        comfirmationMessageDO={deleteDialog}
+        handleDelete={() => {
+          closeDeleteDialog();
+          handleDelete();
+        }}
+      />
       <CreateBasicFoodDialog
         open={openCreateBasicFoodDialog}
         createBasicFood={createBasicFood}
