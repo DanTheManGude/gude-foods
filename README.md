@@ -4,7 +4,7 @@ Helping individuals catalog, create, and grocery shop for their recipes.
 
 # What is it? What does it do?
 
-It is a web app that allows users to input Recipes into a Cookbook. A Recipe includes a name, ingredients with amounts, instructions in order, and descriptive labels. The user can select Recipes to add its ingredients to their Shopping List. Recipes can be searched and filtered by name, ingredients, and labels. The Shopping List is divided into sections found at a grocery store. Items in the Shopping List show which recipes it is for and allows a 'total' amount to be entered. Items in the Shoping List can be checked off which moves them into a seperate section on the Shopping List. A Glossary shared by all users is how food items are added to the system and their specific section. Food sections and Recipe labels are also added in the Glossary.
+It is a web app that allows users to input Recipes into a Cookbook. A Recipe includes a name, ingredients with amounts, instructions in order, and descriptive labels. The user can select Recipes to add its ingredients to their Shopping List. Recipes can be searched and filtered by name, ingredients, and labels. The Shopping List is divided into sections found at a grocery store. Items in the Shopping List show which recipes it is for. Items in the Shoping List can be checked off which moves them into a seperate section on the Shopping List. A Glossary is how food items are added to the system and their specific section. Food sections, ordering, and Recipe labels are also added in the Glossary.
 
 # How do I use it?
 
