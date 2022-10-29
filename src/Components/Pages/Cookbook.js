@@ -18,7 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Box from "@mui/material/Box";
 
-import { updateRequest } from "../../utils";
+import { addRecipeToShoppingList } from "../../utils";
 
 function Cookbook(props) {
   const {
@@ -175,22 +175,11 @@ function Cookbook(props) {
                       size="large"
                       sx={{ flex: 1 }}
                       onClick={() => {
-                        updateRequest(
-                          {
-                            ...Object.keys(ingredients).reduce(
-                              (updates, foodId) => ({
-                                ...updates,
-                                [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
-                              }),
-                              {}
-                            ),
-                            [recipeOrderPath]: [
-                              recipeId,
-                              ...recipeOrder.filter(
-                                (_recipeId) => recipeId !== _recipeId
-                              ),
-                            ],
-                          },
+                        addRecipeToShoppingList(
+                          ingredients,
+                          recipeId,
+                          recipeOrder,
+                          { shoppingListPath, recipeOrderPath },
                           addAlert
                         );
                       }}

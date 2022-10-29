@@ -23,7 +23,12 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import { createKey, updateRequest, waitForElm } from "../../utils";
+import {
+  createKey,
+  updateRequest,
+  waitForElm,
+  addRecipeToShoppingList,
+} from "../../utils";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
@@ -337,22 +342,11 @@ function Recipe(props) {
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
-              updateRequest(
-                {
-                  ...Object.keys(originalRecipe.ingredients).reduce(
-                    (updates, foodId) => ({
-                      ...updates,
-                      [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
-                    }),
-                    {}
-                  ),
-                  [recipeOrderPath]: [
-                    recipeId,
-                    ...recipeOrder.filter(
-                      (_recipeId) => recipeId !== _recipeId
-                    ),
-                  ],
-                },
+              addRecipeToShoppingList(
+                originalRecipe.ingredients,
+                recipeId,
+                recipeOrder,
+                { shoppingListPath, recipeOrderPath },
                 addAlert
               );
             }}
