@@ -132,7 +132,7 @@ function ShoppingList(props) {
             <Checkbox
               color="primary"
               sx={{ paddingLeft: "0" }}
-              checked={shoppingList[basicFoodId].isChecked}
+              checked={!!shoppingList[basicFoodId].isChecked}
               onChange={(event) => {
                 updateRequest({
                   [`${shoppingListPath}/${basicFoodId}/isChecked`]:
