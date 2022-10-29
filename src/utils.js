@@ -107,3 +107,31 @@ export const waitForElm = (selector) => {
     });
   });
 };
+
+export const addRecipeToShoppingList = (
+  ingredients,
+  recipeId,
+  recipeOrder,
+  shoppingList,
+  { shoppingListPath, recipeOrderPath },
+  addAlert
+) => {
+  updateRequest(
+    {
+      ...Object.keys(ingredients).reduce(
+        (updates, foodId) => ({
+          ...updates,
+          [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
+            (shoppingList?.[foodId]?.list?.[recipeId] || 0) + 1,
+          [`${shoppingListPath}/${foodId}/isChecked`]: false,
+        }),
+        {}
+      ),
+      [recipeOrderPath]: [
+        recipeId,
+        ...recipeOrder.filter((_recipeId) => recipeId !== _recipeId),
+      ],
+    },
+    addAlert
+  );
+};

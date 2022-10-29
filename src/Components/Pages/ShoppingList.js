@@ -132,7 +132,7 @@ function ShoppingList(props) {
             <Checkbox
               color="primary"
               sx={{ paddingLeft: "0" }}
-              checked={shoppingList[basicFoodId].isChecked}
+              checked={!!shoppingList[basicFoodId].isChecked}
               onChange={(event) => {
                 updateRequest({
                   [`${shoppingListPath}/${basicFoodId}/isChecked`]:
@@ -159,6 +159,8 @@ function ShoppingList(props) {
                     justifyContent="space-between"
                   >
                     <Typography sx={{ minWidth: "fit-content" }}>
+                      {recipeList[recipeId] > 1 &&
+                        `[${recipeList[recipeId]}x] `}
                       {cookbook[recipeId].ingredients[basicFoodId]}:
                     </Typography>
                     <Typography noWrap sx={{ width: "fill-available" }}>
