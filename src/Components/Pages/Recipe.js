@@ -346,6 +346,7 @@ function Recipe(props) {
                 originalRecipe.ingredients,
                 recipeId,
                 recipeOrder,
+                shoppingList,
                 { shoppingListPath, recipeOrderPath },
                 addAlert
               );

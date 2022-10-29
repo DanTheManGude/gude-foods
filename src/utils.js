@@ -112,6 +112,7 @@ export const addRecipeToShoppingList = (
   ingredients,
   recipeId,
   recipeOrder,
+  shoppingList,
   { shoppingListPath, recipeOrderPath },
   addAlert
 ) => {
@@ -120,7 +121,8 @@ export const addRecipeToShoppingList = (
       ...Object.keys(ingredients).reduce(
         (updates, foodId) => ({
           ...updates,
-          [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
+          [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
+            (shoppingList?.[foodId]?.list?.[recipeId] || 0) + 1,
           [`${shoppingListPath}/${foodId}/isChecked`]: false,
         }),
         {}

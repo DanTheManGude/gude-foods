@@ -22,7 +22,7 @@ import { addRecipeToShoppingList } from "../../utils";
 
 function Cookbook(props) {
   const {
-    database: { glossary, cookbook = {}, recipeOrder = [] },
+    database: { glossary, cookbook = {}, recipeOrder = [], shoppingList },
     dataPaths: { recipeOrderPath, shoppingListPath },
     addAlert,
     filteringOptions = {},
@@ -179,6 +179,7 @@ function Cookbook(props) {
                           ingredients,
                           recipeId,
                           recipeOrder,
+                          shoppingList,
                           { shoppingListPath, recipeOrderPath },
                           addAlert
                         );

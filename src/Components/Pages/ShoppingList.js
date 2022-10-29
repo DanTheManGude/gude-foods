@@ -159,6 +159,8 @@ function ShoppingList(props) {
                     justifyContent="space-between"
                   >
                     <Typography sx={{ minWidth: "fit-content" }}>
+                      {recipeList[recipeId] > 1 &&
+                        `[${recipeList[recipeId]}x] `}
                       {cookbook[recipeId].ingredients[basicFoodId]}:
                     </Typography>
                     <Typography noWrap sx={{ width: "fill-available" }}>
