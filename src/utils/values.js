@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import { fontFamilies } from "./constants";
+import { fontFamilies } from "../constants";
 
 export const constructTheme = () =>
   createTheme({
