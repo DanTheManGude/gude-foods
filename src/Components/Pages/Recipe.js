@@ -43,6 +43,7 @@ function Recipe(props) {
       recipeOrder = [],
       shoppingList,
       basicFoodTagOrder,
+      menu,
     },
     dataPaths: {
       cookbookPath,
@@ -50,6 +51,7 @@ function Recipe(props) {
       shoppingListPath,
       glossaryPath,
       basicFoodTagAssociationPath,
+      menuPath,
     },
     addAlert,
   } = props;
@@ -345,9 +347,8 @@ function Recipe(props) {
               addRecipeToShoppingList(
                 originalRecipe.ingredients,
                 recipeId,
-                recipeOrder,
-                shoppingList,
-                { shoppingListPath, recipeOrderPath },
+                { recipeOrder, shoppingList, menu },
+                { shoppingListPath, recipeOrderPath, menuPath },
                 addAlert
               );
             }}

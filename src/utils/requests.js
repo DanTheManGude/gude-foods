@@ -32,11 +32,11 @@ export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
 export const addRecipeToShoppingList = (
   ingredients,
   recipeId,
-  recipeOrder,
-  shoppingList,
-  { shoppingListPath, recipeOrderPath },
+  { recipeOrder, shoppingList, menu: _menu },
+  { shoppingListPath, recipeOrderPath, menuPath },
   addAlert
 ) => {
+  const menu = _menu || {};
   updateRequest(
     {
       ...Object.keys(ingredients).reduce(
@@ -52,6 +52,10 @@ export const addRecipeToShoppingList = (
         recipeId,
         ...recipeOrder.filter((_recipeId) => recipeId !== _recipeId),
       ],
+      [menuPath]: {
+        ...menu,
+        [recipeId]: menu.hasOwnProperty(recipeId) ? menu[recipeId] + 1 : 1,
+      },
     },
     addAlert
   );

@@ -22,8 +22,8 @@ import { addRecipeToShoppingList } from "../../utils/requests";
 
 function Cookbook(props) {
   const {
-    database: { glossary, cookbook = {}, recipeOrder = [], shoppingList },
-    dataPaths: { recipeOrderPath, shoppingListPath },
+    database: { glossary, cookbook = {}, recipeOrder = [], shoppingList, menu },
+    dataPaths: { recipeOrderPath, shoppingListPath, menuPath },
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
@@ -178,9 +178,8 @@ function Cookbook(props) {
                         addRecipeToShoppingList(
                           ingredients,
                           recipeId,
-                          recipeOrder,
-                          shoppingList,
-                          { shoppingListPath, recipeOrderPath },
+                          { recipeOrder, shoppingList, menu },
+                          { shoppingListPath, recipeOrderPath, menuPath },
                           addAlert
                         );
                       }}
