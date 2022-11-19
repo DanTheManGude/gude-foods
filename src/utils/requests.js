@@ -60,3 +60,7 @@ export const addRecipeToShoppingList = (
     addAlert
   );
 };
+
+export const removeRecipeFromMenu = (recipeId, menuPath, addAlert) => {
+  updateRequest({ [`${menuPath}/${recipeId}`]: null }, addAlert);
+};

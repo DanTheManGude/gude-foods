@@ -19,16 +19,26 @@ import Tooltip from "@mui/material/Tooltip";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Box from "@mui/material/Box";
 
-import { addRecipeToShoppingList } from "../../utils/requests";
+import {
+  addRecipeToShoppingList,
+  removeRecipeFromMenu,
+} from "../../utils/requests";
 
 function Cookbook(props) {
   const {
-    database: { glossary, cookbook = {}, recipeOrder = [], shoppingList, menu },
+    database: {
+      glossary,
+      cookbook = {},
+      recipeOrder = [],
+      shoppingList,
+      menu: _menu,
+    },
     dataPaths: { recipeOrderPath, shoppingListPath, menuPath },
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
   } = props;
+  const menu = _menu || {};
 
   let navigate = useNavigate();
 
@@ -129,7 +139,7 @@ function Cookbook(props) {
       </Stack>
     );
 
-  const renderRecipe = (recipeId) => {
+  const renderRecipe = (recipeId, forMenu) => {
     const {
       name = "Unknown name",
       ingredients = [],
@@ -179,6 +189,15 @@ function Cookbook(props) {
                 <Typography>Add to shopping list</Typography>
               </Button>
             </Stack>
+            <Button
+              color="warning"
+              variant="outlined"
+              onClick={() => {
+                removeRecipeFromMenu(recipeId, menuPath, addAlert);
+              }}
+            >
+              <Typography>Remove recipe from Menu</Typography>
+            </Button>
             <Stack direction="row" spacing={1}>
               {isFavorite && (
                 <Chip
@@ -215,35 +234,29 @@ function Cookbook(props) {
     );
   };
 
-  const renderRecipeStack = () => {
+  const renderRecipeStack = (recipeList, forMenu = false) => (
+    <Stack sx={{ width: "100%" }} spacing={1}>
+      {recipeList
+        .filter((recipeId) => Object.keys(menu).includes(recipeId) === forMenu)
+        .map((recipeId) => {
+          return renderRecipe(recipeId, forMenu);
+        })}
+    </Stack>
+  );
+
+  const renderRecipeList = () => {
     if (!cookbook) {
       return null;
     }
     const recipeList = calculateRecipeList();
     return (
       <Stack sx={{ width: "95%" }} spacing={0.5}>
-        <Paper
-          elevation={0}
-          sx={{
-            paddingY: "10px",
-            paddingX: "10px",
-          }}
-        >
-          <Stack sx={{ width: "100%" }} spacing={1}>
-            {recipeList
-              .filter((recipeId) => Object.keys(menu).includes(recipeId))
-              .map((recipeId) => {
-                return renderRecipe(recipeId);
-              })}
-          </Stack>
-        </Paper>
-        <Stack sx={{ width: "100%" }} spacing={1}>
-          {recipeList
-            .filter((recipeId) => !Object.keys(menu).includes(recipeId))
-            .map((recipeId) => {
-              return renderRecipe(recipeId);
-            })}
-        </Stack>
+        {!!Object.keys(menu).length && (
+          <Paper elevation={0} sx={{ paddingY: "10px", paddingX: "10px" }}>
+            {renderRecipeStack(recipeList, true)}
+          </Paper>
+        )}
+        {renderRecipeStack(recipeList, false)}
       </Stack>
     );
   };
@@ -271,7 +284,7 @@ function Cookbook(props) {
         >
           <Typography color="primary.contrastText">Add new recipe</Typography>
         </Button>
-        {renderRecipeStack()}
+        {renderRecipeList()}
       </Stack>
     </div>
   );
