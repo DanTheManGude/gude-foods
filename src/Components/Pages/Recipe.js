@@ -257,6 +257,7 @@ function Recipe(props) {
           [recipeOrderPath]: recipeOrder.filter(
             (_recipeId) => recipeId !== _recipeId
           ),
+          [`${menuPath}/${recipeId}`]: null,
         }
       ),
       (successAlert) => {

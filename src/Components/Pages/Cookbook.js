@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -128,102 +129,121 @@ function Cookbook(props) {
       </Stack>
     );
 
+  const renderRecipe = (recipeId) => {
+    const {
+      name = "Unknown name",
+      ingredients = [],
+      tags = [],
+      isFavorite = false,
+    } = cookbook[recipeId];
+
+    return (
+      <Accordion key={recipeId}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">{name}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={3}>
+            <Stack
+              spacing={2}
+              direction="row"
+              justifyContent="space-around"
+              alignItems="center"
+            >
+              <Button
+                color="secondary"
+                variant="outlined"
+                size="large"
+                sx={{ flex: 1 }}
+                onClick={() => {
+                  navigate(`/recipe/${recipeId}`);
+                }}
+              >
+                <Typography color="secondary">View full recipe</Typography>
+              </Button>
+              <Button
+                color="secondary"
+                variant="outlined"
+                size="large"
+                sx={{ flex: 1 }}
+                onClick={() => {
+                  addRecipeToShoppingList(
+                    ingredients,
+                    recipeId,
+                    { recipeOrder, shoppingList, menu },
+                    { shoppingListPath, recipeOrderPath, menuPath },
+                    addAlert
+                  );
+                }}
+              >
+                <Typography>Add to shopping list</Typography>
+              </Button>
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              {isFavorite && (
+                <Chip
+                  key={"favorite"}
+                  label={
+                    <StarIcon
+                      sx={{
+                        "&&": {
+                          color: "alt.main",
+                          verticalAlign: "bottom",
+                        },
+                      }}
+                      fontSize="small"
+                    />
+                  }
+                  size="small"
+                  variant="outlined"
+                  color="tertiary"
+                />
+              )}
+              {tags.map((tagId) => (
+                <Chip
+                  key={tagId}
+                  label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
+                  size="small"
+                  variant="outlined"
+                  color="tertiary"
+                />
+              ))}
+            </Stack>
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
+
   const renderRecipeStack = () => {
     if (!cookbook) {
       return null;
     }
     const recipeList = calculateRecipeList();
     return (
-      <Stack sx={{ width: "95%" }} spacing={1}>
-        {recipeList.map((recipeId) => {
-          const {
-            name = "Unknown name",
-            ingredients = [],
-            tags = [],
-            isFavorite = false,
-          } = cookbook[recipeId];
-
-          return (
-            <Accordion key={recipeId}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">{name}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack spacing={3}>
-                  <Stack
-                    spacing={2}
-                    direction="row"
-                    justifyContent="space-around"
-                    alignItems="center"
-                  >
-                    <Button
-                      color="secondary"
-                      variant="outlined"
-                      size="large"
-                      sx={{ flex: 1 }}
-                      onClick={() => {
-                        navigate(`/recipe/${recipeId}`);
-                      }}
-                    >
-                      <Typography color="secondary">
-                        View full recipe
-                      </Typography>
-                    </Button>
-                    <Button
-                      color="secondary"
-                      variant="outlined"
-                      size="large"
-                      sx={{ flex: 1 }}
-                      onClick={() => {
-                        addRecipeToShoppingList(
-                          ingredients,
-                          recipeId,
-                          { recipeOrder, shoppingList, menu },
-                          { shoppingListPath, recipeOrderPath, menuPath },
-                          addAlert
-                        );
-                      }}
-                    >
-                      <Typography>Add to shopping list</Typography>
-                    </Button>
-                  </Stack>
-                  <Stack direction="row" spacing={1}>
-                    {isFavorite && (
-                      <Chip
-                        key={"favorite"}
-                        label={
-                          <StarIcon
-                            sx={{
-                              "&&": {
-                                color: "alt.main",
-                                verticalAlign: "bottom",
-                              },
-                            }}
-                            fontSize="small"
-                          />
-                        }
-                        size="small"
-                        variant="outlined"
-                        color="tertiary"
-                      />
-                    )}
-                    {tags.map((tagId) => (
-                      <Chip
-                        key={tagId}
-                        label={
-                          <Typography>{glossary.recipeTags[tagId]}</Typography>
-                        }
-                        size="small"
-                        variant="outlined"
-                        color="tertiary"
-                      />
-                    ))}
-                  </Stack>
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          );
-        })}
+      <Stack sx={{ width: "95%" }} spacing={0.5}>
+        <Paper
+          elevation={0}
+          sx={{
+            paddingY: "10px",
+            paddingX: "10px",
+          }}
+        >
+          <Stack sx={{ width: "100%" }} spacing={1}>
+            {recipeList
+              .filter((recipeId) => Object.keys(menu).includes(recipeId))
+              .map((recipeId) => {
+                return renderRecipe(recipeId);
+              })}
+          </Stack>
+        </Paper>
+        <Stack sx={{ width: "100%" }} spacing={1}>
+          {recipeList
+            .filter((recipeId) => !Object.keys(menu).includes(recipeId))
+            .map((recipeId) => {
+              return renderRecipe(recipeId);
+            })}
+        </Stack>
       </Stack>
     );
   };
