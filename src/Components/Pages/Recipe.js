@@ -26,9 +26,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 import {
   createKey,
   updateRequest,
-  waitForElm,
   addRecipeToShoppingList,
-} from "../../utils";
+} from "../../utils/requests";
+import { waitForElm } from "../../utils/utility";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";

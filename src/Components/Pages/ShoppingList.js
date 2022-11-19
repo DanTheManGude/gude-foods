@@ -17,7 +17,7 @@ import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { updateRequest, deleteRequest } from "../../utils";
+import { updateRequest, deleteRequest } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";

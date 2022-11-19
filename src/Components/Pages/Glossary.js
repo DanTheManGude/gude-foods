@@ -15,7 +15,7 @@ import IconButton from "@mui/material/IconButton";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import Box from "@mui/material/Box";
 
-import { updateRequest, createKey } from "../../utils";
+import { updateRequest, createKey } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import DepartmentFormControl from "../Utils/DepartmentFormControl";
 

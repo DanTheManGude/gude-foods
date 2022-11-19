@@ -18,7 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Box from "@mui/material/Box";
 
-import { addRecipeToShoppingList } from "../../utils";
+import { addRecipeToShoppingList } from "../../utils/requests";
 
 function Cookbook(props) {
   const {
