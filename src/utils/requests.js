@@ -64,3 +64,7 @@ export const addRecipeToShoppingList = (
 export const removeRecipeFromMenu = (recipeId, menuPath, addAlert) => {
   updateRequest({ [`${menuPath}/${recipeId}`]: null }, addAlert);
 };
+
+export const updateRecipeMenuCount = (recipeId, count, menuPath) => {
+  updateRequest({ [`${menuPath}/${recipeId}`]: count });
+};
