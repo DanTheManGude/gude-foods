@@ -215,7 +215,12 @@ function ShoppingList(props) {
               ))}
             </TransitionGroup>
 
-            <Stack key="setCollated" direction="row" spacing={1}>
+            <Stack
+              key="setCollated"
+              direction="row"
+              spacing={1}
+              justifyContent="space-between"
+            >
               <TextField
                 variant="outlined"
                 label="Set total amount"
@@ -238,34 +243,38 @@ function ShoppingList(props) {
                   ),
                 }}
               />
-              {isActiveInput && (
+              {isActiveInput ? (
                 <Button
-                  color="secondary"
+                  color={"secondary"}
                   variant="outlined"
                   size="small"
                   sx={{ width: "115px" }}
                   disabled={disabled}
                   onClick={() => {
-                    if (isEmptyValue) {
-                      deleteRequest(
-                        [`${shoppingListPath}/${basicFoodId}`],
-                        addAlert
-                      );
-                    } else {
-                      updateRequest(
-                        {
-                          [`${shoppingListPath}/${basicFoodId}/collatedAmount`]:
-                            inputValue,
-                        },
-                        addAlert
-                      );
-                    }
+                    updateRequest(
+                      {
+                        [`${shoppingListPath}/${basicFoodId}/collatedAmount`]:
+                          inputValue,
+                      },
+                      addAlert
+                    );
 
                     clearActiveEditingCollated();
                   }}
                 >
-                  <Typography>{isEmptyValue ? "Delete" : "Update"}</Typography>
+                  <Typography>{"Update"}</Typography>
                 </Button>
+              ) : (
+                <IconButton
+                  onClick={() => {
+                    deleteRequest(
+                      [`${shoppingListPath}/${basicFoodId}`],
+                      addAlert
+                    );
+                  }}
+                >
+                  <ClearIcon color="warning" />
+                </IconButton>
               )}
             </Stack>
           </Stack>
