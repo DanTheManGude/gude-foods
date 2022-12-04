@@ -189,15 +189,17 @@ function Cookbook(props) {
                 <Typography>Add to shopping list</Typography>
               </Button>
             </Stack>
-            <Button
-              color="warning"
-              variant="outlined"
-              onClick={() => {
-                removeRecipeFromMenu(recipeId, menuPath, addAlert);
-              }}
-            >
-              <Typography>Remove recipe from Menu</Typography>
-            </Button>
+            {menu.hasOwnProperty(recipeId) && (
+              <Button
+                color="warning"
+                variant="outlined"
+                onClick={() => {
+                  removeRecipeFromMenu(recipeId, menuPath, addAlert);
+                }}
+              >
+                <Typography>Remove recipe from Menu</Typography>
+              </Button>
+            )}
             <Stack direction="row" spacing={1}>
               {isFavorite && (
                 <Chip
