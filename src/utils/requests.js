@@ -32,7 +32,7 @@ export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
 export const addRecipeToShoppingList = (
   ingredients,
   recipeId,
-  { recipeOrder, shoppingList, menu: _menu },
+  { recipeOrder, menu: _menu },
   { shoppingListPath, recipeOrderPath, menuPath },
   addAlert
 ) => {
@@ -42,8 +42,7 @@ export const addRecipeToShoppingList = (
       ...Object.keys(ingredients).reduce(
         (updates, foodId) => ({
           ...updates,
-          [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
-            (shoppingList?.[foodId]?.list?.[recipeId] || 0) + 1,
+          [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
           [`${shoppingListPath}/${foodId}/isChecked`]: false,
         }),
         {}
