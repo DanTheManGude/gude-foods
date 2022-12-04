@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -73,6 +74,8 @@ function Home(props) {
       </Box>
     );
   };
+
+  const memoMenuCard = useMemo(renderMenuCard, [menu, cookbook, navigate]);
 
   const renderRecipeCard = () => {
     let messageContent = null;
@@ -157,6 +160,12 @@ function Home(props) {
       </Box>
     );
   };
+
+  const memoRecipeCard = useMemo(renderRecipeCard, [
+    cookbook,
+    glossary,
+    navigate,
+  ]);
 
   const renderGlossaryCard = () => {
     const count =
@@ -305,8 +314,8 @@ function Home(props) {
         Home
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        {renderMenuCard()}
-        {renderRecipeCard()}
+        {memoMenuCard}
+        {memoRecipeCard}
         {renderGlossaryCard()}
         {renderShoppingListCard()}
         {renderCookbookCard()}
