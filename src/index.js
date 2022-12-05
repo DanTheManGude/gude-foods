@@ -9,7 +9,7 @@ import { firebaseConfig } from "./firebaseConfig.js";
 
 import "./styles/index.css";
 import { captchaSiteKey } from "./constants";
-import { constructTheme } from "./utils";
+import { constructTheme } from "./utils/values";
 import App from "./Components/App";
 
 const {

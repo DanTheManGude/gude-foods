@@ -22,6 +22,7 @@ export const databasePaths = {
   shoppingList: "shoppingList",
   cookbook: "cookbook",
   recipeOrder: "recipeOrder",
+  menu: "menu",
 };
 
 export const UNKNOWN_TAG = "UNKNOWN_TAG";

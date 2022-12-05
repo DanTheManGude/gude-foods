@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -10,9 +11,71 @@ import Button from "@mui/material/Button";
 
 function Home(props) {
   const {
-    database: { glossary, basicFoodTagAssociation, shoppingList, cookbook },
+    database: {
+      glossary,
+      basicFoodTagAssociation,
+      shoppingList,
+      cookbook,
+      menu,
+    },
   } = props;
   let navigate = useNavigate();
+
+  const renderMenuCard = () => {
+    let messageContent = null;
+
+    if (menu) {
+      const menuList = Object.keys(menu);
+      const recipeId = menuList[Math.floor(Math.random() * menuList.length)];
+      messageContent = (
+        <>
+          <Typography>
+            There are <strong>{menuList.length}</strong> recipes on the menu.
+          </Typography>
+          <Typography>
+            Checkout this one:&nbsp;
+            <Link to={`/recipe/${recipeId}`}>
+              <Typography variant="span" color="secondary">
+                {cookbook[recipeId].name}{" "}
+              </Typography>
+            </Link>
+          </Typography>
+        </>
+      );
+    } else {
+      messageContent = (
+        <Typography>
+          There are <strong>NO</strong> recipes on the menu.
+        </Typography>
+      );
+    }
+
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Menu
+            </Typography>
+            {messageContent}
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={() => {
+                navigate(`/cookbook`);
+              }}
+            >
+              <Typography color="secondary">Go to cookbook</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
+
+  const memoMenuCard = useMemo(renderMenuCard, [menu, cookbook, navigate]);
 
   const renderRecipeCard = () => {
     let messageContent = null;
@@ -97,6 +160,12 @@ function Home(props) {
       </Box>
     );
   };
+
+  const memoRecipeCard = useMemo(renderRecipeCard, [
+    cookbook,
+    glossary,
+    navigate,
+  ]);
 
   const renderGlossaryCard = () => {
     const count =
@@ -245,7 +314,8 @@ function Home(props) {
         Home
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        {renderRecipeCard()}
+        {memoMenuCard}
+        {memoRecipeCard}
         {renderGlossaryCard()}
         {renderShoppingListCard()}
         {renderCookbookCard()}

@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { TransitionGroup } from "react-transition-group";
 
+import styled from "@emotion/styled";
+
+import Paper from "@mui/material/Paper";
 import Collapse from "@mui/material/Collapse";
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
@@ -10,14 +13,22 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { updateRequest, deleteRequest } from "../../utils";
+import {
+  updateRequest,
+  deleteRequest,
+  removeRecipeFromMenu,
+  updateRecipeMenuCount,
+} from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
@@ -29,6 +40,15 @@ const deleteKeys = {
   CHECKED: "the checked items",
 };
 
+const MenuCount = styled(Button)`
+  &&& {
+    &.Mui-disabled {
+      color: #fff;
+      border-color: #ddd;
+    }
+  }
+`;
+
 function ShoppingList(props) {
   const {
     database: {
@@ -37,11 +57,18 @@ function ShoppingList(props) {
       shoppingList,
       cookbook,
       basicFoodTagOrder,
+      recipeOrder = [],
+      menu: _menu,
     },
-    dataPaths: { shoppingListPath, glossaryPath, basicFoodTagAssociationPath },
+    dataPaths: {
+      shoppingListPath,
+      glossaryPath,
+      basicFoodTagAssociationPath,
+      menuPath,
+    },
     addAlert,
   } = props;
-
+  const menu = _menu || {};
   const [shoppingMap, setShoppingMap] = useState({
     unchecked: {},
     checked: {},
@@ -97,6 +124,14 @@ function ShoppingList(props) {
     setShoppingMap(newShoppingMap);
   }, [shoppingList, basicFoodTagAssociation, glossary]);
 
+  const decrementMenuRecipe = (recipeId) => {
+    updateRecipeMenuCount(recipeId, menu[recipeId] - 1, menuPath);
+  };
+
+  const incrementMenuRecipe = (recipeId) => {
+    updateRecipeMenuCount(recipeId, menu[recipeId] + 1, menuPath);
+  };
+
   const getInputHandler = (key, valueComparator) => (event) => {
     const newValue = event.target.value;
 
@@ -123,7 +158,6 @@ function ShoppingList(props) {
     const inputValue = isActiveInput
       ? activeEditingCollated.value
       : collatedAmount;
-    const isEmptyValue = inputValue === "";
 
     return (
       <Accordion key={basicFoodId} disableGutters variant="outlined">
@@ -159,8 +193,9 @@ function ShoppingList(props) {
                     justifyContent="space-between"
                   >
                     <Typography sx={{ minWidth: "fit-content" }}>
-                      {recipeList[recipeId] > 1 &&
-                        `[${recipeList[recipeId]}x] `}
+                      {recipeList[recipeId] &&
+                        menu[recipeId] &&
+                        `[${menu[recipeId]}] `}
                       {cookbook[recipeId].ingredients[basicFoodId]}:
                     </Typography>
                     <Typography noWrap sx={{ width: "fill-available" }}>
@@ -180,7 +215,12 @@ function ShoppingList(props) {
               ))}
             </TransitionGroup>
 
-            <Stack key="setCollated" direction="row" spacing={1}>
+            <Stack
+              key="setCollated"
+              direction="row"
+              spacing={1}
+              justifyContent="space-between"
+            >
               <TextField
                 variant="outlined"
                 label="Set total amount"
@@ -203,34 +243,38 @@ function ShoppingList(props) {
                   ),
                 }}
               />
-              {isActiveInput && (
+              {isActiveInput ? (
                 <Button
-                  color="secondary"
+                  color={"secondary"}
                   variant="outlined"
                   size="small"
                   sx={{ width: "115px" }}
                   disabled={disabled}
                   onClick={() => {
-                    if (isEmptyValue) {
-                      deleteRequest(
-                        [`${shoppingListPath}/${basicFoodId}`],
-                        addAlert
-                      );
-                    } else {
-                      updateRequest(
-                        {
-                          [`${shoppingListPath}/${basicFoodId}/collatedAmount`]:
-                            inputValue,
-                        },
-                        addAlert
-                      );
-                    }
+                    updateRequest(
+                      {
+                        [`${shoppingListPath}/${basicFoodId}/collatedAmount`]:
+                          inputValue,
+                      },
+                      addAlert
+                    );
 
                     clearActiveEditingCollated();
                   }}
                 >
-                  <Typography>{isEmptyValue ? "Delete" : "Update"}</Typography>
+                  <Typography>{"Update"}</Typography>
                 </Button>
+              ) : (
+                <IconButton
+                  onClick={() => {
+                    deleteRequest(
+                      [`${shoppingListPath}/${basicFoodId}`],
+                      addAlert
+                    );
+                  }}
+                >
+                  <ClearIcon color="warning" />
+                </IconButton>
               )}
             </Stack>
           </Stack>
@@ -363,6 +407,63 @@ function ShoppingList(props) {
     );
   };
 
+  const renderMenu = () => (
+    <Paper sx={{ width: "95%" }}>
+      <Stack sx={{ width: "100%" }} alignItems="center">
+        {recipeOrder
+          .filter((recipeId) => Object.keys(menu).includes(recipeId))
+          .map((recipeId) => (
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ width: "95%" }}
+              key={recipeId}
+            >
+              <Typography noWrap sx={{ width: "fill-available" }}>
+                {cookbook[recipeId].name}
+              </Typography>
+              <ButtonGroup variant="outlined" size="small" color="secondary">
+                <Button
+                  disabled={menu[recipeId] === 1}
+                  onClick={() => {
+                    decrementMenuRecipe(recipeId);
+                  }}
+                >
+                  <RemoveIcon />
+                </Button>
+                <MenuCount disabled sx={{ color: "primary" }}>
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    {menu[recipeId]}
+                  </Typography>
+                </MenuCount>
+                <Button
+                  onClick={() => {
+                    incrementMenuRecipe(recipeId);
+                  }}
+                >
+                  <AddIcon />
+                </Button>
+              </ButtonGroup>
+              <IconButton
+                edge="end"
+                onClick={() =>
+                  removeRecipeFromMenu(
+                    recipeId,
+                    shoppingList,
+                    { menuPath, shoppingListPath },
+                    addAlert
+                  )
+                }
+              >
+                <ClearIcon color="warning" />
+              </IconButton>
+            </Stack>
+          ))}
+      </Stack>
+    </Paper>
+  );
+
   const renderChecked = () => {
     if (!shoppingList) {
       return null;
@@ -475,6 +576,7 @@ function ShoppingList(props) {
           {renderChecked()}
         </Stack>
         {renderNewItemControls()}
+        {renderMenu()}
         {renderDeleteButtons()}
       </Stack>
       <DeleteDialog

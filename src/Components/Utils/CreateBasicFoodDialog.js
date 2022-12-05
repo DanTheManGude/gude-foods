@@ -7,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 
-import { updateRequest, createKey } from "../../utils";
+import { updateRequest, createKey } from "../../utils/requests";
 import DepartmentFormControl from "./DepartmentFormControl";
 
 function CreateBasicFoodDialog(props) {

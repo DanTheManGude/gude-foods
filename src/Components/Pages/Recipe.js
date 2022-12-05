@@ -26,9 +26,10 @@ import ClearIcon from "@mui/icons-material/Clear";
 import {
   createKey,
   updateRequest,
-  waitForElm,
   addRecipeToShoppingList,
-} from "../../utils";
+  shoppingListDeletesByRecipe,
+} from "../../utils/requests";
+import { waitForElm } from "../../utils/utility";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
@@ -43,6 +44,7 @@ function Recipe(props) {
       recipeOrder = [],
       shoppingList,
       basicFoodTagOrder,
+      menu,
     },
     dataPaths: {
       cookbookPath,
@@ -50,6 +52,7 @@ function Recipe(props) {
       shoppingListPath,
       glossaryPath,
       basicFoodTagAssociationPath,
+      menuPath,
     },
     addAlert,
   } = props;
@@ -239,24 +242,22 @@ function Recipe(props) {
   };
 
   const handleDelete = () => {
-    const shoppingListDeletes = shoppingList
-      ? Object.keys(shoppingList)
-          .filter((foodId) => {
-            const foodEntry = shoppingList[foodId];
-            return foodEntry.list && foodEntry.list[recipeId];
-          })
-          .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
-      : [];
+    const shoppingListDeletes = shoppingListDeletesByRecipe(
+      recipeId,
+      shoppingList,
+      shoppingListPath
+    );
 
     updateRequest(
-      [`${cookbookPath}/${recipeId}`, ...shoppingListDeletes].reduce(
-        (acc, deletePath) => ({ ...acc, [deletePath]: null }),
-        {
-          [recipeOrderPath]: recipeOrder.filter(
-            (_recipeId) => recipeId !== _recipeId
-          ),
-        }
-      ),
+      [
+        `${cookbookPath}/${recipeId}`,
+        `${menuPath}/${recipeId}`,
+        ...shoppingListDeletes,
+      ].reduce((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
+        [recipeOrderPath]: recipeOrder.filter(
+          (_recipeId) => recipeId !== _recipeId
+        ),
+      }),
       (successAlert) => {
         addAlert(successAlert);
         navigate(`/cookbook`);
@@ -345,9 +346,8 @@ function Recipe(props) {
               addRecipeToShoppingList(
                 originalRecipe.ingredients,
                 recipeId,
-                recipeOrder,
-                shoppingList,
-                { shoppingListPath, recipeOrderPath },
+                { recipeOrder, menu },
+                { shoppingListPath, recipeOrderPath, menuPath },
                 addAlert
               );
             }}

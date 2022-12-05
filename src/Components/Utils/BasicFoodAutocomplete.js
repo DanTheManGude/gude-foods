@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import {
   getCalculateFoodSectionForOptions,
   constructBasicFoodOptions,
-} from "../../utils";
+} from "../../utils/foods";
 
 import { unknownSectionName } from "../../constants";
 
