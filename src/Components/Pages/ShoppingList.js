@@ -449,7 +449,12 @@ function ShoppingList(props) {
               <IconButton
                 edge="end"
                 onClick={() =>
-                  removeRecipeFromMenu(recipeId, menuPath, addAlert)
+                  removeRecipeFromMenu(
+                    recipeId,
+                    shoppingList,
+                    { menuPath, shoppingListPath },
+                    addAlert
+                  )
                 }
               >
                 <ClearIcon color="warning" />

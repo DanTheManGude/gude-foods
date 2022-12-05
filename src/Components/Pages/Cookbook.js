@@ -26,7 +26,13 @@ import {
 
 function Cookbook(props) {
   const {
-    database: { glossary, cookbook = {}, recipeOrder = [], menu: _menu },
+    database: {
+      glossary,
+      cookbook = {},
+      recipeOrder = [],
+      shoppingList,
+      menu: _menu,
+    },
     dataPaths: { recipeOrderPath, shoppingListPath, menuPath },
     addAlert,
     filteringOptions = {},
@@ -188,7 +194,12 @@ function Cookbook(props) {
                 color="warning"
                 variant="outlined"
                 onClick={() => {
-                  removeRecipeFromMenu(recipeId, menuPath, addAlert);
+                  removeRecipeFromMenu(
+                    recipeId,
+                    shoppingList,
+                    { menuPath, shoppingListPath },
+                    addAlert
+                  );
                 }}
               >
                 <Typography>Remove recipe from Menu</Typography>

@@ -74,8 +74,19 @@ export const addRecipeToShoppingList = (
   );
 };
 
-export const removeRecipeFromMenu = (recipeId, menuPath, addAlert) => {
-  updateRequest({ [`${menuPath}/${recipeId}`]: null }, addAlert);
+export const removeRecipeFromMenu = (
+  recipeId,
+  shoppingList,
+  { menuPath, shoppingListPath },
+  addAlert
+) => {
+  deleteRequest(
+    [
+      ...shoppingListDeletesByRecipe(recipeId, shoppingList, shoppingListPath),
+      `${menuPath}/${recipeId}`,
+    ],
+    addAlert
+  );
 };
 
 export const updateRecipeMenuCount = (recipeId, count, menuPath) => {
