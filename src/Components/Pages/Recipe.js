@@ -27,6 +27,7 @@ import {
   createKey,
   updateRequest,
   addRecipeToShoppingList,
+  shoppingListDeletesByRecipe,
 } from "../../utils/requests";
 import { waitForElm } from "../../utils/utility";
 
@@ -241,25 +242,22 @@ function Recipe(props) {
   };
 
   const handleDelete = () => {
-    const shoppingListDeletes = shoppingList
-      ? Object.keys(shoppingList)
-          .filter((foodId) => {
-            const foodEntry = shoppingList[foodId];
-            return foodEntry.list && foodEntry.list[recipeId];
-          })
-          .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
-      : [];
+    const shoppingListDeletes = shoppingListDeletesByRecipe(
+      recipeId,
+      shoppingList,
+      shoppingListPath
+    );
 
     updateRequest(
-      [`${cookbookPath}/${recipeId}`, ...shoppingListDeletes].reduce(
-        (acc, deletePath) => ({ ...acc, [deletePath]: null }),
-        {
-          [recipeOrderPath]: recipeOrder.filter(
-            (_recipeId) => recipeId !== _recipeId
-          ),
-          [`${menuPath}/${recipeId}`]: null,
-        }
-      ),
+      [
+        `${cookbookPath}/${recipeId}`,
+        `${menuPath}/${recipeId}`,
+        ...shoppingListDeletes,
+      ].reduce((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
+        [recipeOrderPath]: recipeOrder.filter(
+          (_recipeId) => recipeId !== _recipeId
+        ),
+      }),
       (successAlert) => {
         addAlert(successAlert);
         navigate(`/cookbook`);

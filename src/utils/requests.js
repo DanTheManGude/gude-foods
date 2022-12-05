@@ -29,6 +29,20 @@ export const deleteRequest = (deletePaths = [], onSuccess, onFailure) => {
 
 export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
 
+export const shoppingListDeletesByRecipe = (
+  recipeId,
+  shoppingList,
+  shoppingListPath
+) =>
+  shoppingList
+    ? Object.keys(shoppingList)
+        .filter((foodId) => {
+          const foodEntry = shoppingList[foodId];
+          return foodEntry.list && foodEntry.list[recipeId];
+        })
+        .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
+    : [];
+
 export const addRecipeToShoppingList = (
   ingredients,
   recipeId,
