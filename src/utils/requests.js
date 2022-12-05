@@ -57,7 +57,6 @@ export const addRecipeToShoppingList = (
         (updates, foodId) => ({
           ...updates,
           [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
-          [`${shoppingListPath}/${foodId}/isChecked`]: false,
         }),
         {}
       ),
