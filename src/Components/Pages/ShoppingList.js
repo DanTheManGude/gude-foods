@@ -158,7 +158,6 @@ function ShoppingList(props) {
     const inputValue = isActiveInput
       ? activeEditingCollated.value
       : collatedAmount;
-    const isEmptyValue = inputValue === "";
 
     return (
       <Accordion key={basicFoodId} disableGutters variant="outlined">
