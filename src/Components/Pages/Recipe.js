@@ -40,11 +40,11 @@ function Recipe(props) {
     database: {
       glossary,
       basicFoodTagAssociation,
-      cookbook = {},
-      recipeOrder = [],
+      cookbook: _cookbook,
+      recipeOrder: _recipeOrder,
       shoppingList,
       basicFoodTagOrder,
-      menu,
+      menu: _menu,
     },
     dataPaths: {
       cookbookPath,
@@ -56,6 +56,8 @@ function Recipe(props) {
     },
     addAlert,
   } = props;
+  const recipeOrder = _recipeOrder || [];
+  const menu = _menu || {};
 
   let navigate = useNavigate();
   const { recipeId: pathParam } = useParams();
@@ -80,11 +82,13 @@ function Recipe(props) {
   const [newIngredientId, setNewIngredientId] = useState(null);
 
   useEffect(() => {
+    const cookbook = _cookbook || {};
+
     if (pathParam === "create") {
       setIsEditing(true);
       setIsCreating(true);
       setRecipeId(createKey(cookbookPath));
-    } else if (cookbook && cookbook.hasOwnProperty(pathParam)) {
+    } else if (cookbook.hasOwnProperty(pathParam)) {
       const _originalRecipe = {
         ...{
           name: "",
@@ -100,7 +104,7 @@ function Recipe(props) {
       setRecipeEntry(JSON.parse(JSON.stringify(_originalRecipe)));
       setRecipeId(pathParam);
     }
-  }, [pathParam, cookbook, cookbookPath]);
+  }, [pathParam, _cookbook, cookbookPath]);
 
   const updateRecipe = (param) => {
     const setter = typeof param === "function" ? param : () => param;

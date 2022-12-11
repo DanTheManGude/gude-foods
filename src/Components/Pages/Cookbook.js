@@ -29,7 +29,7 @@ function Cookbook(props) {
     database: {
       glossary,
       cookbook = {},
-      recipeOrder = [],
+      recipeOrder: _recipeOrder,
       shoppingList,
       menu: _menu,
     },
@@ -39,6 +39,7 @@ function Cookbook(props) {
     setFilteringOptions,
   } = props;
   const menu = _menu || {};
+  const recipeOrder = _recipeOrder || [];
 
   let navigate = useNavigate();
 
