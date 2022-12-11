@@ -55,9 +55,9 @@ function ShoppingList(props) {
       glossary,
       basicFoodTagAssociation,
       shoppingList,
-      cookbook,
+      cookbook: _cookbook,
       basicFoodTagOrder,
-      recipeOrder = [],
+      recipeOrder: _recipeOrder,
       menu: _menu,
     },
     dataPaths: {
@@ -68,7 +68,10 @@ function ShoppingList(props) {
     },
     addAlert,
   } = props;
+  const cookbook = _cookbook || {};
   const menu = _menu || {};
+  const recipeOrder = _recipeOrder || [];
+
   const [shoppingMap, setShoppingMap] = useState({
     unchecked: {},
     checked: {},
