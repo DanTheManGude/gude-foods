@@ -7,6 +7,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
+import { Typography } from "@mui/material";
 
 function AdvancedFiltersDialogue(props) {
   const { open, onClose, filteringOptions, setFilteringOptions } = props;
@@ -26,21 +27,30 @@ function AdvancedFiltersDialogue(props) {
       <DialogTitle color="primary">Filter recipes</DialogTitle>
       <DialogContent dividers>
         <Stack
-          key={"advancedFilters"}
+          key="advancedFilters"
           justifyContent="space-around"
           alignItems="center"
           spacing={1}
         >
-          <RecipeSearchInput
-            searchTerm={searchTerm}
-            setSearchTerm={(_searchTerm) => {
-              setFilteringOptions((_filteringOptions) => ({
-                ..._filteringOptions,
-                searchTerm: _searchTerm,
-              }));
-            }}
-            label="Name"
-          />
+          <Stack
+            key="searchName"
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={1}
+          >
+            <Typography>Name contains:</Typography>
+            <RecipeSearchInput
+              searchTerm={searchTerm}
+              setSearchTerm={(_searchTerm) => {
+                setFilteringOptions((_filteringOptions) => ({
+                  ..._filteringOptions,
+                  searchTerm: _searchTerm,
+                }));
+              }}
+              label="Recipe Title"
+            />
+          </Stack>
         </Stack>
       </DialogContent>
       <DialogActions>
