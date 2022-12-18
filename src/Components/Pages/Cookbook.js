@@ -87,7 +87,7 @@ function Cookbook(props) {
       </Stack>
     );
 
-  const renderRecipe = (recipeId, forMenu) => {
+  const renderRecipe = (recipeId) => {
     const {
       name = "Unknown name",
       ingredients = [],
@@ -194,7 +194,7 @@ function Cookbook(props) {
       {recipeList
         .filter((recipeId) => Object.keys(menu).includes(recipeId) === forMenu)
         .map((recipeId) => {
-          return renderRecipe(recipeId, forMenu);
+          return renderRecipe(recipeId);
         })}
     </Stack>
   );
@@ -204,9 +204,16 @@ function Cookbook(props) {
       return null;
     }
     const recipeList = calculateRecipeList();
+    if (!recipeList.length) {
+      return (
+        <Typography fontWeight="bold" color="white">
+          Looks like no recipes match that search.
+        </Typography>
+      );
+    }
     return (
       <Stack sx={{ width: "95%" }} spacing={0.5}>
-        {!!Object.keys(menu).length && (
+        {recipeList.some((recipeId) => menu.hasOwnProperty(recipeId)) && (
           <Paper elevation={0} sx={{ paddingY: "10px", paddingX: "10px" }}>
             {renderRecipeStack(recipeList, true)}
           </Paper>
