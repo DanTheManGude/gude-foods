@@ -143,7 +143,6 @@ function AdvancedFiltersDialogue(props) {
                 ChipProps={{
                   color: "secondary",
                   variant: "outlined",
-                  size: "small",
                 }}
               />
             </Box>
@@ -195,7 +194,6 @@ function AdvancedFiltersDialogue(props) {
                 ChipProps={{
                   color: "tertiary",
                   variant: "outlined",
-                  size: "small",
                 }}
               />
             </Box>

@@ -52,7 +52,7 @@ function Cookbook(props) {
   } = filteringOptions;
 
   const calculateRecipeList = () => {
-    return recipeOrder.filter((recipeId) => {
+    const recipeList = recipeOrder.filter((recipeId) => {
       const { name, tags = [], isFavorite = false } = cookbook[recipeId];
 
       if (isFavoriteFilter && !isFavorite) {
@@ -67,10 +67,29 @@ function Cookbook(props) {
         return false;
       }
 
-      return ingredientsList.every((ingredientId) =>
-        cookbook[recipeId].ingredients.hasOwnProperty(ingredientId)
-      );
+      return true;
     });
+
+    if (!ingredientsList.length) {
+      return recipeList;
+    }
+
+    return recipeList
+      .map((recipeId) => {
+        const value = {
+          recipeId,
+          ingredientMatchCount: ingredientsList.filter((ingredientId) =>
+            cookbook[recipeId].ingredients.hasOwnProperty(ingredientId)
+          ).length,
+        };
+        return value;
+      })
+      .sort(
+        (recipeEntryA, recipeEntryB) =>
+          recipeEntryB.ingredientMatchCount - recipeEntryA.ingredientMatchCount
+      )
+      .filter((recipeEntry) => recipeEntry.ingredientMatchCount)
+      .map((recipeEntry) => recipeEntry.recipeId);
   };
 
   const renderSearchAndFilters = () =>
