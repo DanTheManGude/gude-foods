@@ -9,7 +9,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,7 +16,6 @@ import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import StarIcon from "@mui/icons-material/Star";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -34,6 +32,7 @@ import { waitForElm } from "../../utils/utility";
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
+import FavoriteSwitch from "../Utils/FavoriteSwitch";
 
 function Recipe(props) {
   const {
@@ -693,44 +692,10 @@ function Recipe(props) {
     const { isFavorite = false } = recipeEntry;
 
     if (isEditing) {
-      const iconSwitchStyles = {
-        color: "alt.main",
-        borderColor: "alt.main",
-        borderWidth: "1px",
-        borderStyle: "solid",
-        borderRadius: "12px",
-      };
       return (
-        <Switch
-          checked={isFavorite}
-          onChange={(event) => {
-            updateIsFavorite(event.target.checked);
-          }}
-          color="tertiary"
-          checkedIcon={
-            <StarIcon
-              sx={{
-                ...iconSwitchStyles,
-                transform: "translate(-2px, -8px)",
-              }}
-              fontSize="small"
-            />
-          }
-          icon={
-            <StarOutlineIcon
-              sx={{
-                ...iconSwitchStyles,
-                transform: "translate(-8px, -8px)",
-              }}
-              fontSize="small"
-            />
-          }
-          sx={{
-            padding: 0,
-            height: "24px",
-            width: "50px",
-            borderRadius: "12px",
-          }}
+        <FavoriteSwitch
+          isChecked={isFavorite}
+          updateChecked={updateIsFavorite}
         />
       );
     }

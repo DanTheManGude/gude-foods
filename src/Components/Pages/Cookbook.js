@@ -10,14 +10,11 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import ClearIcon from "@mui/icons-material/Clear";
 import StarIcon from "@mui/icons-material/Star";
-import Tooltip from "@mui/material/Tooltip";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Box from "@mui/material/Box";
+
+import RecipeSearchInput from "../Utils/RecipeSearchInput";
+import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 
 import {
   addRecipeToShoppingList,
@@ -31,6 +28,8 @@ function Cookbook(props) {
       cookbook = {},
       recipeOrder: _recipeOrder,
       shoppingList,
+      basicFoodTagOrder,
+      basicFoodTagAssociation,
       menu: _menu,
     },
     dataPaths: { recipeOrderPath, shoppingListPath, menuPath },
@@ -43,14 +42,54 @@ function Cookbook(props) {
 
   let navigate = useNavigate();
 
-  const [advancedFiltersTooltipOpen, setAdvancedFiltersTooltipOpen] =
+  const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
-  const { searchTerm = "" } = filteringOptions;
+  const {
+    searchTerm = "",
+    ingredientsList = [],
+    tagsList = [],
+    isFavoriteFilter = false,
+  } = filteringOptions;
 
   const calculateRecipeList = () => {
-    return recipeOrder.filter((recipeId) =>
-      cookbook[recipeId].name.toUpperCase().includes(searchTerm)
-    );
+    const recipeList = recipeOrder.filter((recipeId) => {
+      const { name, tags = [], isFavorite = false } = cookbook[recipeId];
+
+      if (isFavoriteFilter && !isFavorite) {
+        return false;
+      }
+
+      if (!name.toUpperCase().includes(searchTerm)) {
+        return false;
+      }
+
+      if (!tagsList.every((tagId) => tags.includes(tagId))) {
+        return false;
+      }
+
+      return true;
+    });
+
+    if (!ingredientsList.length) {
+      return recipeList;
+    }
+
+    return recipeList
+      .map((recipeId) => {
+        const value = {
+          recipeId,
+          ingredientMatchCount: ingredientsList.filter((ingredientId) =>
+            cookbook[recipeId].ingredients.hasOwnProperty(ingredientId)
+          ).length,
+        };
+        return value;
+      })
+      .sort(
+        (recipeEntryA, recipeEntryB) =>
+          recipeEntryB.ingredientMatchCount - recipeEntryA.ingredientMatchCount
+      )
+      .filter((recipeEntry) => recipeEntry.ingredientMatchCount)
+      .map((recipeEntry) => recipeEntry.recipeId);
   };
 
   const renderSearchAndFilters = () =>
@@ -62,85 +101,35 @@ function Cookbook(props) {
         alignItems="center"
         sx={{ width: "95%" }}
       >
-        <TextField
-          key="search"
-          variant="outlined"
-          sx={{ flexGrow: "1" }}
-          label={<Typography>Search</Typography>}
-          value={searchTerm}
-          onChange={(event) => {
+        <RecipeSearchInput
+          searchTerm={searchTerm}
+          setSearchTerm={(_searchTerm) => {
             setFilteringOptions((_filteringOptions) => ({
               ..._filteringOptions,
-              searchTerm: event.target.value.toUpperCase(),
+              searchTerm: _searchTerm,
             }));
-          }}
-          InputProps={{
-            endAdornment: searchTerm && (
-              <InputAdornment position="end">
-                <IconButton
-                  sx={{ color: "alt.main" }}
-                  onClick={() => {
-                    setFilteringOptions((_filteringOptions) => ({
-                      ..._filteringOptions,
-                      searchTerm: "",
-                    }));
-                  }}
-                  edge="end"
-                >
-                  <ClearIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
           }}
         />
         <Box sx={{ flexGrow: "3", maxWidth: "40%" }}>
-          <ClickAwayListener
-            onClickAway={() => {
-              setAdvancedFiltersTooltipOpen(false);
+          <Button
+            color="secondary"
+            variant="outlined"
+            sx={{ width: "100%" }}
+            onClick={() => {
+              setAdvancedFiltersDialogueOpen(true);
             }}
           >
-            <Box sx={{ width: "100%" }}>
-              <Tooltip
-                PopperProps={{
-                  disablePortal: true,
-                }}
-                open={advancedFiltersTooltipOpen}
-                disableFocusListener
-                disableHoverListener
-                disableTouchListener
-                arrow
-                placement="top"
-                title="Advanced Filters coming soon"
-              >
-                <span
-                  onClick={() => {
-                    setAdvancedFiltersTooltipOpen(
-                      (_advancedFiltersTooltipOpen) =>
-                        !_advancedFiltersTooltipOpen
-                    );
-                  }}
-                >
-                  <Button
-                    color="secondary"
-                    variant="outlined"
-                    disabled={true}
-                    sx={{ width: "100%" }}
-                  >
-                    <Typography>
-                      <span>Advanced</span>
-                      <br />
-                      <span>Filters</span>
-                    </Typography>
-                  </Button>
-                </span>
-              </Tooltip>
-            </Box>
-          </ClickAwayListener>
+            <Typography>
+              <span>Advanced</span>
+              <br />
+              <span>Filters</span>
+            </Typography>
+          </Button>
         </Box>
       </Stack>
     );
 
-  const renderRecipe = (recipeId, forMenu) => {
+  const renderRecipe = (recipeId) => {
     const {
       name = "Unknown name",
       ingredients = [],
@@ -247,7 +236,7 @@ function Cookbook(props) {
       {recipeList
         .filter((recipeId) => Object.keys(menu).includes(recipeId) === forMenu)
         .map((recipeId) => {
-          return renderRecipe(recipeId, forMenu);
+          return renderRecipe(recipeId);
         })}
     </Stack>
   );
@@ -257,9 +246,16 @@ function Cookbook(props) {
       return null;
     }
     const recipeList = calculateRecipeList();
+    if (!recipeList.length) {
+      return (
+        <Typography fontWeight="bold" color="white">
+          Looks like no recipes match that search.
+        </Typography>
+      );
+    }
     return (
       <Stack sx={{ width: "95%" }} spacing={0.5}>
-        {!!Object.keys(menu).length && (
+        {recipeList.some((recipeId) => menu.hasOwnProperty(recipeId)) && (
           <Paper elevation={0} sx={{ paddingY: "10px", paddingX: "10px" }}>
             {renderRecipeStack(recipeList, true)}
           </Paper>
@@ -294,6 +290,17 @@ function Cookbook(props) {
         </Button>
         {renderRecipeList()}
       </Stack>
+      <AdvancedFiltersDialogue
+        open={advancedFiltersDialogueOpen}
+        onClose={() => {
+          setAdvancedFiltersDialogueOpen(false);
+        }}
+        filteringOptions={filteringOptions}
+        setFilteringOptions={setFilteringOptions}
+        glossary={glossary}
+        basicFoodTagOrder={basicFoodTagOrder}
+        basicFoodTagAssociation={basicFoodTagAssociation}
+      />
     </div>
   );
 }
