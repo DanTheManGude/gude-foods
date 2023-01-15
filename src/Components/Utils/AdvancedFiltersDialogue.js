@@ -32,9 +32,9 @@ function AdvancedFiltersDialogue(props) {
 
   const {
     searchTerm = "",
-    ingredientList = [],
+    ingredientsList = [],
     tagsList = [],
-    isFavorite = false,
+    isFavoriteFilter = false,
   } = filteringOptions;
 
   const clearFilteringOptions = () => {
@@ -121,17 +121,17 @@ function AdvancedFiltersDialogue(props) {
                   optionA.foodId === optionB.foodId
                 }
                 getOptionDisabled={(option) =>
-                  ingredientList && ingredientList.includes(option.foodId)
+                  ingredientsList && ingredientsList.includes(option.foodId)
                 }
-                value={ingredientList.map((foodId) => ({
+                value={ingredientsList.map((foodId) => ({
                   foodId,
                   title: glossary.basicFoods[foodId],
                 }))}
                 onChange={(event, selection) => {
-                  const _ingredientList = selection.map(
+                  const _ingredientsList = selection.map(
                     (option) => option.foodId
                   );
-                  updateFilteringOptions({ ingredientList: _ingredientList });
+                  updateFilteringOptions({ ingredientsList: _ingredientsList });
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -213,9 +213,9 @@ function AdvancedFiltersDialogue(props) {
             </Box>
             <Box sx={{ width: "70%" }} display="flex" justifyContent="center">
               <FavoriteSwitch
-                isChecked={isFavorite}
+                isChecked={isFavoriteFilter}
                 updateChecked={(_isFavorite) => {
-                  updateFilteringOptions({ isFavorite: _isFavorite });
+                  updateFilteringOptions({ isFavoriteFilter: _isFavorite });
                 }}
               />
             </Box>

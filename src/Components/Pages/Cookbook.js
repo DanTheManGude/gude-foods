@@ -44,12 +44,33 @@ function Cookbook(props) {
 
   const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
-  const { searchTerm = "" } = filteringOptions;
+  const {
+    searchTerm = "",
+    ingredientsList = [],
+    tagsList = [],
+    isFavoriteFilter = false,
+  } = filteringOptions;
 
   const calculateRecipeList = () => {
-    return recipeOrder.filter((recipeId) =>
-      cookbook[recipeId].name.toUpperCase().includes(searchTerm)
-    );
+    return recipeOrder.filter((recipeId) => {
+      const { name, tags = [], isFavorite = false } = cookbook[recipeId];
+
+      if (isFavoriteFilter && !isFavorite) {
+        return false;
+      }
+
+      if (!name.toUpperCase().includes(searchTerm)) {
+        return false;
+      }
+
+      if (!tagsList.every((tagId) => tags.includes(tagId))) {
+        return false;
+      }
+
+      return ingredientsList.every((ingredientId) =>
+        cookbook[recipeId].ingredients.hasOwnProperty(ingredientId)
+      );
+    });
   };
 
   const renderSearchAndFilters = () =>
