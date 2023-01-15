@@ -28,6 +28,8 @@ function Cookbook(props) {
       cookbook = {},
       recipeOrder: _recipeOrder,
       shoppingList,
+      basicFoodTagOrder,
+      basicFoodTagAssociation,
       menu: _menu,
     },
     dataPaths: { recipeOrderPath, shoppingListPath, menuPath },
@@ -255,6 +257,9 @@ function Cookbook(props) {
         }}
         filteringOptions={filteringOptions}
         setFilteringOptions={setFilteringOptions}
+        glossary={glossary}
+        basicFoodTagOrder={basicFoodTagOrder}
+        basicFoodTagAssociation={basicFoodTagAssociation}
       />
     </div>
   );
