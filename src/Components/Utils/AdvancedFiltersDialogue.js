@@ -11,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
+import FavoriteSwitch from "../Utils/FavoriteSwitch";
 
 import {
   constructBasicFoodOptions,
@@ -33,6 +34,7 @@ function AdvancedFiltersDialogue(props) {
     searchTerm = "",
     ingredientList = [],
     tagsList = [],
+    isFavorite = false,
   } = filteringOptions;
 
   const clearFilteringOptions = () => {
@@ -194,6 +196,26 @@ function AdvancedFiltersDialogue(props) {
                   color: "tertiary",
                   variant: "outlined",
                   size: "small",
+                }}
+              />
+            </Box>
+          </Stack>
+          <Stack
+            key="isFavorite"
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={1}
+            sx={{ width: "100%" }}
+          >
+            <Box sx={{ width: "20%" }}>
+              <Typography>Favorited:</Typography>
+            </Box>
+            <Box sx={{ width: "70%" }} display="flex" justifyContent="center">
+              <FavoriteSwitch
+                isChecked={isFavorite}
+                updateChecked={(_isFavorite) => {
+                  updateFilteringOptions({ isFavorite: _isFavorite });
                 }}
               />
             </Box>
