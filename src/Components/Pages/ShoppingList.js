@@ -26,7 +26,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   updateRequest,
   deleteRequest,
-  removeRecipeFromMenu,
+  removeRecipeFromMenuAndShoppingList,
   updateRecipeMenuCount,
 } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
@@ -483,7 +483,7 @@ function ShoppingList(props) {
               <IconButton
                 edge="end"
                 onClick={() =>
-                  removeRecipeFromMenu(
+                  removeRecipeFromMenuAndShoppingList(
                     recipeId,
                     shoppingList,
                     { menuPath, shoppingListPath },

@@ -73,7 +73,7 @@ export const addRecipeToShoppingList = (
   );
 };
 
-export const removeRecipeFromMenu = (
+export const removeRecipeFromMenuAndShoppingList = (
   recipeId,
   shoppingList,
   { menuPath, shoppingListPath },

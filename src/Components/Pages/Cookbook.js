@@ -18,7 +18,7 @@ import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 
 import {
   addRecipeToShoppingList,
-  removeRecipeFromMenu,
+  removeRecipeFromMenuAndShoppingList,
 } from "../../utils/requests";
 
 function Cookbook(props) {
@@ -184,7 +184,7 @@ function Cookbook(props) {
                 color="warning"
                 variant="outlined"
                 onClick={() => {
-                  removeRecipeFromMenu(
+                  removeRecipeFromMenuAndShoppingList(
                     recipeId,
                     shoppingList,
                     { menuPath, shoppingListPath },
