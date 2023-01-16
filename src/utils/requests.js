@@ -73,6 +73,24 @@ export const addRecipeToShoppingList = (
   );
 };
 
+export const addRecipesToMenu = (recipeIdList, menu, menuPath, addAlert) => {
+  updateRequest(
+    {
+      [menuPath]: {
+        ...menu,
+        ...Object.keys(recipeIdList).reduce(
+          (updates, recipeId) => ({
+            ...updates,
+            [recipeId]: menu.hasOwnProperty(recipeId) ? menu[recipeId] : 1,
+          }),
+          {}
+        ),
+      },
+    },
+    addAlert
+  );
+};
+
 export const removeRecipesFromMenu = (recipeIdList, menuPath, addAlert) => {
   deleteRequest(
     recipeIdList.map((recipeId) => `${menuPath}/${recipeId}`),

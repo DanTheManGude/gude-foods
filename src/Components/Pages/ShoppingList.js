@@ -29,7 +29,7 @@ import {
   removeRecipeFromMenuAndShoppingList,
   updateRecipeMenuCount,
   removeRecipesFromMenu,
-  addRecipeToShoppingList,
+  addRecipesToMenu,
 } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
@@ -370,7 +370,14 @@ function ShoppingList(props) {
           size="small"
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.checked).length}
-          onClick={() => {}}
+          onClick={() => {
+            addRecipesToMenu(
+              Object.keys(shoppingMap.checked),
+              menu,
+              menuPath,
+              addAlert
+            );
+          }}
         >
           <Typography>
             <>
