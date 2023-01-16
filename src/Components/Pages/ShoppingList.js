@@ -355,11 +355,20 @@ function ShoppingList(props) {
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.unchecked).length}
           onClick={() => {
-            removeRecipesFromMenu(
-              Object.keys(shoppingMap.unchecked),
-              menuPath,
-              addAlert
+            const recipeList = Object.keys(shoppingMap.unchecked).reduce(
+              (recipesByDepartment, tagId) => [
+                ...recipesByDepartment,
+                ...Object.keys(shoppingMap.unchecked[tagId]).reduce(
+                  (recipesByFood, foodId) => [
+                    ...recipesByFood,
+                    ...Object.keys(shoppingMap.unchecked[tagId][foodId].list),
+                  ],
+                  []
+                ),
+              ],
+              []
             );
+            removeRecipesFromMenu(recipeList, menuPath, addAlert);
           }}
         >
           <Typography>Remove unchecked recipes from menu</Typography>
@@ -371,12 +380,14 @@ function ShoppingList(props) {
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.checked).length}
           onClick={() => {
-            addRecipesToMenu(
-              Object.keys(shoppingMap.checked),
-              menu,
-              menuPath,
-              addAlert
+            const recipeList = Object.keys(shoppingMap.checked).reduce(
+              (recipesByFood, foodId) => [
+                ...recipesByFood,
+                ...Object.keys(shoppingMap.checked[foodId].list),
+              ],
+              []
             );
+            addRecipesToMenu(recipeList, menu, menuPath, addAlert);
           }}
         >
           <Typography>

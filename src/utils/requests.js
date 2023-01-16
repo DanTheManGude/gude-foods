@@ -78,7 +78,7 @@ export const addRecipesToMenu = (recipeIdList, menu, menuPath, addAlert) => {
     {
       [menuPath]: {
         ...menu,
-        ...Object.keys(recipeIdList).reduce(
+        ...recipeIdList.reduce(
           (updates, recipeId) => ({
             ...updates,
             [recipeId]: menu.hasOwnProperty(recipeId) ? menu[recipeId] : 1,
