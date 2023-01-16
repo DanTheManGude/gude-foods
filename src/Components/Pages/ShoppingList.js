@@ -361,7 +361,9 @@ function ShoppingList(props) {
                 ...Object.keys(shoppingMap.unchecked[tagId]).reduce(
                   (recipesByFood, foodId) => [
                     ...recipesByFood,
-                    ...Object.keys(shoppingMap.unchecked[tagId][foodId].list),
+                    ...Object.keys(
+                      shoppingMap.unchecked[tagId][foodId].list || {}
+                    ),
                   ],
                   []
                 ),
@@ -383,7 +385,7 @@ function ShoppingList(props) {
             const recipeList = Object.keys(shoppingMap.checked).reduce(
               (recipesByFood, foodId) => [
                 ...recipesByFood,
-                ...Object.keys(shoppingMap.checked[foodId].list),
+                ...Object.keys(shoppingMap.checked[foodId].list || {}),
               ],
               []
             );
