@@ -311,12 +311,7 @@ function ShoppingList(props) {
     }
 
     return (
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{ paddingTop: "12px" }}
-        alignItems="center"
-      >
+      <Stack direction="row" spacing={2} alignItems="center">
         <Button
           color="secondary"
           variant="contained"
@@ -339,6 +334,43 @@ function ShoppingList(props) {
           }}
         >
           <Typography>Delete checked</Typography>
+        </Button>
+      </Stack>
+    );
+  };
+
+  const renderMenuButtons = () => {
+    if (!shoppingList) {
+      return null;
+    }
+
+    return (
+      <Stack direction="row" spacing={2} alignItems="center">
+        <Button
+          color="secondary"
+          variant="contained"
+          size="small"
+          sx={{ width: "168px" }}
+          disabled={!Object.keys(shoppingMap.unchecked).length}
+          onClick={() => {}}
+        >
+          <Typography>Remove unchecked recipes from menu</Typography>
+        </Button>
+        <Button
+          color="secondary"
+          variant="contained"
+          size="small"
+          sx={{ width: "168px" }}
+          disabled={!Object.keys(shoppingMap.checked).length}
+          onClick={() => {}}
+        >
+          <Typography>
+            <>
+              <span>Add checked</span>
+              <br />
+              <span>recipes to menu</span>
+            </>
+          </Typography>
         </Button>
       </Stack>
     );
@@ -579,8 +611,9 @@ function ShoppingList(props) {
           {renderChecked()}
         </Stack>
         {renderNewItemControls()}
-        {renderMenu()}
         {renderDeleteButtons()}
+        {renderMenu()}
+        {renderMenuButtons()}
       </Stack>
       <DeleteDialog
         open={!!deleteDialog}
