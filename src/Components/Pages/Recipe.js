@@ -179,6 +179,7 @@ function Recipe(props) {
       return _instructions.concat(newStep);
     });
     setNewStep("");
+    document.getElementById("newStepInput").focus();
   };
   const updateStep = (index, step) => {
     updateInstructions((_instructions) => {
