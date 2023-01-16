@@ -73,6 +73,13 @@ export const addRecipeToShoppingList = (
   );
 };
 
+export const removeRecipesFromMenu = (recipeIdList, menuPath, addAlert) => {
+  deleteRequest(
+    recipeIdList.map((recipeId) => `${menuPath}/${recipeId}`),
+    addAlert
+  );
+};
+
 export const removeRecipeFromMenuAndShoppingList = (
   recipeId,
   shoppingList,

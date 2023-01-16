@@ -28,6 +28,8 @@ import {
   deleteRequest,
   removeRecipeFromMenuAndShoppingList,
   updateRecipeMenuCount,
+  removeRecipesFromMenu,
+  addRecipeToShoppingList,
 } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
@@ -352,7 +354,13 @@ function ShoppingList(props) {
           size="small"
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.unchecked).length}
-          onClick={() => {}}
+          onClick={() => {
+            removeRecipesFromMenu(
+              Object.keys(shoppingMap.unchecked),
+              menuPath,
+              addAlert
+            );
+          }}
         >
           <Typography>Remove unchecked recipes from menu</Typography>
         </Button>
