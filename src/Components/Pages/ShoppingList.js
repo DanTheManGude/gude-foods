@@ -26,8 +26,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   updateRequest,
   deleteRequest,
-  removeRecipeFromMenu,
+  removeRecipeFromMenuAndShoppingList,
   updateRecipeMenuCount,
+  removeRecipesFromMenu,
+  addRecipesToMenu,
 } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
@@ -311,12 +313,7 @@ function ShoppingList(props) {
     }
 
     return (
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{ paddingTop: "12px" }}
-        alignItems="center"
-      >
+      <Stack direction="row" spacing={2} alignItems="center">
         <Button
           color="secondary"
           variant="contained"
@@ -339,6 +336,69 @@ function ShoppingList(props) {
           }}
         >
           <Typography>Delete checked</Typography>
+        </Button>
+      </Stack>
+    );
+  };
+
+  const renderMenuButtons = () => {
+    if (!shoppingList) {
+      return null;
+    }
+
+    return (
+      <Stack direction="row" spacing={2} alignItems="center">
+        <Button
+          color="secondary"
+          variant="contained"
+          size="small"
+          sx={{ width: "168px" }}
+          disabled={!Object.keys(shoppingMap.unchecked).length}
+          onClick={() => {
+            const recipeList = Object.keys(shoppingMap.unchecked).reduce(
+              (recipesByDepartment, tagId) => [
+                ...recipesByDepartment,
+                ...Object.keys(shoppingMap.unchecked[tagId]).reduce(
+                  (recipesByFood, foodId) => [
+                    ...recipesByFood,
+                    ...Object.keys(
+                      shoppingMap.unchecked[tagId][foodId].list || {}
+                    ),
+                  ],
+                  []
+                ),
+              ],
+              []
+            );
+            removeRecipesFromMenu(recipeList, menuPath, addAlert);
+          }}
+        >
+          <Typography>Remove unchecked recipes from menu</Typography>
+        </Button>
+        <Button
+          color="secondary"
+          variant="contained"
+          size="small"
+          sx={{ width: "168px" }}
+          disabled={!Object.keys(shoppingMap.checked).length}
+          onClick={() => {
+            const recipeList = Object.keys(shoppingMap.checked).reduce(
+              (recipesByFood, foodId) => [
+                ...recipesByFood,
+                ...Object.keys(shoppingMap.checked[foodId].list || {}),
+              ],
+              []
+            );
+            addRecipesToMenu(recipeList, menu, menuPath, addAlert);
+          }}
+        >
+          <Typography>
+            <>
+              <span>Add checked</span>
+              <br />
+              <span>recipes to menu</span>
+            </>
+          </Typography>
         </Button>
       </Stack>
     );
@@ -451,7 +511,7 @@ function ShoppingList(props) {
               <IconButton
                 edge="end"
                 onClick={() =>
-                  removeRecipeFromMenu(
+                  removeRecipeFromMenuAndShoppingList(
                     recipeId,
                     shoppingList,
                     { menuPath, shoppingListPath },
@@ -579,8 +639,9 @@ function ShoppingList(props) {
           {renderChecked()}
         </Stack>
         {renderNewItemControls()}
-        {renderMenu()}
         {renderDeleteButtons()}
+        {renderMenu()}
+        {renderMenuButtons()}
       </Stack>
       <DeleteDialog
         open={!!deleteDialog}
