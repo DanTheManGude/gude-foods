@@ -279,15 +279,33 @@ function Cookbook(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={() => {
-            navigate(`/recipe/create`);
-          }}
+        <Stack
+          direction="row"
+          sx={{ width: "100%" }}
+          justifyContent="space-evenly"
         >
-          <Typography color="primary.contrastText">Add new recipe</Typography>
-        </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              navigate(`/recipe/create`);
+            }}
+          >
+            <Typography color="primary.contrastText">
+              Create new recipe
+            </Typography>
+          </Button>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={() => {
+              console.log("Import recipe");
+            }}
+          >
+            <Typography>Import recipe</Typography>
+          </Button>
+        </Stack>
+
         {renderRecipeList()}
       </Stack>
       <AdvancedFiltersDialogue
