@@ -15,6 +15,7 @@ import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { updateRequest, deleteRequest } from "../../utils/requests";
+import { downloadData } from "../../utils/dataTransfer";
 
 function Settings(props) {
   const {
@@ -82,23 +83,16 @@ function Settings(props) {
   };
 
   const onDownload = () => {
-    const data = JSON.stringify(
-      {
-        user: { email: user.email, uid: user.uid },
-        glossary,
-        basicFoodTagAssociation,
-        basicFoodTagOrder,
-        shoppingList,
-        cookbook,
-      },
-      null,
-      2
-    );
+    const data = {
+      user: { email: user.email, uid: user.uid },
+      glossary,
+      basicFoodTagAssociation,
+      basicFoodTagOrder,
+      shoppingList,
+      cookbook,
+    };
 
-    const element = document.createElement("a");
-    element.download = `gudefoods-download.json`;
-    element.href = `data:text/json;charset=utf-8,${encodeURIComponent(data)}`;
-    element.click();
+    downloadData(data);
   };
 
   const renderAppCard = () => {
