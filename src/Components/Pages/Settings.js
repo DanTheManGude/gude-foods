@@ -127,10 +127,9 @@ function Settings(props) {
               buttonProps={{
                 variant: "outlined",
                 color: "secondary",
-                component: "span",
               }}
               buttonText="Import"
-              key="settings"
+              id="settings"
             />
           </CardActions>
         </Card>

@@ -49,7 +49,7 @@ function ImportFileButton(props) {
         }}
       />
       <label htmlFor={inputId}>
-        <Button {...buttonProps}>
+        <Button {...buttonProps} component="span">
           <Typography {...typographyProps}>{buttonText}</Typography>
         </Button>
       </label>
