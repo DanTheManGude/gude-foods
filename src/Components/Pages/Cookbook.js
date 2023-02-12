@@ -20,6 +20,10 @@ import {
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
 } from "../../utils/requests";
+import {
+  downloadData,
+  transformRecipeForExport,
+} from "../../utils/dataTransfer";
 
 function Cookbook(props) {
   const {
@@ -294,7 +298,17 @@ function Cookbook(props) {
         color="secondary"
         variant="outlined"
         onClick={() => {
-          console.log("Export Cookbook");
+          const cookbookData = Object.keys(cookbook).reduce((acc, recipeId) => {
+            const recipeEntry = cookbook[recipeId];
+            const recipeData = transformRecipeForExport(recipeEntry, glossary);
+
+            return {
+              ...acc,
+              [recipeEntry.name]: recipeData,
+            };
+          }, {});
+
+          downloadData(cookbookData);
         }}
       >
         <Typography>Export Cookbook</Typography>

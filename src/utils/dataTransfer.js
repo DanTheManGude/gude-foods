@@ -11,7 +11,7 @@ export const downloadData = (dataJSON) => {
 
 export const transformRecipeForExport = (recipeEntry, glossary) => {
   const { basicFoods, recipeTags } = glossary;
-  const { ingredients, tags } = recipeEntry;
+  const { ingredients, tags = [] } = recipeEntry;
 
   const ingredientsAsNames = Object.keys(ingredients).reduce(
     (acc, ingredientKey) => ({
