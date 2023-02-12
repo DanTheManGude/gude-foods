@@ -1,3 +1,5 @@
+import { createKey } from "./requests";
+
 export const downloadData = (dataJSON, name = "download") => {
   const dataString = JSON.stringify(dataJSON, null, 2);
 
@@ -30,4 +32,59 @@ export const transformRecipeForExport = (recipeEntry, glossary) => {
   };
 
   return recipeData;
+};
+
+export const transformRecipeFromImport = (
+  recipeData,
+  glossary,
+  glossaryPath
+) => {
+  const { basicFoods, recipeTags } = glossary;
+  const { ingredients, tags = [] } = recipeData;
+
+  const newFoods = {};
+  const ingredientsAsKeys = Object.keys(ingredients).reduce(
+    (acc, ingredientName) => {
+      const basicFoodList = Object.keys(basicFoods);
+      const foundFoodId = basicFoodList.find(
+        (foodId) => basicFoods[foodId] === ingredientName
+      );
+
+      let ingredientId = foundFoodId;
+      if (!foundFoodId) {
+        ingredientId = createKey(`${glossaryPath}/basicFoods`);
+        newFoods[ingredientName] = ingredientId;
+      }
+
+      return {
+        ...acc,
+        [ingredientId]: ingredients[ingredientName],
+      };
+    },
+    {}
+  );
+
+  const newTags = {};
+  const tagsAsKeys = tags.map((tagName) => {
+    const recipeTagsList = Object.keys(recipeTags);
+    const foundTagId = recipeTagsList.find(
+      (tagId) => recipeTags[tagId] === tagName
+    );
+
+    let tagId = foundTagId;
+    if (!foundTagId) {
+      tagId = createKey(`${glossaryPath}/recipeTags`);
+      newTags[tagName] = tagId;
+    }
+
+    return tagId;
+  });
+
+  const recipeEntry = {
+    ...recipeData,
+    ingredients: ingredientsAsKeys,
+    tags: tagsAsKeys,
+  };
+
+  return { recipeEntry, newFoods, newTags };
 };

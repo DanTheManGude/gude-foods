@@ -15,6 +15,7 @@ import Box from "@mui/material/Box";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
+import ImportFileButton from "../Utils/ImportFileButton";
 
 import {
   addRecipeToShoppingList,
@@ -23,6 +24,7 @@ import {
 import {
   downloadData,
   transformRecipeForExport,
+  transformRecipeFromImport,
 } from "../../utils/dataTransfer";
 
 function Cookbook(props) {
@@ -36,7 +38,7 @@ function Cookbook(props) {
       basicFoodTagAssociation,
       menu: _menu,
     },
-    dataPaths: { recipeOrderPath, shoppingListPath, menuPath },
+    dataPaths: { recipeOrderPath, shoppingListPath, menuPath, glossaryPath },
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
@@ -256,15 +258,21 @@ function Cookbook(props) {
       >
         <Typography color="primary.contrastText">Create new recipe</Typography>
       </Button>
-      <Button
-        color="primary"
-        variant="outlined"
-        onClick={() => {
-          console.log("Import recipe");
+      <ImportFileButton
+        onSuccess={(recipeData) => {
+          const { recipeEntry, newFoods, newTags } = transformRecipeFromImport(
+            recipeData,
+            glossary,
+            glossaryPath
+          );
+
+          debugger;
         }}
-      >
-        <Typography>Import recipe</Typography>
-      </Button>
+        buttonProps={{ color: "primary", variant: "outlined" }}
+        buttonText="Import recipe"
+        id="import-recipe"
+        addAlert={addAlert}
+      />
     </Stack>
   );
 
