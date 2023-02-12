@@ -241,6 +241,29 @@ function Cookbook(props) {
     </Stack>
   );
 
+  const renderNewRecipeButtons = () => (
+    <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => {
+          navigate(`/recipe/create`);
+        }}
+      >
+        <Typography color="primary.contrastText">Create new recipe</Typography>
+      </Button>
+      <Button
+        color="primary"
+        variant="outlined"
+        onClick={() => {
+          console.log("Import recipe");
+        }}
+      >
+        <Typography>Import recipe</Typography>
+      </Button>
+    </Stack>
+  );
+
   const renderRecipeList = () => {
     if (!cookbook) {
       return null;
@@ -279,33 +302,7 @@ function Cookbook(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
-        <Stack
-          direction="row"
-          sx={{ width: "100%" }}
-          justifyContent="space-evenly"
-        >
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              navigate(`/recipe/create`);
-            }}
-          >
-            <Typography color="primary.contrastText">
-              Create new recipe
-            </Typography>
-          </Button>
-          <Button
-            color="primary"
-            variant="outlined"
-            onClick={() => {
-              console.log("Import recipe");
-            }}
-          >
-            <Typography>Import recipe</Typography>
-          </Button>
-        </Stack>
-
+        {renderNewRecipeButtons()}
         {renderRecipeList()}
       </Stack>
       <AdvancedFiltersDialogue
