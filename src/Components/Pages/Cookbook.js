@@ -288,6 +288,29 @@ function Cookbook(props) {
     );
   };
 
+  const renderImportExportCookbookButtons = () => (
+    <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
+      <Button
+        color="secondary"
+        variant="outlined"
+        onClick={() => {
+          console.log("Export Cookbook");
+        }}
+      >
+        <Typography>Export Cookbook</Typography>
+      </Button>
+      <Button
+        color="secondary"
+        variant="outlined"
+        onClick={() => {
+          console.log("Import a cookbook");
+        }}
+      >
+        <Typography>Import a cookbook</Typography>
+      </Button>
+    </Stack>
+  );
+
   return (
     <div>
       <Typography
@@ -304,6 +327,7 @@ function Cookbook(props) {
         {renderSearchAndFilters()}
         {renderNewRecipeButtons()}
         {renderRecipeList()}
+        {renderImportExportCookbookButtons()}
       </Stack>
       <AdvancedFiltersDialogue
         open={advancedFiltersDialogueOpen}
