@@ -54,33 +54,17 @@ function Settings(props) {
     );
   };
 
-  const handeFileImport = (file) => {
-    let reader = new FileReader();
-
-    reader.readAsText(file);
-
-    reader.onload = () => {
-      const data = JSON.parse(reader.result);
-
-      updateRequest(
-        {
-          [glossaryPath]: data.glossary,
-          [basicFoodTagAssociationPath]: data.basicFoodTagAssociation,
-          [basicFoodTagOrderPath]: data.basicFoodTagOrder,
-          [shoppingListPath]: data.shoppingList,
-          [cookbookPath]: data.cookbook,
-        },
-        addAlert
-      );
-    };
-
-    reader.onerror = () => {
-      addAlert({
-        message: reader.error,
-        title: "Error with importing file",
-        alertProps: { severity: "error" },
-      });
-    };
+  const handeFileImport = (fileData) => {
+    updateRequest(
+      {
+        [glossaryPath]: fileData.glossary,
+        [basicFoodTagAssociationPath]: fileData.basicFoodTagAssociation,
+        [basicFoodTagOrderPath]: fileData.basicFoodTagOrder,
+        [shoppingListPath]: fileData.shoppingList,
+        [cookbookPath]: fileData.cookbook,
+      },
+      addAlert
+    );
   };
 
   const onDownload = () => {
@@ -167,7 +151,8 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <ImportFileButton
-              handeFileImport={handeFileImport}
+              onSuccess={handeFileImport}
+              addAlert={addAlert}
               buttonProps={{
                 variant: "outlined",
                 color: "secondary",
