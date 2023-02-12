@@ -14,6 +14,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
+import ImportFileButton from "../Utils/ImportFileButton";
 import { updateRequest, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 
@@ -165,20 +166,16 @@ function Settings(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <input
-              accept=".json"
-              style={{ display: "none" }}
-              id="import-button-file"
-              type="file"
-              onChange={(event) => {
-                handeFileImport(event.target.files[0]);
+            <ImportFileButton
+              handeFileImport={handeFileImport}
+              buttonProps={{
+                variant: "outlined",
+                color: "secondary",
+                component: "span",
               }}
+              buttonText="Import"
+              key="settings"
             />
-            <label htmlFor="import-button-file">
-              <Button variant="outlined" color="secondary" component="span">
-                Import
-              </Button>
-            </label>
           </CardActions>
         </Card>
       </Box>
