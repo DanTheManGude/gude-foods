@@ -1,6 +1,7 @@
 import { getDatabase, ref, child, push, update } from "firebase/database";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
+  debugger;
   update(ref(getDatabase()), updates)
     .then(() => {
       onSuccess({

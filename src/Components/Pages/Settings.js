@@ -17,52 +17,27 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ImportFileButton from "../Utils/ImportFileButton";
 import { updateRequest, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
+import { databasePaths } from "../../constants";
 
 function Settings(props) {
-  const {
-    database: {
-      glossary,
-      basicFoodTagAssociation,
-      basicFoodTagOrder,
-      shoppingList,
-      cookbook,
-    },
-    dataPaths: {
-      glossaryPath,
-      basicFoodTagAssociationPath,
-      basicFoodTagOrderPath,
-      shoppingListPath,
-      cookbookPath,
-    },
-    addAlert,
-    user,
-  } = props;
+  const { database, dataPaths, addAlert, user } = props;
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleDelete = () => {
     setOpenDeleteDialog(false);
-    deleteRequest(
-      [
-        glossaryPath,
-        basicFoodTagAssociationPath,
-        basicFoodTagOrderPath,
-        shoppingListPath,
-        cookbookPath,
-      ],
-      addAlert
-    );
+    deleteRequest(Object.values(dataPaths), addAlert);
   };
 
   const handeFileImport = (fileData) => {
     updateRequest(
-      {
-        [glossaryPath]: fileData.glossary,
-        [basicFoodTagAssociationPath]: fileData.basicFoodTagAssociation,
-        [basicFoodTagOrderPath]: fileData.basicFoodTagOrder,
-        [shoppingListPath]: fileData.shoppingList,
-        [cookbookPath]: fileData.cookbook,
-      },
+      Object.keys(databasePaths).reduce(
+        (acc, databaseEntryName) => ({
+          ...acc,
+          [dataPaths[`${databaseEntryName}Path`]]: fileData[databaseEntryName],
+        }),
+        {}
+      ),
       addAlert
     );
   };
@@ -70,11 +45,7 @@ function Settings(props) {
   const onDownload = () => {
     const data = {
       user: { email: user.email, uid: user.uid },
-      glossary,
-      basicFoodTagAssociation,
-      basicFoodTagOrder,
-      shoppingList,
-      cookbook,
+      ...database,
     };
 
     downloadData(data);
