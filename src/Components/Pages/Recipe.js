@@ -356,7 +356,7 @@ function Recipe(props) {
                 glossary
               );
 
-              downloadData(recipeData);
+              downloadData(recipeData, recipeData.name);
             }}
           >
             <Typography>Export</Typography>

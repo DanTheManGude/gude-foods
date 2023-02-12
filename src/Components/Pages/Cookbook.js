@@ -308,7 +308,7 @@ function Cookbook(props) {
             };
           }, {});
 
-          downloadData(cookbookData);
+          downloadData(cookbookData, "cookbook");
         }}
       >
         <Typography>Export Cookbook</Typography>
