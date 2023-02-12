@@ -38,7 +38,13 @@ function Cookbook(props) {
       basicFoodTagAssociation,
       menu: _menu,
     },
-    dataPaths: { recipeOrderPath, shoppingListPath, menuPath, glossaryPath },
+    dataPaths: {
+      recipeOrderPath,
+      shoppingListPath,
+      menuPath,
+      glossaryPath,
+      cookbookPath,
+    },
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
@@ -260,11 +266,11 @@ function Cookbook(props) {
       </Button>
       <ImportFileButton
         onSuccess={(recipeData) => {
-          const { recipeEntry, newFoods, newTags } = transformRecipeFromImport(
-            recipeData,
-            glossary,
-            glossaryPath
-          );
+          const { recipeEntry, newFoods, newTags } =
+            transformCookbookFromImport({ recipe: recipeData }, glossary, {
+              glossaryPath,
+              cookbookPath,
+            });
 
           debugger;
         }}

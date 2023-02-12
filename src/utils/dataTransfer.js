@@ -34,57 +34,67 @@ export const transformRecipeForExport = (recipeEntry, glossary) => {
   return recipeData;
 };
 
-export const transformRecipeFromImport = (
-  recipeData,
+export const transformCookbookFromImport = (
+  cookbookData,
   glossary,
-  glossaryPath
+  { glossaryPath, cookbookPath }
 ) => {
   const { basicFoods, recipeTags } = glossary;
-  const { ingredients, tags = [] } = recipeData;
-
   const newFoods = {};
-  const ingredientsAsKeys = Object.keys(ingredients).reduce(
-    (acc, ingredientName) => {
-      const basicFoodList = Object.keys(basicFoods);
-      const foundFoodId = basicFoodList.find(
-        (foodId) => basicFoods[foodId] === ingredientName
+  const newTags = {};
+
+  const formattedCookbook = Object.values(cookbookData).reduce(
+    (accumulator, recipeData) => {
+      const { ingredients, tags = [] } = recipeData;
+
+      const ingredientsAsKeys = Object.keys(ingredients).reduce(
+        (acc, ingredientName) => {
+          const basicFoodList = Object.keys(basicFoods);
+          const foundFoodId = basicFoodList.find(
+            (foodId) => basicFoods[foodId] === ingredientName
+          );
+
+          let ingredientId = foundFoodId;
+          if (!foundFoodId) {
+            ingredientId = createKey(`${glossaryPath}/basicFoods`);
+            newFoods[ingredientName] = ingredientId;
+          }
+
+          return {
+            ...acc,
+            [ingredientId]: ingredients[ingredientName],
+          };
+        },
+        {}
       );
 
-      let ingredientId = foundFoodId;
-      if (!foundFoodId) {
-        ingredientId = createKey(`${glossaryPath}/basicFoods`);
-        newFoods[ingredientName] = ingredientId;
-      }
+      const tagsAsKeys = tags.map((tagName) => {
+        const recipeTagsList = Object.keys(recipeTags);
+        const foundTagId = recipeTagsList.find(
+          (tagId) => recipeTags[tagId] === tagName
+        );
 
-      return {
-        ...acc,
-        [ingredientId]: ingredients[ingredientName],
+        let tagId = foundTagId;
+        if (!foundTagId) {
+          tagId = createKey(`${glossaryPath}/recipeTags`);
+          newTags[tagName] = tagId;
+        }
+
+        return tagId;
+      });
+
+      const recipeEntry = {
+        ...recipeData,
+        ingredients: ingredientsAsKeys,
+        tags: tagsAsKeys,
       };
+
+      const recipeId = createKey(cookbookPath);
+
+      return { ...accumulator, [recipeId]: recipeEntry };
     },
     {}
   );
 
-  const newTags = {};
-  const tagsAsKeys = tags.map((tagName) => {
-    const recipeTagsList = Object.keys(recipeTags);
-    const foundTagId = recipeTagsList.find(
-      (tagId) => recipeTags[tagId] === tagName
-    );
-
-    let tagId = foundTagId;
-    if (!foundTagId) {
-      tagId = createKey(`${glossaryPath}/recipeTags`);
-      newTags[tagName] = tagId;
-    }
-
-    return tagId;
-  });
-
-  const recipeEntry = {
-    ...recipeData,
-    ingredients: ingredientsAsKeys,
-    tags: tagsAsKeys,
-  };
-
-  return { recipeEntry, newFoods, newTags };
+  return { formattedCookbook, newFoods, newTags };
 };
