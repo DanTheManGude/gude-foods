@@ -8,3 +8,26 @@ export const downloadData = (dataJSON) => {
   )}`;
   element.click();
 };
+
+export const transformRecipeForExport = (recipeEntry, glossary) => {
+  const { basicFoods, recipeTags } = glossary;
+  const { ingredients, tags } = recipeEntry;
+
+  const ingredientsAsNames = Object.keys(ingredients).reduce(
+    (acc, ingredientKey) => ({
+      ...acc,
+      [basicFoods[ingredientKey]]: ingredients[ingredientKey],
+    }),
+    {}
+  );
+
+  const tagsAsNames = tags.map((tagKey) => recipeTags[tagKey], {});
+
+  const recipeData = {
+    ...recipeEntry,
+    ingredients: ingredientsAsNames,
+    tags: tagsAsNames,
+  };
+
+  return recipeData;
+};

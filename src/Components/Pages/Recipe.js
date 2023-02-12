@@ -28,6 +28,10 @@ import {
   shoppingListDeletesByRecipe,
 } from "../../utils/requests";
 import { waitForElm } from "../../utils/utility";
+import {
+  downloadData,
+  transformRecipeForExport,
+} from "../../utils/dataTransfer";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
@@ -347,7 +351,12 @@ function Recipe(props) {
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
-              console.log("Export recipe");
+              const recipeData = transformRecipeForExport(
+                recipeEntry,
+                glossary
+              );
+
+              downloadData(recipeData);
             }}
           >
             <Typography>Export</Typography>
