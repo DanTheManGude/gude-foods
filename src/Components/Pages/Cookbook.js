@@ -15,28 +15,43 @@ import Box from "@mui/material/Box";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
+import ImportFileButton from "../Utils/ImportFileButton";
 
 import {
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
+  updateFromCookbookImport,
 } from "../../utils/requests";
+import {
+  downloadData,
+  transformRecipeForExport,
+  transformCookbookFromImport,
+} from "../../utils/dataTransfer";
 
 function Cookbook(props) {
   const {
     database: {
-      glossary,
-      cookbook = {},
+      glossary: _glossary,
+      cookbook: _cookbook,
       recipeOrder: _recipeOrder,
       shoppingList,
       basicFoodTagOrder,
       basicFoodTagAssociation,
       menu: _menu,
     },
-    dataPaths: { recipeOrderPath, shoppingListPath, menuPath },
+    dataPaths: {
+      recipeOrderPath,
+      shoppingListPath,
+      menuPath,
+      glossaryPath,
+      cookbookPath,
+    },
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
   } = props;
+  const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
+  const cookbook = _cookbook || {};
   const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];
 
@@ -50,6 +65,22 @@ function Cookbook(props) {
     tagsList = [],
     isFavoriteFilter = false,
   } = filteringOptions;
+
+  const handleImportedData = (importedCookbook) => {
+    const transformedData = transformCookbookFromImport(
+      importedCookbook,
+      glossary,
+      glossaryPath,
+      cookbookPath
+    );
+
+    updateFromCookbookImport(
+      transformedData,
+      { cookbookPath, glossaryPath, recipeOrderPath },
+      recipeOrder,
+      addAlert
+    );
+  };
 
   const calculateRecipeList = () => {
     const recipeList = recipeOrder.filter((recipeId) => {
@@ -241,6 +272,29 @@ function Cookbook(props) {
     </Stack>
   );
 
+  const renderNewRecipeButtons = () => (
+    <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => {
+          navigate(`/recipe/create`);
+        }}
+      >
+        <Typography color="primary.contrastText">Create new recipe</Typography>
+      </Button>
+      <ImportFileButton
+        onSuccess={(recipeData) => {
+          handleImportedData({ recipe: recipeData });
+        }}
+        buttonProps={{ color: "primary", variant: "outlined" }}
+        buttonText="Import recipe"
+        id="import-recipe"
+        addAlert={addAlert}
+      />
+    </Stack>
+  );
+
   const renderRecipeList = () => {
     if (!cookbook) {
       return null;
@@ -265,6 +319,39 @@ function Cookbook(props) {
     );
   };
 
+  const renderImportExportCookbookButtons = () => (
+    <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
+      <Button
+        color="secondary"
+        variant="outlined"
+        onClick={() => {
+          const cookbookData = Object.keys(cookbook).reduce((acc, recipeId) => {
+            const recipeEntry = cookbook[recipeId];
+            const recipeData = transformRecipeForExport(recipeEntry, glossary);
+
+            return {
+              ...acc,
+              [recipeEntry.name]: recipeData,
+            };
+          }, {});
+
+          downloadData(cookbookData, "cookbook");
+        }}
+      >
+        <Typography>Export Cookbook</Typography>
+      </Button>
+      <ImportFileButton
+        onSuccess={(cookbookData) => {
+          handleImportedData(cookbookData);
+        }}
+        buttonProps={{ color: "secondary", variant: "outlined" }}
+        buttonText="Import a cookbook"
+        id="import-cookbook"
+        addAlert={addAlert}
+      />
+    </Stack>
+  );
+
   return (
     <div>
       <Typography
@@ -279,16 +366,9 @@ function Cookbook(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={() => {
-            navigate(`/recipe/create`);
-          }}
-        >
-          <Typography color="primary.contrastText">Add new recipe</Typography>
-        </Button>
+        {renderNewRecipeButtons()}
         {renderRecipeList()}
+        {renderImportExportCookbookButtons()}
       </Stack>
       <AdvancedFiltersDialogue
         open={advancedFiltersDialogueOpen}

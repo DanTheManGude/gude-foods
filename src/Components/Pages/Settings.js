@@ -14,91 +14,41 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
+import ImportFileButton from "../Utils/ImportFileButton";
 import { updateRequest, deleteRequest } from "../../utils/requests";
+import { downloadData } from "../../utils/dataTransfer";
+import { databasePaths } from "../../constants";
 
 function Settings(props) {
-  const {
-    database: {
-      glossary,
-      basicFoodTagAssociation,
-      basicFoodTagOrder,
-      shoppingList,
-      cookbook,
-    },
-    dataPaths: {
-      glossaryPath,
-      basicFoodTagAssociationPath,
-      basicFoodTagOrderPath,
-      shoppingListPath,
-      cookbookPath,
-    },
-    addAlert,
-    user,
-  } = props;
+  const { database, dataPaths, addAlert, user } = props;
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleDelete = () => {
     setOpenDeleteDialog(false);
-    deleteRequest(
-      [
-        glossaryPath,
-        basicFoodTagAssociationPath,
-        basicFoodTagOrderPath,
-        shoppingListPath,
-        cookbookPath,
-      ],
+    deleteRequest(Object.values(dataPaths), addAlert);
+  };
+
+  const handeFileImport = (fileData) => {
+    updateRequest(
+      Object.keys(databasePaths).reduce(
+        (acc, databaseEntryName) => ({
+          ...acc,
+          [dataPaths[`${databaseEntryName}Path`]]: fileData[databaseEntryName],
+        }),
+        {}
+      ),
       addAlert
     );
   };
 
-  const handeFileImport = (file) => {
-    let reader = new FileReader();
-
-    reader.readAsText(file);
-
-    reader.onload = () => {
-      const data = JSON.parse(reader.result);
-
-      updateRequest(
-        {
-          [glossaryPath]: data.glossary,
-          [basicFoodTagAssociationPath]: data.basicFoodTagAssociation,
-          [basicFoodTagOrderPath]: data.basicFoodTagOrder,
-          [shoppingListPath]: data.shoppingList,
-          [cookbookPath]: data.cookbook,
-        },
-        addAlert
-      );
-    };
-
-    reader.onerror = () => {
-      addAlert({
-        message: reader.error,
-        title: "Error with importing file",
-        alertProps: { severity: "error" },
-      });
-    };
-  };
-
   const onDownload = () => {
-    const data = JSON.stringify(
-      {
-        user: { email: user.email, uid: user.uid },
-        glossary,
-        basicFoodTagAssociation,
-        basicFoodTagOrder,
-        shoppingList,
-        cookbook,
-      },
-      null,
-      2
-    );
+    const data = {
+      user: { email: user.email, uid: user.uid },
+      ...database,
+    };
 
-    const element = document.createElement("a");
-    element.download = `gudefoods-download.json`;
-    element.href = `data:text/json;charset=utf-8,${encodeURIComponent(data)}`;
-    element.click();
+    downloadData(data);
   };
 
   const renderAppCard = () => {
@@ -171,20 +121,16 @@ function Settings(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <input
-              accept=".json"
-              style={{ display: "none" }}
-              id="import-button-file"
-              type="file"
-              onChange={(event) => {
-                handeFileImport(event.target.files[0]);
+            <ImportFileButton
+              onSuccess={handeFileImport}
+              addAlert={addAlert}
+              buttonProps={{
+                variant: "outlined",
+                color: "secondary",
               }}
+              buttonText="Import"
+              id="settings"
             />
-            <label htmlFor="import-button-file">
-              <Button variant="outlined" color="secondary" component="span">
-                Import
-              </Button>
-            </label>
           </CardActions>
         </Card>
       </Box>
