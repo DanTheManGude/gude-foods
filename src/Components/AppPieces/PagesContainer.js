@@ -45,7 +45,9 @@ function PagesContainer(props) {
     <Routes>
       <Route
         path="/*"
-        element={<Home database={database} dataPaths={dataPaths} />}
+        element={
+          <Home database={database} dataPaths={dataPaths} addAlert={addAlert} />
+        }
       />
       <Route
         path="cookbook"

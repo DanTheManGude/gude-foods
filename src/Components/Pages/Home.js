@@ -9,6 +9,8 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
+import { setAllData } from "../../utils/requests";
+
 function Home(props) {
   const {
     database: {
@@ -18,7 +20,7 @@ function Home(props) {
       cookbook,
       menu,
     },
-    userDisplayName,
+    addAlert,
   } = props;
   let navigate = useNavigate();
 
@@ -45,7 +47,7 @@ function Home(props) {
               color="primary"
               variant="outlined"
               onClick={() => {
-                console.log("do the thing");
+                setAllData({}, dataPaths, addAlert);
               }}
             >
               <Typography>Setup my account with gude food</Typography>
