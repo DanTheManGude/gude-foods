@@ -119,8 +119,8 @@ export const updateRecipeMenuCount = (recipeId, count, menuPath) => {
 
 export const updateFromCookbookImport = (
   transformedData,
-  cookbookPath,
-  glossaryPath,
+  { cookbookPath, glossaryPath, recipeOrderPath },
+  recipeOrder,
   addAlert
 ) => {
   const { formattedCookbook, newFoods, newTags } = transformedData;

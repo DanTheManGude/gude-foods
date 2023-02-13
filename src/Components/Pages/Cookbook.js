@@ -31,8 +31,8 @@ import {
 function Cookbook(props) {
   const {
     database: {
-      glossary,
-      cookbook = {},
+      glossary: _glossary,
+      cookbook: _cookbook,
       recipeOrder: _recipeOrder,
       shoppingList,
       basicFoodTagOrder,
@@ -50,6 +50,8 @@ function Cookbook(props) {
     filteringOptions = {},
     setFilteringOptions,
   } = props;
+  const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
+  const cookbook = _cookbook || {};
   const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];
 
@@ -74,8 +76,8 @@ function Cookbook(props) {
 
     updateFromCookbookImport(
       transformedData,
-      cookbookPath,
-      glossaryPath,
+      { cookbookPath, glossaryPath, recipeOrderPath },
+      recipeOrder,
       addAlert
     );
   };
