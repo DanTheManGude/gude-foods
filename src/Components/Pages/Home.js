@@ -39,7 +39,7 @@ function Home(props) {
               Welcome to Gude Foods
             </Typography>
             <Typography>
-              Looks like you are a new user. To help get you started, there is
+              Looks like you are a new user. To help get you going, there is
               starter data with some neat recipes. Click the button to import
               it.
             </Typography>
@@ -52,7 +52,7 @@ function Home(props) {
                 setAllData(newUserData, dataPaths, addAlert);
               }}
             >
-              <Typography>Setup my account with gude food</Typography>
+              <Typography>Setup my account</Typography>
             </Button>
           </CardActions>
         </Card>
