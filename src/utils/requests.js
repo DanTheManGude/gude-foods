@@ -1,4 +1,5 @@
 import { getDatabase, ref, child, push, update } from "firebase/database";
+import { databasePaths } from "../constants";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
@@ -156,6 +157,19 @@ export const updateFromCookbookImport = (
       ...tagUpdates,
       [recipeOrderPath]: [...Object.keys(formattedCookbook), ...recipeOrder],
     },
+    addAlert
+  );
+};
+
+export const setAllData = (allUserData, addAlert) => {
+  updateRequest(
+    Object.keys(databasePaths).reduce(
+      (acc, databaseEntryName) => ({
+        ...acc,
+        [dataPaths[`${databaseEntryName}Path`]]: allUserData[databaseEntryName],
+      }),
+      {}
+    ),
     addAlert
   );
 };

@@ -15,9 +15,8 @@ import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import ImportFileButton from "../Utils/ImportFileButton";
-import { updateRequest, deleteRequest } from "../../utils/requests";
+import { setAllData, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
-import { databasePaths } from "../../constants";
 
 function Settings(props) {
   const { database, dataPaths, addAlert, user } = props;
@@ -27,19 +26,6 @@ function Settings(props) {
   const handleDelete = () => {
     setOpenDeleteDialog(false);
     deleteRequest(Object.values(dataPaths), addAlert);
-  };
-
-  const handeFileImport = (fileData) => {
-    updateRequest(
-      Object.keys(databasePaths).reduce(
-        (acc, databaseEntryName) => ({
-          ...acc,
-          [dataPaths[`${databaseEntryName}Path`]]: fileData[databaseEntryName],
-        }),
-        {}
-      ),
-      addAlert
-    );
   };
 
   const onDownload = () => {
@@ -122,7 +108,7 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <ImportFileButton
-              onSuccess={handeFileImport}
+              onSuccess={(fileData) => setAllData(fileData, addAlert)}
               addAlert={addAlert}
               buttonProps={{
                 variant: "outlined",
