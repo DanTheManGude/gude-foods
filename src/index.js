@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 
 import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./firebaseConfig.js";
+import firebaseConfig from "./firebaseConfig.json";
 
 import "./styles/index.css";
 import { captchaSiteKey } from "./constants";
