@@ -18,13 +18,14 @@ import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
 
 import {
+  updateRequest,
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
 } from "../../utils/requests";
 import {
   downloadData,
   transformRecipeForExport,
-  transformRecipeFromImport,
+  transformCookbookFromImport,
 } from "../../utils/dataTransfer";
 
 function Cookbook(props) {
@@ -266,13 +267,50 @@ function Cookbook(props) {
       </Button>
       <ImportFileButton
         onSuccess={(recipeData) => {
-          const { recipeEntry, newFoods, newTags } =
-            transformCookbookFromImport({ recipe: recipeData }, glossary, {
+          const { formattedCookbook, newFoods, newTags } =
+            transformCookbookFromImport(
+              { recipe: recipeData },
+              glossary,
               glossaryPath,
-              cookbookPath,
-            });
+              cookbookPath
+            );
 
-          debugger;
+          const cookbookUpdates = Object.keys(formattedCookbook).reduce(
+            (acc, recipeId) => ({
+              ...acc,
+              [`${cookbookPath}/${recipeId}`]: formattedCookbook[recipeId],
+            }),
+            {}
+          );
+
+          const foodUpdates = Object.keys(newFoods).reduce(
+            (acc, foodName) => ({
+              ...acc,
+              [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: foodName,
+            }),
+            {}
+          );
+
+          const tagUpdates = Object.keys(newTags).reduce(
+            (acc, tagName) => ({
+              ...acc,
+              [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: tagName,
+            }),
+            {}
+          );
+
+          updateRequest(
+            {
+              ...cookbookUpdates,
+              ...foodUpdates,
+              ...tagUpdates,
+              [recipeOrderPath]: [
+                ...Object.keys(formattedCookbook),
+                ...recipeOrder,
+              ],
+            },
+            addAlert
+          );
         }}
         buttonProps={{ color: "primary", variant: "outlined" }}
         buttonText="Import recipe"

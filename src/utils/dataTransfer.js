@@ -37,7 +37,8 @@ export const transformRecipeForExport = (recipeEntry, glossary) => {
 export const transformCookbookFromImport = (
   cookbookData,
   glossary,
-  { glossaryPath, cookbookPath }
+  glossaryPath,
+  cookbookPath
 ) => {
   const { basicFoods, recipeTags } = glossary;
   const newFoods = {};
