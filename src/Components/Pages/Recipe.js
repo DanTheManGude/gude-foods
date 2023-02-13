@@ -28,6 +28,10 @@ import {
   shoppingListDeletesByRecipe,
 } from "../../utils/requests";
 import { waitForElm } from "../../utils/utility";
+import {
+  downloadData,
+  transformRecipeForExport,
+} from "../../utils/dataTransfer";
 
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
@@ -277,7 +281,7 @@ function Recipe(props) {
       justifyContent="space-around"
       alignItems="center"
       sx={{ width: "95%" }}
-      spacing={2}
+      spacing={0.5}
     >
       {!isCreating && isEditing ? (
         <>
@@ -310,7 +314,7 @@ function Recipe(props) {
           color="secondary"
           variant="outlined"
           size="small"
-          sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "2" }}
+          sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "1" }}
           onClick={() => {
             navigate(`/cookbook`);
           }}
@@ -335,12 +339,28 @@ function Recipe(props) {
           variant="outlined"
           size="small"
           onClick={handleSave}
-          sx={{ flexGrow: "2" }}
+          sx={{ flexGrow: "1" }}
         >
           <Typography>Save</Typography>
         </Button>
       ) : (
         <>
+          <Button
+            color="primary"
+            variant="outlined"
+            size="small"
+            sx={{ height: "50px", flexGrow: "1" }}
+            onClick={() => {
+              const recipeData = transformRecipeForExport(
+                recipeEntry,
+                glossary
+              );
+
+              downloadData(recipeData, recipeData.name);
+            }}
+          >
+            <Typography>Export</Typography>
+          </Button>
           <Button
             color="secondary"
             variant="outlined"

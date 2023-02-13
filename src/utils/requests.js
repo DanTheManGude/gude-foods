@@ -116,3 +116,46 @@ export const removeRecipeFromMenuAndShoppingList = (
 export const updateRecipeMenuCount = (recipeId, count, menuPath) => {
   updateRequest({ [`${menuPath}/${recipeId}`]: count });
 };
+
+export const updateFromCookbookImport = (
+  transformedData,
+  { cookbookPath, glossaryPath, recipeOrderPath },
+  recipeOrder,
+  addAlert
+) => {
+  const { formattedCookbook, newFoods, newTags } = transformedData;
+
+  const cookbookUpdates = Object.keys(formattedCookbook).reduce(
+    (acc, recipeId) => ({
+      ...acc,
+      [`${cookbookPath}/${recipeId}`]: formattedCookbook[recipeId],
+    }),
+    {}
+  );
+
+  const foodUpdates = Object.keys(newFoods).reduce(
+    (acc, foodName) => ({
+      ...acc,
+      [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: foodName,
+    }),
+    {}
+  );
+
+  const tagUpdates = Object.keys(newTags).reduce(
+    (acc, tagName) => ({
+      ...acc,
+      [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: tagName,
+    }),
+    {}
+  );
+
+  updateRequest(
+    {
+      ...cookbookUpdates,
+      ...foodUpdates,
+      ...tagUpdates,
+      [recipeOrderPath]: [...Object.keys(formattedCookbook), ...recipeOrder],
+    },
+    addAlert
+  );
+};
