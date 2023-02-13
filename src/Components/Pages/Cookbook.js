@@ -18,9 +18,9 @@ import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
 
 import {
-  updateRequest,
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
+  updateFromCookbookImport,
 } from "../../utils/requests";
 import {
   downloadData,
@@ -63,6 +63,22 @@ function Cookbook(props) {
     tagsList = [],
     isFavoriteFilter = false,
   } = filteringOptions;
+
+  const handleImportedData = (importedCookbook) => {
+    const transformedData = transformCookbookFromImport(
+      importedCookbook,
+      glossary,
+      glossaryPath,
+      cookbookPath
+    );
+
+    updateFromCookbookImport(
+      transformedData,
+      cookbookPath,
+      glossaryPath,
+      addAlert
+    );
+  };
 
   const calculateRecipeList = () => {
     const recipeList = recipeOrder.filter((recipeId) => {
@@ -267,50 +283,7 @@ function Cookbook(props) {
       </Button>
       <ImportFileButton
         onSuccess={(recipeData) => {
-          const { formattedCookbook, newFoods, newTags } =
-            transformCookbookFromImport(
-              { recipe: recipeData },
-              glossary,
-              glossaryPath,
-              cookbookPath
-            );
-
-          const cookbookUpdates = Object.keys(formattedCookbook).reduce(
-            (acc, recipeId) => ({
-              ...acc,
-              [`${cookbookPath}/${recipeId}`]: formattedCookbook[recipeId],
-            }),
-            {}
-          );
-
-          const foodUpdates = Object.keys(newFoods).reduce(
-            (acc, foodName) => ({
-              ...acc,
-              [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: foodName,
-            }),
-            {}
-          );
-
-          const tagUpdates = Object.keys(newTags).reduce(
-            (acc, tagName) => ({
-              ...acc,
-              [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: tagName,
-            }),
-            {}
-          );
-
-          updateRequest(
-            {
-              ...cookbookUpdates,
-              ...foodUpdates,
-              ...tagUpdates,
-              [recipeOrderPath]: [
-                ...Object.keys(formattedCookbook),
-                ...recipeOrder,
-              ],
-            },
-            addAlert
-          );
+          handleImportedData({ recipe: recipeData });
         }}
         buttonProps={{ color: "primary", variant: "outlined" }}
         buttonText="Import recipe"
@@ -365,15 +338,15 @@ function Cookbook(props) {
       >
         <Typography>Export Cookbook</Typography>
       </Button>
-      <Button
-        color="secondary"
-        variant="outlined"
-        onClick={() => {
-          console.log("Import a cookbook");
+      <ImportFileButton
+        onSuccess={(cookbookData) => {
+          handleImportedData(cookbookData);
         }}
-      >
-        <Typography>Import a cookbook</Typography>
-      </Button>
+        buttonProps={{ color: "secondary", variant: "outlined" }}
+        buttonText="Import a cookbook"
+        id="import-cookbook"
+        addAlert={addAlert}
+      />
     </Stack>
   );
 
