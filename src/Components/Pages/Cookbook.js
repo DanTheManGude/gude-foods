@@ -303,7 +303,7 @@ function Cookbook(props) {
     if (!recipeList.length) {
       return (
         <Typography fontWeight="bold" color="white">
-          Looks like no recipes match that search.
+          Looks like there are no recipes.
         </Typography>
       );
     }

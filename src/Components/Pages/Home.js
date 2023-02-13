@@ -9,6 +9,9 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
+import newUserData from "../../newUserData.json";
+import { setAllData } from "../../utils/requests";
+
 function Home(props) {
   const {
     database: {
@@ -18,8 +21,44 @@ function Home(props) {
       cookbook,
       menu,
     },
+    addAlert,
+    dataPaths,
   } = props;
   let navigate = useNavigate();
+
+  const renderNewUserCard = () => {
+    if (glossary) {
+      return null;
+    }
+
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Welcome to Gude Foods
+            </Typography>
+            <Typography>
+              Looks like you are a new user. To help get you going, there is
+              starter data with some neat recipes. Click the button to import
+              it.
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="primary"
+              variant="outlined"
+              onClick={() => {
+                setAllData(newUserData, dataPaths, addAlert);
+              }}
+            >
+              <Typography>Setup my account</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
 
   const renderMenuCard = () => {
     let messageContent = null;
@@ -314,6 +353,7 @@ function Home(props) {
         Home
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+        {renderNewUserCard()}
         {memoMenuCard}
         {memoRecipeCard}
         {renderGlossaryCard()}
