@@ -18,8 +18,43 @@ function Home(props) {
       cookbook,
       menu,
     },
+    userDisplayName,
   } = props;
   let navigate = useNavigate();
+
+  const renderNewUserCard = () => {
+    if (glossary) {
+      return null;
+    }
+
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Welcome to Gude Foods
+            </Typography>
+            <Typography>
+              Looks like you are a new user. To help get you started, there is
+              starter data with some neat recipes. Click the button to import
+              it.
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="primary"
+              variant="outlined"
+              onClick={() => {
+                console.log("do the thing");
+              }}
+            >
+              <Typography>Setup my account with gude food</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
 
   const renderMenuCard = () => {
     let messageContent = null;
@@ -314,6 +349,7 @@ function Home(props) {
         Home
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+        {renderNewUserCard()}
         {memoMenuCard}
         {memoRecipeCard}
         {renderGlossaryCard()}
