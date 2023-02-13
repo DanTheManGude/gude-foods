@@ -9,6 +9,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
+import newUserData from "../../newUserData.json";
 import { setAllData } from "../../utils/requests";
 
 function Home(props) {
@@ -21,6 +22,7 @@ function Home(props) {
       menu,
     },
     addAlert,
+    dataPaths,
   } = props;
   let navigate = useNavigate();
 
@@ -47,7 +49,7 @@ function Home(props) {
               color="primary"
               variant="outlined"
               onClick={() => {
-                setAllData({}, dataPaths, addAlert);
+                setAllData(newUserData, dataPaths, addAlert);
               }}
             >
               <Typography>Setup my account with gude food</Typography>
