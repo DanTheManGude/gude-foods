@@ -51,9 +51,10 @@ export const transformCookbookFromImport = (
       const ingredientsAsKeys = Object.keys(ingredients).reduce(
         (acc, ingredientName) => {
           const basicFoodList = Object.keys(basicFoods);
-          const foundFoodId = basicFoodList.find(
-            (foodId) => basicFoods[foodId] === ingredientName
-          );
+          const foundFoodId =
+            basicFoodList.find(
+              (foodId) => basicFoods[foodId] === ingredientName
+            ) || newFoods[ingredientName];
 
           let ingredientId = foundFoodId;
           if (!foundFoodId) {
@@ -71,9 +72,9 @@ export const transformCookbookFromImport = (
 
       const tagsAsKeys = tags.map((tagName) => {
         const recipeTagsList = Object.keys(recipeTags);
-        const foundTagId = recipeTagsList.find(
-          (tagId) => recipeTags[tagId] === tagName
-        );
+        const foundTagId =
+          recipeTagsList.find((tagId) => recipeTags[tagId] === tagName) ||
+          newTags[tagName];
 
         let tagId = foundTagId;
         if (!foundTagId) {
