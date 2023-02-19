@@ -45,7 +45,7 @@ const NavBar = (props) => {
     <>
       <AppBar position="fixed" sx={{ left: "2%", width: "96%" }}>
         <Container maxWidth="xl">
-          <Toolbar disableGutters>
+          <Toolbar disableGutters sx={{ justifyContent: "center" }}>
             <Typography
               variant="h5"
               noWrap
@@ -64,68 +64,13 @@ const NavBar = (props) => {
               <Link to={`/`}>Gude Foods</Link>
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: "block", md: "none" },
-                }}
-              >
-                {pages
-                  .map((page) => (
-                    <MenuItem
-                      key={page}
-                      onClick={() => {
-                        handleCloseNavMenu();
-                        navigate(`/${page}`);
-                      }}
-                    >
-                      <Typography textAlign="center">
-                        {presentationNames[page]}
-                      </Typography>
-                    </MenuItem>
-                  ))
-                  .concat(
-                    <GoogleLoginButton
-                      key="googleLogin"
-                      handleClick={handleCloseNavMenu}
-                      addAlert={addAlert}
-                    />
-                  )}
-              </Menu>
-            </Box>
-
             <Typography
               variant="h4"
               noWrap
               component="span"
               href=""
               sx={{
-                mr: 2,
                 display: { xs: "flex", md: "none" },
-                flexGrow: 1,
                 fontFamily: "DancingScript",
                 fontWeight: "bold",
                 letterSpacing: ".3rem",
@@ -156,7 +101,14 @@ const NavBar = (props) => {
                 addAlert={addAlert}
               />
             </Box>
-            <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+            <Box
+              sx={{
+                display: { md: "none" },
+                right: "0",
+                bottom: "7px",
+              }}
+              position="absolute"
+            >
               <Link to={`/`}>
                 <img
                   width="32px"
