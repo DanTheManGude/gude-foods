@@ -15,6 +15,7 @@ import { getDatabase, ref, child, get } from "firebase/database";
 import PagesContainer from "./AppPieces/PagesContainer";
 
 import NavBar from "./AppPieces/NavBar";
+import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
 
 function App() {
@@ -119,6 +120,7 @@ function App() {
       ) : (
         <UnauthorizedUser user={user} addAlert={addAlert} />
       )}
+      <BottomNav />
     </div>
   );
 }
