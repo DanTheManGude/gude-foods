@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import styled from "@emotion/styled";
@@ -6,13 +5,9 @@ import styled from "@emotion/styled";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 
 import GoogleLoginButton from "./GoogleLoginButton.js";
 
@@ -30,16 +25,6 @@ const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 const NavBar = (props) => {
   const { addAlert } = props;
   let navigate = useNavigate();
-
-  const [anchorElNav, setAnchorElNav] = useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
 
   return (
     <>
@@ -85,7 +70,6 @@ const NavBar = (props) => {
                 <Button
                   key={page}
                   onClick={() => {
-                    handleCloseNavMenu();
                     navigate(`/${page}`);
                   }}
                   sx={{ my: 2, color: "white", display: "block" }}
@@ -96,10 +80,7 @@ const NavBar = (props) => {
             </Box>
 
             <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-              <GoogleLoginButton
-                handleClick={handleCloseNavMenu}
-                addAlert={addAlert}
-              />
+              <GoogleLoginButton addAlert={addAlert} />
             </Box>
             <Box
               sx={{

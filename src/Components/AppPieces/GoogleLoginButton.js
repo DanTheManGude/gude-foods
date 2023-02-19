@@ -27,7 +27,7 @@ const signInGoogle = (addAlert) => {
 };
 
 function GoogleLoginButton(props) {
-  const { addAlert, handleClick } = props;
+  const { addAlert } = props;
 
   const [buttonImageSource, setButtonImageSource] = useState(
     imageSources.NORMAL
@@ -36,7 +36,6 @@ function GoogleLoginButton(props) {
   return (
     <button
       onClick={() => {
-        handleClick();
         signInGoogle(addAlert);
       }}
       className="googleLoginButton"
