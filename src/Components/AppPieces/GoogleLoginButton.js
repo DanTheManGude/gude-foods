@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInGoogle } from "../../utils/signIn";
 
 const constructImageUrl = (type) => `/media/googleLogin/${type}.png`;
 const imageSources = {
@@ -8,26 +8,8 @@ const imageSources = {
   PRESSED: constructImageUrl("pressed"),
 };
 
-const signInGoogle = (addAlert) => {
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
-
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      console.log(`login ${result.user.uid}`);
-    })
-    .catch((error) => {
-      const { name, code } = error;
-      addAlert({
-        message: code,
-        title: name,
-        alertProps: { severity: "error" },
-      });
-    });
-};
-
 function GoogleLoginButton(props) {
-  const { addAlert, handleClick } = props;
+  const { addAlert } = props;
 
   const [buttonImageSource, setButtonImageSource] = useState(
     imageSources.NORMAL
@@ -36,7 +18,6 @@ function GoogleLoginButton(props) {
   return (
     <button
       onClick={() => {
-        handleClick();
         signInGoogle(addAlert);
       }}
       className="googleLoginButton"

@@ -281,72 +281,57 @@ function Recipe(props) {
       justifyContent="space-around"
       alignItems="center"
       sx={{ width: "95%" }}
-      spacing={0.5}
+      spacing={2}
     >
-      {!isCreating && isEditing ? (
+      {isEditing ? (
         <>
+          {!isCreating && (
+            <Button
+              key="delete"
+              color="error"
+              variant="outlined"
+              size="small"
+              sx={{ flexGrow: "1" }}
+              onClick={() => {
+                setOpenDeleteDialog(true);
+              }}
+            >
+              <Typography>Delete</Typography>
+            </Button>
+          )}
           <Button
-            color="error"
-            variant="outlined"
-            size="small"
-            sx={{ flexGrow: "1" }}
-            onClick={() => {
-              setOpenDeleteDialog(true);
-            }}
-          >
-            <Typography>Delete</Typography>
-          </Button>
-          <Button
+            key="cancel"
             color="warning"
             variant="outlined"
             size="small"
             sx={{ flexGrow: "1" }}
             onClick={() => {
-              setRecipeEntry(JSON.parse(JSON.stringify(originalRecipe)));
-              setIsEditing(false);
+              if (isCreating) {
+                navigate("/cookbook");
+              } else {
+                setRecipeEntry(JSON.parse(JSON.stringify(originalRecipe)));
+                setIsEditing(false);
+              }
             }}
           >
             <Typography>Cancel</Typography>
           </Button>
+          <Button
+            key="save"
+            color="success"
+            variant="outlined"
+            size="small"
+            onClick={handleSave}
+            sx={{ flexGrow: "1" }}
+          >
+            <Typography>Save</Typography>
+          </Button>
         </>
-      ) : (
-        <Button
-          color="secondary"
-          variant="outlined"
-          size="small"
-          sx={{ ...(isCreating ? {} : { height: "50px" }), flexGrow: "1" }}
-          onClick={() => {
-            navigate(`/cookbook`);
-          }}
-        >
-          <Typography color="secondary">
-            {isCreating ? (
-              "Back to cookbook"
-            ) : (
-              <>
-                <span>Back to</span>
-                <br />
-                <span>cookbook</span>
-              </>
-            )}
-          </Typography>
-        </Button>
-      )}
-
-      {isEditing ? (
-        <Button
-          color="success"
-          variant="outlined"
-          size="small"
-          onClick={handleSave}
-          sx={{ flexGrow: "1" }}
-        >
-          <Typography>Save</Typography>
-        </Button>
       ) : (
         <>
           <Button
-            color="primary"
+            key="export"
+            color="secondary"
             variant="outlined"
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
@@ -362,6 +347,7 @@ function Recipe(props) {
             <Typography>Export</Typography>
           </Button>
           <Button
+            key="shoppingList"
             color="secondary"
             variant="outlined"
             size="small"
@@ -383,6 +369,7 @@ function Recipe(props) {
             </Typography>
           </Button>
           <Button
+            key="edit"
             color="success"
             variant="outlined"
             size="small"

@@ -24,7 +24,7 @@ function DepartmentFormControl(props) {
         onChange={onChange}
         xs={{ marginTop: 0, paddingTop: "5px" }}
       >
-        {(glossary && glossary.basicFoodTags
+        {(glossary && glossary.basicFoodTags && basicFoodTagOrder
           ? basicFoodTagOrder.map((basicFoodTagKey) => (
               <MenuItem value={basicFoodTagKey} key={basicFoodTagKey}>
                 {glossary.basicFoodTags[basicFoodTagKey]}

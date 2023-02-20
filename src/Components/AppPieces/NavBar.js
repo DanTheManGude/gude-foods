@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import styled from "@emotion/styled";
@@ -6,24 +5,12 @@ import styled from "@emotion/styled";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 
+import { pages, presentationNames } from "../../constants";
 import GoogleLoginButton from "./GoogleLoginButton.js";
-
-const presentationNames = {
-  cookbook: "Cookbook",
-  shoppingList: "Shopping List",
-  glossary: "Glossary",
-  settings: "Settings",
-};
-
-const pages = ["cookbook", "shoppingList", "glossary", "settings"];
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -31,21 +18,11 @@ const NavBar = (props) => {
   const { addAlert } = props;
   let navigate = useNavigate();
 
-  const [anchorElNav, setAnchorElNav] = useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   return (
     <>
       <AppBar position="fixed" sx={{ left: "2%", width: "96%" }}>
         <Container maxWidth="xl">
-          <Toolbar disableGutters>
+          <Toolbar disableGutters sx={{ justifyContent: "center" }}>
             <Typography
               variant="h5"
               noWrap
@@ -64,68 +41,13 @@ const NavBar = (props) => {
               <Link to={`/`}>Gude Foods</Link>
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: "block", md: "none" },
-                }}
-              >
-                {pages
-                  .map((page) => (
-                    <MenuItem
-                      key={page}
-                      onClick={() => {
-                        handleCloseNavMenu();
-                        navigate(`/${page}`);
-                      }}
-                    >
-                      <Typography textAlign="center">
-                        {presentationNames[page]}
-                      </Typography>
-                    </MenuItem>
-                  ))
-                  .concat(
-                    <GoogleLoginButton
-                      key="googleLogin"
-                      handleClick={handleCloseNavMenu}
-                      addAlert={addAlert}
-                    />
-                  )}
-              </Menu>
-            </Box>
-
             <Typography
               variant="h4"
               noWrap
               component="span"
               href=""
               sx={{
-                mr: 2,
                 display: { xs: "flex", md: "none" },
-                flexGrow: 1,
                 fontFamily: "DancingScript",
                 fontWeight: "bold",
                 letterSpacing: ".3rem",
@@ -140,7 +62,6 @@ const NavBar = (props) => {
                 <Button
                   key={page}
                   onClick={() => {
-                    handleCloseNavMenu();
                     navigate(`/${page}`);
                   }}
                   sx={{ my: 2, color: "white", display: "block" }}
@@ -151,12 +72,16 @@ const NavBar = (props) => {
             </Box>
 
             <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-              <GoogleLoginButton
-                handleClick={handleCloseNavMenu}
-                addAlert={addAlert}
-              />
+              <GoogleLoginButton addAlert={addAlert} />
             </Box>
-            <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+            <Box
+              sx={{
+                display: { md: "none" },
+                right: "0",
+                bottom: "7px",
+              }}
+              position="absolute"
+            >
               <Link to={`/`}>
                 <img
                   width="32px"

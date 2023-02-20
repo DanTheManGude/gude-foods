@@ -33,3 +33,12 @@ export const emailConfig = {
   templateId: "template_214p9la",
   userId: "user_2K4sBJkaEW2m7T8CPrYhp",
 };
+
+export const presentationNames = {
+  glossary: "Glossary",
+  shoppingList: "Shopping List",
+  cookbook: "Cookbook",
+  settings: "Settings",
+};
+
+export const pages = ["glossary", "shoppingList", "cookbook", "settings"];
