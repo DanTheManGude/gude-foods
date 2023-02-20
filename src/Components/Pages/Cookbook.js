@@ -7,11 +7,13 @@ import Paper from "@mui/material/Paper";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
-import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import StarIcon from "@mui/icons-material/Star";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
@@ -276,8 +278,8 @@ function Cookbook(props) {
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
         disabled={true}
-        color="primary"
-        variant="outlined"
+        color="tertiary"
+        variant="contained"
         onClick={() => {
           // TODO - Insert fancy AI stuff here
         }}
@@ -288,7 +290,7 @@ function Cookbook(props) {
         onSuccess={(recipeData) => {
           handleImportedData({ recipe: recipeData });
         }}
-        buttonProps={{ color: "primary", variant: "outlined" }}
+        buttonProps={{ color: "secondary", variant: "outlined" }}
         buttonText="Import recipe"
         id="import-recipe"
         addAlert={addAlert}
@@ -353,6 +355,23 @@ function Cookbook(props) {
     </Stack>
   );
 
+  const renderCreateRecipeButton = () => (
+    <Fab
+      color="primary"
+      size="large"
+      sx={{
+        position: "fixed",
+        bottom: "107px",
+        right: "35px",
+      }}
+      onClick={() => {
+        navigate(`/recipe/create`);
+      }}
+    >
+      <AddIcon />
+    </Fab>
+  );
+
   return (
     <div>
       <Typography
@@ -371,6 +390,7 @@ function Cookbook(props) {
         {renderNewRecipeButtons()}
         {renderImportExportCookbookButtons()}
       </Stack>
+      {renderCreateRecipeButton()}
       <AdvancedFiltersDialogue
         open={advancedFiltersDialogueOpen}
         onClose={() => {
