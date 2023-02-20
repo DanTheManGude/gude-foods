@@ -275,13 +275,14 @@ function Cookbook(props) {
   const renderNewRecipeButtons = () => (
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
+        disabled={true}
         color="primary"
-        variant="contained"
+        variant="outlined"
         onClick={() => {
-          navigate(`/recipe/create`);
+          // TODO - Insert fancy AI stuff here
         }}
       >
-        <Typography color="primary.contrastText">Create new recipe</Typography>
+        <Typography>Generate Recipe with AI</Typography>
       </Button>
       <ImportFileButton
         onSuccess={(recipeData) => {
@@ -345,7 +346,7 @@ function Cookbook(props) {
           handleImportedData(cookbookData);
         }}
         buttonProps={{ color: "secondary", variant: "outlined" }}
-        buttonText="Import a cookbook"
+        buttonText="Import cookbook"
         id="import-cookbook"
         addAlert={addAlert}
       />
@@ -366,8 +367,8 @@ function Cookbook(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
-        {renderNewRecipeButtons()}
         {renderRecipeList()}
+        {renderNewRecipeButtons()}
         {renderImportExportCookbookButtons()}
       </Stack>
       <AdvancedFiltersDialogue
