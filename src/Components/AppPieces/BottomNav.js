@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import BottomNavigation from "@mui/material/BottomNavigation";
@@ -24,22 +23,16 @@ const navActionSxProp = { paddingX: "4px" };
 function BottomNav(props) {
   const { addAlert } = props;
 
-  const [currentPageIndex, setCurrentPageIndex] = useState(-1);
-
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setCurrentPageIndex(pages.findIndex((page) => pathname.includes(page)));
-  }, [pathname]);
 
   return (
     <BottomNavigation
       showLabels={true}
-      value={currentPageIndex}
+      value={pathname.slice(1)}
       onChange={(event, newValue) => {
-        if (newValue < pages.length) {
-          navigate(`/${pages[newValue]}`);
+        if (pages.includes(newValue)) {
+          navigate(`/${newValue}`);
         } else {
           signInGoogle(addAlert);
         }
@@ -57,6 +50,7 @@ function BottomNav(props) {
       {pages.map((page) => (
         <BottomNavigationAction
           key={page}
+          value={page}
           label={presentationNames[page]}
           icon={pageIcons[page]}
           sx={navActionSxProp}
@@ -64,6 +58,7 @@ function BottomNav(props) {
       ))}
       <BottomNavigationAction
         label="Login"
+        value={"googleLogin"}
         icon={
           <img
             width="24px"
