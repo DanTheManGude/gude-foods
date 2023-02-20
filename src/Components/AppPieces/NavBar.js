@@ -9,16 +9,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
+import { pages, presentationNames } from "../../constants";
 import GoogleLoginButton from "./GoogleLoginButton.js";
-
-const presentationNames = {
-  cookbook: "Cookbook",
-  shoppingList: "Shopping List",
-  glossary: "Glossary",
-  settings: "Settings",
-};
-
-const pages = ["cookbook", "shoppingList", "glossary", "settings"];
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 

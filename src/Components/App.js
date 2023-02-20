@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -74,11 +74,6 @@ function App() {
     });
   }, [user]);
 
-  const usePathname = () => {
-    const location = useLocation();
-    return location.pathname;
-  };
-
   const renderMessages = () => (
     <List
       sx={{
@@ -114,13 +109,13 @@ function App() {
   return (
     <div className="App">
       {renderMessages()}
-      <NavBar pathname={usePathname()} addAlert={addAlert} />
+      <NavBar addAlert={addAlert} />
       {isAuthorizedUser ? (
         <PagesContainer user={user} addAlert={addAlert} />
       ) : (
         <UnauthorizedUser user={user} addAlert={addAlert} />
       )}
-      <BottomNav />
+      <BottomNav addAlert={addAlert} />
     </div>
   );
 }
