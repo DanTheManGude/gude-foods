@@ -6,6 +6,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { generateRecipe, parseResponse } from "../../utils/ai";
 
@@ -63,6 +68,22 @@ function GenerateRecipeDialogue(props) {
     );
   };
 
+  const renderLoading = () => <CircularProgress color="secondary" />;
+
+  const renderControls = () => {
+    return null;
+  };
+
+  const renderPromptCard = () => (
+    <Box sx={{ width: "95%" }}>
+      <Card variant="outlined">
+        <CardContent>
+          <Typography>{prompt}</Typography>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+
   return (
     <Dialog
       sx={{ "& .MuiDialog-paper": { width: "80%" } }}
@@ -71,13 +92,21 @@ function GenerateRecipeDialogue(props) {
     >
       <DialogTitle color="primary">Generate Recipe with AI</DialogTitle>
       <DialogContent dividers>
-        <Typography>{prompt}</Typography>
+        <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
+          {isLoading ? renderLoading() : renderControls()}
+          {renderPromptCard()}
+        </Stack>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onClose} color="secondary">
+        <Button autoFocus onClick={onClose} color="warning">
           <Typography>Close</Typography>
         </Button>
-        <Button disabled={isLoading} onClick={handleGenerate} color="tertiary">
+        <Button
+          disabled={isLoading}
+          variant="outlined"
+          onClick={handleGenerate}
+          color="tertiary"
+        >
           <Typography>Generate</Typography>
         </Button>
       </DialogActions>
