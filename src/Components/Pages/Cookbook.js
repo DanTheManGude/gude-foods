@@ -29,6 +29,7 @@ import {
   transformRecipeForExport,
   transformCookbookFromImport,
 } from "../../utils/dataTransfer";
+import { generateRecipe } from "../../utils/ai";
 
 function Cookbook(props) {
   const {
@@ -277,11 +278,12 @@ function Cookbook(props) {
   const renderNewRecipeButtons = () => (
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
-        disabled={true}
         color="tertiary"
         variant="contained"
         onClick={() => {
-          // TODO - Insert fancy AI stuff here
+          generateRecipe({}, (textResponse) => {
+            console.log(textResponse);
+          });
         }}
       >
         <Typography>Generate Recipe with AI</Typography>
