@@ -19,3 +19,7 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
     })
     .catch(onFailure);
 };
+
+export const parseResponse = (textResponse) => {
+  return textResponse;
+};

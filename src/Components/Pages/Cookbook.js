@@ -18,6 +18,7 @@ import StarIcon from "@mui/icons-material/Star";
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
+import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
 
 import {
   addRecipeToShoppingList,
@@ -29,7 +30,6 @@ import {
   transformRecipeForExport,
   transformCookbookFromImport,
 } from "../../utils/dataTransfer";
-import { generateRecipe } from "../../utils/ai";
 
 function Cookbook(props) {
   const {
@@ -61,6 +61,8 @@ function Cookbook(props) {
 
   let navigate = useNavigate();
 
+  const [openGenerateRecipeDialogue, setOpenGenerateRecipeDialogue] =
+    useState(false);
   const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
   const {
@@ -283,21 +285,7 @@ function Cookbook(props) {
         color="tertiary"
         variant="contained"
         onClick={() => {
-          const prompt = "Create a recipe with chicken, rice, and broccoli.";
-          generateRecipe(
-            openAIKey,
-            prompt,
-            (textResponse) => {
-              console.log(textResponse);
-            },
-            (error) => {
-              addAlert({
-                message: error.toString(),
-                title: "Error with generating recipe",
-                alertProps: { severity: "error" },
-              });
-            }
-          );
+          setOpenGenerateRecipeDialogue(true);
         }}
       >
         <Typography>Generate Recipe with AI</Typography>
@@ -417,6 +405,14 @@ function Cookbook(props) {
         glossary={glossary}
         basicFoodTagOrder={basicFoodTagOrder}
         basicFoodTagAssociation={basicFoodTagAssociation}
+      />
+      <GenerateRecipeDialogue
+        openAIKey={openAIKey}
+        open={openGenerateRecipeDialogue}
+        onClose={() => {
+          setOpenGenerateRecipeDialogue(false);
+        }}
+        addAlert={addAlert}
       />
     </div>
   );
