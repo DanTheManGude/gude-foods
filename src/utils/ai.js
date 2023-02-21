@@ -6,15 +6,13 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
       Authorization: `Bearer ${openAIKey}`,
     },
     body: JSON.stringify({
+      model: "text-davinci-003",
       prompt: prompt,
-      temperature: 0.1,
-      max_tokens: 7,
+      temperature: 0,
+      max_tokens: 300,
     }),
   };
-  fetch(
-    "https://api.openai.com/v1/engines/code-davinci-001/completions",
-    requestOptions
-  )
+  fetch("https://api.openai.com/v1/completions", requestOptions)
     .then((resp) => resp.json())
     .then((data) => {
       onSuccess(data.choices[0].text);

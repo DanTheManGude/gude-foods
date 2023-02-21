@@ -283,7 +283,7 @@ function Cookbook(props) {
         color="tertiary"
         variant="contained"
         onClick={() => {
-          const prompt = "Say this is a test";
+          const prompt = "Create a recipe with chicken, rice, and broccoli.";
           generateRecipe(
             openAIKey,
             prompt,
