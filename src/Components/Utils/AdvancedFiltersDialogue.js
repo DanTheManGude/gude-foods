@@ -1,5 +1,4 @@
 import Stack from "@mui/material/Stack";
-
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -10,14 +9,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
-import RecipeSearchInput from "../Utils/RecipeSearchInput";
-import FavoriteSwitch from "../Utils/FavoriteSwitch";
-
-import {
-  constructBasicFoodOptions,
-  getCalculateFoodSectionForOptions,
-} from "../../utils/foods";
-import { unknownSectionName } from "../../constants";
+import RecipeSearchInput from "./RecipeSearchInput";
+import FavoriteSwitch from "./FavoriteSwitch";
+import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 
 function AdvancedFiltersDialogue(props) {
   const {
@@ -47,12 +41,6 @@ function AdvancedFiltersDialogue(props) {
       ...partialFilteringOptions,
     }));
   };
-
-  const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
-    glossary,
-    basicFoodTagAssociation,
-    unknownSectionName
-  );
 
   return (
     <Dialog
@@ -89,7 +77,7 @@ function AdvancedFiltersDialogue(props) {
               />
             </Box>
           </Stack>
-          <Stack
+          {/* <Stack
             key="ingredientsIncludes"
             direction="row"
             justifyContent="space-between"
@@ -146,7 +134,16 @@ function AdvancedFiltersDialogue(props) {
                 }}
               />
             </Box>
-          </Stack>
+          </Stack> */}
+          <BasicFoodMultiSelect
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            basicFoodTagOrder={basicFoodTagOrder}
+            ingredientsList={ingredientsList}
+            updateIngredientsList={(newIngredientsList) => {
+              updateFilteringOptions({ ingredientsList: newIngredientsList });
+            }}
+          />
           <Stack
             key="tagsIncludes"
             direction="row"
