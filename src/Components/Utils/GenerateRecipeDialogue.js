@@ -109,7 +109,9 @@ function GenerateRecipeDialogue(props) {
     <Card variant="outlined" sx={{ width: "100%" }}>
       <Paper elevation={2}>
         <CardContent>
-          <Typography>{responseText}</Typography>
+          <Typography style={{ whiteSpace: "pre-line" }}>
+            {responseText}
+          </Typography>
         </CardContent>
       </Paper>
     </Card>
