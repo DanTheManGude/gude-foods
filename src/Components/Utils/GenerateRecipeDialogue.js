@@ -11,6 +11,8 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
 
 import { generateRecipe, parseResponse } from "../../utils/ai";
 
@@ -43,7 +45,7 @@ function GenerateRecipeDialogue(props) {
 
     newPrompt = `${newPrompt}.`;
     setPrompt(newPrompt);
-  }, [recipeList, freeForm]);
+  }, [recipeList, tagsList, freeForm]);
 
   const handleGenerate = () => {
     startLoading();
@@ -71,11 +73,133 @@ function GenerateRecipeDialogue(props) {
   const renderLoading = () => <CircularProgress color="secondary" />;
 
   const renderControls = () => {
-    return null;
+    return (
+      <>
+        {/* <Stack
+          key="ingredientsIncludes"
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
+          sx={{ width: "100%" }}
+        >
+          <Box sx={{ width: "20%" }}>
+            <Typography>Includes foods:</Typography>
+          </Box>
+          <Box sx={{ width: "70%" }}>
+            <Autocomplete
+              multiple={true}
+              limitTags={3}
+              id="ingredient-input-multi"
+              options={constructBasicFoodOptions(
+                glossary,
+                basicFoodTagOrder || [],
+                unknownSectionName,
+                calculateFoodSectionForOptions
+              )}
+              getOptionLabel={(option) => option.title}
+              groupBy={(option) =>
+                option.foodId
+                  ? calculateFoodSectionForOptions(option.foodId)
+                  : null
+              }
+              isOptionEqualToValue={(optionA, optionB) =>
+                optionA.foodId === optionB.foodId
+              }
+              getOptionDisabled={(option) =>
+                ingredientsList && ingredientsList.includes(option.foodId)
+              }
+              value={ingredientsList.map((foodId) => ({
+                foodId,
+                title: glossary.basicFoods[foodId],
+              }))}
+              onChange={(event, selection) => {
+                const _ingredientsList = selection.map(
+                  (option) => option.foodId
+                );
+                updateFilteringOptions({ ingredientsList: _ingredientsList });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Ingredients"
+                  placeholder="Enter item"
+                />
+              )}
+              ChipProps={{
+                color: "secondary",
+                variant: "outlined",
+              }}
+            />
+          </Box>
+        </Stack>
+        <Stack
+          key="tagsIncludes"
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
+          sx={{ width: "100%" }}
+        >
+          <Box sx={{ width: "20%" }}>
+            <Typography>Has tags:</Typography>
+          </Box>
+          <Box sx={{ width: "70%" }}>
+            <Autocomplete
+              multiple={true}
+              limitTags={3}
+              id="multiple-limit-tags"
+              options={
+                glossary && glossary.recipeTags
+                  ? Object.keys(glossary.recipeTags).map((tagId) => ({
+                      tagId,
+                      title: glossary.recipeTags[tagId],
+                    }))
+                  : []
+              }
+              getOptionLabel={(option) => option.title}
+              getOptionDisabled={(option) => tagsList.includes(option.tagId)}
+              isOptionEqualToValue={(optionA, optionB) =>
+                optionA.tagId === optionB.tagId
+              }
+              value={tagsList.map((tagId) => ({
+                tagId,
+                title: glossary.recipeTags[tagId],
+              }))}
+              onChange={(event, selection) => {
+                const _tagsList = selection.map((option) => option.tagId);
+                updateFilteringOptions({ tagsList: _tagsList });
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Tags" placeholder="Enter tags" />
+              )}
+              ChipProps={{
+                color: "tertiary",
+                variant: "outlined",
+              }}
+            />
+          </Box>
+        </Stack> */}
+        <Paper elevation={2} sx={{ width: "100%" }}>
+          <Box sx={{ padding: 2 }}>
+            <TextField
+              label="Additional details"
+              fullWidth={true}
+              multiline={true}
+              value={freeForm}
+              onChange={(event) => {
+                setFreeForm(event.target.value);
+              }}
+              variant="standard"
+            />
+          </Box>
+        </Paper>
+      </>
+    );
   };
 
   const renderPromptCard = () => (
-    <Box sx={{ width: "95%" }}>
+    <Box sx={{ width: "100%" }}>
       <Card variant="outlined">
         <CardContent>
           <Typography>{prompt}</Typography>
