@@ -52,6 +52,7 @@ function Cookbook(props) {
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
+    openAIKey,
   } = props;
   const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
   const cookbook = _cookbook || {};
@@ -278,12 +279,25 @@ function Cookbook(props) {
   const renderNewRecipeButtons = () => (
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
+        disabled={!openAIKey}
         color="tertiary"
         variant="contained"
         onClick={() => {
-          generateRecipe({}, (textResponse) => {
-            console.log(textResponse);
-          });
+          const prompt = "Say this is a test";
+          generateRecipe(
+            openAIKey,
+            prompt,
+            (textResponse) => {
+              console.log(textResponse);
+            },
+            (error) => {
+              addAlert({
+                message: error.toString(),
+                title: "Error with generating recipe",
+                alertProps: { severity: "error" },
+              });
+            }
+          );
         }}
       >
         <Typography>Generate Recipe with AI</Typography>

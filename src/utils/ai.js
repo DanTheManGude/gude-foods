@@ -1,7 +1,4 @@
-export const generateRecipe = (options, onSuccess, onFailure) => {
-  const openAIKey = "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";
-  const prompt = "Say this is a test";
-
+export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
   const requestOptions = {
     method: "POST",
     headers: {
@@ -22,7 +19,5 @@ export const generateRecipe = (options, onSuccess, onFailure) => {
     .then((data) => {
       onSuccess(data.choices[0].text);
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(onFailure);
 };
