@@ -282,8 +282,8 @@ function Cookbook(props) {
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
         disabled={!openAIKey}
-        color="tertiary"
-        variant="contained"
+        color="primary"
+        variant="outlined"
         onClick={() => {
           setOpenGenerateRecipeDialogue(true);
         }}

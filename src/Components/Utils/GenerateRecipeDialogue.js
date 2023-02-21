@@ -57,7 +57,7 @@ function GenerateRecipeDialogue(props) {
 
     newPrompt = `${newPrompt}.`;
     setPrompt(newPrompt);
-  }, [ingredientsList, tagsList, freeForm]);
+  }, [ingredientsList, tagsList, freeForm, glossary]);
 
   const handleGenerate = () => {
     startLoading();
@@ -184,14 +184,14 @@ function GenerateRecipeDialogue(props) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onClose} color="warning">
+        <Button autoFocus onClick={onClose} color="secondary">
           <Typography>Close</Typography>
         </Button>
         <Button
           disabled={isLoading}
           variant="outlined"
           onClick={handleGenerate}
-          color="tertiary"
+          color="primary"
         >
           <Typography>Generate</Typography>
         </Button>
