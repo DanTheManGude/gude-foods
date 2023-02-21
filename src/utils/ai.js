@@ -21,5 +21,6 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
 };
 
 export const parseResponse = (textResponse) => {
-  return textResponse;
+  throw Error("Error in parsing text");
+  //return textResponse;
 };

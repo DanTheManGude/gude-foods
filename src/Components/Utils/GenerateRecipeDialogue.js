@@ -37,9 +37,20 @@ function GenerateRecipeDialogue(props) {
   const [tagsList, setTagsList] = useState([]);
   const [freeForm, setFreeForm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [responseText, setResponseText] = useState("");
 
   const startLoading = () => setIsLoading(true);
   const stopLoading = () => setIsLoading(false);
+
+  const handleClose = () => {
+    setIngredientsList([]);
+    setTagsList([]);
+    setFreeForm("");
+    stopLoading();
+    setResponseText("");
+
+    onClose();
+  };
 
   useEffect(() => {
     let newPrompt = promptPrefix;
@@ -68,24 +79,41 @@ function GenerateRecipeDialogue(props) {
     generateRecipe(
       openAIKey,
       prompt,
-      (textResponse) => {
-        const generatedRecipe = parseResponse(textResponse);
-        console.log(generatedRecipe);
+      (_responseText) => {
+        let generatedRecipe;
+        try {
+          generatedRecipe = parseResponse(_responseText);
+          handleClose();
+          console.log(generatedRecipe);
+          // Navigate to Recipe with generatedRecipe
+        } catch (error) {
+          setResponseText(_responseText);
+        }
+
         stopLoading();
       },
       (error) => {
-        onClose();
+        handleClose();
         addAlert({
           message: error.toString(),
           title: "Error when generating recipe",
           alertProps: { severity: "error" },
         });
-        stopLoading();
       }
     );
   };
 
   const renderLoading = () => <CircularProgress color="secondary" />;
+
+  const renderResponseTextCard = () => (
+    <Card variant="outlined" sx={{ width: "100%" }}>
+      <Paper elevation={2}>
+        <CardContent>
+          <Typography>{responseText}</Typography>
+        </CardContent>
+      </Paper>
+    </Card>
+  );
 
   const renderControls = () => {
     return (
@@ -120,6 +148,16 @@ function GenerateRecipeDialogue(props) {
     );
   };
 
+  const renderMainContent = () => {
+    if (responseText) {
+      return null;
+    }
+    if (isLoading) {
+      return renderLoading();
+    }
+    return renderControls();
+  };
+
   const renderPromptCard = () => (
     <Box sx={{ width: "100%" }}>
       <Card variant="outlined">
@@ -139,16 +177,17 @@ function GenerateRecipeDialogue(props) {
       <DialogTitle color="primary">Generate Recipe with AI</DialogTitle>
       <DialogContent dividers>
         <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
-          {isLoading ? renderLoading() : renderControls()}
+          {renderMainContent()}
           {renderPromptCard()}
+          {responseText && renderResponseTextCard()}
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onClose} color="secondary">
+        <Button autoFocus onClick={handleClose} color="secondary">
           <Typography>Close</Typography>
         </Button>
         <Button
-          disabled={isLoading}
+          disabled={isLoading || !!responseText}
           variant="outlined"
           onClick={handleGenerate}
           color="primary"
