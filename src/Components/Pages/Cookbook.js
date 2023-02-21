@@ -413,6 +413,9 @@ function Cookbook(props) {
           setOpenGenerateRecipeDialogue(false);
         }}
         addAlert={addAlert}
+        glossary={glossary}
+        basicFoodTagAssociation={basicFoodTagAssociation}
+        basicFoodTagOrder={basicFoodTagOrder}
       />
     </div>
   );

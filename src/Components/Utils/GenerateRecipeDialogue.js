@@ -14,15 +14,25 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 
+import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
+
 import { generateRecipe, parseResponse } from "../../utils/ai";
 
 const promptPrefix = "Generate a recipe";
 
 function GenerateRecipeDialogue(props) {
-  const { open, onClose, openAIKey, addAlert } = props;
+  const {
+    open,
+    onClose,
+    openAIKey,
+    addAlert,
+    glossary,
+    basicFoodTagOrder,
+    basicFoodTagAssociation,
+  } = props;
 
   const [prompt, setPrompt] = useState(promptPrefix);
-  const [recipeList, setRecipeList] = useState([]);
+  const [ingredientsList, setIngredientsList] = useState([]);
   const [tagsList, setTagsList] = useState([]);
   const [freeForm, setFreeForm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +43,10 @@ function GenerateRecipeDialogue(props) {
   useEffect(() => {
     let newPrompt = promptPrefix;
 
-    if (recipeList.length) {
-      newPrompt = `${newPrompt} with foods ${recipeList.join(", ")}`;
+    if (ingredientsList.length) {
+      newPrompt = `${newPrompt} with foods ${ingredientsList
+        .map((foodId) => glossary.basicFoods[foodId])
+        .join(", ")}`;
     }
     if (tagsList.length) {
       newPrompt = `${newPrompt} with types ${tagsList.join(", ")}`;
@@ -45,7 +57,7 @@ function GenerateRecipeDialogue(props) {
 
     newPrompt = `${newPrompt}.`;
     setPrompt(newPrompt);
-  }, [recipeList, tagsList, freeForm]);
+  }, [ingredientsList, tagsList, freeForm]);
 
   const handleGenerate = () => {
     startLoading();
@@ -75,64 +87,14 @@ function GenerateRecipeDialogue(props) {
   const renderControls = () => {
     return (
       <>
-        {/* <Stack
-          key="ingredientsIncludes"
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          spacing={1}
-          sx={{ width: "100%" }}
-        >
-          <Box sx={{ width: "20%" }}>
-            <Typography>Includes foods:</Typography>
-          </Box>
-          <Box sx={{ width: "70%" }}>
-            <Autocomplete
-              multiple={true}
-              limitTags={3}
-              id="ingredient-input-multi"
-              options={constructBasicFoodOptions(
-                glossary,
-                basicFoodTagOrder || [],
-                unknownSectionName,
-                calculateFoodSectionForOptions
-              )}
-              getOptionLabel={(option) => option.title}
-              groupBy={(option) =>
-                option.foodId
-                  ? calculateFoodSectionForOptions(option.foodId)
-                  : null
-              }
-              isOptionEqualToValue={(optionA, optionB) =>
-                optionA.foodId === optionB.foodId
-              }
-              getOptionDisabled={(option) =>
-                ingredientsList && ingredientsList.includes(option.foodId)
-              }
-              value={ingredientsList.map((foodId) => ({
-                foodId,
-                title: glossary.basicFoods[foodId],
-              }))}
-              onChange={(event, selection) => {
-                const _ingredientsList = selection.map(
-                  (option) => option.foodId
-                );
-                updateFilteringOptions({ ingredientsList: _ingredientsList });
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Ingredients"
-                  placeholder="Enter item"
-                />
-              )}
-              ChipProps={{
-                color: "secondary",
-                variant: "outlined",
-              }}
-            />
-          </Box>
-        </Stack>
+        <BasicFoodMultiSelect
+          glossary={glossary}
+          basicFoodTagAssociation={basicFoodTagAssociation}
+          basicFoodTagOrder={basicFoodTagOrder}
+          ingredientsList={ingredientsList}
+          updateIngredientsList={setIngredientsList}
+        />
+        {/* 
         <Stack
           key="tagsIncludes"
           direction="row"
