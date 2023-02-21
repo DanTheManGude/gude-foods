@@ -62,7 +62,7 @@ function GenerateRecipeDialogue(props) {
         onClose();
         addAlert({
           message: error.toString(),
-          title: "Error with generating recipe",
+          title: "Error when generating recipe",
           alertProps: { severity: "error" },
         });
         stopLoading();
