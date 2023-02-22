@@ -17,6 +17,7 @@ function PagesContainer(props) {
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
   const [filteringOptions, setFilteringOptions] = useState();
+  const [openAIKey, setOpenAIKey] = useState();
 
   useEffect(() => {
     if (!user) {
@@ -39,6 +40,10 @@ function PagesContainer(props) {
         }));
       });
     });
+
+    onValue(ref(db, "openAIKey"), (snapshot) => {
+      setOpenAIKey(snapshot.val());
+    });
   }, [user]);
 
   return (
@@ -58,6 +63,7 @@ function PagesContainer(props) {
             addAlert={addAlert}
             filteringOptions={filteringOptions}
             setFilteringOptions={setFilteringOptions}
+            openAIKey={openAIKey}
           />
         }
       />

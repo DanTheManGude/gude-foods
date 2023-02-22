@@ -18,6 +18,7 @@ import StarIcon from "@mui/icons-material/Star";
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
+import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
 
 import {
   addRecipeToShoppingList,
@@ -51,6 +52,7 @@ function Cookbook(props) {
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
+    openAIKey,
   } = props;
   const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
   const cookbook = _cookbook || {};
@@ -59,6 +61,8 @@ function Cookbook(props) {
 
   let navigate = useNavigate();
 
+  const [openGenerateRecipeDialogue, setOpenGenerateRecipeDialogue] =
+    useState(false);
   const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
   const {
@@ -277,11 +281,11 @@ function Cookbook(props) {
   const renderNewRecipeButtons = () => (
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
-        disabled={true}
-        color="tertiary"
-        variant="contained"
+        disabled={!openAIKey}
+        color="primary"
+        variant="outlined"
         onClick={() => {
-          // TODO - Insert fancy AI stuff here
+          setOpenGenerateRecipeDialogue(true);
         }}
       >
         <Typography>Generate Recipe with AI</Typography>
@@ -401,6 +405,17 @@ function Cookbook(props) {
         glossary={glossary}
         basicFoodTagOrder={basicFoodTagOrder}
         basicFoodTagAssociation={basicFoodTagAssociation}
+      />
+      <GenerateRecipeDialogue
+        openAIKey={openAIKey}
+        open={openGenerateRecipeDialogue}
+        onClose={() => {
+          setOpenGenerateRecipeDialogue(false);
+        }}
+        addAlert={addAlert}
+        glossary={glossary}
+        basicFoodTagAssociation={basicFoodTagAssociation}
+        basicFoodTagOrder={basicFoodTagOrder}
       />
     </div>
   );

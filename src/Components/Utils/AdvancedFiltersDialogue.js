@@ -1,23 +1,16 @@
 import Stack from "@mui/material/Stack";
-
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
-import RecipeSearchInput from "../Utils/RecipeSearchInput";
-import FavoriteSwitch from "../Utils/FavoriteSwitch";
-
-import {
-  constructBasicFoodOptions,
-  getCalculateFoodSectionForOptions,
-} from "../../utils/foods";
-import { unknownSectionName } from "../../constants";
+import RecipeSearchInput from "./RecipeSearchInput";
+import FavoriteSwitch from "./FavoriteSwitch";
+import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
+import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
 
 function AdvancedFiltersDialogue(props) {
   const {
@@ -47,12 +40,6 @@ function AdvancedFiltersDialogue(props) {
       ...partialFilteringOptions,
     }));
   };
-
-  const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
-    glossary,
-    basicFoodTagAssociation,
-    unknownSectionName
-  );
 
   return (
     <Dialog
@@ -89,115 +76,22 @@ function AdvancedFiltersDialogue(props) {
               />
             </Box>
           </Stack>
-          <Stack
-            key="ingredientsIncludes"
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={1}
-            sx={{ width: "100%" }}
-          >
-            <Box sx={{ width: "20%" }}>
-              <Typography>Includes foods:</Typography>
-            </Box>
-            <Box sx={{ width: "70%" }}>
-              <Autocomplete
-                multiple={true}
-                limitTags={3}
-                id="ingredient-input-multi"
-                options={constructBasicFoodOptions(
-                  glossary,
-                  basicFoodTagOrder || [],
-                  unknownSectionName,
-                  calculateFoodSectionForOptions
-                )}
-                getOptionLabel={(option) => option.title}
-                groupBy={(option) =>
-                  option.foodId
-                    ? calculateFoodSectionForOptions(option.foodId)
-                    : null
-                }
-                isOptionEqualToValue={(optionA, optionB) =>
-                  optionA.foodId === optionB.foodId
-                }
-                getOptionDisabled={(option) =>
-                  ingredientsList && ingredientsList.includes(option.foodId)
-                }
-                value={ingredientsList.map((foodId) => ({
-                  foodId,
-                  title: glossary.basicFoods[foodId],
-                }))}
-                onChange={(event, selection) => {
-                  const _ingredientsList = selection.map(
-                    (option) => option.foodId
-                  );
-                  updateFilteringOptions({ ingredientsList: _ingredientsList });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Ingredients"
-                    placeholder="Enter item"
-                  />
-                )}
-                ChipProps={{
-                  color: "secondary",
-                  variant: "outlined",
-                }}
-              />
-            </Box>
-          </Stack>
-          <Stack
-            key="tagsIncludes"
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={1}
-            sx={{ width: "100%" }}
-          >
-            <Box sx={{ width: "20%" }}>
-              <Typography>Has tags:</Typography>
-            </Box>
-            <Box sx={{ width: "70%" }}>
-              <Autocomplete
-                multiple={true}
-                limitTags={3}
-                id="multiple-limit-tags"
-                options={
-                  glossary && glossary.recipeTags
-                    ? Object.keys(glossary.recipeTags).map((tagId) => ({
-                        tagId,
-                        title: glossary.recipeTags[tagId],
-                      }))
-                    : []
-                }
-                getOptionLabel={(option) => option.title}
-                getOptionDisabled={(option) => tagsList.includes(option.tagId)}
-                isOptionEqualToValue={(optionA, optionB) =>
-                  optionA.tagId === optionB.tagId
-                }
-                value={tagsList.map((tagId) => ({
-                  tagId,
-                  title: glossary.recipeTags[tagId],
-                }))}
-                onChange={(event, selection) => {
-                  const _tagsList = selection.map((option) => option.tagId);
-                  updateFilteringOptions({ tagsList: _tagsList });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Tags"
-                    placeholder="Enter tags"
-                  />
-                )}
-                ChipProps={{
-                  color: "tertiary",
-                  variant: "outlined",
-                }}
-              />
-            </Box>
-          </Stack>
+          <BasicFoodMultiSelect
+            glossary={glossary}
+            basicFoodTagAssociation={basicFoodTagAssociation}
+            basicFoodTagOrder={basicFoodTagOrder}
+            ingredientsList={ingredientsList}
+            updateIngredientsList={(newIngredientsList) => {
+              updateFilteringOptions({ ingredientsList: newIngredientsList });
+            }}
+          />
+          <RecipeTagsMultiSelect
+            glossary={glossary}
+            tagsList={tagsList}
+            updateTagsList={(newTagsList) => {
+              updateFilteringOptions({ tagsList: newTagsList });
+            }}
+          />
           <Stack
             key="isFavorite"
             direction="row"
