@@ -20,7 +20,10 @@ import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
 
 import { generateRecipe, parseResponse } from "../../utils/ai";
 
-const promptPrefix = "Generate a recipe";
+const PromptTypography = (props) => <Typography component="span" {...props} />;
+const promptPrefix = (
+  <PromptTypography key="prefix">Generate a recipe</PromptTypography>
+);
 
 function GenerateRecipeDialogue(props) {
   const {
@@ -33,7 +36,7 @@ function GenerateRecipeDialogue(props) {
     basicFoodTagAssociation,
   } = props;
 
-  const [prompt, setPrompt] = useState(promptPrefix);
+  const [prompt, setPrompt] = useState([promptPrefix]);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [tagsList, setTagsList] = useState([]);
   const [freeForm, setFreeForm] = useState("");
@@ -54,32 +57,61 @@ function GenerateRecipeDialogue(props) {
   };
 
   useEffect(() => {
-    let newPrompt = promptPrefix;
+    const newPrompt = [promptPrefix];
 
     if (ingredientsList.length) {
-      newPrompt = `${newPrompt} with foods ${ingredientsList
-        .map((foodId) => glossary.basicFoods[foodId])
-        .join(", ")}`;
+      newPrompt.push(
+        <PromptTypography key="ingredientStarter">
+          {` with foods `}
+        </PromptTypography>
+      );
+      newPrompt.push(
+        <PromptTypography key="ingredientList" sx={{ fontWeight: "bold" }}>
+          {ingredientsList
+            .map((foodId) => glossary.basicFoods[foodId])
+            .join(", ")}
+        </PromptTypography>
+      );
     }
     if (tagsList.length) {
-      newPrompt = `${newPrompt} with attributes ${tagsList
-        .map((tagId) => glossary.recipeTags[tagId])
-        .join(", ")}`;
+      newPrompt.push(
+        <PromptTypography key="tagsStarter"> with attributes </PromptTypography>
+      );
+      newPrompt.push(
+        <PromptTypography key="tagsList" sx={{ fontStyle: "italic" }}>
+          {tagsList.map((tagId) => glossary.recipeTags[tagId]).join(", ")}
+        </PromptTypography>
+      );
     }
     if (freeForm) {
-      newPrompt = `${newPrompt} that ${freeForm}`;
+      newPrompt.push(
+        <PromptTypography key="freeFormStarter"> that </PromptTypography>
+      );
+      newPrompt.push(
+        <PromptTypography
+          key="freeFormText"
+          sx={{ textDecoration: "underline" }}
+        >
+          {freeForm}
+        </PromptTypography>
+      );
     }
 
-    newPrompt = `${newPrompt}.`;
+    newPrompt.push(<PromptTypography key="closer">.</PromptTypography>);
     setPrompt(newPrompt);
   }, [ingredientsList, tagsList, freeForm, glossary]);
 
   const handleGenerate = () => {
     startLoading();
 
+    const promptText = prompt.reduce((acc, promptElement) => {
+      const promptElementText = promptElement.props.children;
+      return `${acc}${promptElementText}`;
+    }, "");
+
     generateRecipe(
       openAIKey,
-      prompt,
+      promptText,
       (_responseText) => {
         let generatedRecipe;
         try {
@@ -164,9 +196,7 @@ function GenerateRecipeDialogue(props) {
   const renderPromptCard = () => (
     <Box sx={{ width: "100%" }}>
       <Card variant="outlined">
-        <CardContent>
-          <Typography>{prompt}</Typography>
-        </CardContent>
+        <CardContent>{prompt}</CardContent>
       </Card>
     </Box>
   );
