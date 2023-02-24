@@ -13,6 +13,7 @@ import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
@@ -188,14 +189,27 @@ function GenerateRecipeDialogue(props) {
         <Button autoFocus onClick={handleClose} color="secondary">
           <Typography>Close</Typography>
         </Button>
-        <Button
-          disabled={isLoading || !!responseText}
-          variant="outlined"
-          onClick={handleGenerate}
-          color="primary"
-        >
-          <Typography>Generate</Typography>
-        </Button>
+        {responseText ? (
+          <Button
+            color="primary"
+            variant="outlined"
+            endIcon={<ContentCopyRoundedIcon />}
+            onClick={() => {
+              navigator.clipboard.writeText(responseText);
+            }}
+          >
+            <Typography>Copy</Typography>
+          </Button>
+        ) : (
+          <Button
+            disabled={isLoading || !!responseText}
+            variant="outlined"
+            onClick={handleGenerate}
+            color="primary"
+          >
+            <Typography>Generate</Typography>
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
