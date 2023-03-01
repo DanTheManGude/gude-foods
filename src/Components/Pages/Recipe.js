@@ -37,7 +37,11 @@ import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 import FavoriteSwitch from "../Utils/FavoriteSwitch";
-import { renderNameText, renderNameInput } from "../Utils/RecipeParts";
+import {
+  renderEditingButtons,
+  renderNameText,
+  renderNameInput,
+} from "../Utils/RecipeParts";
 
 function Recipe(props) {
   const {
@@ -213,6 +217,15 @@ function Recipe(props) {
     );
   }
 
+  const handleCancel = () => {
+    if (isCreating) {
+      navigate("/cookbook");
+    } else {
+      setRecipeEntry(JSON.parse(JSON.stringify(originalRecipe)));
+      setIsEditing(false);
+    }
+  };
+
   const handleSave = () => {
     const { name, instructions, ingredients } = recipeEntry;
 
@@ -300,33 +313,7 @@ function Recipe(props) {
               <Typography>Delete</Typography>
             </Button>
           )}
-          <Button
-            key="cancel"
-            color="warning"
-            variant="outlined"
-            size="small"
-            sx={{ flexGrow: "1" }}
-            onClick={() => {
-              if (isCreating) {
-                navigate("/cookbook");
-              } else {
-                setRecipeEntry(JSON.parse(JSON.stringify(originalRecipe)));
-                setIsEditing(false);
-              }
-            }}
-          >
-            <Typography>Cancel</Typography>
-          </Button>
-          <Button
-            key="save"
-            color="success"
-            variant="outlined"
-            size="small"
-            onClick={handleSave}
-            sx={{ flexGrow: "1" }}
-          >
-            <Typography>Save</Typography>
-          </Button>
+          {renderEditingButtons(handleCancel, handleSave)}
         </>
       ) : (
         <>

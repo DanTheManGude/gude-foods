@@ -1,11 +1,20 @@
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { renderNameInput } from "../Utils/RecipeParts";
+import Stack from "@mui/material/Stack";
+
+import { renderEditingButtons, renderNameInput } from "../Utils/RecipeParts";
+
+import { createKey, updateRequest } from "../../utils/requests";
 
 function AiRecipe(props) {
-  const { database, dataPaths, addAlert, givenRecipe } = props;
+  const {
+    database: { recipeOrder: _recipeOrder },
+    dataPaths: { cookbookPath, recipeOrderPath },
+    addAlert,
+    givenRecipe,
+  } = props;
+  const recipeOrder = _recipeOrder || [];
 
   const {
     name: givenName,
@@ -13,7 +22,25 @@ function AiRecipe(props) {
     instructions: givenInstructions,
   } = givenRecipe;
 
+  let navigate = useNavigate();
+
   const [name, setName] = useState(givenName);
+
+  const handleCancel = () => {
+    navigate("/cookbook");
+  };
+
+  const handleSave = () => {
+    const recipe = { name };
+    const recipeId = createKey(cookbookPath);
+
+    const updates = {
+      [`${cookbookPath}/${recipeId}`]: recipe,
+      [recipeOrderPath]: [recipeId, ...recipeOrder],
+    };
+
+    updateRequest(updates, addAlert);
+  };
 
   return (
     <Stack
@@ -21,7 +48,16 @@ function AiRecipe(props) {
       spacing={0}
       alignItems="center"
     >
-      {/* {renderTopButtonControls()} */}
+      <Stack
+        key="buttonControl"
+        direction="row"
+        justifyContent="space-around"
+        alignItems="center"
+        sx={{ width: "95%" }}
+        spacing={2}
+      >
+        {renderEditingButtons(handleCancel, handleSave)}
+      </Stack>
       <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
         {renderNameInput(name, setName, !name)}
         {/* {renderIngredients()}
