@@ -21,6 +21,44 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
 };
 
 export const parseResponse = (textResponse) => {
-  throw Error("Error in parsing text");
-  //return textResponse;
+  const recipe = { title: "", ingredients: [], instructions: [] };
+
+  const textResponseLines = textResponse.split("\n");
+  textResponseLines.forEach((line) => {
+    if (!line) {
+      return;
+    }
+
+    if (!recipe.title) {
+      recipe.title = line;
+      return;
+    }
+
+    const maybeIngredientMatch = line.match(/- (.+)/);
+    if (maybeIngredientMatch && maybeIngredientMatch.length === 2) {
+      const ingredients = recipe.ingredients;
+      recipe.ingredients = ingredients.concat(maybeIngredientMatch[1]);
+      return;
+    }
+
+    const maybeInstructionMatch = line.match(/\d+\. (.+)/);
+    if (maybeInstructionMatch && maybeInstructionMatch.length === 2) {
+      const instructions = recipe.instructions;
+      recipe.instructions = instructions.concat(maybeInstructionMatch[1]);
+      return;
+    }
+  });
+
+  const errorText = "Error in parsing text";
+  if (!recipe.title) {
+    throw Error(`${errorText}- no title`);
+  }
+  if (recipe.ingredients.length === 0) {
+    throw Error(`${errorText}- no ingredients`);
+  }
+  if (recipe.instructions.length === 0) {
+    throw Error(`${errorText}- no instructions`);
+  }
+
+  return recipe;
 };

@@ -113,9 +113,8 @@ function GenerateRecipeDialogue(props) {
       openAIKey,
       promptText,
       (_responseText) => {
-        let generatedRecipe;
         try {
-          generatedRecipe = parseResponse(_responseText);
+          const generatedRecipe = parseResponse(_responseText);
           handleClose();
           console.log(generatedRecipe);
           // Navigate to Recipe with generatedRecipe
