@@ -1,5 +1,8 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
+
+import { renderNameInput } from "../Utils/RecipeParts";
 
 function AiRecipe(props) {
   const { database, dataPaths, addAlert, givenRecipe } = props;
@@ -10,22 +13,7 @@ function AiRecipe(props) {
     instructions: givenInstructions,
   } = givenRecipe;
 
-  const renderName = () => {
-    return (
-      <Typography
-        key="title"
-        variant="h5"
-        sx={{
-          color: "primary.main",
-          textAlign: "left",
-          width: "100%",
-          marginBottom: 1,
-        }}
-      >
-        {givenName}
-      </Typography>
-    );
-  };
+  const [name, setName] = useState(givenName);
 
   return (
     <Stack
@@ -35,7 +23,7 @@ function AiRecipe(props) {
     >
       {/* {renderTopButtonControls()} */}
       <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
-        {renderName()}
+        {renderNameInput(name, setName, !name)}
         {/* {renderIngredients()}
         {renderInstructions()}
         {renderNotes()}

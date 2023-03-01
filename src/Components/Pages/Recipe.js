@@ -37,6 +37,7 @@ import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 import FavoriteSwitch from "../Utils/FavoriteSwitch";
+import { renderNameText, renderNameInput } from "../Utils/RecipeParts";
 
 function Recipe(props) {
   const {
@@ -390,35 +391,10 @@ function Recipe(props) {
 
     if (isEditing) {
       const error = !isCreating && !name.length;
-      return (
-        <TextField
-          label="Name"
-          variant="filled"
-          error={error}
-          helperText={error && "Enter something"}
-          multiline={true}
-          value={name}
-          onChange={(event) => {
-            updateName(event.target.value);
-          }}
-        />
-      );
+      return renderNameInput(name, updateName, error);
     }
 
-    return (
-      <Typography
-        key="title"
-        variant="h5"
-        sx={{
-          color: "primary.main",
-          textAlign: "left",
-          width: "100%",
-          marginBottom: 1,
-        }}
-      >
-        {name}
-      </Typography>
-    );
+    return renderNameText(name);
   };
 
   const renderIngredients = () => {
