@@ -52,6 +52,7 @@ function Cookbook(props) {
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
+    setAiGeneratedRecipe,
     openAIKey,
   } = props;
   const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
@@ -416,6 +417,7 @@ function Cookbook(props) {
         glossary={glossary}
         basicFoodTagAssociation={basicFoodTagAssociation}
         basicFoodTagOrder={basicFoodTagOrder}
+        setAiGeneratedRecipe={setAiGeneratedRecipe}
       />
     </div>
   );

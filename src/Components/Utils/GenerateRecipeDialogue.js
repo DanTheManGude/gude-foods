@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -34,7 +35,9 @@ function GenerateRecipeDialogue(props) {
     glossary,
     basicFoodTagOrder,
     basicFoodTagAssociation,
+    setAiGeneratedRecipe,
   } = props;
+  let navigate = useNavigate();
 
   const [prompt, setPrompt] = useState([promptPrefix]);
   const [ingredientsList, setIngredientsList] = useState([]);
@@ -116,8 +119,8 @@ function GenerateRecipeDialogue(props) {
         try {
           const generatedRecipe = parseResponse(_responseText);
           handleClose();
-          console.log(generatedRecipe);
-          // Navigate to Recipe with generatedRecipe
+          setAiGeneratedRecipe(generatedRecipe);
+          navigate("/aiRecipe");
         } catch (error) {
           setResponseText(_responseText);
         }

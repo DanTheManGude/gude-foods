@@ -392,7 +392,7 @@ function Recipe(props) {
       const error = !isCreating && !name.length;
       return (
         <TextField
-          label="Title"
+          label="Name"
           variant="filled"
           error={error}
           helperText={error && "Enter something"}

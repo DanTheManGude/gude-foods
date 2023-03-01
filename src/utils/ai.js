@@ -21,7 +21,7 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
 };
 
 export const parseResponse = (textResponse) => {
-  const recipe = { title: "", ingredients: [], instructions: [] };
+  const recipe = { name: "", ingredients: [], instructions: [] };
 
   const textResponseLines = textResponse.split("\n");
   textResponseLines.forEach((line) => {
@@ -29,8 +29,8 @@ export const parseResponse = (textResponse) => {
       return;
     }
 
-    if (!recipe.title) {
-      recipe.title = line;
+    if (!recipe.name) {
+      recipe.name = line;
       return;
     }
 
@@ -50,8 +50,8 @@ export const parseResponse = (textResponse) => {
   });
 
   const errorText = "Error in parsing text";
-  if (!recipe.title) {
-    throw Error(`${errorText}- no title`);
+  if (!recipe.name) {
+    throw Error(`${errorText}- no name`);
   }
   if (recipe.ingredients.length === 0) {
     throw Error(`${errorText}- no ingredients`);

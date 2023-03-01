@@ -10,6 +10,7 @@ import Recipe from "../Pages/Recipe";
 import ShoppingList from "../Pages/ShoppingList";
 import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
+import AiRecipe from "../Pages/AiRecipe";
 
 function PagesContainer(props) {
   const { user, addAlert } = props;
@@ -17,6 +18,7 @@ function PagesContainer(props) {
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
   const [filteringOptions, setFilteringOptions] = useState();
+  const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
   const [openAIKey, setOpenAIKey] = useState();
 
   useEffect(() => {
@@ -63,6 +65,7 @@ function PagesContainer(props) {
             addAlert={addAlert}
             filteringOptions={filteringOptions}
             setFilteringOptions={setFilteringOptions}
+            setAiGeneratedRecipe={setAiGeneratedRecipe}
             openAIKey={openAIKey}
           />
         }
@@ -105,6 +108,17 @@ function PagesContainer(props) {
             dataPaths={dataPaths}
             user={user}
             addAlert={addAlert}
+          />
+        }
+      />
+      <Route
+        path="aiRecipe"
+        element={
+          <AiRecipe
+            database={database}
+            dataPaths={dataPaths}
+            addAlert={addAlert}
+            givenRecipe={aiGeneratedRecipe}
           />
         }
       />
