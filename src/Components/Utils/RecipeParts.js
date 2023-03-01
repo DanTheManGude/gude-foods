@@ -1,6 +1,8 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
 
 export const renderEditingButtons = (onCancel, onSave) => (
   <>
@@ -27,21 +29,6 @@ export const renderEditingButtons = (onCancel, onSave) => (
   </>
 );
 
-export const renderNameText = (name) => (
-  <Typography
-    key="title"
-    variant="h5"
-    sx={{
-      color: "primary.main",
-      textAlign: "left",
-      width: "100%",
-      marginBottom: 1,
-    }}
-  >
-    {name}
-  </Typography>
-);
-
 export const renderNameInput = (name, updateName, error) => (
   <TextField
     label="Name"
@@ -53,5 +40,24 @@ export const renderNameInput = (name, updateName, error) => (
     onChange={(event) => {
       updateName(event.target.value);
     }}
+  />
+);
+
+export const renderNotesContainer = (contents) => (
+  <Paper elevation={2} sx={{ width: "100%" }}>
+    <Box sx={{ padding: 2 }}>{contents}</Box>
+  </Paper>
+);
+
+export const renderNotesInput = (notes, updateNotes) => (
+  <TextField
+    label="Enter Notes"
+    fullWidth={true}
+    multiline={true}
+    value={notes}
+    onChange={(event) => {
+      updateNotes(event.target.value);
+    }}
+    variant="standard"
   />
 );

@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 
-import { renderEditingButtons, renderNameInput } from "../Utils/RecipeParts";
+import {
+  renderEditingButtons,
+  renderNameInput,
+  renderNotesContainer,
+  renderNotesInput,
+} from "../Utils/RecipeParts";
 
 import { createKey, updateRequest } from "../../utils/requests";
 
@@ -25,13 +30,14 @@ function AiRecipe(props) {
   let navigate = useNavigate();
 
   const [name, setName] = useState(givenName);
+  const [notes, setNotes] = useState("");
 
   const handleCancel = () => {
     navigate("/cookbook");
   };
 
   const handleSave = () => {
-    const recipe = { name };
+    const recipe = { name, notes };
     const recipeId = createKey(cookbookPath);
 
     const updates = {
@@ -61,9 +67,9 @@ function AiRecipe(props) {
       <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
         {renderNameInput(name, setName, !name)}
         {/* {renderIngredients()}
-        {renderInstructions()}
-        {renderNotes()}
-        {renderTags()} */}
+        {renderInstructions()} */}
+        {renderNotesContainer(renderNotesInput(notes, setNotes))}
+        {/* {renderTags()}  */}
       </Stack>
     </Stack>
   );

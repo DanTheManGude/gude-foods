@@ -6,8 +6,6 @@ import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -39,8 +37,9 @@ import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 import FavoriteSwitch from "../Utils/FavoriteSwitch";
 import {
   renderEditingButtons,
-  renderNameText,
   renderNameInput,
+  renderNotesContainer,
+  renderNotesInput,
 } from "../Utils/RecipeParts";
 
 function Recipe(props) {
@@ -381,7 +380,20 @@ function Recipe(props) {
       return renderNameInput(name, updateName, error);
     }
 
-    return renderNameText(name);
+    return (
+      <Typography
+        key="title"
+        variant="h5"
+        sx={{
+          color: "primary.main",
+          textAlign: "left",
+          width: "100%",
+          marginBottom: 1,
+        }}
+      >
+        {name}
+      </Typography>
+    );
   };
 
   const renderIngredients = () => {
@@ -637,26 +649,13 @@ function Recipe(props) {
       return null;
     }
 
-    return (
-      <Paper elevation={2} sx={{ width: "100%" }}>
-        <Box sx={{ padding: 2 }}>
-          {isEditing ? (
-            <TextField
-              label="Enter Notes"
-              fullWidth={true}
-              multiline={true}
-              value={notes}
-              onChange={(event) => {
-                updateNotes(event.target.value);
-              }}
-              variant="standard"
-            />
-          ) : (
-            <Typography>{notes}</Typography>
-          )}
-        </Box>
-      </Paper>
+    const contents = isEditing ? (
+      renderNotesInput(notes, updateNotes)
+    ) : (
+      <Typography>{notes}</Typography>
     );
+
+    return renderNotesContainer(contents);
   };
 
   const renderFavorite = () => {
