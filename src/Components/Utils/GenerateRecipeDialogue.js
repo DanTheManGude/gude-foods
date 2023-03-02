@@ -176,6 +176,9 @@ function GenerateRecipeDialogue(props) {
                 setFreeForm(event.target.value);
               }}
               variant="standard"
+              inputProps={{
+                autoCapitalize: "none",
+              }}
             />
           </Box>
         </Paper>
@@ -183,12 +186,9 @@ function GenerateRecipeDialogue(props) {
     );
   };
 
-  const renderMainContent = () => {
-    if (responseText) {
+  const maybeRenderControls = () => {
+    if (responseText || isLoading) {
       return null;
-    }
-    if (isLoading) {
-      return renderLoading();
     }
     return renderControls();
   };
@@ -210,8 +210,9 @@ function GenerateRecipeDialogue(props) {
       <DialogTitle color="primary">Generate Recipe with AI</DialogTitle>
       <DialogContent dividers>
         <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
-          {renderMainContent()}
+          {maybeRenderControls()}
           {renderPromptCard()}
+          {isLoading && renderLoading()}
           {responseText && renderResponseTextCard()}
         </Stack>
       </DialogContent>
