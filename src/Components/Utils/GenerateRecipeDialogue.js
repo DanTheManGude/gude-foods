@@ -41,7 +41,7 @@ function GenerateRecipeDialogue(props) {
 
   const [prompt, setPrompt] = useState([promptPrefix]);
   const [ingredientsList, setIngredientsList] = useState([]);
-  const [tagsList, setTagsList] = useState([]);
+  const [tags, setTags] = useState([]);
   const [freeForm, setFreeForm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [responseText, setResponseText] = useState("");
@@ -51,7 +51,7 @@ function GenerateRecipeDialogue(props) {
 
   const handleClose = () => {
     setIngredientsList([]);
-    setTagsList([]);
+    setTags([]);
     setFreeForm("");
     stopLoading();
     setResponseText("");
@@ -76,13 +76,13 @@ function GenerateRecipeDialogue(props) {
         </PromptTypography>
       );
     }
-    if (tagsList.length) {
+    if (tags.length) {
       newPrompt.push(
         <PromptTypography key="tagsStarter"> with attributes </PromptTypography>
       );
       newPrompt.push(
-        <PromptTypography key="tagsList" sx={{ fontStyle: "italic" }}>
-          {tagsList.map((tagId) => glossary.recipeTags[tagId]).join(", ")}
+        <PromptTypography key="tags" sx={{ fontStyle: "italic" }}>
+          {tags.map((tagId) => glossary.recipeTags[tagId]).join(", ")}
         </PromptTypography>
       );
     }
@@ -102,7 +102,7 @@ function GenerateRecipeDialogue(props) {
 
     newPrompt.push(<PromptTypography key="closer">.</PromptTypography>);
     setPrompt(newPrompt);
-  }, [ingredientsList, tagsList, freeForm, glossary]);
+  }, [ingredientsList, tags, freeForm, glossary]);
 
   const handleGenerate = () => {
     startLoading();
@@ -118,8 +118,20 @@ function GenerateRecipeDialogue(props) {
       (_responseText) => {
         try {
           const generatedRecipe = parseResponse(_responseText);
+          const aiTag = Object.keys(glossary.recipeTags).find(
+            (recipeId) => glossary.recipeTags[recipeId] === "AI"
+          );
+
+          const tagsList = tags;
+          if (aiTag && !tagsList.includes(aiTag)) {
+            tagsList.unshift(aiTag);
+          }
+
           handleClose();
-          setAiGeneratedRecipe(generatedRecipe);
+          setAiGeneratedRecipe({
+            ...generatedRecipe,
+            tags: tagsList,
+          });
           navigate("/aiRecipe");
         } catch (error) {
           setResponseText(_responseText);
@@ -164,8 +176,8 @@ function GenerateRecipeDialogue(props) {
         />
         <RecipeTagsMultiSelect
           glossary={glossary}
-          tagsList={tagsList}
-          updateTagsList={setTagsList}
+          tagsList={tags}
+          updateTagsList={setTags}
         />
         <Paper elevation={2} sx={{ width: "100%" }}>
           <Box sx={{ padding: 2 }}>

@@ -28,6 +28,7 @@ function AiRecipe(props) {
     name: givenName,
     ingredients: givenIngredients,
     instructions: givenInstructions,
+    tags: givenTags,
   } = givenRecipe;
 
   let navigate = useNavigate();
@@ -35,7 +36,7 @@ function AiRecipe(props) {
   const [name, setName] = useState(givenName);
   const [instructions, setInstructions] = useState(givenInstructions);
   const [notes, setNotes] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(givenTags);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleCancel = () => {
