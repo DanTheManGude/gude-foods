@@ -187,11 +187,8 @@ function GenerateRecipeDialogue(props) {
   };
 
   const renderMainContent = () => {
-    if (responseText) {
+    if (responseText || isLoading) {
       return null;
-    }
-    if (isLoading) {
-      return renderLoading();
     }
     return renderControls();
   };
@@ -215,6 +212,7 @@ function GenerateRecipeDialogue(props) {
         <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
           {renderMainContent()}
           {renderPromptCard()}
+          {isLoading && renderLoading()}
           {responseText && renderResponseTextCard()}
         </Stack>
       </DialogContent>
