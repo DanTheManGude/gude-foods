@@ -45,6 +45,7 @@ function BottomNav(props) {
         paddingTop: "10px",
         height: "80px",
         alignItems: "flex-start",
+        zIndex: 9001,
       }}
     >
       {pages.map((page) => (
