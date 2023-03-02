@@ -13,7 +13,7 @@ import {
 } from "../Utils/RecipeParts";
 import InstructionList from "../Utils/InstructionList";
 
-import { createKey, updateRequest } from "../../utils/requests";
+import { createKey, saveRecipe } from "../../utils/requests";
 
 function AiRecipe(props) {
   const {
@@ -43,15 +43,15 @@ function AiRecipe(props) {
   };
 
   const handleSave = () => {
-    const recipe = { name, notes };
-    const recipeId = createKey(cookbookPath);
-
-    const updates = {
-      [`${cookbookPath}/${recipeId}`]: recipe,
-      [recipeOrderPath]: [recipeId, ...recipeOrder],
-    };
-
-    updateRequest(updates, addAlert);
+    saveRecipe(
+      { name, instructions, tags, isFavorite, notes },
+      undefined,
+      { cookbookPath, recipeOrderPath },
+      recipeOrder,
+      addAlert,
+      () => {},
+      navigate
+    );
   };
 
   const getDeleteTagHandler = (removedTagId) => () => {

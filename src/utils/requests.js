@@ -173,3 +173,53 @@ export const setAllData = (allUserData, dataPaths, addAlert) => {
     addAlert
   );
 };
+
+export const saveRecipe = (
+  recipe,
+  _recipeId,
+  { cookbookPath, recipeOrderPath },
+  recipeOrder,
+  addAlert,
+  successHandler,
+  navigate
+) => {
+  const { name, instructions, ingredients } = recipe;
+  const isCreating = !_recipeId;
+
+  if (
+    !(
+      !!name.length &&
+      !!instructions.length &&
+      !!Object.keys(ingredients).length
+    )
+  ) {
+    addAlert({
+      message: <span>Please fill out the required fields.</span>,
+      alertProps: { severity: "warning" },
+    });
+    return;
+  }
+
+  let recipeId = _recipeId;
+  if (isCreating) {
+    recipeId = createKey(cookbookPath);
+  }
+
+  const updates = {
+    [`${cookbookPath}/${recipeId}`]: recipe,
+  };
+
+  if (isCreating) {
+    updates[recipeOrderPath] = [recipeId, ...recipeOrder];
+  }
+
+  updateRequest(
+    updates,
+    (successAlert) => {
+      successHandler();
+      addAlert(successAlert);
+      navigate(`/recipe/${recipeId}`);
+    },
+    addAlert
+  );
+};

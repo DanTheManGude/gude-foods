@@ -16,6 +16,7 @@ import {
   updateRequest,
   addRecipeToShoppingList,
   shoppingListDeletesByRecipe,
+  saveRecipe,
 } from "../../utils/requests";
 import { waitForElm } from "../../utils/utility";
 import {
@@ -87,7 +88,6 @@ function Recipe(props) {
     if (pathParam === "create") {
       setIsEditing(true);
       setIsCreating(true);
-      setRecipeId(createKey(cookbookPath));
     } else if (cookbook.hasOwnProperty(pathParam)) {
       const _originalRecipe = {
         ...{
@@ -167,7 +167,7 @@ function Recipe(props) {
     });
   };
 
-  if (!recipeId) {
+  if (!recipeId && !isCreating) {
     return (
       <Typography
         variant="h6"
@@ -190,40 +190,20 @@ function Recipe(props) {
     }
   };
 
+  const saveSuccessHandler = () => {
+    setIsCreating(false);
+    setIsEditing(false);
+  };
+
   const handleSave = () => {
-    const { name, instructions, ingredients } = recipeEntry;
-
-    if (
-      !(
-        !!name.length &&
-        !!instructions.length &&
-        !!Object.keys(ingredients).length
-      )
-    ) {
-      addAlert({
-        message: <span>Please fill out the required fields.</span>,
-        alertProps: { severity: "warning" },
-      });
-      return;
-    }
-
-    const updates = {
-      [`${cookbookPath}/${recipeId}`]: recipeEntry,
-    };
-
-    if (isCreating) {
-      updates[recipeOrderPath] = [recipeId, ...recipeOrder];
-    }
-
-    updateRequest(
-      updates,
-      (successAlert) => {
-        addAlert(successAlert);
-        setIsCreating(false);
-        setIsEditing(false);
-        navigate(`/recipe/${recipeId}`);
-      },
-      addAlert
+    saveRecipe(
+      recipeEntry,
+      recipeId,
+      { cookbookPath, recipeOrderPath },
+      recipeOrder,
+      addAlert,
+      saveSuccessHandler,
+      navigate
     );
   };
 
