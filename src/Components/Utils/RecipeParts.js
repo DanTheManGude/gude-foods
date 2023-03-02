@@ -51,9 +51,9 @@ export const renderNameInput = (name, updateName, error) => (
   />
 );
 
-export const renderNotesContainer = (contents) => (
+export const renderNotesContainer = (renderedContents) => (
   <Paper elevation={2} sx={{ width: "100%" }}>
-    <Box sx={{ padding: 2 }}>{contents}</Box>
+    <Box sx={{ padding: 2 }}>{renderedContents}</Box>
   </Paper>
 );
 

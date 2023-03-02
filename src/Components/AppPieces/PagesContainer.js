@@ -39,6 +39,7 @@ const hackAiGeneratedRecipe = {
     "Bake for 25 minutes, or until the peppers are tender and the cheese is melted.",
     "Serve warm. Enjoy!",
   ],
+  tags: [],
 };
 
 function PagesContainer(props) {

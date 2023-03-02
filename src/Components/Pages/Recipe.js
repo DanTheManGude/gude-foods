@@ -12,7 +12,6 @@ import TextField from "@mui/material/TextField";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 import {
-  createKey,
   updateRequest,
   addRecipeToShoppingList,
   shoppingListDeletesByRecipe,

@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 import {
   renderEditingButtons,
@@ -13,7 +17,7 @@ import {
 } from "../Utils/RecipeParts";
 import InstructionList from "../Utils/InstructionList";
 
-import { createKey, saveRecipe } from "../../utils/requests";
+import { saveRecipe } from "../../utils/requests";
 
 function AiRecipe(props) {
   const {
@@ -63,6 +67,23 @@ function AiRecipe(props) {
     setTags((oldTags) => oldTags.concat(newTagId));
   };
 
+  const renderGivenInstructions = () => (
+    <Box sx={{ width: "100%" }}>
+      <Card variant="outlined">
+        <CardContent>
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            Given Ingredients
+          </Typography>
+          {givenIngredients.map((ingredientLine, index) => (
+            <Typography key={`ingredientLine-${index}`}>
+              {ingredientLine}
+            </Typography>
+          ))}
+        </CardContent>
+      </Card>
+    </Box>
+  );
+
   const glossaryRecipeTags = (glossary && glossary.recipeTags) || [];
 
   return (
@@ -83,7 +104,7 @@ function AiRecipe(props) {
       </Stack>
       <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
         {renderNameInput(name, setName, !name)}
-        {/* {renderIngredients()} */}
+        {renderGivenInstructions()}
         <InstructionList
           instructions={instructions}
           setInstructions={setInstructions}
