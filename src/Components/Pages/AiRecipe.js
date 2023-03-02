@@ -11,6 +11,7 @@ import {
   renderTagList,
   renderTagControls,
 } from "../Utils/RecipeParts";
+import InstructionList from "../Utils/InstructionList";
 
 import { createKey, updateRequest } from "../../utils/requests";
 
@@ -32,6 +33,7 @@ function AiRecipe(props) {
   let navigate = useNavigate();
 
   const [name, setName] = useState(givenName);
+  const [instructions, setInstructions] = useState(givenInstructions);
   const [notes, setNotes] = useState("");
   const [tags, setTags] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -80,8 +82,12 @@ function AiRecipe(props) {
       </Stack>
       <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
         {renderNameInput(name, setName, !name)}
-        {/* {renderIngredients()}
-        {renderInstructions()} */}
+        {/* {renderIngredients()} */}
+        <InstructionList
+          instructions={instructions}
+          setInstructions={setInstructions}
+          editable={true}
+        />
         {renderNotesContainer(renderNotesInput(notes, setNotes))}
         {renderTagList(
           true,
