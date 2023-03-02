@@ -11,9 +11,6 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
-import Autocomplete from "@mui/material/Autocomplete";
-import StarIcon from "@mui/icons-material/Star";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -34,18 +31,19 @@ import {
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
-import FavoriteSwitch from "../Utils/FavoriteSwitch";
 import {
   renderEditingButtons,
   renderNameInput,
   renderNotesContainer,
   renderNotesInput,
+  renderTagList,
+  renderTagControls,
 } from "../Utils/RecipeParts";
 
 function Recipe(props) {
   const {
     database: {
-      glossary,
+      glossary: _glossary,
       basicFoodTagAssociation,
       cookbook: _cookbook,
       recipeOrder: _recipeOrder,
@@ -65,6 +63,7 @@ function Recipe(props) {
   } = props;
   const recipeOrder = _recipeOrder || [];
   const menu = _menu || {};
+  const glossary = _glossary || {};
 
   let navigate = useNavigate();
   const { recipeId: pathParam } = useParams();
@@ -658,116 +657,23 @@ function Recipe(props) {
     return renderNotesContainer(contents);
   };
 
-  const renderFavorite = () => {
-    const { isFavorite = false } = recipeEntry;
-
-    if (isEditing) {
-      return (
-        <FavoriteSwitch
-          isChecked={isFavorite}
-          updateChecked={updateIsFavorite}
-        />
-      );
-    }
-
-    if (isFavorite) {
-      return (
-        <Chip
-          key={"favorite"}
-          label={
-            <StarIcon
-              sx={{
-                "&&": {
-                  color: "alt.main",
-                  verticalAlign: "bottom",
-                },
-              }}
-              fontSize="small"
-            />
-          }
-          size="small"
-          variant="outlined"
-          color="tertiary"
-        />
-      );
-    }
-
-    return null;
-  };
-
   const renderTags = () => {
-    const { tags = [] } = recipeEntry;
+    const { tags = [], isFavorite = false } = recipeEntry;
+
+    const glossaryRecipeTags = glossary.recipeTags || [];
     return (
       <>
-        <Stack
-          direction="row"
-          spacing={1}
-          key="tags"
-          sx={{ width: "95%" }}
-          alignItems={"center"}
-        >
-          {renderFavorite()}
-          {tags.map((tagId) => (
-            <Chip
-              key={tagId}
-              label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
-              size="small"
-              variant="outlined"
-              color="tertiary"
-              onDelete={isEditing ? getDeleteTag(tagId) : undefined}
-            />
-          ))}
-        </Stack>
-        {isEditing ? (
-          <Autocomplete
-            id={"addtagSelect"}
-            options={
-              glossary && glossary.recipeTags
-                ? Object.keys(glossary.recipeTags).map((tagId) => ({
-                    tagId,
-                    title: glossary.recipeTags[tagId],
-                  }))
-                : []
-            }
-            getOptionLabel={(option) => option.title}
-            getOptionDisabled={(option) => tags.includes(option.tagId)}
-            filterOptions={(options, params) => {
-              const { inputValue, getOptionLabel } = params;
-              const filtered = options.filter((option) =>
-                getOptionLabel(option)
-                  .toLocaleUpperCase()
-                  .includes(inputValue.toUpperCase())
-              );
-              const isExisting = options.some(
-                (option) => inputValue === option.title
-              );
-              if (inputValue !== "" && !isExisting) {
-                filtered.push({
-                  inputValue,
-                  title: `Create "${inputValue}"`,
-                });
-              }
-              return filtered;
-            }}
-            value={null}
-            onChange={(event, selectedOption) => {
-              const { tagId: _tagId, inputValue } = selectedOption;
-              let tagId = _tagId;
-              if (inputValue) {
-                tagId = createKey(`${glossaryPath}/recipeTags`);
-                updateRequest({
-                  [`${glossaryPath}/recipeTags/${tagId}`]: inputValue,
-                });
-              }
-              addTag(tagId);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="Enter tag" size="small" />
-            )}
-            blurOnSelect={true}
-            clearOnBlur={true}
-          />
-        ) : null}
+        {renderTagList(
+          isEditing,
+          { tags, isFavorite },
+          updateIsFavorite,
+          getDeleteTag,
+          glossaryRecipeTags
+        )}
+
+        {isEditing
+          ? renderTagControls(tags, addTag, glossaryRecipeTags, glossaryPath)
+          : null}
       </>
     );
   };

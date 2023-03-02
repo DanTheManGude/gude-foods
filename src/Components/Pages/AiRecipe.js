@@ -8,14 +8,16 @@ import {
   renderNameInput,
   renderNotesContainer,
   renderNotesInput,
+  renderTagList,
+  renderTagControls,
 } from "../Utils/RecipeParts";
 
 import { createKey, updateRequest } from "../../utils/requests";
 
 function AiRecipe(props) {
   const {
-    database: { recipeOrder: _recipeOrder },
-    dataPaths: { cookbookPath, recipeOrderPath },
+    database: { recipeOrder: _recipeOrder, glossary },
+    dataPaths: { cookbookPath, recipeOrderPath, glossaryPath },
     addAlert,
     givenRecipe,
   } = props;
@@ -31,6 +33,8 @@ function AiRecipe(props) {
 
   const [name, setName] = useState(givenName);
   const [notes, setNotes] = useState("");
+  const [tags, setTags] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleCancel = () => {
     navigate("/cookbook");
@@ -47,6 +51,16 @@ function AiRecipe(props) {
 
     updateRequest(updates, addAlert);
   };
+
+  const getDeleteTagHandler = (removedTagId) => () => {
+    setTags((oldTags) => oldTags.filter((tagId) => tagId !== removedTagId));
+  };
+
+  const addTag = (newTagId) => {
+    setTags((oldTags) => oldTags.concat(newTagId));
+  };
+
+  const glossaryRecipeTags = (glossary && glossary.recipeTags) || [];
 
   return (
     <Stack
@@ -69,7 +83,14 @@ function AiRecipe(props) {
         {/* {renderIngredients()}
         {renderInstructions()} */}
         {renderNotesContainer(renderNotesInput(notes, setNotes))}
-        {/* {renderTags()}  */}
+        {renderTagList(
+          true,
+          { tags, isFavorite },
+          setIsFavorite,
+          getDeleteTagHandler,
+          glossaryRecipeTags
+        )}
+        {renderTagControls(tags, addTag, glossaryRecipeTags, glossaryPath)}
       </Stack>
     </Stack>
   );
