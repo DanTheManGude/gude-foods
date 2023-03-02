@@ -186,7 +186,7 @@ function GenerateRecipeDialogue(props) {
     );
   };
 
-  const renderMainContent = () => {
+  const maybeRenderControls = () => {
     if (responseText || isLoading) {
       return null;
     }
@@ -210,7 +210,7 @@ function GenerateRecipeDialogue(props) {
       <DialogTitle color="primary">Generate Recipe with AI</DialogTitle>
       <DialogContent dividers>
         <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
-          {renderMainContent()}
+          {maybeRenderControls()}
           {renderPromptCard()}
           {isLoading && renderLoading()}
           {responseText && renderResponseTextCard()}
