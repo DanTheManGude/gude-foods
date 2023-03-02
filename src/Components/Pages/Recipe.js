@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -6,26 +6,16 @@ import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
-import Autocomplete from "@mui/material/Autocomplete";
-import StarIcon from "@mui/icons-material/Star";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import ClearIcon from "@mui/icons-material/Clear";
 
 import {
-  createKey,
   updateRequest,
   addRecipeToShoppingList,
   shoppingListDeletesByRecipe,
+  saveRecipe,
 } from "../../utils/requests";
 import { waitForElm } from "../../utils/utility";
 import {
@@ -36,12 +26,20 @@ import {
 import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
-import FavoriteSwitch from "../Utils/FavoriteSwitch";
+import {
+  renderEditingButtons,
+  renderNameInput,
+  renderNotesContainer,
+  renderNotesInput,
+  renderTagList,
+  renderTagControls,
+} from "../Utils/RecipeParts";
+import InstructionList from "../Utils/InstructionList";
 
 function Recipe(props) {
   const {
     database: {
-      glossary,
+      glossary: _glossary,
       basicFoodTagAssociation,
       cookbook: _cookbook,
       recipeOrder: _recipeOrder,
@@ -61,6 +59,7 @@ function Recipe(props) {
   } = props;
   const recipeOrder = _recipeOrder || [];
   const menu = _menu || {};
+  const glossary = _glossary || {};
 
   let navigate = useNavigate();
   const { recipeId: pathParam } = useParams();
@@ -80,8 +79,6 @@ function Recipe(props) {
   const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
     useState(false);
   const [createBasicFood, setCreateBasicFood] = useState({});
-
-  const [newStep, setNewStep] = useState("");
   const [newIngredientId, setNewIngredientId] = useState(null);
 
   useEffect(() => {
@@ -90,7 +87,6 @@ function Recipe(props) {
     if (pathParam === "create") {
       setIsEditing(true);
       setIsCreating(true);
-      setRecipeId(createKey(cookbookPath));
     } else if (cookbook.hasOwnProperty(pathParam)) {
       const _originalRecipe = {
         ...{
@@ -170,35 +166,7 @@ function Recipe(props) {
     });
   };
 
-  const moveStep = (oldIndex, newIndex) => {
-    updateInstructions((_instructions) => {
-      const step = _instructions[oldIndex];
-      _instructions.splice(oldIndex, 1);
-      _instructions.splice(newIndex, 0, step);
-      return _instructions;
-    });
-  };
-  const addStep = () => {
-    updateInstructions((_instructions) => {
-      return _instructions.concat(newStep);
-    });
-    setNewStep("");
-    document.getElementById("newStepInput").focus();
-  };
-  const updateStep = (index, step) => {
-    updateInstructions((_instructions) => {
-      _instructions.splice(index, 1, step);
-      return _instructions;
-    });
-  };
-  const getRemoveStep = (index) => () => {
-    updateInstructions((_instructions) => {
-      _instructions.splice(index, 1);
-      return _instructions;
-    });
-  };
-
-  if (!recipeId) {
+  if (!recipeId && !isCreating) {
     return (
       <Typography
         variant="h6"
@@ -212,40 +180,29 @@ function Recipe(props) {
     );
   }
 
-  const handleSave = () => {
-    const { name, instructions, ingredients } = recipeEntry;
-
-    if (
-      !(
-        !!name.length &&
-        !!instructions.length &&
-        !!Object.keys(ingredients).length
-      )
-    ) {
-      addAlert({
-        message: <span>Please fill out the required fields.</span>,
-        alertProps: { severity: "warning" },
-      });
-      return;
-    }
-
-    const updates = {
-      [`${cookbookPath}/${recipeId}`]: recipeEntry,
-    };
-
+  const handleCancel = () => {
     if (isCreating) {
-      updates[recipeOrderPath] = [recipeId, ...recipeOrder];
+      navigate("/cookbook");
+    } else {
+      setRecipeEntry(JSON.parse(JSON.stringify(originalRecipe)));
+      setIsEditing(false);
     }
+  };
 
-    updateRequest(
-      updates,
-      (successAlert) => {
-        addAlert(successAlert);
-        setIsCreating(false);
-        setIsEditing(false);
-        navigate(`/recipe/${recipeId}`);
-      },
-      addAlert
+  const saveSuccessHandler = () => {
+    setIsCreating(false);
+    setIsEditing(false);
+  };
+
+  const handleSave = () => {
+    saveRecipe(
+      recipeEntry,
+      recipeId,
+      { cookbookPath, recipeOrderPath },
+      recipeOrder,
+      addAlert,
+      saveSuccessHandler,
+      navigate
     );
   };
 
@@ -299,33 +256,7 @@ function Recipe(props) {
               <Typography>Delete</Typography>
             </Button>
           )}
-          <Button
-            key="cancel"
-            color="warning"
-            variant="outlined"
-            size="small"
-            sx={{ flexGrow: "1" }}
-            onClick={() => {
-              if (isCreating) {
-                navigate("/cookbook");
-              } else {
-                setRecipeEntry(JSON.parse(JSON.stringify(originalRecipe)));
-                setIsEditing(false);
-              }
-            }}
-          >
-            <Typography>Cancel</Typography>
-          </Button>
-          <Button
-            key="save"
-            color="success"
-            variant="outlined"
-            size="small"
-            onClick={handleSave}
-            sx={{ flexGrow: "1" }}
-          >
-            <Typography>Save</Typography>
-          </Button>
+          {renderEditingButtons(handleCancel, handleSave)}
         </>
       ) : (
         <>
@@ -390,19 +321,7 @@ function Recipe(props) {
 
     if (isEditing) {
       const error = !isCreating && !name.length;
-      return (
-        <TextField
-          label="Title"
-          variant="filled"
-          error={error}
-          helperText={error && "Enter something"}
-          multiline={true}
-          value={name}
-          onChange={(event) => {
-            updateName(event.target.value);
-          }}
-        />
-      );
+      return renderNameInput(name, updateName, error);
     }
 
     return (
@@ -539,134 +458,6 @@ function Recipe(props) {
     );
   };
 
-  const renderInstructions = () => {
-    const { instructions = [] } = recipeEntry;
-
-    return (
-      <Accordion key={"instructions"} sx={{ width: "100%" }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Instructions</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={isEditing ? 2 : 1}>
-            {instructions
-              .map((instructionText, index) => {
-                return (
-                  <Stack
-                    key={index}
-                    direction="row"
-                    alignItems="center"
-                    spacing={1}
-                  >
-                    {isEditing ? (
-                      <>
-                        <Select
-                          value={index}
-                          sx={{ minWidth: "64px", height: "40px" }}
-                          onChange={(event) => {
-                            moveStep(index, event.target.value);
-                          }}
-                          onClose={() => {
-                            setTimeout(() => {
-                              document.activeElement.blur();
-                            }, 100);
-                          }}
-                        >
-                          {instructions.map((t, i) => (
-                            <MenuItem key={i} value={i} disabled={i === index}>
-                              {i + 1}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        <TextField
-                          placeholder="Edit step"
-                          value={instructionText}
-                          onChange={(event) => {
-                            updateStep(index, event.target.value);
-                          }}
-                          size="small"
-                          fullWidth={true}
-                          variant="outlined"
-                        />
-                        <HighlightOffIcon
-                          color="secondary"
-                          onClick={getRemoveStep(index)}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <Typography sx={{ fontWeight: 700, width: "17px" }}>
-                          {index + 1}.
-                        </Typography>
-                        &nbsp;
-                        <Typography>{instructionText}</Typography>
-                      </>
-                    )}
-                  </Stack>
-                );
-              })
-              .concat(
-                isEditing ? (
-                  <Stack key={"addStep"} direction="row" alignItems="center">
-                    <>
-                      <span
-                        onClick={() => {
-                          if (!newStep) {
-                            document.getElementById("newStepInput").focus();
-                          }
-                        }}
-                      >
-                        <Button
-                          color="secondary"
-                          variant="outlined"
-                          size="small"
-                          onClick={addStep}
-                          sx={{ minWidth: "64px", height: "40px" }}
-                          disabled={!newStep}
-                        >
-                          <Typography>Add</Typography>
-                        </Button>
-                      </span>
-                      &nbsp; &nbsp;
-                      <TextField
-                        id="newStepInput"
-                        placeholder="Enter new step"
-                        onChange={(event) => {
-                          setNewStep(event.target.value);
-                        }}
-                        size="small"
-                        fullWidth={true}
-                        variant="outlined"
-                        value={newStep}
-                        InputProps={{
-                          endAdornment: newStep && (
-                            <InputAdornment position="end">
-                              <IconButton
-                                sx={{ color: "alt.main" }}
-                                onClick={() => {
-                                  setNewStep("");
-                                  document
-                                    .getElementById("newStepInput")
-                                    .focus();
-                                }}
-                                edge="end"
-                              >
-                                <ClearIcon />
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </>
-                  </Stack>
-                ) : null
-              )}
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-    );
-  };
-
   const renderNotes = () => {
     const { notes = "" } = recipeEntry;
 
@@ -674,138 +465,32 @@ function Recipe(props) {
       return null;
     }
 
-    return (
-      <Paper elevation={2} sx={{ width: "100%" }}>
-        <Box sx={{ padding: 2 }}>
-          {isEditing ? (
-            <TextField
-              label="Enter Notes"
-              fullWidth={true}
-              multiline={true}
-              value={notes}
-              onChange={(event) => {
-                updateNotes(event.target.value);
-              }}
-              variant="standard"
-            />
-          ) : (
-            <Typography>{notes}</Typography>
-          )}
-        </Box>
-      </Paper>
+    const contents = isEditing ? (
+      renderNotesInput(notes, updateNotes)
+    ) : (
+      <Typography>{notes}</Typography>
     );
-  };
 
-  const renderFavorite = () => {
-    const { isFavorite = false } = recipeEntry;
-
-    if (isEditing) {
-      return (
-        <FavoriteSwitch
-          isChecked={isFavorite}
-          updateChecked={updateIsFavorite}
-        />
-      );
-    }
-
-    if (isFavorite) {
-      return (
-        <Chip
-          key={"favorite"}
-          label={
-            <StarIcon
-              sx={{
-                "&&": {
-                  color: "alt.main",
-                  verticalAlign: "bottom",
-                },
-              }}
-              fontSize="small"
-            />
-          }
-          size="small"
-          variant="outlined"
-          color="tertiary"
-        />
-      );
-    }
-
-    return null;
+    return renderNotesContainer(contents);
   };
 
   const renderTags = () => {
-    const { tags = [] } = recipeEntry;
+    const { tags = [], isFavorite = false } = recipeEntry;
+
+    const glossaryRecipeTags = glossary.recipeTags || [];
     return (
       <>
-        <Stack
-          direction="row"
-          spacing={1}
-          key="tags"
-          sx={{ width: "95%" }}
-          alignItems={"center"}
-        >
-          {renderFavorite()}
-          {tags.map((tagId) => (
-            <Chip
-              key={tagId}
-              label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
-              size="small"
-              variant="outlined"
-              color="tertiary"
-              onDelete={isEditing ? getDeleteTag(tagId) : undefined}
-            />
-          ))}
-        </Stack>
-        {isEditing ? (
-          <Autocomplete
-            id={"addtagSelect"}
-            options={
-              glossary && glossary.recipeTags
-                ? Object.keys(glossary.recipeTags).map((tagId) => ({
-                    tagId,
-                    title: glossary.recipeTags[tagId],
-                  }))
-                : []
-            }
-            getOptionLabel={(option) => option.title}
-            getOptionDisabled={(option) => tags.includes(option.tagId)}
-            filterOptions={(options, params) => {
-              const { inputValue, getOptionLabel } = params;
-              const filtered = options.filter((option) =>
-                getOptionLabel(option)
-                  .toLocaleUpperCase()
-                  .includes(inputValue.toUpperCase())
-              );
-              const isExisting = options.some(
-                (option) => inputValue === option.title
-              );
-              if (inputValue !== "" && !isExisting) {
-                filtered.push({
-                  inputValue,
-                  title: `Create "${inputValue}"`,
-                });
-              }
-              return filtered;
-            }}
-            value={null}
-            onChange={(event, selectedOption) => {
-              const { tagId: _tagId, inputValue } = selectedOption;
-              let tagId = _tagId;
-              if (inputValue) {
-                tagId = createKey(`${glossaryPath}/recipeTags`);
-                updateRequest({
-                  [`${glossaryPath}/recipeTags/${tagId}`]: inputValue,
-                });
-              }
-              addTag(tagId);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="Enter tag" size="small" />
-            )}
-            blurOnSelect={true}
-            clearOnBlur={true}
-          />
-        ) : null}
+        {renderTagList(
+          isEditing,
+          { tags, isFavorite },
+          updateIsFavorite,
+          getDeleteTag,
+          glossaryRecipeTags
+        )}
+
+        {isEditing
+          ? renderTagControls(tags, addTag, glossaryRecipeTags, glossaryPath)
+          : null}
       </>
     );
   };
@@ -821,7 +506,11 @@ function Recipe(props) {
         <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
           {renderName()}
           {renderIngredients()}
-          {renderInstructions()}
+          <InstructionList
+            instructions={recipeEntry.instructions || []}
+            setInstructions={updateInstructions}
+            editable={isEditing}
+          />
           {renderNotes()}
           {renderTags()}
         </Stack>
