@@ -176,6 +176,9 @@ function GenerateRecipeDialogue(props) {
                 setFreeForm(event.target.value);
               }}
               variant="standard"
+              inputProps={{
+                autoCapitalize: "none",
+              }}
             />
           </Box>
         </Paper>
