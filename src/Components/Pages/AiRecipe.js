@@ -18,11 +18,22 @@ import {
 import InstructionList from "../Utils/InstructionList";
 
 import { saveRecipe } from "../../utils/requests";
+import IngredientList from "../Utils/IngredientList";
 
 function AiRecipe(props) {
   const {
-    database: { recipeOrder: _recipeOrder, glossary },
-    dataPaths: { cookbookPath, recipeOrderPath, glossaryPath },
+    database: {
+      recipeOrder: _recipeOrder,
+      glossary,
+      basicFoodTagAssociation,
+      basicFoodTagOrder,
+    },
+    dataPaths: {
+      cookbookPath,
+      recipeOrderPath,
+      glossaryPath,
+      basicFoodTagAssociationPath,
+    },
     addAlert,
     givenRecipe,
   } = props;
@@ -38,6 +49,7 @@ function AiRecipe(props) {
   let navigate = useNavigate();
 
   const [name, setName] = useState(givenName);
+  const [ingredients, setIngredients] = useState({});
   const [instructions, setInstructions] = useState(givenInstructions);
   const [notes, setNotes] = useState("");
   const [tags, setTags] = useState(givenTags);
@@ -105,6 +117,16 @@ function AiRecipe(props) {
       <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
         {renderNameInput(name, setName, !name)}
         {renderGivenInstructions()}
+        <IngredientList
+          ingredients={ingredients}
+          editable={true}
+          basicFoodTagAssociation={basicFoodTagAssociation}
+          basicFoodTagOrder={basicFoodTagOrder}
+          glossary={glossary}
+          basicFoodTagAssociationPath={basicFoodTagAssociationPath}
+          glossaryPath={glossaryPath}
+          updateIngredients={setIngredients}
+        />
         <InstructionList
           instructions={instructions}
           setInstructions={setInstructions}
