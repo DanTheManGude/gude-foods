@@ -77,6 +77,7 @@ function InstructionList(props) {
         size="small"
         fullWidth={true}
         variant="outlined"
+        multiline={true}
       />
       <HighlightOffIcon color="secondary" onClick={getRemoveStep(index)} />
     </>
