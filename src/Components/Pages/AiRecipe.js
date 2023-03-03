@@ -44,14 +44,16 @@ function AiRecipe(props) {
     ingredients: givenIngredients,
     instructions: givenInstructions,
     tags: givenTags,
+    notes: givenNotes,
+    ingredientText,
   } = givenRecipe;
 
   let navigate = useNavigate();
 
   const [name, setName] = useState(givenName);
-  const [ingredients, setIngredients] = useState({});
+  const [ingredients, setIngredients] = useState(givenIngredients);
   const [instructions, setInstructions] = useState(givenInstructions);
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState(givenNotes);
   const [tags, setTags] = useState(givenTags);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -86,7 +88,7 @@ function AiRecipe(props) {
           <Typography variant="h6" color="text.secondary" gutterBottom>
             Given Ingredients
           </Typography>
-          {givenIngredients.map((ingredientLine, index) => (
+          {ingredientText.map((ingredientLine, index) => (
             <Typography key={`ingredientLine-${index}`}>
               {ingredientLine}
             </Typography>
