@@ -21,7 +21,8 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
 };
 
 export const parseResponse = (textResponse) => {
-  const recipe = { name: "", ingredients: [], instructions: [] };
+  const recipe = { name: "", ingredientText: [], instructions: [] };
+  let lookingFor = "name";
 
   const textResponseLines = textResponse.split("\n");
   textResponseLines.forEach((line) => {
@@ -29,31 +30,42 @@ export const parseResponse = (textResponse) => {
       return;
     }
 
-    if (!recipe.name) {
+    if (line.toUpperCase().includes("INSTRUCTIONS")) {
+      lookingFor = "instructions";
+      return;
+    }
+
+    if (line.toUpperCase().includes("INGREDIENTS")) {
+      lookingFor = "ingredients";
+      return;
+    }
+
+    if (lookingFor === "name") {
       recipe.name = line;
       return;
     }
 
-    const maybeIngredientMatch = line.match(/- (.+)/);
-    if (maybeIngredientMatch && maybeIngredientMatch.length === 2) {
-      const ingredients = recipe.ingredients;
-      recipe.ingredients = ingredients.concat(maybeIngredientMatch[1]);
+    if (lookingFor === "ingredients") {
+      recipe.ingredientText.push(line);
       return;
     }
 
     const maybeInstructionMatch = line.match(/\d+\. (.+)/);
-    if (maybeInstructionMatch && maybeInstructionMatch.length === 2) {
-      const instructions = recipe.instructions;
-      recipe.instructions = instructions.concat(maybeInstructionMatch[1]);
+    if (
+      lookingFor === "instructions" &&
+      maybeInstructionMatch &&
+      maybeInstructionMatch.length === 2
+    ) {
+      recipe.instructions.push(maybeInstructionMatch[1]);
       return;
     }
   });
 
-  const errorText = "Error in parsing text";
+  const errorText = "Parsing text";
   if (!recipe.name) {
     throw Error(`${errorText}- no name`);
   }
-  if (recipe.ingredients.length === 0) {
+  if (recipe.ingredientText.length === 0) {
     throw Error(`${errorText}- no ingredients`);
   }
   if (recipe.instructions.length === 0) {

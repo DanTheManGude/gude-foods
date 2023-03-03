@@ -42,7 +42,7 @@ function GenerateRecipeDialogue(props) {
   const [prompt, setPrompt] = useState([promptPrefix]);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [tags, setTags] = useState([]);
-  const [freeForm, setFreeForm] = useState("");
+  const [additionalNotes, setAdditionalNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [responseText, setResponseText] = useState("");
 
@@ -52,7 +52,7 @@ function GenerateRecipeDialogue(props) {
   const handleClose = () => {
     setIngredientsList([]);
     setTags([]);
-    setFreeForm("");
+    setAdditionalNotes("");
     stopLoading();
     setResponseText("");
 
@@ -86,23 +86,23 @@ function GenerateRecipeDialogue(props) {
         </PromptTypography>
       );
     }
-    if (freeForm) {
+    if (additionalNotes) {
       newPrompt.push(
-        <PromptTypography key="freeFormStarter"> that </PromptTypography>
+        <PromptTypography key="additionalNotesStarter"> that </PromptTypography>
       );
       newPrompt.push(
         <PromptTypography
-          key="freeFormText"
+          key="additionalNotesText"
           sx={{ textDecoration: "underline" }}
         >
-          {freeForm}
+          {additionalNotes}
         </PromptTypography>
       );
     }
 
     newPrompt.push(<PromptTypography key="closer">.</PromptTypography>);
     setPrompt(newPrompt);
-  }, [ingredientsList, tags, freeForm, glossary]);
+  }, [ingredientsList, tags, additionalNotes, glossary]);
 
   const handleGenerate = () => {
     startLoading();
@@ -131,6 +131,11 @@ function GenerateRecipeDialogue(props) {
           setAiGeneratedRecipe({
             ...generatedRecipe,
             tags: tagsList,
+            ingredients: ingredientsList.reduce(
+              (acc, ingredientId) => ({ ...acc, [ingredientId]: "" }),
+              {}
+            ),
+            notes: additionalNotes,
           });
           navigate("/aiRecipe");
         } catch (error) {
@@ -185,9 +190,9 @@ function GenerateRecipeDialogue(props) {
               label="Additional details"
               fullWidth={true}
               multiline={true}
-              value={freeForm}
+              value={additionalNotes}
               onChange={(event) => {
-                setFreeForm(event.target.value);
+                setAdditionalNotes(event.target.value);
               }}
               variant="standard"
               inputProps={{
