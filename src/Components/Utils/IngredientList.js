@@ -75,8 +75,9 @@ function IngredientList(props) {
   };
   const getRemoveIngredient = (ingredientId) => () => {
     updateIngredients((_ingredients) => {
-      delete _ingredients[ingredientId];
-      return _ingredients;
+      const { [ingredientId]: removedIngredient, ...restIngredients } =
+        _ingredients;
+      return restIngredients;
     });
   };
 
