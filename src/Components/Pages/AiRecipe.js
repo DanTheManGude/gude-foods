@@ -63,7 +63,7 @@ function AiRecipe(props) {
 
   const handleSave = () => {
     saveRecipe(
-      { name, instructions, tags, isFavorite, notes },
+      { name, ingredients, instructions, tags, isFavorite, notes },
       undefined,
       { cookbookPath, recipeOrderPath },
       recipeOrder,
