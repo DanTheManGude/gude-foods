@@ -1,0 +1,189 @@
+import { useState } from "react";
+
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+
+import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
+import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
+
+import { waitForElm } from "../../utils/utility";
+
+function IngredientList(props) {
+  const {
+    ingredients = {},
+    editable,
+    basicFoodTagAssociation,
+    basicFoodTagOrder,
+    glossary,
+    basicFoodTagAssociationPath,
+    glossaryPath,
+    updateIngredients,
+  } = props;
+
+  const [newIngredientId, setNewIngredientId] = useState(null);
+  const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
+    useState(false);
+  const [createBasicFood, setCreateBasicFood] = useState({});
+
+  const setIngredient = (ingredientId, value) => {
+    updateIngredients((_ingredients) => ({
+      ..._ingredients,
+      [ingredientId]: value,
+    }));
+  };
+  const addIngredient = (ingredientId) => {
+    updateIngredients((_ingredients) => {
+      return { ..._ingredients, [ingredientId]: "" };
+    });
+
+    waitForElm(`#${ingredientId}-amount-input`).then((elm) => {
+      elm.focus();
+    });
+    setNewIngredientId(null);
+  };
+  const getRemoveIngredient = (ingredientId) => () => {
+    updateIngredients((_ingredients) => {
+      delete _ingredients[ingredientId];
+      return _ingredients;
+    });
+  };
+
+  return (
+    <>
+      <Accordion key={"ingredients"} sx={{ width: "100%" }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Ingredients</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={editable ? 2 : 1}>
+            {Object.keys(ingredients)
+              .sort((ingredientIdA, ingredientIdB) => {
+                if (!basicFoodTagAssociation || !basicFoodTagOrder) {
+                  return 0;
+                }
+                const tagA = basicFoodTagAssociation[ingredientIdA];
+                const tagB = basicFoodTagAssociation[ingredientIdB];
+
+                if (!tagA) {
+                  if (!tagB) {
+                    return 0;
+                  }
+                  return 1;
+                }
+                if (!tagB) {
+                  return -1;
+                }
+
+                const indexA = basicFoodTagOrder.indexOf(tagA);
+                const indexB = basicFoodTagOrder.indexOf(tagB);
+
+                return indexA - indexB;
+              })
+              .map((ingredientId) => (
+                <Stack
+                  key={ingredientId}
+                  direction="row"
+                  spacing={1}
+                  alignItems="center"
+                >
+                  {editable ? (
+                    <>
+                      <Typography
+                        sx={{ fontWeight: "bold", minWidth: "130px" }}
+                      >
+                        {glossary.basicFoods[ingredientId]}:
+                      </Typography>
+                      <TextField
+                        id={`${ingredientId}-amount-input`}
+                        placeholder="Edit amount"
+                        value={ingredients[ingredientId]}
+                        onChange={(event) => {
+                          setIngredient(ingredientId, event.target.value);
+                        }}
+                        size="small"
+                        fullWidth={true}
+                        variant="outlined"
+                        inputProps={{
+                          autoCapitalize: "none",
+                        }}
+                      />
+                      <HighlightOffIcon
+                        color="secondary"
+                        onClick={getRemoveIngredient(ingredientId)}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        {glossary.basicFoods[ingredientId]}:
+                      </Typography>
+                      <Typography>{ingredients[ingredientId]}</Typography>
+                    </>
+                  )}
+                </Stack>
+              ))
+              .concat(
+                editable ? (
+                  <Stack
+                    key={"addIngredient"}
+                    direction="row"
+                    spacing={2}
+                    alignItems="center"
+                  >
+                    <BasicFoodAutocomplete
+                      id="addIngredientSelect"
+                      foodMap={ingredients}
+                      newFoodId={newIngredientId}
+                      setNewFoodId={setNewIngredientId}
+                      handleInputvalue={(inputValue) => {
+                        setOpenCreateBasicFoodDialog(true);
+                        setCreateBasicFood({ name: inputValue });
+                      }}
+                      extraProps={{ fullWidth: true }}
+                      glossary={glossary}
+                      basicFoodTagAssociation={basicFoodTagAssociation}
+                      basicFoodTagOrder={basicFoodTagOrder}
+                    />
+                    <Button
+                      id={`add-ingredient-button`}
+                      color="secondary"
+                      variant="outlined"
+                      size="small"
+                      onClick={() => addIngredient(newIngredientId)}
+                      disabled={!newIngredientId}
+                      sx={{ minWidth: "fit-content" }}
+                    >
+                      <Typography>Add item</Typography>
+                    </Button>
+                  </Stack>
+                ) : null
+              )}
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+      <CreateBasicFoodDialog
+        open={openCreateBasicFoodDialog}
+        createBasicFood={createBasicFood}
+        setCreateBasicFood={setCreateBasicFood}
+        handleSelectedFood={addIngredient}
+        onClose={() => {
+          setOpenCreateBasicFoodDialog(false);
+          setCreateBasicFood({});
+        }}
+        glossary={glossary}
+        basicFoodTagOrder={basicFoodTagOrder}
+        glossaryPath={glossaryPath}
+        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
+      />
+    </>
+  );
+}
+
+export default IngredientList;
