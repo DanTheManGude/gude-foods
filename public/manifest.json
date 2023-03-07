@@ -11,7 +11,7 @@
     { "src": "favicon-32x32.png", "type": "image/png", "sizes": "32x32" },
     { "src": "logo.png", "type": "image/png", "sizes": "180x180" }
   ],
-  "start_url": ".",
+  "start_url": "/home",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
