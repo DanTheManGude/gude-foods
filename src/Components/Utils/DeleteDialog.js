@@ -23,7 +23,7 @@ function DeleteDialog(props) {
         <Button autoFocus onClick={onClose} color="secondary">
           <Typography>Cancel</Typography>
         </Button>
-        <Button onClick={handleDelete} color="error">
+        <Button onClick={handleDelete} color="error" variant="outlined">
           <Typography>Delete</Typography>
         </Button>
       </DialogActions>

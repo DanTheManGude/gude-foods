@@ -23,6 +23,19 @@ function CreateBasicFoodDialog(props) {
     basicFoodTagAssociationPath,
   } = props;
 
+  const handleCreate = () => {
+    const foodId = createKey(`${glossaryPath}/basicFoods`);
+    const updates = {};
+    updates[`${glossaryPath}/basicFoods/${foodId}`] = createBasicFood.name;
+    if (createBasicFood.tagId) {
+      updates[`${basicFoodTagAssociationPath}/${foodId}`] =
+        createBasicFood.tagId;
+    }
+    updateRequest(updates);
+    handleSelectedFood(foodId);
+    onClose();
+  };
+
   return (
     <Dialog
       open={open}
@@ -75,19 +88,8 @@ function CreateBasicFoodDialog(props) {
         <Button
           color="success"
           disabled={!createBasicFood.name}
-          onClick={() => {
-            const foodId = createKey(`${glossaryPath}/basicFoods`);
-            const updates = {};
-            updates[`${glossaryPath}/basicFoods/${foodId}`] =
-              createBasicFood.name;
-            if (createBasicFood.tagId) {
-              updates[`${basicFoodTagAssociationPath}/${foodId}`] =
-                createBasicFood.tagId;
-            }
-            updateRequest(updates);
-            handleSelectedFood(foodId);
-            onClose();
-          }}
+          variant="outlined"
+          onClick={handleCreate}
         >
           Create
         </Button>
