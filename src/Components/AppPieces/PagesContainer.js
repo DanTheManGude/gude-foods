@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 import { databasePaths } from "../../constants";
@@ -51,7 +51,7 @@ function PagesContainer(props) {
   return (
     <Routes>
       <Route
-        path="/*"
+        path="/home"
         element={
           <Home database={database} dataPaths={dataPaths} addAlert={addAlert} />
         }
@@ -124,6 +124,7 @@ function PagesContainer(props) {
           }
         />
       )}
+      <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   );
 }
