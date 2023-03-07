@@ -33,7 +33,6 @@ import {
 } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
-import CreateBasicFoodDialog from "../Utils/CreateBasicFoodDialog";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
@@ -89,10 +88,6 @@ function ShoppingList(props) {
     setNewFoodId(null);
     setNewFoodAmount("");
   };
-
-  const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
-    useState(false);
-  const [createBasicFood, setCreateBasicFood] = useState({});
 
   const [deleteDialog, setDeleteDialog] = useState(null);
   const closeDeleteDialog = () => {
@@ -413,14 +408,12 @@ function ShoppingList(props) {
             foodMap={shoppingList}
             newFoodId={newFoodId}
             setNewFoodId={setNewFoodId}
-            handleInputvalue={(inputValue) => {
-              setOpenCreateBasicFoodDialog(true);
-              setCreateBasicFood({ name: inputValue });
-            }}
             extraProps={{ sx: { width: "206px" } }}
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             basicFoodTagOrder={basicFoodTagOrder}
+            glossaryPath={glossaryPath}
+            basicFoodTagAssociationPath={basicFoodTagAssociationPath}
           />
           <TextField
             variant="outlined"
@@ -652,20 +645,6 @@ function ShoppingList(props) {
           closeDeleteDialog();
           handleDelete();
         }}
-      />
-      <CreateBasicFoodDialog
-        open={openCreateBasicFoodDialog}
-        createBasicFood={createBasicFood}
-        setCreateBasicFood={setCreateBasicFood}
-        handleSelectedFood={setNewFoodId}
-        onClose={() => {
-          setOpenCreateBasicFoodDialog(false);
-          setCreateBasicFood({});
-        }}
-        glossary={glossary}
-        basicFoodTagOrder={basicFoodTagOrder}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
     </div>
   );

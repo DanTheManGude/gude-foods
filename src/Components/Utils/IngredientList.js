@@ -11,7 +11,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
-import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
 
 import { waitForElm } from "../../utils/utility";
 
@@ -53,9 +52,6 @@ function IngredientList(props) {
   } = props;
 
   const [newIngredientId, setNewIngredientId] = useState(null);
-  const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
-    useState(false);
-  const [createBasicFood, setCreateBasicFood] = useState({});
 
   const setIngredient = (ingredientId, value) => {
     updateIngredients((_ingredients) => ({
@@ -144,14 +140,12 @@ function IngredientList(props) {
         foodMap={ingredients}
         newFoodId={newIngredientId}
         setNewFoodId={setNewIngredientId}
-        handleInputvalue={(inputValue) => {
-          setOpenCreateBasicFoodDialog(true);
-          setCreateBasicFood({ name: inputValue });
-        }}
         extraProps={{ fullWidth: true }}
         glossary={glossary}
         basicFoodTagAssociation={basicFoodTagAssociation}
         basicFoodTagOrder={basicFoodTagOrder}
+        glossaryPath={glossaryPath}
+        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
       <Button
         id={`add-ingredient-button`}
@@ -179,20 +173,6 @@ function IngredientList(props) {
           </Stack>
         </AccordionDetails>
       </Accordion>
-      <CreateBasicFoodDialog
-        open={openCreateBasicFoodDialog}
-        createBasicFood={createBasicFood}
-        setCreateBasicFood={setCreateBasicFood}
-        handleSelectedFood={addIngredient}
-        onClose={() => {
-          setOpenCreateBasicFoodDialog(false);
-          setCreateBasicFood({});
-        }}
-        glossary={glossary}
-        basicFoodTagOrder={basicFoodTagOrder}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
-      />
     </>
   );
 }
