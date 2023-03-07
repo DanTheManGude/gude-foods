@@ -48,6 +48,7 @@ function Cookbook(props) {
       menuPath,
       glossaryPath,
       cookbookPath,
+      basicFoodTagAssociationPath,
     },
     addAlert,
     filteringOptions = {},
@@ -406,6 +407,8 @@ function Cookbook(props) {
         glossary={glossary}
         basicFoodTagOrder={basicFoodTagOrder}
         basicFoodTagAssociation={basicFoodTagAssociation}
+        glossaryPath={glossaryPath}
+        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
       <GenerateRecipeDialogue
         openAIKey={openAIKey}
@@ -418,6 +421,8 @@ function Cookbook(props) {
         basicFoodTagAssociation={basicFoodTagAssociation}
         basicFoodTagOrder={basicFoodTagOrder}
         setAiGeneratedRecipe={setAiGeneratedRecipe}
+        glossaryPath={glossaryPath}
+        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
     </div>
   );

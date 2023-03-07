@@ -21,6 +21,8 @@ function AdvancedFiltersDialogue(props) {
     glossary,
     basicFoodTagOrder,
     basicFoodTagAssociation,
+    glossaryPath,
+    basicFoodTagAssociationPath,
   } = props;
 
   const {
@@ -80,6 +82,8 @@ function AdvancedFiltersDialogue(props) {
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             basicFoodTagOrder={basicFoodTagOrder}
+            glossaryPath={glossaryPath}
+            basicFoodTagAssociationPath={basicFoodTagAssociationPath}
             ingredientsList={ingredientsList}
             updateIngredientsList={(newIngredientsList) => {
               updateFilteringOptions({ ingredientsList: newIngredientsList });
