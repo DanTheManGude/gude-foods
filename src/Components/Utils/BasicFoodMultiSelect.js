@@ -58,6 +58,25 @@ function BasicFoodMultiSelect(props) {
           getOptionDisabled={(option) =>
             ingredientsList && ingredientsList.includes(option.foodId)
           }
+          filterOptions={(options, params) => {
+            const { inputValue, getOptionLabel } = params;
+            console.log(inputValue);
+            const filtered = options.filter((option) =>
+              getOptionLabel(option)
+                .toLocaleUpperCase()
+                .includes(inputValue.toUpperCase())
+            );
+            const isExisting = options.some(
+              (option) => inputValue === option.title
+            );
+            if (inputValue !== "" && !isExisting) {
+              filtered.push({
+                inputValue,
+                title: `Create "${inputValue}"`,
+              });
+            }
+            return filtered;
+          }}
           value={ingredientsList.map((foodId) => ({
             foodId,
             title: glossary.basicFoods[foodId],
