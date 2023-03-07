@@ -70,10 +70,6 @@ const NavBar = (props) => {
                 </Button>
               ))}
             </Box>
-
-            <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-              <GoogleLoginButton addAlert={addAlert} />
-            </Box>
             <Box
               sx={{
                 display: { md: "none" },
