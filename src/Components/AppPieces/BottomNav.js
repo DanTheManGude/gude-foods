@@ -6,8 +6,9 @@ import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
 import MenuBookSharpIcon from "@mui/icons-material/MenuBookSharp";
 import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
 import FormatListBulletedSharpIcon from "@mui/icons-material/FormatListBulletedSharp";
+import HouseSharp from "@mui/icons-material/HouseSharp";
 
-import { signInGoogle } from "../../utils/signIn";
+import { signInGoogle } from "../../utils/googleAuth";
 
 import { pages, presentationNames } from "../../constants";
 
@@ -15,10 +16,9 @@ const pageIcons = {
   glossary: <DescriptionSharpIcon />,
   shoppingList: <FormatListBulletedSharpIcon />,
   cookbook: <MenuBookSharpIcon />,
+  home: <HouseSharp />,
   settings: <SettingsSharpIcon />,
 };
-
-const navActionSxProp = { paddingX: "4px" };
 
 function BottomNav(props) {
   const { addAlert } = props;
@@ -46,6 +46,7 @@ function BottomNav(props) {
         height: "80px",
         alignItems: "flex-start",
         zIndex: 9001,
+        display: { md: "none" },
       }}
     >
       {pages.map((page) => (
@@ -54,22 +55,9 @@ function BottomNav(props) {
           value={page}
           label={presentationNames[page]}
           icon={pageIcons[page]}
-          sx={navActionSxProp}
+          sx={{ paddingX: "4px" }}
         />
       ))}
-      <BottomNavigationAction
-        label="Login"
-        value={"googleLogin"}
-        icon={
-          <img
-            width="24px"
-            src="/media/googleLogin/G.png"
-            alt="Login with Google"
-            style={{ borderRadius: "24px" }}
-          />
-        }
-        sx={navActionSxProp}
-      />
     </BottomNavigation>
   );
 }

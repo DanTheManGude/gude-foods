@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import { getEmailLink } from "../../utils/values";
 import { emailConfig } from "../../constants";
 
+import GoogleLoginButton from "./GoogleLoginButton";
+
 const getSendAuthorizationRequest = (user, addAlert) => () => {
   const { serviceId, templateId, userId } = emailConfig;
   const { displayName, email } = user;
@@ -80,6 +82,7 @@ function UnauthorizedUser(props) {
       <Typography sx={textStyles}>
         Please sign in with Google to use the app.
       </Typography>
+      <GoogleLoginButton addAlert={addAlert} />
     </Stack>
   );
 }

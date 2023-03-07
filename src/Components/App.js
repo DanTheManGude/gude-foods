@@ -109,7 +109,7 @@ function App() {
   return (
     <div className="App">
       {renderMessages()}
-      <NavBar addAlert={addAlert} />
+      <NavBar />
       {isAuthorizedUser ? (
         <PagesContainer user={user} addAlert={addAlert} />
       ) : (
