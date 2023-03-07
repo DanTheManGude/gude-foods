@@ -38,7 +38,14 @@ export const presentationNames = {
   glossary: "Glossary",
   shoppingList: "Shopping List",
   cookbook: "Cookbook",
+  home: "Home",
   settings: "Settings",
 };
 
-export const pages = ["glossary", "shoppingList", "cookbook", "settings"];
+export const pages = [
+  "glossary",
+  "shoppingList",
+  "cookbook",
+  "home",
+  "settings",
+];
