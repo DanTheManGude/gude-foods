@@ -19,6 +19,10 @@ function BasicFoodMultiSelect(props) {
     updateIngredientsList,
   } = props;
 
+  const handleInputvalue = (inputValue) => {
+    console.log(inputValue);
+  };
+
   const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
     glossary,
     basicFoodTagAssociation,
@@ -60,7 +64,6 @@ function BasicFoodMultiSelect(props) {
           }
           filterOptions={(options, params) => {
             const { inputValue, getOptionLabel } = params;
-            console.log(inputValue);
             const filtered = options.filter((option) =>
               getOptionLabel(option)
                 .toLocaleUpperCase()
@@ -81,7 +84,12 @@ function BasicFoodMultiSelect(props) {
             foodId,
             title: glossary.basicFoods[foodId],
           }))}
-          onChange={(event, selection) => {
+          onChange={(event, selection, reason, details) => {
+            const inputValue = selection.length && selection.at(-1).inputValue;
+            if (inputValue) {
+              handleInputvalue(inputValue);
+              return;
+            }
             const newIngredientsList = selection.map((option) => option.foodId);
             updateIngredientsList(newIngredientsList);
           }}
