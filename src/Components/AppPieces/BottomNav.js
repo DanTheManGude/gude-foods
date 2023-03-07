@@ -8,7 +8,7 @@ import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
 import FormatListBulletedSharpIcon from "@mui/icons-material/FormatListBulletedSharp";
 import HouseSharp from "@mui/icons-material/HouseSharp";
 
-import { signInGoogle } from "../../utils/signIn";
+import { signInGoogle } from "../../utils/googleAuth";
 
 import { pages, presentationNames } from "../../constants";
 

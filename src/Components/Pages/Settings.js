@@ -14,9 +14,10 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import ImportFileButton from "../Utils/ImportFileButton";
 import { setAllData, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
+import { signOutGoogle } from "../../utils/googleAuth";
+import ImportFileButton from "../Utils/ImportFileButton";
 
 function Settings(props) {
   const { database, dataPaths, addAlert, user } = props;
@@ -35,6 +36,10 @@ function Settings(props) {
     };
 
     downloadData(data);
+  };
+
+  const handleLogout = () => {
+    signOutGoogle(addAlert);
   };
 
   const renderAppCard = () => {
@@ -66,6 +71,31 @@ function Settings(props) {
               .
             </Typography>
           </CardContent>
+        </Card>
+      </Box>
+    );
+  };
+
+  const renderUserCard = () => {
+    if (!user) {
+      return;
+    }
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Current user
+            </Typography>
+            <Typography>
+              You are currently logged in as: <strong>{user.email}</strong>
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button color="secondary" variant="outlined" onClick={handleLogout}>
+              Logout
+            </Button>
+          </CardActions>
         </Card>
       </Box>
     );
@@ -196,6 +226,7 @@ function Settings(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderAppCard()}
+        {renderUserCard()}
         {renderDownloadData()}
         {renderImportData()}
         {renderDeleteData()}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { signInGoogle } from "../../utils/signIn";
+import { signInGoogle } from "../../utils/googleAuth";
 
 const constructImageUrl = (type) => `/media/googleLogin/${type}.png`;
 const imageSources = {
