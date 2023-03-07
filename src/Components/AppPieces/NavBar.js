@@ -10,12 +10,10 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import { pages, presentationNames } from "../../constants";
-import GoogleLoginButton from "./GoogleLoginButton.js";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
-const NavBar = (props) => {
-  const { addAlert } = props;
+const NavBar = () => {
   let navigate = useNavigate();
 
   return (
