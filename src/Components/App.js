@@ -115,7 +115,7 @@ function App() {
       ) : (
         <UnauthorizedUser user={user} addAlert={addAlert} />
       )}
-      <BottomNav addAlert={addAlert} />
+      {isAuthorizedUser && <BottomNav addAlert={addAlert} />}
     </div>
   );
 }
