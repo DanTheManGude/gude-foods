@@ -315,7 +315,7 @@ function Recipe(props) {
     const contents = isEditing ? (
       renderNotesInput(notes, updateNotes)
     ) : (
-      <Typography>{notes}</Typography>
+      <Typography style={{ whiteSpace: "pre-line" }}>{notes}</Typography>
     );
 
     return renderNotesContainer(contents);
