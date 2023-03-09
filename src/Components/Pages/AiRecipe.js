@@ -85,7 +85,12 @@ function AiRecipe(props) {
     <Box sx={{ width: "100%" }}>
       <Card variant="outlined">
         <CardContent>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            gutterBottom
+            sx={{ fontStyle: "italic" }}
+          >
             Given Ingredients
           </Typography>
           {ingredientText.map((ingredientLine, index) => (
