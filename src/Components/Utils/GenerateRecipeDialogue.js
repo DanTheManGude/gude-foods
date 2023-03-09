@@ -120,8 +120,12 @@ function GenerateRecipeDialogue(props) {
       (_responseText) => {
         try {
           const generatedRecipe = parseResponse(_responseText);
+
           const aiTag = Object.keys(glossary.recipeTags).find(
-            (recipeId) => glossary.recipeTags[recipeId] === "AI"
+            (tagId) => glossary.recipeTags[tagId] === "AI"
+          );
+          const saltIngredient = Object.keys(glossary.basicFoods).find(
+            (foodId) => glossary.basicFoods[foodId] === "salt"
           );
 
           const tagsList = tags;
@@ -129,14 +133,19 @@ function GenerateRecipeDialogue(props) {
             tagsList.unshift(aiTag);
           }
 
+          const ingredients = ingredientsList.reduce(
+            (acc, ingredientId) => ({ ...acc, [ingredientId]: "" }),
+            {}
+          );
+          if (saltIngredient) {
+            ingredients[saltIngredient] = "a grain";
+          }
+
           handleClose();
           setAiGeneratedRecipe({
             ...generatedRecipe,
             tags: tagsList,
-            ingredients: ingredientsList.reduce(
-              (acc, ingredientId) => ({ ...acc, [ingredientId]: "" }),
-              {}
-            ),
+            ingredients,
             notes: additionalNotes,
           });
           navigate("/aiRecipe");
