@@ -438,6 +438,7 @@ function ShoppingList(props) {
                   </IconButton>
                 </InputAdornment>
               ),
+              autoCapitalize: "none",
             }}
           />
         </Stack>
