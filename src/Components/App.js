@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 
 import { useNavigate } from "react-router-dom";
 
+import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import List from "@mui/material/List";
@@ -22,6 +23,7 @@ function App() {
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const prevUserRef = useRef();
 
@@ -39,10 +41,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    addAlert({
-      message: "Welcome to Gude Foods",
-      alertProps: { severity: "info" },
-    });
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
   }, []);
 
   useEffect(() => {
@@ -106,18 +107,26 @@ function App() {
     </List>
   );
 
-  return (
-    <div className="App">
-      {renderMessages()}
-      <NavBar />
-      {isAuthorizedUser ? (
+  if (isAuthorizedUser) {
+    return (
+      <>
+        {renderMessages()}
+        <NavBar />
         <PagesContainer user={user} addAlert={addAlert} />
-      ) : (
-        <UnauthorizedUser user={user} addAlert={addAlert} />
-      )}
-      {isAuthorizedUser && <BottomNav addAlert={addAlert} />}
-    </div>
-  );
+        <BottomNav addAlert={addAlert} />
+      </>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: "center", paddingTop: "20%" }}>
+        <CircularProgress color="primary" size="30%" sx={{ margin: "auto" }} />
+      </div>
+    );
+  }
+
+  return <UnauthorizedUser user={user} addAlert={addAlert} />;
 }
 
 export default App;

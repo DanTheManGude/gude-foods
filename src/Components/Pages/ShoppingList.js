@@ -37,7 +37,6 @@ import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
-import { colors } from "@mui/material";
 
 const deleteKeys = {
   ALL: "the entire shopping list",
