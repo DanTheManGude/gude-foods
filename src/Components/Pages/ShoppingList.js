@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { TransitionGroup } from "react-transition-group";
 
@@ -22,6 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Link from "@mui/material/Link";
 
 import {
   updateRequest,
@@ -72,6 +74,8 @@ function ShoppingList(props) {
   const cookbook = _cookbook || {};
   const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];
+
+  const navigate = useNavigate();
 
   const [shoppingMap, setShoppingMap] = useState({
     unchecked: {},
@@ -199,7 +203,14 @@ function ShoppingList(props) {
                       {cookbook[recipeId].ingredients[basicFoodId]}:
                     </Typography>
                     <Typography noWrap sx={{ width: "fill-available" }}>
-                      {cookbook[recipeId].name}
+                      <Link
+                        onClick={() => {
+                          navigate(`/recipe/${recipeId}`);
+                        }}
+                        sx={{ color: "white" }}
+                      >
+                        {cookbook[recipeId].name}
+                      </Link>
                     </Typography>
                     <IconButton
                       onClick={() => {
@@ -438,6 +449,7 @@ function ShoppingList(props) {
                   </IconButton>
                 </InputAdornment>
               ),
+              autoCapitalize: "none",
             }}
           />
         </Stack>
