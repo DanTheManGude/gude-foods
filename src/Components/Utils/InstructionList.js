@@ -135,6 +135,7 @@ function InstructionList(props) {
         fullWidth={true}
         variant="outlined"
         value={newStep}
+        multiline={true}
         InputProps={{
           endAdornment: newStep && (
             <InputAdornment position="end">
