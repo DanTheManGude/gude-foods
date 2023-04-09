@@ -60,39 +60,28 @@ function Cooking(props) {
         <Typography>Back to recipe</Typography>
       </Button>
       <ButtonGroup variant="text">
-        <IconButton color="primary">
-          {playing ? (
-            <Pause
-              onClick={() => {
-                document.getElementById(musicAudioId).pause();
-                setPlaying(false);
-              }}
-            />
-          ) : (
-            <PlayCircleOutlineIcon
-              onClick={() => {
-                document.getElementById(musicAudioId).play();
-                setPlaying(true);
-              }}
-            />
-          )}
+        <IconButton
+          color="primary"
+          onClick={() => {
+            if (playing) {
+              document.getElementById(musicAudioId).pause();
+            } else {
+              document.getElementById(musicAudioId).play();
+            }
+            setPlaying(!playing);
+          }}
+        >
+          {playing ? <Pause /> : <PlayCircleOutlineIcon />}
         </IconButton>
-        <IconButton>
-          {muted ? (
-            <VolumeOffIcon
-              onClick={() => {
-                document.getElementById(musicAudioId).muted = false;
-                setMuted(false);
-              }}
-            />
-          ) : (
-            <VolumeUpIcon
-              onClick={() => {
-                document.getElementById(musicAudioId).muted = true;
-                setMuted(true);
-              }}
-            />
-          )}
+        <IconButton
+          onClick={() => {
+            const newMuted = !muted;
+
+            document.getElementById(musicAudioId).muted = newMuted;
+            setMuted(newMuted);
+          }}
+        >
+          {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
         </IconButton>
       </ButtonGroup>
     </Stack>
