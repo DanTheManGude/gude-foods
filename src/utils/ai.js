@@ -30,12 +30,12 @@ export const parseResponse = (textResponse) => {
       return;
     }
 
-    if (line.toUpperCase().includes("INSTRUCTIONS")) {
+    if (line.includes("Instructions:")) {
       lookingFor = "instructions";
       return;
     }
 
-    if (line.toUpperCase().includes("INGREDIENTS")) {
+    if (line.includes("Ingredients:")) {
       lookingFor = "ingredients";
       return;
     }
