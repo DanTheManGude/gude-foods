@@ -11,6 +11,8 @@ import Pause from "@mui/icons-material/Pause";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 
+const musicAudioId = "musicAudio";
+
 function Cooking(props) {
   const {
     database: { cookbook: _cookbook },
@@ -21,8 +23,8 @@ function Cooking(props) {
   const [name, setName] = useState("");
   const [instructions, setInstructions] = useState([]);
 
-  const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [playing, setPlaying] = useState(true);
+  const [muted, setMuted] = useState(true);
 
   let navigate = useNavigate();
 
@@ -62,12 +64,14 @@ function Cooking(props) {
           {playing ? (
             <Pause
               onClick={() => {
+                document.getElementById(musicAudioId).pause();
                 setPlaying(false);
               }}
             />
           ) : (
             <PlayCircleOutlineIcon
               onClick={() => {
+                document.getElementById(musicAudioId).play();
                 setPlaying(true);
               }}
             />
@@ -77,12 +81,14 @@ function Cooking(props) {
           {muted ? (
             <VolumeOffIcon
               onClick={() => {
+                document.getElementById(musicAudioId).muted = false;
                 setMuted(false);
               }}
             />
           ) : (
             <VolumeUpIcon
               onClick={() => {
+                document.getElementById(musicAudioId).muted = true;
                 setMuted(true);
               }}
             />
@@ -126,6 +132,10 @@ function Cooking(props) {
           {renderInstructions()}
         </Stack>
       </Stack>
+      <audio id={musicAudioId} autoPlay muted loop>
+        <source src={`/media/music.mp3`} type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
     </>
   );
 }
