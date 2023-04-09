@@ -3,6 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import IconButton from "@mui/material/IconButton";
@@ -105,7 +108,36 @@ function Cooking(props) {
   };
 
   const renderInstructions = () => {
-    return <>{instructions.map((step) => step)}</>;
+    const fontSize = 30;
+    return (
+      <>
+        <Box sx={{ width: "100%" }}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                Instructions
+              </Typography>
+              <Stack spacing={1.5}>
+                {instructions.map((instructionText, index) => (
+                  <Stack
+                    key={index}
+                    direction="row"
+                    alignItems="center"
+                    spacing={1}
+                  >
+                    <Typography sx={{ fontWeight: 700, fontSize }}>
+                      {index + 1}.
+                    </Typography>
+                    &nbsp;
+                    <Typography sx={{ fontSize }}>{instructionText}</Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Box>
+      </>
+    );
   };
 
   return (
@@ -116,7 +148,7 @@ function Cooking(props) {
         alignItems="center"
       >
         {renderTopButtonControls()}
-        <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 1 }}>
+        <Stack key="contents" spacing={1} sx={{ width: "95%", marginTop: 1 }}>
           {renderName()}
           {renderInstructions()}
         </Stack>
