@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -16,7 +17,9 @@ import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 
 function InstructionList(props) {
-  const { instructions = [], setInstructions, editable } = props;
+  const { instructions = [], setInstructions, editable, recipeId } = props;
+
+  let navigate = useNavigate();
 
   const [newStep, setNewStep] = useState("");
 
@@ -163,7 +166,22 @@ function InstructionList(props) {
       </AccordionSummary>
       <AccordionDetails>
         <Stack spacing={editable ? 2 : 1}>
-          {renderSteps().concat(editable && renderAddInstructionControl())}
+          {renderSteps().concat(
+            editable ? (
+              renderAddInstructionControl()
+            ) : (
+              <Button
+                color="secondary"
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  navigate(`/cooking/${recipeId}`);
+                }}
+              >
+                <Typography>Cook recipe</Typography>
+              </Button>
+            )
+          )}
         </Stack>
       </AccordionDetails>
     </Accordion>

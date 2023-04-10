@@ -7,6 +7,7 @@ import { databasePaths } from "../../constants";
 import Home from "../Pages/Home";
 import Cookbook from "../Pages/Cookbook";
 import Recipe from "../Pages/Recipe";
+import Cooking from "../Pages/Cooking";
 import ShoppingList from "../Pages/ShoppingList";
 import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
@@ -79,6 +80,10 @@ function PagesContainer(props) {
             addAlert={addAlert}
           />
         }
+      />
+      <Route
+        path="cooking/:recipeId"
+        element={<Cooking database={database} />}
       />
       <Route
         path="shoppingList"

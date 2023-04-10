@@ -366,6 +366,7 @@ function Recipe(props) {
             instructions={recipeEntry.instructions || []}
             setInstructions={updateInstructions}
             editable={isEditing}
+            recipeId={recipeId}
           />
           {renderNotes()}
           {renderTags()}
