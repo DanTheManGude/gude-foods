@@ -42,53 +42,64 @@ function Cooking(props) {
     }
   }, [recipeId, _cookbook]);
 
-  const renderTopButtonControls = () => (
-    <Stack
-      key="buttonControl"
-      direction="row"
-      justifyContent="space-around"
-      alignItems="center"
-      sx={{ width: "95%" }}
-      spacing={2}
-    >
-      <Button
-        color="secondary"
-        variant="outlined"
-        size="small"
-        sx={{ flexGrow: "1" }}
-        onClick={() => {
-          navigate(`/recipe/${recipeId}`);
-        }}
+  const renderTopButtonControls = () => {
+    const iconProps = { sx: { fontSize: 30 } };
+    return (
+      <Stack
+        key="buttonControl"
+        direction="row"
+        justifyContent="space-around"
+        alignItems="center"
+        sx={{ width: "95%" }}
+        spacing={2}
       >
-        <Typography>Back to recipe</Typography>
-      </Button>
-      <ButtonGroup variant="text">
-        <IconButton
-          color="primary"
+        <Button
+          color="secondary"
+          variant="outlined"
+          size="small"
+          sx={{ flexGrow: "1" }}
           onClick={() => {
-            if (playing) {
-              document.getElementById(musicAudioId).pause();
-            } else {
-              document.getElementById(musicAudioId).play();
-            }
-            setPlaying(!playing);
+            navigate(`/recipe/${recipeId}`);
           }}
         >
-          {playing ? <Pause /> : <PlayCircleOutlineIcon />}
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            const newMuted = !muted;
+          <Typography>Back to recipe</Typography>
+        </Button>
+        <ButtonGroup>
+          <IconButton
+            color="primary"
+            onClick={() => {
+              if (playing) {
+                document.getElementById(musicAudioId).pause();
+              } else {
+                document.getElementById(musicAudioId).play();
+              }
+              setPlaying(!playing);
+            }}
+          >
+            {playing ? (
+              <Pause {...iconProps} />
+            ) : (
+              <PlayCircleOutlineIcon {...iconProps} />
+            )}
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              const newMuted = !muted;
 
-            document.getElementById(musicAudioId).muted = newMuted;
-            setMuted(newMuted);
-          }}
-        >
-          {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
-        </IconButton>
-      </ButtonGroup>
-    </Stack>
-  );
+              document.getElementById(musicAudioId).muted = newMuted;
+              setMuted(newMuted);
+            }}
+          >
+            {muted ? (
+              <VolumeOffIcon {...iconProps} />
+            ) : (
+              <VolumeUpIcon {...iconProps} />
+            )}
+          </IconButton>
+        </ButtonGroup>
+      </Stack>
+    );
+  };
 
   const renderName = () => {
     return (
