@@ -111,12 +111,14 @@ function App() {
 
   if (isAuthorizedUser) {
     return (
-      <AddAlertContext.Provider value={addAlert}>
+      <>
         {renderMessages()}
         <NavBar />
-        <PagesContainer user={user} addAlert={addAlert} />
+        <AddAlertContext.Provider value={addAlert}>
+          <PagesContainer user={user} />
+        </AddAlertContext.Provider>
         <BottomNav />
-      </AddAlertContext.Provider>
+      </>
     );
   }
 
@@ -128,11 +130,7 @@ function App() {
     );
   }
 
-  return (
-    <AddAlertContext.Provider value={addAlert}>
-      <UnauthorizedUser user={user} addAlert={addAlert} />
-    </AddAlertContext.Provider>
-  );
+  return <UnauthorizedUser user={user} addAlert={addAlert} />;
 }
 
 export default App;
