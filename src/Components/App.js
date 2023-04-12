@@ -19,6 +19,8 @@ import NavBar from "./AppPieces/NavBar";
 import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
 
+import { AddAlertContext } from "./Contexts";
+
 function App() {
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
@@ -109,12 +111,12 @@ function App() {
 
   if (isAuthorizedUser) {
     return (
-      <>
+      <AddAlertContext.Provider value={addAlert}>
         {renderMessages()}
         <NavBar />
         <PagesContainer user={user} addAlert={addAlert} />
-        <BottomNav addAlert={addAlert} />
-      </>
+        <BottomNav />
+      </AddAlertContext.Provider>
     );
   }
 
@@ -126,7 +128,11 @@ function App() {
     );
   }
 
-  return <UnauthorizedUser user={user} addAlert={addAlert} />;
+  return (
+    <AddAlertContext.Provider value={addAlert}>
+      <UnauthorizedUser user={user} addAlert={addAlert} />
+    </AddAlertContext.Provider>
+  );
 }
 
 export default App;

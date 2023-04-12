@@ -21,8 +21,6 @@ const pageIcons = {
 };
 
 function BottomNav(props) {
-  const { addAlert } = props;
-
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -31,11 +29,7 @@ function BottomNav(props) {
       showLabels={true}
       value={pathname.slice(1)}
       onChange={(event, newValue) => {
-        if (pages.includes(newValue)) {
-          navigate(`/${newValue}`);
-        } else {
-          signInGoogle(addAlert);
-        }
+        navigate(`/${newValue}`);
       }}
       sx={{
         position: "fixed",

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
 
@@ -13,10 +13,15 @@ import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
 import AiRecipe from "../Pages/AiRecipe";
 
-import { DatabaseContext, DataPathsContext } from "../Contexts";
+import {
+  DatabaseContext,
+  DataPathsContext,
+  AddAlertContext,
+} from "../Contexts";
 
 function PagesContainer(props) {
-  const { user, addAlert } = props;
+  const { user } = props;
+  const addAlert = useContext(AddAlertContext);
 
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
