@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -20,6 +20,8 @@ import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
 import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
 
+import { DatabaseContext, DataPathsContext } from "../Contexts";
+
 import {
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
@@ -33,33 +35,36 @@ import {
 
 function Cookbook(props) {
   const {
-    database: {
-      glossary: _glossary,
-      cookbook: _cookbook,
-      recipeOrder: _recipeOrder,
-      shoppingList,
-      basicFoodTagOrder,
-      basicFoodTagAssociation,
-      menu: _menu,
-    },
-    dataPaths: {
-      recipeOrderPath,
-      shoppingListPath,
-      menuPath,
-      glossaryPath,
-      cookbookPath,
-      basicFoodTagAssociationPath,
-    },
     addAlert,
     filteringOptions = {},
     setFilteringOptions,
     setAiGeneratedRecipe,
     openAIKey,
   } = props;
+  const database = useContext(DatabaseContext);
+  const {
+    glossary: _glossary,
+    cookbook: _cookbook,
+    recipeOrder: _recipeOrder,
+    shoppingList,
+    basicFoodTagOrder,
+    basicFoodTagAssociation,
+    menu: _menu,
+  } = database;
   const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
   const cookbook = _cookbook || {};
   const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];
+
+  const dataPaths = useContext(DataPathsContext);
+  const {
+    recipeOrderPath,
+    shoppingListPath,
+    menuPath,
+    glossaryPath,
+    cookbookPath,
+    basicFoodTagAssociationPath,
+  } = dataPaths;
 
   let navigate = useNavigate();
 
