@@ -7,6 +7,8 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Box from "@mui/material/Box";
 
+import { DataPathsContext } from "../Contexts";
+
 import RecipeSearchInput from "./RecipeSearchInput";
 import FavoriteSwitch from "./FavoriteSwitch";
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
@@ -21,9 +23,10 @@ function AdvancedFiltersDialogue(props) {
     glossary,
     basicFoodTagOrder,
     basicFoodTagAssociation,
-    glossaryPath,
-    basicFoodTagAssociationPath,
   } = props;
+
+  const { glossaryPath, basicFoodTagAssociationPath } =
+    useContext(DataPathsContext);
 
   const {
     searchTerm = "",

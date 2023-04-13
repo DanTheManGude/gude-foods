@@ -55,10 +55,7 @@ function PagesContainer(props) {
     <DatabaseContext.Provider value={database}>
       <DataPathsContext.Provider value={dataPaths}>
         <Routes>
-          <Route
-            path="/home"
-            element={<Home database={database} dataPaths={dataPaths} />}
-          />
+          <Route path="/home" element={<Home database={database} />} />
           <Route
             path="cookbook"
             element={
@@ -72,7 +69,7 @@ function PagesContainer(props) {
           />
           <Route
             path="recipe/:recipeId"
-            element={<Recipe database={database} dataPaths={dataPaths} />}
+            element={<Recipe database={database} />}
           />
           <Route
             path="cooking/:recipeId"
@@ -80,27 +77,18 @@ function PagesContainer(props) {
           />
           <Route
             path="shoppingList"
-            element={<ShoppingList database={database} dataPaths={dataPaths} />}
+            element={<ShoppingList database={database} />}
           />
-          <Route
-            path="glossary"
-            element={<Glossary database={database} dataPaths={dataPaths} />}
-          />
+          <Route path="glossary" element={<Glossary database={database} />} />
           <Route
             path="settings"
-            element={
-              <Settings database={database} dataPaths={dataPaths} user={user} />
-            }
+            element={<Settings database={database} user={user} />}
           />
           {aiGeneratedRecipe && (
             <Route
               path="aiRecipe"
               element={
-                <AiRecipe
-                  database={database}
-                  dataPaths={dataPaths}
-                  givenRecipe={aiGeneratedRecipe}
-                />
+                <AiRecipe database={database} givenRecipe={aiGeneratedRecipe} />
               }
             />
           )}

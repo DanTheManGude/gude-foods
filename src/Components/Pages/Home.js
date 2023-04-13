@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import newUserData from "../../newUserData.json";
 import { setAllData } from "../../utils/requests";
 
-import { AddAlertContext } from "../Contexts";
+import { AddAlertContext, DataPathsContext } from "../Contexts";
 
 function Home(props) {
   const {
@@ -23,10 +23,10 @@ function Home(props) {
       cookbook,
       menu,
     },
-    dataPaths,
   } = props;
   let navigate = useNavigate();
   const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
 
   const renderNewUserCard = () => {
     if (glossary) {

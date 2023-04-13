@@ -8,7 +8,7 @@ import {
   constructBasicFoodOptions,
 } from "../../utils/foods";
 import { unknownSectionName } from "../../constants";
-
+import { DataPathsContext } from "../Contexts";
 import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
 
 function BasicFoodAutocomplete(props) {
@@ -21,9 +21,10 @@ function BasicFoodAutocomplete(props) {
     glossary,
     basicFoodTagAssociation,
     basicFoodTagOrder,
-    basicFoodTagAssociationPath,
-    glossaryPath,
   } = props;
+
+  const { basicFoodTagAssociationPath, glossaryPath } =
+    useContext(DataPathsContext);
 
   const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
     useState(false);

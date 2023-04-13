@@ -18,12 +18,13 @@ import { setAllData, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import { signOutGoogle } from "../../utils/googleAuth";
 import ImportFileButton from "../Utils/ImportFileButton";
-import { AddAlertContext } from "../Contexts";
+import { AddAlertContext, DataPathsContext } from "../Contexts";
 
 function Settings(props) {
-  const { database, dataPaths, user } = props;
+  const { database, user } = props;
 
   const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 

@@ -46,8 +46,6 @@ function IngredientList(props) {
     basicFoodTagAssociation,
     basicFoodTagOrder,
     glossary,
-    basicFoodTagAssociationPath,
-    glossaryPath,
     updateIngredients,
   } = props;
 
@@ -144,8 +142,6 @@ function IngredientList(props) {
         glossary={glossary}
         basicFoodTagAssociation={basicFoodTagAssociation}
         basicFoodTagOrder={basicFoodTagOrder}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
       <Button
         id={`add-ingredient-button`}

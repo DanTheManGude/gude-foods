@@ -68,7 +68,6 @@ function Cookbook(props) {
     menuPath,
     glossaryPath,
     cookbookPath,
-    basicFoodTagAssociationPath,
   } = dataPaths;
 
   let navigate = useNavigate();
@@ -92,12 +91,7 @@ function Cookbook(props) {
       cookbookPath
     );
 
-    updateFromCookbookImport(
-      transformedData,
-      { cookbookPath, glossaryPath, recipeOrderPath },
-      recipeOrder,
-      addAlert
-    );
+    updateFromCookbookImport(transformedData, dataPaths, recipeOrder, addAlert);
   };
 
   const calculateRecipeList = () => {
@@ -220,7 +214,7 @@ function Cookbook(props) {
                     ingredients,
                     recipeId,
                     { recipeOrder, menu },
-                    { shoppingListPath, recipeOrderPath, menuPath },
+                    dataPaths,
                     addAlert
                   );
                 }}
@@ -415,8 +409,6 @@ function Cookbook(props) {
         glossary={glossary}
         basicFoodTagOrder={basicFoodTagOrder}
         basicFoodTagAssociation={basicFoodTagAssociation}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
       <GenerateRecipeDialogue
         openAIKey={openAIKey}
@@ -428,8 +420,6 @@ function Cookbook(props) {
         basicFoodTagAssociation={basicFoodTagAssociation}
         basicFoodTagOrder={basicFoodTagOrder}
         setAiGeneratedRecipe={setAiGeneratedRecipe}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
     </div>
   );

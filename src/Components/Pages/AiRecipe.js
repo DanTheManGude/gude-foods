@@ -30,15 +30,16 @@ function AiRecipe(props) {
       basicFoodTagAssociation,
       basicFoodTagOrder,
     },
-    dataPaths: {
-      cookbookPath,
-      recipeOrderPath,
-      glossaryPath,
-      basicFoodTagAssociationPath,
-    },
     givenRecipe,
   } = props;
   const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
+  const {
+    cookbookPath,
+    recipeOrderPath,
+    glossaryPath,
+    basicFoodTagAssociationPath,
+  } = dataPaths;
 
   const recipeOrder = _recipeOrder || [];
 

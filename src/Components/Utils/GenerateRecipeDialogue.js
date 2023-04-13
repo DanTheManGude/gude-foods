@@ -35,8 +35,6 @@ function GenerateRecipeDialogue(props) {
     basicFoodTagOrder,
     basicFoodTagAssociation,
     setAiGeneratedRecipe,
-    glossaryPath,
-    basicFoodTagAssociationPath,
   } = props;
   const addAlert = useContext(AddAlertContext);
   let navigate = useNavigate();
@@ -189,8 +187,6 @@ function GenerateRecipeDialogue(props) {
           basicFoodTagOrder={basicFoodTagOrder}
           ingredientsList={ingredientsList}
           updateIngredientsList={setIngredientsList}
-          glossaryPath={glossaryPath}
-          basicFoodTagAssociationPath={basicFoodTagAssociationPath}
         />
         <RecipeTagsMultiSelect
           glossary={glossary}

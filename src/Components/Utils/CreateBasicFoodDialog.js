@@ -8,6 +8,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 
 import { updateRequest, createKey } from "../../utils/requests";
+import { DataPathsContext } from "../Contexts";
 import DepartmentFormControl from "./DepartmentFormControl";
 
 function CreateBasicFoodDialog(props) {
@@ -20,8 +21,8 @@ function CreateBasicFoodDialog(props) {
     glossary,
     basicFoodTagOrder,
     glossaryPath,
-    basicFoodTagAssociationPath,
   } = props;
+  const { basicFoodTagAssociationPath } = useContext(DataPathsContext);
 
   const handleCreate = () => {
     const foodId = createKey(`${glossaryPath}/basicFoods`);

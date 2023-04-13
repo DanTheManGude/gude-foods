@@ -28,7 +28,7 @@ import {
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
 
-import { AddAlertContext } from "../Contexts";
+import { AddAlertContext, DataPathsContext } from "../Contexts";
 
 function Recipe(props) {
   const {
@@ -41,16 +41,17 @@ function Recipe(props) {
       basicFoodTagOrder,
       menu: _menu,
     },
-    dataPaths: {
-      cookbookPath,
-      recipeOrderPath,
-      shoppingListPath,
-      glossaryPath,
-      basicFoodTagAssociationPath,
-      menuPath,
-    },
   } = props;
   const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
+  const {
+    cookbookPath,
+    recipeOrderPath,
+    shoppingListPath,
+    glossaryPath,
+    basicFoodTagAssociationPath,
+    menuPath,
+  } = dataPaths;
 
   const recipeOrder = _recipeOrder || [];
   const menu = _menu || {};
@@ -256,7 +257,7 @@ function Recipe(props) {
                 originalRecipe.ingredients,
                 recipeId,
                 { recipeOrder, menu },
-                { shoppingListPath, recipeOrderPath, menuPath },
+                dataPaths,
                 addAlert
               );
             }}

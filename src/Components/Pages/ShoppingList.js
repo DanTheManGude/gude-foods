@@ -38,7 +38,7 @@ import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
-import { AddAlertContext } from "../Contexts";
+import { AddAlertContext, DataPathsContext } from "../Contexts";
 
 const deleteKeys = {
   ALL: "the entire shopping list",
@@ -65,14 +65,10 @@ function ShoppingList(props) {
       recipeOrder: _recipeOrder,
       menu: _menu,
     },
-    dataPaths: {
-      shoppingListPath,
-      glossaryPath,
-      basicFoodTagAssociationPath,
-      menuPath,
-    },
   } = props;
   const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
+  const { shoppingListPath, menuPath } = dataPaths;
 
   const cookbook = _cookbook || {};
   const menu = _menu || {};
@@ -426,8 +422,6 @@ function ShoppingList(props) {
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             basicFoodTagOrder={basicFoodTagOrder}
-            glossaryPath={glossaryPath}
-            basicFoodTagAssociationPath={basicFoodTagAssociationPath}
           />
           <TextField
             variant="outlined"
