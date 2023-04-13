@@ -38,6 +38,8 @@ import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
+import { AddAlertContext } from "../Contexts";
+
 const deleteKeys = {
   ALL: "the entire shopping list",
   CHECKED: "the checked items",
@@ -69,8 +71,9 @@ function ShoppingList(props) {
       basicFoodTagAssociationPath,
       menuPath,
     },
-    addAlert,
   } = props;
+  const addAlert = useContext(AddAlertContext);
+
   const cookbook = _cookbook || {};
   const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];

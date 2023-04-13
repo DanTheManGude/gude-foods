@@ -7,6 +7,8 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
+import { saveRecipe } from "../../utils/requests";
+
 import {
   renderEditingButtons,
   renderNameInput,
@@ -16,9 +18,9 @@ import {
   renderTagControls,
 } from "../Utils/RecipeParts";
 import InstructionList from "../Utils/InstructionList";
-
-import { saveRecipe } from "../../utils/requests";
 import IngredientList from "../Utils/IngredientList";
+
+import { AddAlertContext } from "../Contexts";
 
 function AiRecipe(props) {
   const {
@@ -34,9 +36,10 @@ function AiRecipe(props) {
       glossaryPath,
       basicFoodTagAssociationPath,
     },
-    addAlert,
     givenRecipe,
   } = props;
+  const addAlert = useContext(AddAlertContext);
+
   const recipeOrder = _recipeOrder || [];
 
   const {

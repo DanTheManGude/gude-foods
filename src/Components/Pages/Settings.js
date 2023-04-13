@@ -18,9 +18,12 @@ import { setAllData, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import { signOutGoogle } from "../../utils/googleAuth";
 import ImportFileButton from "../Utils/ImportFileButton";
+import { AddAlertContext } from "../Contexts";
 
 function Settings(props) {
-  const { database, dataPaths, addAlert, user } = props;
+  const { database, dataPaths, user } = props;
+
+  const addAlert = useContext(AddAlertContext);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -139,7 +142,6 @@ function Settings(props) {
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <ImportFileButton
               onSuccess={(fileData) => setAllData(fileData, addAlert)}
-              addAlert={addAlert}
               buttonProps={{
                 variant: "outlined",
                 color: "secondary",

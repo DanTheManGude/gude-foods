@@ -28,6 +28,8 @@ import {
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
 
+import { AddAlertContext } from "../Contexts";
+
 function Recipe(props) {
   const {
     database: {
@@ -47,8 +49,9 @@ function Recipe(props) {
       basicFoodTagAssociationPath,
       menuPath,
     },
-    addAlert,
   } = props;
+  const addAlert = useContext(AddAlertContext);
+
   const recipeOrder = _recipeOrder || [];
   const menu = _menu || {};
   const glossary = _glossary || {};

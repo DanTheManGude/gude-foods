@@ -12,6 +12,8 @@ import Button from "@mui/material/Button";
 import newUserData from "../../newUserData.json";
 import { setAllData } from "../../utils/requests";
 
+import { AddAlertContext } from "../Contexts";
+
 function Home(props) {
   const {
     database: {
@@ -21,10 +23,10 @@ function Home(props) {
       cookbook,
       menu,
     },
-    addAlert,
     dataPaths,
   } = props;
   let navigate = useNavigate();
+  const addAlert = useContext(AddAlertContext);
 
   const renderNewUserCard = () => {
     if (glossary) {

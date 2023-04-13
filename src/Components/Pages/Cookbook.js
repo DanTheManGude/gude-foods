@@ -15,13 +15,6 @@ import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StarIcon from "@mui/icons-material/Star";
 
-import RecipeSearchInput from "../Utils/RecipeSearchInput";
-import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
-import ImportFileButton from "../Utils/ImportFileButton";
-import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
-
-import { DatabaseContext, DataPathsContext } from "../Contexts";
-
 import {
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
@@ -33,15 +26,27 @@ import {
   transformCookbookFromImport,
 } from "../../utils/dataTransfer";
 
+import RecipeSearchInput from "../Utils/RecipeSearchInput";
+import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
+import ImportFileButton from "../Utils/ImportFileButton";
+import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
+
+import {
+  DatabaseContext,
+  DataPathsContext,
+  AddAlertContext,
+} from "../Contexts";
+
 function Cookbook(props) {
   const {
-    addAlert,
     filteringOptions = {},
     setFilteringOptions,
     setAiGeneratedRecipe,
     openAIKey,
   } = props;
   const database = useContext(DatabaseContext);
+  const addAlert = useContext(AddAlertContext);
+
   const {
     glossary: _glossary,
     cookbook: _cookbook,
@@ -304,7 +309,6 @@ function Cookbook(props) {
         buttonProps={{ color: "secondary", variant: "outlined" }}
         buttonText="Import recipe"
         id="import-recipe"
-        addAlert={addAlert}
       />
     </Stack>
   );
@@ -361,7 +365,6 @@ function Cookbook(props) {
         buttonProps={{ color: "secondary", variant: "outlined" }}
         buttonText="Import cookbook"
         id="import-cookbook"
-        addAlert={addAlert}
       />
     </Stack>
   );
@@ -421,7 +424,6 @@ function Cookbook(props) {
         onClose={() => {
           setOpenGenerateRecipeDialogue(false);
         }}
-        addAlert={addAlert}
         glossary={glossary}
         basicFoodTagAssociation={basicFoodTagAssociation}
         basicFoodTagOrder={basicFoodTagOrder}

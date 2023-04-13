@@ -13,15 +13,10 @@ import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
 import AiRecipe from "../Pages/AiRecipe";
 
-import {
-  DatabaseContext,
-  DataPathsContext,
-  AddAlertContext,
-} from "../Contexts";
+import { DatabaseContext, DataPathsContext } from "../Contexts";
 
 function PagesContainer(props) {
   const { user } = props;
-  const addAlert = useContext(AddAlertContext);
 
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
@@ -62,19 +57,12 @@ function PagesContainer(props) {
         <Routes>
           <Route
             path="/home"
-            element={
-              <Home
-                database={database}
-                dataPaths={dataPaths}
-                addAlert={addAlert}
-              />
-            }
+            element={<Home database={database} dataPaths={dataPaths} />}
           />
           <Route
             path="cookbook"
             element={
               <Cookbook
-                addAlert={addAlert}
                 filteringOptions={filteringOptions}
                 setFilteringOptions={setFilteringOptions}
                 setAiGeneratedRecipe={setAiGeneratedRecipe}
@@ -84,13 +72,7 @@ function PagesContainer(props) {
           />
           <Route
             path="recipe/:recipeId"
-            element={
-              <Recipe
-                database={database}
-                dataPaths={dataPaths}
-                addAlert={addAlert}
-              />
-            }
+            element={<Recipe database={database} dataPaths={dataPaths} />}
           />
           <Route
             path="cooking/:recipeId"
@@ -98,33 +80,16 @@ function PagesContainer(props) {
           />
           <Route
             path="shoppingList"
-            element={
-              <ShoppingList
-                database={database}
-                dataPaths={dataPaths}
-                addAlert={addAlert}
-              />
-            }
+            element={<ShoppingList database={database} dataPaths={dataPaths} />}
           />
           <Route
             path="glossary"
-            element={
-              <Glossary
-                database={database}
-                dataPaths={dataPaths}
-                addAlert={addAlert}
-              />
-            }
+            element={<Glossary database={database} dataPaths={dataPaths} />}
           />
           <Route
             path="settings"
             element={
-              <Settings
-                database={database}
-                dataPaths={dataPaths}
-                user={user}
-                addAlert={addAlert}
-              />
+              <Settings database={database} dataPaths={dataPaths} user={user} />
             }
           />
           {aiGeneratedRecipe && (
@@ -134,7 +99,6 @@ function PagesContainer(props) {
                 <AiRecipe
                   database={database}
                   dataPaths={dataPaths}
-                  addAlert={addAlert}
                   givenRecipe={aiGeneratedRecipe}
                 />
               }

@@ -19,6 +19,8 @@ import { updateRequest, createKey } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import DepartmentFormControl from "../Utils/DepartmentFormControl";
 
+import { AddAlertContext } from "../Contexts";
+
 function Glossary(props) {
   const {
     database: {
@@ -35,8 +37,8 @@ function Glossary(props) {
       basicFoodTagAssociationPath,
       basicFoodTagOrderPath,
     },
-    addAlert,
   } = props;
+  const addAlert = useContext(AddAlertContext);
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});

@@ -1,16 +1,19 @@
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+import { AddAlertContext } from "../Contexts";
+
 function ImportFileButton(props) {
   const {
     onSuccess,
     onFailure,
-    addAlert,
     buttonProps = {},
     buttonText = "Import",
     typographyProps = {},
     id,
   } = props;
+  const addAlert = useContext(AddAlertContext);
+
   const inputId = `import-file-button-${id}`;
 
   const handeFileImport = (file) => {

@@ -16,10 +16,10 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
+import { generateRecipe, parseResponse } from "../../utils/ai";
+import { AddAlertContext } from "../Contexts";
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
-
-import { generateRecipe, parseResponse } from "../../utils/ai";
 
 const PromptTypography = (props) => <Typography component="span" {...props} />;
 const promptPrefix = (
@@ -31,7 +31,6 @@ function GenerateRecipeDialogue(props) {
     open,
     onClose,
     openAIKey,
-    addAlert,
     glossary,
     basicFoodTagOrder,
     basicFoodTagAssociation,
@@ -39,6 +38,7 @@ function GenerateRecipeDialogue(props) {
     glossaryPath,
     basicFoodTagAssociationPath,
   } = props;
+  const addAlert = useContext(AddAlertContext);
   let navigate = useNavigate();
 
   const [prompt, setPrompt] = useState([promptPrefix]);
