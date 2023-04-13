@@ -62,13 +62,7 @@ function Cookbook(props) {
   const recipeOrder = _recipeOrder || [];
 
   const dataPaths = useContext(DataPathsContext);
-  const {
-    recipeOrderPath,
-    shoppingListPath,
-    menuPath,
-    glossaryPath,
-    cookbookPath,
-  } = dataPaths;
+  const { shoppingListPath, menuPath, glossaryPath, cookbookPath } = dataPaths;
 
   let navigate = useNavigate();
 

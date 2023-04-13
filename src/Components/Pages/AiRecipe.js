@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
@@ -20,7 +20,7 @@ import {
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
 
-import { AddAlertContext } from "../Contexts";
+import { AddAlertContext, DataPathsContext } from "../Contexts";
 
 function AiRecipe(props) {
   const {
