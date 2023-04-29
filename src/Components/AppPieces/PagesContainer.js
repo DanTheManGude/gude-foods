@@ -39,11 +39,11 @@ function PagesContainer(props) {
           ..._database,
           [key]: snapshot.val(),
         }));
-        setDataPaths((_dataPaths) => ({
-          ..._dataPaths,
-          [`${key}Path`]: fullPath,
-        }));
       });
+      setDataPaths((_dataPaths) => ({
+        ..._dataPaths,
+        [`${key}Path`]: fullPath,
+      }));
     });
 
     onValue(ref(db, "openAIKey"), (snapshot) => {
