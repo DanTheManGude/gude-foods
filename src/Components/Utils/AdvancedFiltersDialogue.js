@@ -1,5 +1,3 @@
-import { useContext } from "react";
-
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -8,8 +6,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Box from "@mui/material/Box";
-
-import { DataPathsContext } from "../Contexts";
 
 import RecipeSearchInput from "./RecipeSearchInput";
 import FavoriteSwitch from "./FavoriteSwitch";
@@ -26,9 +22,6 @@ function AdvancedFiltersDialogue(props) {
     basicFoodTagOrder,
     basicFoodTagAssociation,
   } = props;
-
-  const { glossaryPath, basicFoodTagAssociationPath } =
-    useContext(DataPathsContext);
 
   const {
     searchTerm = "",
@@ -87,8 +80,6 @@ function AdvancedFiltersDialogue(props) {
             glossary={glossary}
             basicFoodTagAssociation={basicFoodTagAssociation}
             basicFoodTagOrder={basicFoodTagOrder}
-            glossaryPath={glossaryPath}
-            basicFoodTagAssociationPath={basicFoodTagAssociationPath}
             ingredientsList={ingredientsList}
             updateIngredientsList={(newIngredientsList) => {
               updateFilteringOptions({ ingredientsList: newIngredientsList });

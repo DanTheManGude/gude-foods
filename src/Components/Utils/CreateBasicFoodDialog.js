@@ -21,9 +21,9 @@ function CreateBasicFoodDialog(props) {
     onClose,
     glossary,
     basicFoodTagOrder,
-    glossaryPath,
   } = props;
-  const { basicFoodTagAssociationPath } = useContext(DataPathsContext);
+  const { basicFoodTagAssociationPath, glossaryPath } =
+    useContext(DataPathsContext);
 
   const handleCreate = () => {
     const foodId = createKey(`${glossaryPath}/basicFoods`);

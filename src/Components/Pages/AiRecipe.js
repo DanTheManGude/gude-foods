@@ -34,12 +34,7 @@ function AiRecipe(props) {
   } = props;
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
-  const {
-    cookbookPath,
-    recipeOrderPath,
-    glossaryPath,
-    basicFoodTagAssociationPath,
-  } = dataPaths;
+  const { cookbookPath, recipeOrderPath, glossaryPath } = dataPaths;
 
   const recipeOrder = _recipeOrder || [];
 
@@ -134,8 +129,6 @@ function AiRecipe(props) {
           basicFoodTagAssociation={basicFoodTagAssociation}
           basicFoodTagOrder={basicFoodTagOrder}
           glossary={glossary}
-          basicFoodTagAssociationPath={basicFoodTagAssociationPath}
-          glossaryPath={glossaryPath}
           updateIngredients={setIngredients}
         />
         <InstructionList

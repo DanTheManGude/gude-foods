@@ -362,8 +362,6 @@ function Recipe(props) {
             basicFoodTagAssociation={basicFoodTagAssociation}
             basicFoodTagOrder={basicFoodTagOrder}
             glossary={glossary}
-            basicFoodTagAssociationPath={basicFoodTagAssociationPath}
-            glossaryPath={glossaryPath}
             updateIngredients={updateIngredients}
           />
           <InstructionList

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -8,7 +8,6 @@ import {
   constructBasicFoodOptions,
 } from "../../utils/foods";
 import { unknownSectionName } from "../../constants";
-import { DataPathsContext } from "../Contexts";
 import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
 
 function BasicFoodAutocomplete(props) {
@@ -22,9 +21,6 @@ function BasicFoodAutocomplete(props) {
     basicFoodTagAssociation,
     basicFoodTagOrder,
   } = props;
-
-  const { basicFoodTagAssociationPath, glossaryPath } =
-    useContext(DataPathsContext);
 
   const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
     useState(false);
@@ -115,8 +111,6 @@ function BasicFoodAutocomplete(props) {
         }}
         glossary={glossary}
         basicFoodTagOrder={basicFoodTagOrder}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
     </>
   );
