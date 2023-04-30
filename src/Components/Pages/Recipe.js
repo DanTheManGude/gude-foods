@@ -28,20 +28,13 @@ import {
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
 
-import { AddAlertContext, DataPathsContext } from "../Contexts";
+import {
+  DatabaseContext,
+  AddAlertContext,
+  DataPathsContext,
+} from "../Contexts";
 
-function Recipe(props) {
-  const {
-    database: {
-      glossary: _glossary,
-      basicFoodTagAssociation,
-      cookbook: _cookbook,
-      recipeOrder: _recipeOrder,
-      shoppingList,
-      basicFoodTagOrder,
-      menu: _menu,
-    },
-  } = props;
+function Recipe() {
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const {
@@ -49,9 +42,16 @@ function Recipe(props) {
     recipeOrderPath,
     shoppingListPath,
     glossaryPath,
-    basicFoodTagAssociationPath,
     menuPath,
   } = dataPaths;
+  const database = useContext(DatabaseContext);
+  const {
+    glossary: _glossary,
+    cookbook: _cookbook,
+    recipeOrder: _recipeOrder,
+    shoppingList,
+    menu: _menu,
+  } = database;
 
   const recipeOrder = _recipeOrder || [];
   const menu = _menu || {};
@@ -359,9 +359,6 @@ function Recipe(props) {
           <IngredientList
             ingredients={recipeEntry.ingredients}
             editable={isEditing}
-            basicFoodTagAssociation={basicFoodTagAssociation}
-            basicFoodTagOrder={basicFoodTagOrder}
-            glossary={glossary}
             updateIngredients={updateIngredients}
           />
           <InstructionList

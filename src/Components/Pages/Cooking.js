@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -14,12 +14,13 @@ import Pause from "@mui/icons-material/Pause";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 
+import { DatabaseContext } from "../Contexts";
+
 const musicAudioId = "musicAudio";
 
-function Cooking(props) {
-  const {
-    database: { cookbook: _cookbook },
-  } = props;
+function Cooking() {
+  const database = useContext(DatabaseContext);
+  const { cookbook: _cookbook } = database;
 
   const { recipeId } = useParams();
 

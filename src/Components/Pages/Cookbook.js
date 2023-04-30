@@ -52,8 +52,6 @@ function Cookbook(props) {
     cookbook: _cookbook,
     recipeOrder: _recipeOrder,
     shoppingList,
-    basicFoodTagOrder,
-    basicFoodTagAssociation,
     menu: _menu,
   } = database;
   const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
@@ -400,9 +398,6 @@ function Cookbook(props) {
         }}
         filteringOptions={filteringOptions}
         setFilteringOptions={setFilteringOptions}
-        glossary={glossary}
-        basicFoodTagOrder={basicFoodTagOrder}
-        basicFoodTagAssociation={basicFoodTagAssociation}
       />
       <GenerateRecipeDialogue
         openAIKey={openAIKey}
@@ -410,9 +405,6 @@ function Cookbook(props) {
         onClose={() => {
           setOpenGenerateRecipeDialogue(false);
         }}
-        glossary={glossary}
-        basicFoodTagAssociation={basicFoodTagAssociation}
-        basicFoodTagOrder={basicFoodTagOrder}
         setAiGeneratedRecipe={setAiGeneratedRecipe}
       />
     </div>

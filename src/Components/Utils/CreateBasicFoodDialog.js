@@ -19,8 +19,6 @@ function CreateBasicFoodDialog(props) {
     setCreateBasicFood,
     handleSelectedFood,
     onClose,
-    glossary,
-    basicFoodTagOrder,
   } = props;
   const { basicFoodTagAssociationPath, glossaryPath } =
     useContext(DataPathsContext);
@@ -78,8 +76,6 @@ function CreateBasicFoodDialog(props) {
                 tagId: event.target.value,
               }));
             }}
-            glossary={glossary}
-            basicFoodTagOrder={basicFoodTagOrder}
           />
         </Stack>
       </DialogContent>

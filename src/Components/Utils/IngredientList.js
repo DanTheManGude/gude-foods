@@ -10,9 +10,11 @@ import Button from "@mui/material/Button";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
-import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
-
 import { waitForElm } from "../../utils/utility";
+
+import { DatabaseContext } from "../Contexts";
+
+import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
 
 const getIngredientSorting =
   (basicFoodTagAssociation, basicFoodTagOrder) =>
@@ -40,14 +42,10 @@ const getIngredientSorting =
   };
 
 function IngredientList(props) {
-  const {
-    ingredients = {},
-    editable,
-    basicFoodTagAssociation,
-    basicFoodTagOrder,
-    glossary,
-    updateIngredients,
-  } = props;
+  const { ingredients = {}, editable, updateIngredients } = props;
+
+  const database = useContext(DatabaseContext);
+  const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
 
   const [newIngredientId, setNewIngredientId] = useState(null);
 
@@ -139,9 +137,6 @@ function IngredientList(props) {
         newFoodId={newIngredientId}
         setNewFoodId={setNewIngredientId}
         extraProps={{ fullWidth: true }}
-        glossary={glossary}
-        basicFoodTagAssociation={basicFoodTagAssociation}
-        basicFoodTagOrder={basicFoodTagOrder}
       />
       <Button
         id={`add-ingredient-button`}

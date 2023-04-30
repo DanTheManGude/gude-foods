@@ -19,18 +19,13 @@ import { updateRequest, createKey } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import DepartmentFormControl from "../Utils/DepartmentFormControl";
 
-import { AddAlertContext, DataPathsContext } from "../Contexts";
+import {
+  AddAlertContext,
+  DataPathsContext,
+  DatabaseContext,
+} from "../Contexts";
 
-function Glossary(props) {
-  const {
-    database: {
-      glossary,
-      shoppingList,
-      cookbook,
-      basicFoodTagAssociation,
-      basicFoodTagOrder,
-    },
-  } = props;
+function Glossary() {
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const {
@@ -40,6 +35,14 @@ function Glossary(props) {
     basicFoodTagAssociationPath,
     basicFoodTagOrderPath,
   } = dataPaths;
+  const database = useContext(DatabaseContext);
+  const {
+    glossary,
+    shoppingList,
+    cookbook,
+    basicFoodTagAssociation,
+    basicFoodTagOrder,
+  } = database;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});

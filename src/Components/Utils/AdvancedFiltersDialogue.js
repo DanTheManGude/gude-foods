@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -7,21 +9,15 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Box from "@mui/material/Box";
 
+import { DatabaseContext } from "../Contexts";
+
 import RecipeSearchInput from "./RecipeSearchInput";
 import FavoriteSwitch from "./FavoriteSwitch";
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
 
 function AdvancedFiltersDialogue(props) {
-  const {
-    open,
-    onClose,
-    filteringOptions,
-    setFilteringOptions,
-    glossary,
-    basicFoodTagOrder,
-    basicFoodTagAssociation,
-  } = props;
+  const { open, onClose, filteringOptions, setFilteringOptions } = props;
 
   const {
     searchTerm = "",
@@ -29,6 +25,9 @@ function AdvancedFiltersDialogue(props) {
     tagsList = [],
     isFavoriteFilter = false,
   } = filteringOptions;
+
+  const database = useContext(DatabaseContext);
+  const { glossary, basicFoodTagOrder, basicFoodTagAssociation } = database;
 
   const clearFilteringOptions = () => {
     setFilteringOptions({});

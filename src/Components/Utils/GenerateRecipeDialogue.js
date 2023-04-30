@@ -17,7 +17,7 @@ import TextField from "@mui/material/TextField";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 import { generateRecipe, parseResponse } from "../../utils/ai";
-import { AddAlertContext } from "../Contexts";
+import { DatabaseContext, AddAlertContext } from "../Contexts";
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
 
@@ -27,16 +27,12 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const {
-    open,
-    onClose,
-    openAIKey,
-    glossary,
-    basicFoodTagOrder,
-    basicFoodTagAssociation,
-    setAiGeneratedRecipe,
-  } = props;
+  const { open, onClose, openAIKey, setAiGeneratedRecipe } = props;
+
   const addAlert = useContext(AddAlertContext);
+  const database = useContext(DatabaseContext);
+  const { glossary, basicFoodTagOrder, basicFoodTagAssociation } = database;
+
   let navigate = useNavigate();
 
   const [prompt, setPrompt] = useState([promptPrefix]);

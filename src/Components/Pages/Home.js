@@ -12,21 +12,19 @@ import Button from "@mui/material/Button";
 import newUserData from "../../newUserData.json";
 import { setAllData } from "../../utils/requests";
 
-import { AddAlertContext, DataPathsContext } from "../Contexts";
+import {
+  AddAlertContext,
+  DataPathsContext,
+  DatabaseContext,
+} from "../Contexts";
 
-function Home(props) {
-  const {
-    database: {
-      glossary,
-      basicFoodTagAssociation,
-      shoppingList,
-      cookbook,
-      menu,
-    },
-  } = props;
+function Home() {
   let navigate = useNavigate();
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
+  const database = useContext(DatabaseContext);
+  const { glossary, basicFoodTagAssociation, shoppingList, cookbook, menu } =
+    database;
 
   const renderNewUserCard = () => {
     if (glossary) {
