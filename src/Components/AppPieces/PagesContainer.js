@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
 
+import { updateRequest } from "../../utils/requests";
 import { databasePaths } from "../../constants";
 
 import Home from "../Pages/Home";
@@ -29,9 +30,10 @@ function PagesContainer(props) {
     }
     const db = getDatabase();
 
+    const pathPrefix = `accounts/${user.uid}`;
     Object.keys(databasePaths).forEach((key) => {
       const pathName = databasePaths[key];
-      const fullPath = `accounts/${user.uid}/${pathName}`;
+      const fullPath = `${pathPrefix}/${pathName}`;
 
       onValue(ref(db, fullPath), (snapshot) => {
         setDatabase((_database) => ({
@@ -44,6 +46,7 @@ function PagesContainer(props) {
         [`${key}Path`]: fullPath,
       }));
     });
+    updateRequest({ [`${pathPrefix}/name`]: user.displayName });
   }, [user]);
 
   return (
