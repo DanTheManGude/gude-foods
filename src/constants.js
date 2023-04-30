@@ -23,6 +23,7 @@ export const databasePaths = {
   cookbook: "cookbook",
   recipeOrder: "recipeOrder",
   menu: "menu",
+  openAIKey: "openAIKey",
 };
 
 export const UNKNOWN_TAG = "UNKNOWN_TAG";

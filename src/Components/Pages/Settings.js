@@ -40,7 +40,7 @@ function Settings(props) {
 
   const onDownload = () => {
     const data = {
-      user: { email: user.email, uid: user.uid },
+      user: { name: user.displayName, email: user.email, uid: user.uid },
       ...database,
     };
 

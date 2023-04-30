@@ -171,6 +171,7 @@ function InstructionList(props) {
               renderAddInstructionControl()
             ) : (
               <Button
+                key={"cookRecipe"}
                 color="secondary"
                 variant="outlined"
                 size="small"

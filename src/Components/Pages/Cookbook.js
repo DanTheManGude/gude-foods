@@ -42,7 +42,6 @@ function Cookbook(props) {
     filteringOptions = {},
     setFilteringOptions,
     setAiGeneratedRecipe,
-    openAIKey,
   } = props;
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
@@ -279,7 +278,6 @@ function Cookbook(props) {
   const renderNewRecipeButtons = () => (
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
-        disabled={!openAIKey}
         color="primary"
         variant="outlined"
         onClick={() => {
@@ -400,7 +398,6 @@ function Cookbook(props) {
         setFilteringOptions={setFilteringOptions}
       />
       <GenerateRecipeDialogue
-        openAIKey={openAIKey}
         open={openGenerateRecipeDialogue}
         onClose={() => {
           setOpenGenerateRecipeDialogue(false);
