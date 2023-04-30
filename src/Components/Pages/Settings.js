@@ -22,6 +22,7 @@ import {
   AddAlertContext,
   DataPathsContext,
   DatabaseContext,
+  PaletteContext,
 } from "../Contexts";
 
 function Settings(props) {
@@ -30,6 +31,7 @@ function Settings(props) {
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
+  const [palette, setPalette] = useContext(PaletteContext);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -219,6 +221,8 @@ function Settings(props) {
       </DialogActions>
     </Dialog>
   );
+
+  console.log(palette);
 
   return (
     <div>
