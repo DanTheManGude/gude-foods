@@ -27,11 +27,12 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const { open, onClose, openAIKey, setAiGeneratedRecipe } = props;
+  const { open, onClose, setAiGeneratedRecipe } = props;
 
   const addAlert = useContext(AddAlertContext);
   const database = useContext(DatabaseContext);
-  const { glossary, basicFoodTagOrder, basicFoodTagAssociation } = database;
+  const { glossary, basicFoodTagOrder, basicFoodTagAssociation, openAIKey } =
+    database;
 
   let navigate = useNavigate();
 
