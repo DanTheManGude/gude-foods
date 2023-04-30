@@ -1,10 +1,18 @@
+import { useContext } from "react";
+
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
+import { DatabaseContext } from "../Contexts";
+
 function DepartmentFormControl(props) {
-  const { disabled, id, value, onChange, glossary, basicFoodTagOrder } = props;
+  const { disabled, id, value, onChange } = props;
+
+  const database = useContext(DatabaseContext);
+  const { glossary, basicFoodTagOrder } = database;
+
   return (
     <FormControl
       size="small"

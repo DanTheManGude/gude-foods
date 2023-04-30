@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { TransitionGroup } from "react-transition-group";
@@ -38,6 +38,12 @@ import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
+import {
+  DatabaseContext,
+  AddAlertContext,
+  DataPathsContext,
+} from "../Contexts";
+
 const deleteKeys = {
   ALL: "the entire shopping list",
   CHECKED: "the checked items",
@@ -52,25 +58,21 @@ const MenuCount = styled(Button)`
   }
 `;
 
-function ShoppingList(props) {
+function ShoppingList() {
+  const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
+  const { shoppingListPath, menuPath } = dataPaths;
+  const database = useContext(DatabaseContext);
   const {
-    database: {
-      glossary,
-      basicFoodTagAssociation,
-      shoppingList,
-      cookbook: _cookbook,
-      basicFoodTagOrder,
-      recipeOrder: _recipeOrder,
-      menu: _menu,
-    },
-    dataPaths: {
-      shoppingListPath,
-      glossaryPath,
-      basicFoodTagAssociationPath,
-      menuPath,
-    },
-    addAlert,
-  } = props;
+    glossary,
+    basicFoodTagAssociation,
+    shoppingList,
+    cookbook: _cookbook,
+    basicFoodTagOrder,
+    recipeOrder: _recipeOrder,
+    menu: _menu,
+  } = database;
+
   const cookbook = _cookbook || {};
   const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];
@@ -420,11 +422,6 @@ function ShoppingList(props) {
             newFoodId={newFoodId}
             setNewFoodId={setNewFoodId}
             extraProps={{ sx: { width: "206px" } }}
-            glossary={glossary}
-            basicFoodTagAssociation={basicFoodTagAssociation}
-            basicFoodTagOrder={basicFoodTagOrder}
-            glossaryPath={glossaryPath}
-            basicFoodTagAssociationPath={basicFoodTagAssociationPath}
           />
           <TextField
             variant="outlined"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
@@ -19,24 +19,30 @@ import { updateRequest, createKey } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import DepartmentFormControl from "../Utils/DepartmentFormControl";
 
-function Glossary(props) {
+import {
+  AddAlertContext,
+  DataPathsContext,
+  DatabaseContext,
+} from "../Contexts";
+
+function Glossary() {
+  const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
   const {
-    database: {
-      glossary,
-      shoppingList,
-      cookbook,
-      basicFoodTagAssociation,
-      basicFoodTagOrder,
-    },
-    dataPaths: {
-      glossaryPath,
-      shoppingListPath,
-      cookbookPath,
-      basicFoodTagAssociationPath,
-      basicFoodTagOrderPath,
-    },
-    addAlert,
-  } = props;
+    glossaryPath,
+    shoppingListPath,
+    cookbookPath,
+    basicFoodTagAssociationPath,
+    basicFoodTagOrderPath,
+  } = dataPaths;
+  const database = useContext(DatabaseContext);
+  const {
+    glossary,
+    shoppingList,
+    cookbook,
+    basicFoodTagAssociation,
+    basicFoodTagOrder,
+  } = database;
 
   const [editingEntry, setEditingEntry] = useState({});
   const clearEditingEntry = () => setEditingEntry({});

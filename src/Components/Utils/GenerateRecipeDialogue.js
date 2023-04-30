@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -16,10 +16,10 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
+import { generateRecipe, parseResponse } from "../../utils/ai";
+import { DatabaseContext, AddAlertContext } from "../Contexts";
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
-
-import { generateRecipe, parseResponse } from "../../utils/ai";
 
 const PromptTypography = (props) => <Typography component="span" {...props} />;
 const promptPrefix = (
@@ -27,18 +27,12 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const {
-    open,
-    onClose,
-    openAIKey,
-    addAlert,
-    glossary,
-    basicFoodTagOrder,
-    basicFoodTagAssociation,
-    setAiGeneratedRecipe,
-    glossaryPath,
-    basicFoodTagAssociationPath,
-  } = props;
+  const { open, onClose, openAIKey, setAiGeneratedRecipe } = props;
+
+  const addAlert = useContext(AddAlertContext);
+  const database = useContext(DatabaseContext);
+  const { glossary, basicFoodTagOrder, basicFoodTagAssociation } = database;
+
   let navigate = useNavigate();
 
   const [prompt, setPrompt] = useState([promptPrefix]);
@@ -189,8 +183,6 @@ function GenerateRecipeDialogue(props) {
           basicFoodTagOrder={basicFoodTagOrder}
           ingredientsList={ingredientsList}
           updateIngredientsList={setIngredientsList}
-          glossaryPath={glossaryPath}
-          basicFoodTagAssociationPath={basicFoodTagAssociationPath}
         />
         <RecipeTagsMultiSelect
           glossary={glossary}

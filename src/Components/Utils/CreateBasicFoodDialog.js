@@ -1,5 +1,6 @@
-import Stack from "@mui/material/Stack";
+import { useContext } from "react";
 
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -8,6 +9,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 
 import { updateRequest, createKey } from "../../utils/requests";
+import { DataPathsContext } from "../Contexts";
 import DepartmentFormControl from "./DepartmentFormControl";
 
 function CreateBasicFoodDialog(props) {
@@ -17,11 +19,9 @@ function CreateBasicFoodDialog(props) {
     setCreateBasicFood,
     handleSelectedFood,
     onClose,
-    glossary,
-    basicFoodTagOrder,
-    glossaryPath,
-    basicFoodTagAssociationPath,
   } = props;
+  const { basicFoodTagAssociationPath, glossaryPath } =
+    useContext(DataPathsContext);
 
   const handleCreate = () => {
     const foodId = createKey(`${glossaryPath}/basicFoods`);
@@ -76,8 +76,6 @@ function CreateBasicFoodDialog(props) {
                 tagId: event.target.value,
               }));
             }}
-            glossary={glossary}
-            basicFoodTagOrder={basicFoodTagOrder}
           />
         </Stack>
       </DialogContent>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -28,27 +28,31 @@ import {
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
 
-function Recipe(props) {
+import {
+  DatabaseContext,
+  AddAlertContext,
+  DataPathsContext,
+} from "../Contexts";
+
+function Recipe() {
+  const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
   const {
-    database: {
-      glossary: _glossary,
-      basicFoodTagAssociation,
-      cookbook: _cookbook,
-      recipeOrder: _recipeOrder,
-      shoppingList,
-      basicFoodTagOrder,
-      menu: _menu,
-    },
-    dataPaths: {
-      cookbookPath,
-      recipeOrderPath,
-      shoppingListPath,
-      glossaryPath,
-      basicFoodTagAssociationPath,
-      menuPath,
-    },
-    addAlert,
-  } = props;
+    cookbookPath,
+    recipeOrderPath,
+    shoppingListPath,
+    glossaryPath,
+    menuPath,
+  } = dataPaths;
+  const database = useContext(DatabaseContext);
+  const {
+    glossary: _glossary,
+    cookbook: _cookbook,
+    recipeOrder: _recipeOrder,
+    shoppingList,
+    menu: _menu,
+  } = database;
+
   const recipeOrder = _recipeOrder || [];
   const menu = _menu || {};
   const glossary = _glossary || {};
@@ -253,7 +257,7 @@ function Recipe(props) {
                 originalRecipe.ingredients,
                 recipeId,
                 { recipeOrder, menu },
-                { shoppingListPath, recipeOrderPath, menuPath },
+                dataPaths,
                 addAlert
               );
             }}
@@ -355,11 +359,6 @@ function Recipe(props) {
           <IngredientList
             ingredients={recipeEntry.ingredients}
             editable={isEditing}
-            basicFoodTagAssociation={basicFoodTagAssociation}
-            basicFoodTagOrder={basicFoodTagOrder}
-            glossary={glossary}
-            basicFoodTagAssociationPath={basicFoodTagAssociationPath}
-            glossaryPath={glossaryPath}
             updateIngredients={updateIngredients}
           />
           <InstructionList

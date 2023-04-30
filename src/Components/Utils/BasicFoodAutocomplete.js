@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -8,22 +8,13 @@ import {
   constructBasicFoodOptions,
 } from "../../utils/foods";
 import { unknownSectionName } from "../../constants";
-
+import { DatabaseContext } from "../Contexts";
 import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
 
 function BasicFoodAutocomplete(props) {
-  const {
-    id,
-    foodMap,
-    newFoodId,
-    setNewFoodId,
-    extraProps,
-    glossary,
-    basicFoodTagAssociation,
-    basicFoodTagOrder,
-    basicFoodTagAssociationPath,
-    glossaryPath,
-  } = props;
+  const { id, foodMap, newFoodId, setNewFoodId, extraProps } = props;
+  const database = useContext(DatabaseContext);
+  const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
 
   const [openCreateBasicFoodDialog, setOpenCreateBasicFoodDialog] =
     useState(false);
@@ -112,10 +103,6 @@ function BasicFoodAutocomplete(props) {
           setOpenCreateBasicFoodDialog(false);
           setCreateBasicFood({});
         }}
-        glossary={glossary}
-        basicFoodTagOrder={basicFoodTagOrder}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
     </>
   );

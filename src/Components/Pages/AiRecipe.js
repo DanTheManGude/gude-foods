@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+
+import { saveRecipe } from "../../utils/requests";
 
 import {
   renderEditingButtons,
@@ -16,27 +18,22 @@ import {
   renderTagControls,
 } from "../Utils/RecipeParts";
 import InstructionList from "../Utils/InstructionList";
-
-import { saveRecipe } from "../../utils/requests";
 import IngredientList from "../Utils/IngredientList";
 
+import {
+  AddAlertContext,
+  DataPathsContext,
+  DatabaseContext,
+} from "../Contexts";
+
 function AiRecipe(props) {
-  const {
-    database: {
-      recipeOrder: _recipeOrder,
-      glossary,
-      basicFoodTagAssociation,
-      basicFoodTagOrder,
-    },
-    dataPaths: {
-      cookbookPath,
-      recipeOrderPath,
-      glossaryPath,
-      basicFoodTagAssociationPath,
-    },
-    addAlert,
-    givenRecipe,
-  } = props;
+  const { givenRecipe } = props;
+  const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
+  const { cookbookPath, recipeOrderPath, glossaryPath } = dataPaths;
+  const database = useContext(DatabaseContext);
+  const { recipeOrder: _recipeOrder, glossary } = database;
+
   const recipeOrder = _recipeOrder || [];
 
   const {
@@ -127,11 +124,6 @@ function AiRecipe(props) {
         <IngredientList
           ingredients={ingredients}
           editable={true}
-          basicFoodTagAssociation={basicFoodTagAssociation}
-          basicFoodTagOrder={basicFoodTagOrder}
-          glossary={glossary}
-          basicFoodTagAssociationPath={basicFoodTagAssociationPath}
-          glossaryPath={glossaryPath}
           updateIngredients={setIngredients}
         />
         <InstructionList

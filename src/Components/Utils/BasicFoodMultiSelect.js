@@ -18,8 +18,6 @@ function BasicFoodMultiSelect(props) {
     glossary,
     basicFoodTagAssociation,
     basicFoodTagOrder,
-    glossaryPath,
-    basicFoodTagAssociationPath,
     ingredientsList,
     updateIngredientsList,
   } = props;
@@ -138,8 +136,6 @@ function BasicFoodMultiSelect(props) {
         }}
         glossary={glossary}
         basicFoodTagOrder={basicFoodTagOrder}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
     </>
   );

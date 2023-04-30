@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -18,9 +18,18 @@ import { setAllData, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import { signOutGoogle } from "../../utils/googleAuth";
 import ImportFileButton from "../Utils/ImportFileButton";
+import {
+  AddAlertContext,
+  DataPathsContext,
+  DatabaseContext,
+} from "../Contexts";
 
 function Settings(props) {
-  const { database, dataPaths, addAlert, user } = props;
+  const { user } = props;
+
+  const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
+  const database = useContext(DatabaseContext);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -139,7 +148,6 @@ function Settings(props) {
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <ImportFileButton
               onSuccess={(fileData) => setAllData(fileData, addAlert)}
-              addAlert={addAlert}
               buttonProps={{
                 variant: "outlined",
                 color: "secondary",

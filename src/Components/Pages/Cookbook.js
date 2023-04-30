@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -15,11 +15,6 @@ import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StarIcon from "@mui/icons-material/Star";
 
-import RecipeSearchInput from "../Utils/RecipeSearchInput";
-import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
-import ImportFileButton from "../Utils/ImportFileButton";
-import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
-
 import {
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
@@ -31,35 +26,41 @@ import {
   transformCookbookFromImport,
 } from "../../utils/dataTransfer";
 
+import RecipeSearchInput from "../Utils/RecipeSearchInput";
+import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
+import ImportFileButton from "../Utils/ImportFileButton";
+import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
+
+import {
+  DatabaseContext,
+  DataPathsContext,
+  AddAlertContext,
+} from "../Contexts";
+
 function Cookbook(props) {
   const {
-    database: {
-      glossary: _glossary,
-      cookbook: _cookbook,
-      recipeOrder: _recipeOrder,
-      shoppingList,
-      basicFoodTagOrder,
-      basicFoodTagAssociation,
-      menu: _menu,
-    },
-    dataPaths: {
-      recipeOrderPath,
-      shoppingListPath,
-      menuPath,
-      glossaryPath,
-      cookbookPath,
-      basicFoodTagAssociationPath,
-    },
-    addAlert,
     filteringOptions = {},
     setFilteringOptions,
     setAiGeneratedRecipe,
     openAIKey,
   } = props;
+  const database = useContext(DatabaseContext);
+  const addAlert = useContext(AddAlertContext);
+
+  const {
+    glossary: _glossary,
+    cookbook: _cookbook,
+    recipeOrder: _recipeOrder,
+    shoppingList,
+    menu: _menu,
+  } = database;
   const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
   const cookbook = _cookbook || {};
   const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];
+
+  const dataPaths = useContext(DataPathsContext);
+  const { shoppingListPath, menuPath, glossaryPath, cookbookPath } = dataPaths;
 
   let navigate = useNavigate();
 
@@ -82,12 +83,7 @@ function Cookbook(props) {
       cookbookPath
     );
 
-    updateFromCookbookImport(
-      transformedData,
-      { cookbookPath, glossaryPath, recipeOrderPath },
-      recipeOrder,
-      addAlert
-    );
+    updateFromCookbookImport(transformedData, dataPaths, recipeOrder, addAlert);
   };
 
   const calculateRecipeList = () => {
@@ -210,7 +206,7 @@ function Cookbook(props) {
                     ingredients,
                     recipeId,
                     { recipeOrder, menu },
-                    { shoppingListPath, recipeOrderPath, menuPath },
+                    dataPaths,
                     addAlert
                   );
                 }}
@@ -299,7 +295,6 @@ function Cookbook(props) {
         buttonProps={{ color: "secondary", variant: "outlined" }}
         buttonText="Import recipe"
         id="import-recipe"
-        addAlert={addAlert}
       />
     </Stack>
   );
@@ -356,7 +351,6 @@ function Cookbook(props) {
         buttonProps={{ color: "secondary", variant: "outlined" }}
         buttonText="Import cookbook"
         id="import-cookbook"
-        addAlert={addAlert}
       />
     </Stack>
   );
@@ -404,11 +398,6 @@ function Cookbook(props) {
         }}
         filteringOptions={filteringOptions}
         setFilteringOptions={setFilteringOptions}
-        glossary={glossary}
-        basicFoodTagOrder={basicFoodTagOrder}
-        basicFoodTagAssociation={basicFoodTagAssociation}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
       <GenerateRecipeDialogue
         openAIKey={openAIKey}
@@ -416,13 +405,7 @@ function Cookbook(props) {
         onClose={() => {
           setOpenGenerateRecipeDialogue(false);
         }}
-        addAlert={addAlert}
-        glossary={glossary}
-        basicFoodTagAssociation={basicFoodTagAssociation}
-        basicFoodTagOrder={basicFoodTagOrder}
         setAiGeneratedRecipe={setAiGeneratedRecipe}
-        glossaryPath={glossaryPath}
-        basicFoodTagAssociationPath={basicFoodTagAssociationPath}
       />
     </div>
   );

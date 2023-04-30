@@ -13,8 +13,10 @@ import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
 import AiRecipe from "../Pages/AiRecipe";
 
+import { DatabaseContext, DataPathsContext } from "../Contexts";
+
 function PagesContainer(props) {
-  const { user, addAlert } = props;
+  const { user } = props;
 
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
@@ -37,11 +39,11 @@ function PagesContainer(props) {
           ..._database,
           [key]: snapshot.val(),
         }));
-        setDataPaths((_dataPaths) => ({
-          ..._dataPaths,
-          [`${key}Path`]: fullPath,
-        }));
       });
+      setDataPaths((_dataPaths) => ({
+        ..._dataPaths,
+        [`${key}Path`]: fullPath,
+      }));
     });
 
     onValue(ref(db, "openAIKey"), (snapshot) => {
@@ -50,87 +52,36 @@ function PagesContainer(props) {
   }, [user]);
 
   return (
-    <Routes>
-      <Route
-        path="/home"
-        element={
-          <Home database={database} dataPaths={dataPaths} addAlert={addAlert} />
-        }
-      />
-      <Route
-        path="cookbook"
-        element={
-          <Cookbook
-            database={database}
-            dataPaths={dataPaths}
-            addAlert={addAlert}
-            filteringOptions={filteringOptions}
-            setFilteringOptions={setFilteringOptions}
-            setAiGeneratedRecipe={setAiGeneratedRecipe}
-            openAIKey={openAIKey}
+    <DatabaseContext.Provider value={database}>
+      <DataPathsContext.Provider value={dataPaths}>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route
+            path="cookbook"
+            element={
+              <Cookbook
+                filteringOptions={filteringOptions}
+                setFilteringOptions={setFilteringOptions}
+                setAiGeneratedRecipe={setAiGeneratedRecipe}
+                openAIKey={openAIKey}
+              />
+            }
           />
-        }
-      />
-      <Route
-        path="recipe/:recipeId"
-        element={
-          <Recipe
-            database={database}
-            dataPaths={dataPaths}
-            addAlert={addAlert}
-          />
-        }
-      />
-      <Route
-        path="cooking/:recipeId"
-        element={<Cooking database={database} />}
-      />
-      <Route
-        path="shoppingList"
-        element={
-          <ShoppingList
-            database={database}
-            dataPaths={dataPaths}
-            addAlert={addAlert}
-          />
-        }
-      />
-      <Route
-        path="glossary"
-        element={
-          <Glossary
-            database={database}
-            dataPaths={dataPaths}
-            addAlert={addAlert}
-          />
-        }
-      />
-      <Route
-        path="settings"
-        element={
-          <Settings
-            database={database}
-            dataPaths={dataPaths}
-            user={user}
-            addAlert={addAlert}
-          />
-        }
-      />
-      {aiGeneratedRecipe && (
-        <Route
-          path="aiRecipe"
-          element={
-            <AiRecipe
-              database={database}
-              dataPaths={dataPaths}
-              addAlert={addAlert}
-              givenRecipe={aiGeneratedRecipe}
+          <Route path="recipe/:recipeId" element={<Recipe />} />
+          <Route path="cooking/:recipeId" element={<Cooking />} />
+          <Route path="shoppingList" element={<ShoppingList />} />
+          <Route path="glossary" element={<Glossary />} />
+          <Route path="settings" element={<Settings user={user} />} />
+          {aiGeneratedRecipe && (
+            <Route
+              path="aiRecipe"
+              element={<AiRecipe givenRecipe={aiGeneratedRecipe} />}
             />
-          }
-        />
-      )}
-      <Route path="*" element={<Navigate to="/home" />} />
-    </Routes>
+          )}
+          <Route path="*" element={<Navigate to="/home" />} />
+        </Routes>
+      </DataPathsContext.Provider>
+    </DatabaseContext.Provider>
   );
 }
 

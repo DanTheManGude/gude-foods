@@ -8,8 +8,6 @@ import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
 import FormatListBulletedSharpIcon from "@mui/icons-material/FormatListBulletedSharp";
 import HouseSharp from "@mui/icons-material/HouseSharp";
 
-import { signInGoogle } from "../../utils/googleAuth";
-
 import { pages, presentationNames } from "../../constants";
 
 const pageIcons = {
@@ -21,8 +19,6 @@ const pageIcons = {
 };
 
 function BottomNav(props) {
-  const { addAlert } = props;
-
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -31,11 +27,7 @@ function BottomNav(props) {
       showLabels={true}
       value={pathname.slice(1)}
       onChange={(event, newValue) => {
-        if (pages.includes(newValue)) {
-          navigate(`/${newValue}`);
-        } else {
-          signInGoogle(addAlert);
-        }
+        navigate(`/${newValue}`);
       }}
       sx={{
         position: "fixed",
