@@ -2,14 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
-import { ThemeProvider } from "@mui/material/styles";
-
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "./firebaseConfig.json";
 
 import "./styles/index.css";
 import { captchaSiteKey } from "./constants";
-import { constructTheme } from "./utils/values";
 import App from "./Components/App";
 
 const {
@@ -27,9 +24,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ThemeProvider theme={constructTheme()}>
-        <App />
-      </ThemeProvider>
+      <App />
     </BrowserRouter>
   </React.StrictMode>
 );

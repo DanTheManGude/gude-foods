@@ -20,6 +20,7 @@ import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
 
 import { AddAlertContext } from "./Contexts";
+import withTheme from "./withTheme";
 
 function App() {
   const [alertList, setAlertList] = useState([]);
@@ -133,4 +134,4 @@ function App() {
   return <UnauthorizedUser user={user} addAlert={addAlert} />;
 }
 
-export default App;
+export default withTheme(App);
