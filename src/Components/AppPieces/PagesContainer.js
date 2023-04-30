@@ -22,7 +22,6 @@ function PagesContainer(props) {
   const [dataPaths, setDataPaths] = useState({});
   const [filteringOptions, setFilteringOptions] = useState();
   const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
-  const [openAIKey, setOpenAIKey] = useState();
 
   useEffect(() => {
     if (!user) {
@@ -31,8 +30,8 @@ function PagesContainer(props) {
     const db = getDatabase();
 
     Object.keys(databasePaths).forEach((key) => {
-      const pathRoot = databasePaths[key];
-      const fullPath = `${pathRoot}/${user.uid}`;
+      const pathName = databasePaths[key];
+      const fullPath = `accounts/${user.uid}/${pathName}`;
 
       onValue(ref(db, fullPath), (snapshot) => {
         setDatabase((_database) => ({
@@ -44,10 +43,6 @@ function PagesContainer(props) {
         ..._dataPaths,
         [`${key}Path`]: fullPath,
       }));
-    });
-
-    onValue(ref(db, "openAIKey"), (snapshot) => {
-      setOpenAIKey(snapshot.val());
     });
   }, [user]);
 
