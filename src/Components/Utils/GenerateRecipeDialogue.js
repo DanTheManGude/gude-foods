@@ -15,11 +15,18 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
+import { updateOpenAIKey } from "../../utils/requests";
 import { generateRecipe, parseResponse } from "../../utils/ai";
-import { DatabaseContext, AddAlertContext } from "../Contexts";
+import {
+  DatabaseContext,
+  DataPathsContext,
+  AddAlertContext,
+} from "../Contexts";
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
+import { Link } from "@mui/material";
 
 const PromptTypography = (props) => <Typography component="span" {...props} />;
 const promptPrefix = (
@@ -30,9 +37,15 @@ function GenerateRecipeDialogue(props) {
   const { open, onClose, setAiGeneratedRecipe } = props;
 
   const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
+  const { openAIKeyPath } = dataPaths;
   const database = useContext(DatabaseContext);
-  const { glossary, basicFoodTagOrder, basicFoodTagAssociation, openAIKey } =
-    database;
+  const {
+    glossary,
+    basicFoodTagOrder,
+    basicFoodTagAssociation,
+    openAIKey: savedOpenAiKey,
+  } = database;
 
   let navigate = useNavigate();
 
@@ -42,9 +55,15 @@ function GenerateRecipeDialogue(props) {
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [responseText, setResponseText] = useState("");
+  const [enteredOpenAIKey, setEnteredOpenAIKey] = useState("");
+  const [usableOpenAIKey, setUseableOpenAIKey] = useState();
 
   const startLoading = () => setIsLoading(true);
   const stopLoading = () => setIsLoading(false);
+
+  if (savedOpenAiKey && usableOpenAIKey !== savedOpenAiKey) {
+    setUseableOpenAIKey(savedOpenAiKey);
+  }
 
   const handleClose = () => {
     setIngredientsList([]);
@@ -110,7 +129,7 @@ function GenerateRecipeDialogue(props) {
     }, "");
 
     generateRecipe(
-      openAIKey,
+      usableOpenAIKey,
       promptText,
       (_responseText) => {
         try {
@@ -151,12 +170,15 @@ function GenerateRecipeDialogue(props) {
         stopLoading();
       },
       (error) => {
-        handleClose();
-        addAlert({
-          message: error.toString(),
-          title: "Error when generating recipe",
-          alertProps: { severity: "error" },
-        });
+        stopLoading();
+        addAlert(
+          {
+            message: error.toString(),
+            title: "Error when generating recipe",
+            alertProps: { severity: "error" },
+          },
+          6000
+        );
       }
     );
   };
@@ -226,6 +248,136 @@ function GenerateRecipeDialogue(props) {
     </Box>
   );
 
+  const handleSaveOpenAIKey = () => {
+    updateOpenAIKey(enteredOpenAIKey, openAIKeyPath, addAlert);
+  };
+
+  const handleEnteredOpenAIKey = () => {
+    setUseableOpenAIKey(enteredOpenAIKey);
+  };
+
+  const handleRemoveApiKey = () => {
+    if (savedOpenAiKey) {
+      updateOpenAIKey(null, openAIKeyPath, addAlert);
+    }
+    setUseableOpenAIKey();
+  };
+
+  const renderDiaglogContentAndActions = () => {
+    if (!usableOpenAIKey) {
+      return (
+        <>
+          <DialogContent dividers>
+            <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
+              <Typography>
+                Use OpenAI to create a recipe. Gude Foods will craft the prompt,
+                make the request, and parse the response into a cookbook ready
+                recipe. An account is required with OpenAPI, and your api keys
+                can be found
+                <Link
+                  href="https://platform.openai.com/account/api-keys"
+                  target="_blank"
+                  rel="noopener"
+                  color="secondary"
+                >
+                  {" here."}
+                  <OpenInNewIcon
+                    fontSize="inherit"
+                    sx={{ verticalAlign: "sub" }}
+                  />
+                </Link>
+                <br />
+                Save the key to Gude Foods for future use, or only enter it for
+                one time use.
+              </Typography>
+              <TextField
+                label="Enter your OpenAI API key"
+                fullWidth={true}
+                value={enteredOpenAIKey}
+                onChange={(event) => {
+                  setEnteredOpenAIKey(event.target.value);
+                }}
+                variant="outlined"
+                inputProps={{
+                  autoCapitalize: "none",
+                }}
+                color="info"
+              />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="secondary">
+              <Typography>Close</Typography>
+            </Button>
+            <Button
+              disabled={!enteredOpenAIKey}
+              variant="outlined"
+              onClick={handleSaveOpenAIKey}
+              color="primary"
+            >
+              <Typography>Save</Typography>
+            </Button>
+            <Button
+              disabled={!enteredOpenAIKey}
+              variant="contained"
+              onClick={handleEnteredOpenAIKey}
+              color="primary"
+            >
+              <Typography>One time use</Typography>
+            </Button>
+          </DialogActions>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <DialogContent dividers>
+          <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
+            {maybeRenderControls()}
+            {renderPromptCard()}
+            {isLoading && renderLoading()}
+            {responseText && renderResponseTextCard()}
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleRemoveApiKey} color="error">
+            <Typography>Remove api key</Typography>
+          </Button>
+          <Button
+            autoFocus
+            onClick={handleClose}
+            color="secondary"
+            variant="outlined"
+          >
+            <Typography>Close</Typography>
+          </Button>
+          {responseText ? (
+            <Button
+              color="primary"
+              variant="contained"
+              endIcon={<ContentCopyRoundedIcon />}
+              onClick={() => {
+                navigator.clipboard.writeText(responseText);
+              }}
+            >
+              <Typography>Copy</Typography>
+            </Button>
+          ) : (
+            <Button
+              disabled={isLoading || !!responseText}
+              variant="contained"
+              onClick={handleGenerate}
+              color="primary"
+            >
+              <Typography>Generate</Typography>
+            </Button>
+          )}
+        </DialogActions>
+      </>
+    );
+  };
+
   return (
     <Dialog
       sx={{ "& .MuiDialog-paper": { width: "80%" } }}
@@ -233,40 +385,7 @@ function GenerateRecipeDialogue(props) {
       open={open}
     >
       <DialogTitle color="primary">Generate Recipe with AI</DialogTitle>
-      <DialogContent dividers>
-        <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
-          {maybeRenderControls()}
-          {renderPromptCard()}
-          {isLoading && renderLoading()}
-          {responseText && renderResponseTextCard()}
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={handleClose} color="secondary">
-          <Typography>Close</Typography>
-        </Button>
-        {responseText ? (
-          <Button
-            color="primary"
-            variant="outlined"
-            endIcon={<ContentCopyRoundedIcon />}
-            onClick={() => {
-              navigator.clipboard.writeText(responseText);
-            }}
-          >
-            <Typography>Copy</Typography>
-          </Button>
-        ) : (
-          <Button
-            disabled={isLoading || !!responseText}
-            variant="outlined"
-            onClick={handleGenerate}
-            color="primary"
-          >
-            <Typography>Generate</Typography>
-          </Button>
-        )}
-      </DialogActions>
+      {renderDiaglogContentAndActions()}
     </Dialog>
   );
 }

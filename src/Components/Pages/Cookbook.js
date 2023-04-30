@@ -52,7 +52,6 @@ function Cookbook(props) {
     recipeOrder: _recipeOrder,
     shoppingList,
     menu: _menu,
-    openAIKey,
   } = database;
   const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
   const cookbook = _cookbook || {};
@@ -279,7 +278,6 @@ function Cookbook(props) {
   const renderNewRecipeButtons = () => (
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
-        disabled={!openAIKey}
         color="primary"
         variant="outlined"
         onClick={() => {

@@ -223,3 +223,12 @@ export const saveRecipe = (
     addAlert
   );
 };
+
+export const updateOpenAIKey = (enteredOpenAIKey, openAIKeyPath, addAlert) => {
+  updateRequest(
+    {
+      [openAIKeyPath]: enteredOpenAIKey,
+    },
+    addAlert
+  );
+};

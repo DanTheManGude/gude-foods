@@ -14,8 +14,15 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
   };
   fetch("https://api.openai.com/v1/completions", requestOptions)
     .then((resp) => resp.json())
-    .then((data) => {
-      onSuccess(data.choices[0].text);
+    .then((response) => {
+      if (response.choices) {
+        onSuccess(response.choices[0].text);
+        return;
+      }
+      if (response.error) {
+        throw response.error.message;
+      }
+      throw response;
     })
     .catch(onFailure);
 };
