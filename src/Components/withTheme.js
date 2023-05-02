@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 
-import { defaultPalette } from "../constants";
-import { constructTheme } from "../utils/values";
-import { PaletteContext } from "./Contexts";
+import { defaultColors } from "../constants";
+import { constructTheme, constructBackgroundStyleText } from "../utils/utility";
+import { ColorsContext } from "./Contexts";
 
 const withTheme = (Component) => (props) => {
-  const paletteValue = useState(defaultPalette);
+  const colorsValue = useState(defaultColors);
+  const { palette, background } = colorsValue[0];
+
+  useEffect(() => {
+    document.documentElement.style.background =
+      constructBackgroundStyleText(background);
+    document.documentElement.style.backgroundColor = background[0].color;
+    document.documentElement.style.backgroundAttachment = "fixed";
+  }, [background]);
+
   return (
-    <ThemeProvider theme={constructTheme(paletteValue[0])}>
-      <PaletteContext.Provider value={paletteValue}>
+    <ThemeProvider theme={constructTheme(palette)}>
+      <ColorsContext.Provider value={colorsValue}>
         <Component {...props} />
-      </PaletteContext.Provider>
+      </ColorsContext.Provider>
     </ThemeProvider>
   );
 };

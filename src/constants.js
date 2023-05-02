@@ -15,12 +15,19 @@ export const fontFamilies = [
   "sans-serif",
 ];
 
-export const defaultPalette = {
-  mode: "dark",
-  primary: { main: "#ffad76" },
-  secondary: { main: "#AF7ADB", contrastText: "#1e201e" },
-  tertiary: { main: "#79B2A8", contrastText: "#000" },
-  alt: { main: "#D6D365" },
+export const defaultColors = {
+  palette: {
+    mode: "dark",
+    primary: { main: "#ffad76" },
+    secondary: { main: "#AF7ADB", contrastText: "#1e201e" },
+    tertiary: { main: "#79B2A8", contrastText: "#000" },
+    alt: { main: "#D6D365" },
+  },
+  background: [
+    { percent: 0, color: "#283868" },
+    { percent: 75, color: "#102257" },
+    { percent: 100, color: "#0e1f4e" },
+  ],
 };
 
 export const databasePaths = {
