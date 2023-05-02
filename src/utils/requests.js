@@ -1,5 +1,5 @@
 import { getDatabase, ref, child, push, update } from "firebase/database";
-import { databasePaths, defaultColors } from "../constants";
+import { databasePaths } from "../constants";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
@@ -234,5 +234,11 @@ export const updateOpenAIKey = (enteredOpenAIKey, openAIKeyPath, addAlert) => {
 };
 
 export const uploadColors = (colorsPath, colors, addAlert) => {
-  console.log(colors);
+  updateRequest(
+    { [colorsPath]: colors },
+    (successAlert) => {
+      addAlert(successAlert);
+    },
+    addAlert
+  );
 };
