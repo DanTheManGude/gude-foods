@@ -22,7 +22,7 @@ import {
   AddAlertContext,
   DataPathsContext,
   DatabaseContext,
-  PaletteContext,
+  // ColorsContext,
 } from "../Contexts";
 
 function Settings(props) {
@@ -31,7 +31,7 @@ function Settings(props) {
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
-  const [palette, setPalette] = useContext(PaletteContext);
+  //const [colors, setColors] = useContext(ColorsContext);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -105,6 +105,39 @@ function Settings(props) {
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button color="secondary" variant="outlined" onClick={handleLogout}>
               Logout
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
+
+  const renderColorCard = () => {
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Theme
+            </Typography>
+            <Typography>
+              Change the colors used in the app for your account.
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="secondary"
+              variant="outlined"
+              //onClick={handleRestoreColors}
+            >
+              Restore defaults
+            </Button>
+            <Button
+              color="secondary"
+              variant="outlined"
+              //onClick={handleSaveColors}
+            >
+              Save
             </Button>
           </CardActions>
         </Card>
@@ -222,8 +255,6 @@ function Settings(props) {
     </Dialog>
   );
 
-  console.log(palette);
-
   return (
     <div>
       <Typography
@@ -239,6 +270,7 @@ function Settings(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderAppCard()}
         {renderUserCard()}
+        {renderColorCard()}
         {renderDownloadData()}
         {renderImportData()}
         {renderDeleteData()}
