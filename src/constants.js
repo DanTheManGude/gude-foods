@@ -39,6 +39,7 @@ export const databasePaths = {
   recipeOrder: "recipeOrder",
   menu: "menu",
   openAIKey: "openAIKey",
+  colors: "colors",
 };
 
 export const UNKNOWN_TAG = "UNKNOWN_TAG";

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
 
@@ -14,10 +14,19 @@ import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
 import AiRecipe from "../Pages/AiRecipe";
 
-import { DatabaseContext, DataPathsContext } from "../Contexts";
+import {
+  DatabaseContext,
+  DataPathsContext,
+  ColorsUpdateContext,
+} from "../Contexts";
+
+const getCreateFullPath = (user) => (pathName) =>
+  `accounts/${user.uid}/${pathName}`;
 
 function PagesContainer(props) {
   const { user } = props;
+
+  const setColors = useContext(ColorsUpdateContext);
 
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
@@ -25,15 +34,23 @@ function PagesContainer(props) {
   const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !setColors) {
       return;
     }
     const db = getDatabase();
 
-    const pathPrefix = `accounts/${user.uid}`;
+    const createFullPath = getCreateFullPath(user);
+
+    onValue(ref(db, createFullPath(databasePaths.colors)), (snapshot) => {
+      const snapshotValue = snapshot.val();
+      if (snapshotValue) {
+        setColors(snapshotValue);
+      }
+    });
+
     Object.keys(databasePaths).forEach((key) => {
       const pathName = databasePaths[key];
-      const fullPath = `${pathPrefix}/${pathName}`;
+      const fullPath = createFullPath(pathName);
 
       onValue(ref(db, fullPath), (snapshot) => {
         setDatabase((_database) => ({
@@ -46,8 +63,8 @@ function PagesContainer(props) {
         [`${key}Path`]: fullPath,
       }));
     });
-    updateRequest({ [`${pathPrefix}/name`]: user.displayName });
-  }, [user]);
+    updateRequest({ [createFullPath("name")]: user.displayName });
+  }, [user, setColors]);
 
   return (
     <DatabaseContext.Provider value={database}>

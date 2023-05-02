@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -14,7 +14,8 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import { setAllData, deleteRequest } from "../../utils/requests";
+import { defaultColors } from "../../constants";
+import { setAllData, deleteRequest, uploadColors } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import { signOutGoogle } from "../../utils/googleAuth";
 import ImportFileButton from "../Utils/ImportFileButton";
@@ -22,7 +23,6 @@ import {
   AddAlertContext,
   DataPathsContext,
   DatabaseContext,
-  // ColorsContext,
 } from "../Contexts";
 
 function Settings(props) {
@@ -31,9 +31,28 @@ function Settings(props) {
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
-  //const [colors, setColors] = useContext(ColorsContext);
+
+  const { colors: dbColors } = database;
+  const { colorsPath } = dataPaths;
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [editingColors, setEditingColors] = useState();
+
+  useEffect(() => {
+    setEditingColors(dbColors || defaultColors);
+  }, [dbColors]);
+
+  const updateColors = (givenColors) => {
+    uploadColors(colorsPath, givenColors, addAlert);
+  };
+
+  const handleSaveColors = () => {
+    updateColors(editingColors);
+  };
+
+  const handleRestoreDefaultColors = () => {
+    updateColors(defaultColors);
+  };
 
   const handleDelete = () => {
     setOpenDeleteDialog(false);
@@ -128,14 +147,14 @@ function Settings(props) {
             <Button
               color="secondary"
               variant="outlined"
-              //onClick={handleRestoreColors}
+              onClick={() => handleRestoreDefaultColors()}
             >
               Restore defaults
             </Button>
             <Button
               color="secondary"
               variant="outlined"
-              //onClick={handleSaveColors}
+              onClick={() => handleSaveColors()}
             >
               Save
             </Button>
