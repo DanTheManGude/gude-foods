@@ -51,7 +51,7 @@ function Settings(props) {
   };
 
   const handleRestoreDefaultColors = () => {
-    updateColors(defaultColors);
+    updateColors(null);
   };
 
   const handleDelete = () => {
