@@ -21,7 +21,7 @@ export const waitForElm = (selector) => {
   });
 };
 
-export const constructTheme = (palette = {}) =>
+export const constructTheme = (palette) =>
   createTheme({
     palette,
     typography: {

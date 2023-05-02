@@ -14,7 +14,6 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import { defaultColors } from "../../constants";
 import { setAllData, deleteRequest, uploadColors } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import { signOutGoogle } from "../../utils/googleAuth";
@@ -23,6 +22,7 @@ import {
   AddAlertContext,
   DataPathsContext,
   DatabaseContext,
+  ColorsValueContext,
 } from "../Contexts";
 
 function Settings(props) {
@@ -31,16 +31,16 @@ function Settings(props) {
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
+  const colorsValue = useContext(ColorsValueContext);
 
-  const { colors: dbColors } = database;
   const { colorsPath } = dataPaths;
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [editingColors, setEditingColors] = useState();
+  const [editingColors, setEditingColors] = useState(colorsValue);
 
   useEffect(() => {
-    setEditingColors(dbColors || defaultColors);
-  }, [dbColors]);
+    setEditingColors(colorsValue);
+  }, [colorsValue]);
 
   const updateColors = (givenColors) => {
     uploadColors(colorsPath, givenColors, addAlert);

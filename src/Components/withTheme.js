@@ -3,7 +3,7 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import { defaultColors } from "../constants";
 import { constructTheme, constructBackgroundStyleText } from "../utils/utility";
-import { ColorsUpdateContext } from "./Contexts";
+import { ColorsUpdateContext, ColorsValueContext } from "./Contexts";
 
 const withTheme = (Component) => (props) => {
   const [colors, setColors] = useState(defaultColors);
@@ -18,9 +18,11 @@ const withTheme = (Component) => (props) => {
 
   return (
     <ThemeProvider theme={constructTheme(palette)}>
-      <ColorsUpdateContext.Provider value={setColors}>
-        <Component {...props} />
-      </ColorsUpdateContext.Provider>
+      <ColorsValueContext.Provider value={colors}>
+        <ColorsUpdateContext.Provider value={setColors}>
+          <Component {...props} />
+        </ColorsUpdateContext.Provider>
+      </ColorsValueContext.Provider>
     </ThemeProvider>
   );
 };
