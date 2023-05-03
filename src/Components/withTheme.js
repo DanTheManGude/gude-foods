@@ -15,6 +15,10 @@ const withTheme = (Component) => (props) => {
   const { palette, background } = allColors[validColorKey];
 
   useEffect(() => {
+    document
+      .getElementsByName("theme-color")[0]
+      .setAttribute("content", background[0].color);
+
     document.documentElement.style.background =
       constructBackgroundStyleText(background);
   }, [background]);
