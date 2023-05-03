@@ -40,7 +40,11 @@ export const allColors = {
       tertiary: { main: "#79B2A8", contrastText: "#000" },
       alt: { main: "#D6D365" },
     },
-    background: [{ percent: 0, color: "#000000" }],
+    background: [
+      { percent: 0, color: "#333333" },
+      { percent: 75, color: "#111111" },
+      { percent: 100, color: "#000000" },
+    ],
   },
   light: {
     palette: {
@@ -50,11 +54,15 @@ export const allColors = {
       tertiary: { main: "#79B2A8", contrastText: "#000" },
       alt: { main: "#D6D365" },
     },
-    background: [{ percent: 0, color: "#ffffff" }],
+    background: [
+      { percent: 0, color: "#ffffff" },
+      { percent: 25, color: "#dddddd" },
+      { percent: 100, color: "#eeeeee" },
+    ],
   },
 };
 
-const colorOptionNames = { default: "Default", dark: "Dark", light: "Licght" };
+const colorOptionNames = { default: "Default", dark: "Dark", light: "Light" };
 
 export const colorOptions = Object.keys(allColors).map((colorKey) => ({
   key: colorKey,

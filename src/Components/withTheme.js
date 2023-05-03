@@ -17,8 +17,6 @@ const withTheme = (Component) => (props) => {
   useEffect(() => {
     document.documentElement.style.background =
       constructBackgroundStyleText(background);
-    document.documentElement.style.backgroundColor = background[0].color;
-    document.documentElement.style.backgroundAttachment = "fixed";
   }, [background]);
 
   return (
