@@ -341,8 +341,13 @@ function GenerateRecipeDialogue(props) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleRemoveApiKey} color="error">
-            <Typography>Remove api key</Typography>
+          <Button
+            autoFocus
+            variant="outlined"
+            onClick={handleRemoveApiKey}
+            color="error"
+          >
+            <Typography>Delete key</Typography>
           </Button>
           <Button
             autoFocus
