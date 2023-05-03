@@ -54,6 +54,13 @@ export const allColors = {
   },
 };
 
+const colorOptionNames = { default: "Default", dark: "Dark", light: "Licght" };
+
+export const colorOptions = Object.keys(allColors).map((colorKey) => ({
+  key: colorKey,
+  name: colorOptionNames[colorKey],
+}));
+
 export const databasePaths = {
   glossary: "glossary",
   basicFoodTagAssociation: "basicFood-basicFoodTag",
