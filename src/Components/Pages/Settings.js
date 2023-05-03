@@ -284,9 +284,9 @@ function Settings(props) {
         Settings
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        {renderAppCard()}
         {renderUserCard()}
         {renderColorCard()}
+        {renderAppCard()}
         {renderDownloadData()}
         {renderImportData()}
         {renderDeleteData()}
