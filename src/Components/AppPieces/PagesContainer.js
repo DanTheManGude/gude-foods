@@ -17,7 +17,7 @@ import AiRecipe from "../Pages/AiRecipe";
 import {
   DatabaseContext,
   DataPathsContext,
-  ColorsUpdateContext,
+  ColorKeyContext,
 } from "../Contexts";
 
 const getCreateFullPath = (user) => (pathName) =>
@@ -26,7 +26,7 @@ const getCreateFullPath = (user) => (pathName) =>
 function PagesContainer(props) {
   const { user } = props;
 
-  const setColors = useContext(ColorsUpdateContext);
+  const setColorKey = useContext(ColorKeyContext);
 
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
@@ -34,17 +34,17 @@ function PagesContainer(props) {
   const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
 
   useEffect(() => {
-    if (!user || !setColors) {
+    if (!user || !setColorKey) {
       return;
     }
     const db = getDatabase();
 
     const createFullPath = getCreateFullPath(user);
 
-    onValue(ref(db, createFullPath(databasePaths.colors)), (snapshot) => {
+    onValue(ref(db, createFullPath(databasePaths.colorKey)), (snapshot) => {
       const snapshotValue = snapshot.val();
       if (snapshotValue) {
-        setColors(snapshotValue);
+        setColorKey(snapshotValue);
       }
     });
 
@@ -64,7 +64,7 @@ function PagesContainer(props) {
       }));
     });
     updateRequest({ [createFullPath("name")]: user.displayName });
-  }, [user, setColors]);
+  }, [user, setColorKey]);
 
   return (
     <DatabaseContext.Provider value={database}>

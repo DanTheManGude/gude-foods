@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -14,6 +14,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
+import { defaultColorKey } from "../../constants";
 import { setAllData, deleteRequest, uploadColors } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import { signOutGoogle } from "../../utils/googleAuth";
@@ -22,7 +23,6 @@ import {
   AddAlertContext,
   DataPathsContext,
   DatabaseContext,
-  ColorsValueContext,
 } from "../Contexts";
 
 function Settings(props) {
@@ -31,27 +31,15 @@ function Settings(props) {
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
-  const colorsValue = useContext(ColorsValueContext);
 
   const { colorsPath } = dataPaths;
+  const { colorKey: _colorKey } = database;
+  const colorKey = _colorKey || defaultColorKey;
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [editingColors, setEditingColors] = useState(colorsValue);
 
-  useEffect(() => {
-    setEditingColors(colorsValue);
-  }, [colorsValue]);
-
-  const updateColors = (givenColors) => {
-    uploadColors(colorsPath, givenColors, addAlert);
-  };
-
-  const handleSaveColors = () => {
-    updateColors(editingColors);
-  };
-
-  const handleRestoreDefaultColors = () => {
-    updateColors(null);
+  const updateColors = (givenColorKey) => {
+    uploadColors(colorsPath, givenColorKey, addAlert);
   };
 
   const handleDelete = () => {
@@ -142,23 +130,8 @@ function Settings(props) {
             <Typography>
               Change the colors used in the app for your account.
             </Typography>
+            {`colorKey: ${colorKey}`}
           </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button
-              color="secondary"
-              variant="outlined"
-              onClick={() => handleRestoreDefaultColors()}
-            >
-              Restore defaults
-            </Button>
-            <Button
-              color="secondary"
-              variant="outlined"
-              onClick={() => handleSaveColors()}
-            >
-              Save
-            </Button>
-          </CardActions>
         </Card>
       </Box>
     );

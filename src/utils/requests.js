@@ -233,9 +233,9 @@ export const updateOpenAIKey = (enteredOpenAIKey, openAIKeyPath, addAlert) => {
   );
 };
 
-export const uploadColors = (colorsPath, colors, addAlert) => {
+export const uploadColors = (colorsPath, colorKey, addAlert) => {
   updateRequest(
-    { [colorsPath]: colors },
+    { [colorsPath]: colorKey },
     (successAlert) => {
       addAlert(successAlert);
     },
