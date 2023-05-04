@@ -7,9 +7,9 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
     },
     body: JSON.stringify({
       model: "text-davinci-003",
-      prompt: prompt,
+      prompt,
       temperature: 0,
-      max_tokens: 300,
+      max_tokens: 500,
     }),
   };
   fetch("https://api.openai.com/v1/completions", requestOptions)
