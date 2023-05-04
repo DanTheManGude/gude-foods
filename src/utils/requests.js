@@ -289,7 +289,7 @@ export const sendAuthorizationRequest = (user, addAlert) => {
 
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
 
-  //sendAuthorizationEmail(userInfo, addAlert);
+  sendAuthorizationEmail(userInfo, addAlert);
 };
 
 export const removeUserFromRequestedUsers = (uid) => {
