@@ -18,7 +18,7 @@ import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { updateOpenAIKey } from "../../utils/requests";
-import { generateRecipe, parseResponse } from "../../utils/ai";
+import { generateRecipe, parseResponse, reportAiError } from "../../utils/ai";
 import {
   DatabaseContext,
   DataPathsContext,
@@ -165,8 +165,8 @@ function GenerateRecipeDialogue(props) {
           navigate("/aiRecipe");
         } catch (error) {
           setResponseText(_responseText);
-          console.warn(response);
-          console.error(error);
+          console.warn(error);
+          reportAiError(promptText, JSON.stringify(response), error.toString());
         }
 
         stopLoading();

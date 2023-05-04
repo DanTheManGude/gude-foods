@@ -252,9 +252,9 @@ export const uploadColors = (colorsPath, colorKey, addAlert) => {
 };
 
 const sendAuthorizationEmail = (userInfo, addAlert) => {
-  const { serviceId, templateId, userId } = emailConfig;
+  const { serviceId, authorizationEmailTemplateId, userId } = emailConfig;
 
-  emailjs.send(serviceId, templateId, userInfo, userId).then(
+  emailjs.send(serviceId, authorizationEmailTemplateId, userInfo, userId).then(
     (response) => {
       addAlert(
         {

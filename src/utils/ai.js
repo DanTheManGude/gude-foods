@@ -1,3 +1,7 @@
+import emailjs from "@emailjs/browser";
+
+import { emailConfig } from "../constants";
+
 export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
   const requestOptions = {
     method: "POST",
@@ -16,7 +20,7 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
     .then((resp) => resp.json())
     .then((response) => {
       if (response.choices) {
-        onSuccess(response.choices[0].text);
+        onSuccess(response.choices[0].text, response);
         return;
       }
       if (response.error) {
@@ -28,6 +32,7 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
 };
 
 export const parseResponse = (textResponse) => {
+  throw Error("error string");
   const recipe = { name: "", ingredientText: [], instructions: [] };
   let lookingFor = "name";
 
@@ -80,4 +85,18 @@ export const parseResponse = (textResponse) => {
   }
 
   return recipe;
+};
+
+export const reportAiError = (promptText, response, error) => {
+  const { serviceId, reportAiTemplateId, userId } = emailConfig;
+
+  debugger;
+  emailjs
+    .send(
+      serviceId,
+      reportAiTemplateId,
+      { promptText, response, error },
+      userId
+    )
+    .then(console.log, console.warn);
 };
