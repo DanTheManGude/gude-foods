@@ -272,8 +272,10 @@ function GenerateRecipeDialogue(props) {
               <Typography>
                 Use OpenAI to create a recipe. Gude Foods will craft the prompt,
                 make the request, and parse the response into a cookbook ready
-                recipe. An account is required with OpenAPI, and your api keys
-                can be found
+                recipe.
+              </Typography>
+              <Typography fontWeight={600}>
+                An OpenAPI account is required and your api keys can be found
                 <Link
                   href="https://platform.openai.com/account/api-keys"
                   target="_blank"
@@ -286,9 +288,9 @@ function GenerateRecipeDialogue(props) {
                     sx={{ verticalAlign: "sub" }}
                   />
                 </Link>
-                <br />
-                Save the key to Gude Foods for future use, or only enter it for
-                one time use.
+              </Typography>
+              <Typography>
+                Save the key to Gude Foods for future use, or only use it now.
               </Typography>
               <TextField
                 label="Enter your OpenAI API key"
@@ -306,24 +308,25 @@ function GenerateRecipeDialogue(props) {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={handleClose} color="secondary">
+            <Button variant="outlined" onClick={handleClose} color="secondary">
               <Typography>Close</Typography>
             </Button>
+
             <Button
               disabled={!enteredOpenAIKey}
               variant="outlined"
-              onClick={handleSaveOpenAIKey}
+              onClick={handleEnteredOpenAIKey}
               color="primary"
             >
-              <Typography>Save</Typography>
+              <Typography>Use only now</Typography>
             </Button>
             <Button
               disabled={!enteredOpenAIKey}
               variant="contained"
-              onClick={handleEnteredOpenAIKey}
+              onClick={handleSaveOpenAIKey}
               color="primary"
             >
-              <Typography>One time use</Typography>
+              <Typography>Save</Typography>
             </Button>
           </DialogActions>
         </>
