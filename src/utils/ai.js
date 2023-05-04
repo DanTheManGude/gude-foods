@@ -32,7 +32,6 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
 };
 
 export const parseResponse = (textResponse) => {
-  throw Error("error string");
   const recipe = { name: "", ingredientText: [], instructions: [] };
   let lookingFor = "name";
 
@@ -90,7 +89,6 @@ export const parseResponse = (textResponse) => {
 export const reportAiError = (addAlert, promptText, response, error) => {
   const { serviceId, reportAiTemplateId, userId } = emailConfig;
 
-  debugger;
   emailjs
     .send(
       serviceId,
