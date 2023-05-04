@@ -249,19 +249,6 @@ export const uploadColors = (colorsPath, colorKey, addAlert) => {
 const sendAuthorizationEmail = (userInfo, addAlert) => {
   const { serviceId, templateId, userId } = emailConfig;
 
-  addAlert(
-    {
-      message: (
-        <span>
-          Succesfully sent authorization request. You should recieve a
-          confirmation email shortly (be sure to check your junk folder).
-        </span>
-      ),
-      alertProps: { severity: "success" },
-    },
-    5000
-  );
-
   emailjs.send(serviceId, templateId, userInfo, userId).then(
     (response) => {
       addAlert(
@@ -302,5 +289,14 @@ export const sendAuthorizationRequest = (user, addAlert) => {
 
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
 
-  sendAuthorizationEmail(userInfo, addAlert);
+  //sendAuthorizationEmail(userInfo, addAlert);
+};
+
+export const removeUserFromRequestedUsers = (uid) => {
+  deleteRequest([`requestedUsers/${uid}`]);
+};
+
+export const approveRequestedUser = (uid) => {
+  removeUserFromRequestedUsers(uid);
+  updateRequest({ [`users/${uid}`]: true });
 };
