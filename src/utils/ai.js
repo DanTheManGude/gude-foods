@@ -1,3 +1,7 @@
+import emailjs from "@emailjs/browser";
+
+import { emailConfig } from "../constants";
+
 export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
   const requestOptions = {
     method: "POST",
@@ -7,16 +11,16 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
     },
     body: JSON.stringify({
       model: "text-davinci-003",
-      prompt: prompt,
+      prompt,
       temperature: 0,
-      max_tokens: 300,
+      max_tokens: 500,
     }),
   };
   fetch("https://api.openai.com/v1/completions", requestOptions)
     .then((resp) => resp.json())
     .then((response) => {
       if (response.choices) {
-        onSuccess(response.choices[0].text);
+        onSuccess(response.choices[0].text, response);
         return;
       }
       if (response.error) {
@@ -80,4 +84,39 @@ export const parseResponse = (textResponse) => {
   }
 
   return recipe;
+};
+
+export const reportAiError = (addAlert, promptText, response, error) => {
+  const { serviceId, reportAiTemplateId, userId } = emailConfig;
+
+  emailjs
+    .send(
+      serviceId,
+      reportAiTemplateId,
+      { promptText, response, error },
+      userId
+    )
+    .then(
+      (response) => {
+        addAlert(
+          {
+            title: <span>Thanks for sharing</span>,
+            message: (
+              <span>
+                Succesfully reported the error. Thank you for helping make Gude
+                Foods better.
+              </span>
+            ),
+            alertProps: { severity: "success" },
+          },
+          5000
+        );
+      },
+      (error) => {
+        addAlert({
+          message: <span>An error occured when reporting the error</span>,
+          alertProps: { severity: "error" },
+        });
+      }
+    );
 };

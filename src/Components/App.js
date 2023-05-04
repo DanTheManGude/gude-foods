@@ -97,7 +97,7 @@ function App() {
     <List
       sx={{
         width: "100%",
-        zIndex: 9000,
+        zIndex: 2000,
         top: "55px",
         position: "fixed",
       }}

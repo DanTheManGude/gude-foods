@@ -86,7 +86,8 @@ export const unknownSectionName = "Unknown Section";
 
 export const emailConfig = {
   serviceId: "service_sbv0ia4",
-  templateId: "template_214p9la",
+  authorizationEmailTemplateId: "template_214p9la",
+  reportAiTemplateId: "template_fe1e5ws",
   userId: "user_2K4sBJkaEW2m7T8CPrYhp",
 };
 
