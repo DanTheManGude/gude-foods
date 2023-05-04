@@ -8,6 +8,7 @@ import { sendAuthorizationRequest } from "../../utils/requests";
 
 import GoogleLoginButton from "./GoogleLoginButton";
 import { useEffect, useState } from "react";
+import UserCard from "../Utils/UserCard";
 
 const textStyles = {
   color: "primary.main",
@@ -49,10 +50,11 @@ function UnauthorizedUser(props) {
   );
 
   const renderHasRequestedMessage = () => (
-    <Stack sx={{ paddingTop: "15px" }} alignItems="center">
+    <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
       <Typography sx={textStyles}>
         You have requested access. Check back here shortly.
       </Typography>
+      <UserCard user={user} addAlert={addAlert} />
     </Stack>
   );
 

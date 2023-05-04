@@ -24,7 +24,7 @@ const getCreateFullPath = (user) => (pathName) =>
   `accounts/${user.uid}/${pathName}`;
 
 function PagesContainer(props) {
-  const { user } = props;
+  const { user, requestedUsers } = props;
 
   const setColorKey = useContext(ColorKeyContext);
 
@@ -70,7 +70,10 @@ function PagesContainer(props) {
     <DatabaseContext.Provider value={database}>
       <DataPathsContext.Provider value={dataPaths}>
         <Routes>
-          <Route path="/home" element={<Home />} />
+          <Route
+            path="/home"
+            element={<Home requestedUsers={requestedUsers} />}
+          />
           <Route
             path="cookbook"
             element={
