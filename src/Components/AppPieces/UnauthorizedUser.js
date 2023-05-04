@@ -4,49 +4,9 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-import { getEmailLink } from "../../utils/utility";
-import { emailConfig } from "../../constants";
+import { sendAuthorizationRequest } from "../../utils/utility";
 
 import GoogleLoginButton from "./GoogleLoginButton";
-
-const getSendAuthorizationRequest = (user, addAlert) => () => {
-  const { serviceId, templateId, userId } = emailConfig;
-  const { displayName, email } = user;
-  const userInfo = { displayName, email };
-
-  emailjs.send(serviceId, templateId, userInfo, userId).then(
-    (response) => {
-      addAlert(
-        {
-          message: (
-            <span>
-              Succesfully sent authorization request. You should recieve a
-              confirmation email shortly (be sure to check your junk folder).
-            </span>
-          ),
-          alertProps: { severity: "success" },
-        },
-        5000
-      );
-    },
-    (error) => {
-      addAlert(
-        {
-          message: (
-            <span>
-              An error occured when sending authorization request. You can reach
-              out to&nbsp;
-              <a href={getEmailLink(userInfo)}>dgude31@outlook.com</a>
-              &nbsp;directly.
-            </span>
-          ),
-          alertProps: { severity: "error" },
-        },
-        7000
-      );
-    }
-  );
-};
 
 const textStyles = {
   color: "primary.main",
@@ -56,6 +16,11 @@ const textStyles = {
 
 function UnauthorizedUser(props) {
   const { user, addAlert } = props;
+
+  const handleNotifyClick = () => {
+    sendAuthorizationRequest(user, addAlert);
+  };
+
   if (!!user) {
     return (
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
@@ -69,7 +34,7 @@ function UnauthorizedUser(props) {
         <Button
           color="secondary"
           variant="outlined"
-          onClick={getSendAuthorizationRequest(user, addAlert)}
+          onClick={handleNotifyClick}
         >
           <Typography>Notify admin</Typography>
         </Button>
