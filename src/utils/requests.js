@@ -169,7 +169,12 @@ export const setAllData = (allUserData, dataPaths, addAlert) => {
     Object.keys(databasePaths).reduce(
       (acc, databaseEntryName) => ({
         ...acc,
-        [dataPaths[`${databaseEntryName}Path`]]: allUserData[databaseEntryName],
+        ...(allUserData.hasOwnProperty(databaseEntryName)
+          ? {
+              [dataPaths[`${databaseEntryName}Path`]]:
+                allUserData[databaseEntryName],
+            }
+          : {}),
       }),
       {}
     ),

@@ -78,7 +78,7 @@ function Home(props) {
   };
 
   const renderNewUserCard = () => {
-    if (glossary) {
+    if (cookbook && Object.keys(cookbook).length >= 3) {
       return null;
     }
 
