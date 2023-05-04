@@ -37,7 +37,7 @@ function BottomNav(props) {
         paddingTop: "10px",
         height: "80px",
         alignItems: "flex-start",
-        zIndex: 9001,
+        zIndex: 1100,
         display: { md: "none" },
       }}
     >

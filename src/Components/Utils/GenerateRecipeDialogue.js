@@ -131,7 +131,7 @@ function GenerateRecipeDialogue(props) {
     generateRecipe(
       usableOpenAIKey,
       promptText,
-      (_responseText) => {
+      (_responseText, response) => {
         try {
           const generatedRecipe = parseResponse(_responseText);
 
@@ -165,6 +165,8 @@ function GenerateRecipeDialogue(props) {
           navigate("/aiRecipe");
         } catch (error) {
           setResponseText(_responseText);
+          console.warn(response);
+          console.error(error);
         }
 
         stopLoading();
@@ -388,7 +390,14 @@ function GenerateRecipeDialogue(props) {
 
   return (
     <Dialog
-      sx={{ "& .MuiDialog-paper": { width: "80%" } }}
+      sx={{
+        "& .MuiDialog-paper": {
+          width: "80%",
+        },
+        "& .MuiDialog-container": {
+          marginBottom: "100px",
+        },
+      }}
       maxWidth="xs"
       open={open}
     >
