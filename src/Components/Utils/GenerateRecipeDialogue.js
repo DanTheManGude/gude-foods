@@ -346,14 +346,17 @@ function GenerateRecipeDialogue(props) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button
-            autoFocus
-            variant="outlined"
-            onClick={handleRemoveApiKey}
-            color="error"
-          >
-            <Typography>Delete key</Typography>
-          </Button>
+          {!isLoading && !responseText && (
+            <Button
+              autoFocus
+              variant="outlined"
+              onClick={handleRemoveApiKey}
+              color="error"
+            >
+              <Typography>Delete key</Typography>
+            </Button>
+          )}
+
           <Button
             autoFocus
             onClick={handleClose}
@@ -375,7 +378,7 @@ function GenerateRecipeDialogue(props) {
             </Button>
           ) : (
             <Button
-              disabled={isLoading || !!responseText}
+              disabled={isLoading}
               variant="contained"
               onClick={handleGenerate}
               color="primary"
