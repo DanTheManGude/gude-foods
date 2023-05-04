@@ -11,7 +11,7 @@ import Collapse from "@mui/material/Collapse";
 import { TransitionGroup } from "react-transition-group";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, child, get } from "firebase/database";
+import { getDatabase, ref, child, get, onValue } from "firebase/database";
 
 import PagesContainer from "./AppPieces/PagesContainer";
 
@@ -27,6 +27,7 @@ function App() {
   const [user, setUser] = useState();
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [requestedUsers, setIsRequestedUsers] = useState();
 
   const prevUserRef = useRef();
 
@@ -77,6 +78,12 @@ function App() {
         setIsLoading(false);
       });
 
+    onValue(ref(getDatabase(), `requestedUsers`), (snapshot) => {
+      if (snapshot.exists()) {
+        setIsRequestedUsers(snapshot.val());
+      }
+    });
+
     addAlert({
       message: "Succesfully logged in with Google",
       title: `Hello ${user.displayName}`,
@@ -122,7 +129,7 @@ function App() {
         {renderMessages()}
         <NavBar />
         <AddAlertContext.Provider value={addAlert}>
-          <PagesContainer user={user} />
+          <PagesContainer user={user} requestedUsers={requestedUsers} />
         </AddAlertContext.Provider>
         <BottomNav />
       </>
