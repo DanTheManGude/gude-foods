@@ -78,7 +78,7 @@ function Home(props) {
   };
 
   const renderNewUserCard = () => {
-    if (cookbook && Object.keys(cookbook).length >= 3) {
+    if (glossary) {
       return null;
     }
 
@@ -91,8 +91,7 @@ function Home(props) {
             </Typography>
             <Typography>
               Looks like you are a new user. To help get you going, there is
-              starter data with some neat recipes. Click the button to import
-              it.
+              starter data with some neat recipes.
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
@@ -103,7 +102,7 @@ function Home(props) {
                 setAllData(newUserData, dataPaths, addAlert);
               }}
             >
-              <Typography>Setup my account</Typography>
+              <Typography>Add starter data</Typography>
             </Button>
           </CardActions>
         </Card>
