@@ -183,7 +183,7 @@ function GenerateRecipeDialogue(props) {
     );
   };
 
-  const renderLoading = () => <CircularProgress color="secondary" />;
+  const renderLoading = () => <CircularProgress color="primary" />;
 
   const renderResponseTextCard = () => (
     <Card variant="outlined" sx={{ width: "100%" }}>
