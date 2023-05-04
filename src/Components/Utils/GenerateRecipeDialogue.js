@@ -270,6 +270,11 @@ function GenerateRecipeDialogue(props) {
     setUseableOpenAIKey();
   };
 
+  const handleReportError = () => {
+    reportAiError(addAlert, ...reportErrorValues);
+    setReportErrorValues();
+  };
+
   const renderDiaglogContentAndActions = () => {
     if (!usableOpenAIKey) {
       return (
@@ -375,9 +380,8 @@ function GenerateRecipeDialogue(props) {
               <Button
                 color="primary"
                 variant="outlined"
-                onClick={() => {
-                  reportAiError(addAlert, ...reportErrorValues);
-                }}
+                onClick={handleReportError}
+                disabled={!reportErrorValues}
               >
                 <Typography>Report error</Typography>
               </Button>
