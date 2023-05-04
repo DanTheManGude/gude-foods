@@ -81,6 +81,8 @@ function App() {
     onValue(ref(getDatabase(), `requestedUsers`), (snapshot) => {
       if (snapshot.exists()) {
         setIsRequestedUsers(snapshot.val());
+      } else {
+        setIsRequestedUsers();
       }
     });
 
