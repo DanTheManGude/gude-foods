@@ -36,6 +36,7 @@ const promptPrefix = (
 function GenerateRecipeDialogue(props) {
   const { open, onClose, setAiGeneratedRecipe } = props;
 
+  const [reportErrorValues, setReportErrorValues] = useState();
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const { openAIKeyPath } = dataPaths;
@@ -166,7 +167,11 @@ function GenerateRecipeDialogue(props) {
         } catch (error) {
           setResponseText(_responseText);
           console.warn(error);
-          reportAiError(promptText, JSON.stringify(response), error.toString());
+          setReportErrorValues([
+            promptText,
+            JSON.stringify(response),
+            error.toString(),
+          ]);
         }
 
         stopLoading();
@@ -366,16 +371,27 @@ function GenerateRecipeDialogue(props) {
             <Typography>Close</Typography>
           </Button>
           {responseText ? (
-            <Button
-              color="primary"
-              variant="contained"
-              endIcon={<ContentCopyRoundedIcon />}
-              onClick={() => {
-                navigator.clipboard.writeText(responseText);
-              }}
-            >
-              <Typography>Copy</Typography>
-            </Button>
+            <>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={() => {
+                  reportAiError(addAlert, ...reportErrorValues);
+                }}
+              >
+                <Typography>Report error</Typography>
+              </Button>
+              <Button
+                color="primary"
+                variant="contained"
+                endIcon={<ContentCopyRoundedIcon />}
+                onClick={() => {
+                  navigator.clipboard.writeText(responseText);
+                }}
+              >
+                <Typography>Copy</Typography>
+              </Button>
+            </>
           ) : (
             <Button
               disabled={isLoading}
