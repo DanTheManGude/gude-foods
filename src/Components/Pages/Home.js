@@ -8,10 +8,13 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 
 import newUserData from "../../newUserData.json";
-import { setAllData } from "../../utils/requests";
+import {
+  setAllData,
+  removeUserFromRequestedUsers,
+  approveRequestedUser,
+} from "../../utils/requests";
 
 import {
   AddAlertContext,
@@ -44,12 +47,25 @@ function Home(props) {
             <Typography>There are users who requested access.</Typography>
             <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="left">
               {Object.keys(requestedUsers).map((uid) => (
-                <Stack direction="row" alignItems="flex-end" spacing={2}>
-                  <Typography>{requestedUsers[uid]}:</Typography>
-                  <Button color="error" variant="outlined">
+                <Stack
+                  direction="row"
+                  alignItems="flex-end"
+                  spacing={2}
+                  key={uid}
+                >
+                  <Typography fontSize={20}>{requestedUsers[uid]}:</Typography>
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={() => removeUserFromRequestedUsers(uid)}
+                  >
                     Reject
                   </Button>
-                  <Button color="success" variant="contained">
+                  <Button
+                    color="success"
+                    variant="contained"
+                    onClick={() => approveRequestedUser(uid)}
+                  >
                     Accept
                   </Button>
                 </Stack>
