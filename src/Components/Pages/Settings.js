@@ -12,9 +12,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import { setAllData, deleteRequest } from "../../utils/requests";
+import { defaultColorKey, colorOptions } from "../../constants";
+import { setAllData, deleteRequest, uploadColors } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import { signOutGoogle } from "../../utils/googleAuth";
 import ImportFileButton from "../Utils/ImportFileButton";
@@ -31,7 +37,15 @@ function Settings(props) {
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
 
+  const { colorKeyPath } = dataPaths;
+  const { colorKey: _colorKey } = database;
+  const colorKey = _colorKey || defaultColorKey;
+
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const updateColors = (givenColorKey) => {
+    uploadColors(colorKeyPath, givenColorKey, addAlert);
+  };
 
   const handleDelete = () => {
     setOpenDeleteDialog(false);
@@ -105,6 +119,43 @@ function Settings(props) {
               Logout
             </Button>
           </CardActions>
+        </Card>
+      </Box>
+    );
+  };
+
+  const renderColorCard = () => {
+    const labelText = "Select theme";
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Theme
+            </Typography>
+            <Stack sx={{ width: "100%" }} spacing={3}>
+              <Typography>
+                Change the colors used in the app for your account.
+              </Typography>
+              <FormControl fullWidth size="small" variant="outlined">
+                <InputLabel>{labelText}</InputLabel>
+                <Select
+                  sx={{ maxWidth: "200px" }}
+                  value={colorKey}
+                  onChange={(event) => {
+                    updateColors(event.target.value);
+                  }}
+                  label={labelText}
+                >
+                  {colorOptions.map((option) => (
+                    <MenuItem key={option.key} value={option.key}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Stack>
+          </CardContent>
         </Card>
       </Box>
     );
@@ -233,8 +284,9 @@ function Settings(props) {
         Settings
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        {renderAppCard()}
         {renderUserCard()}
+        {renderColorCard()}
+        {renderAppCard()}
         {renderDownloadData()}
         {renderImportData()}
         {renderDeleteData()}

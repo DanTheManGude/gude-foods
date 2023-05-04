@@ -8,12 +8,6 @@
   src: url("./Dosis.ttf");
 }
 
-html {
-  background: linear-gradient(180deg, #283868 0%, #102257 75%, #0e1f4e 100%);
-  background-color: #283868;
-  background-attachment: fixed;
-}
-
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

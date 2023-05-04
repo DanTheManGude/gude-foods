@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-import { getEmailLink } from "../../utils/values";
+import { getEmailLink } from "../../utils/utility";
 import { emailConfig } from "../../constants";
 
 import GoogleLoginButton from "./GoogleLoginButton";
