@@ -64,11 +64,17 @@ function App() {
 
     get(child(ref(getDatabase()), `users/${user.uid}`))
       .then((snapshot) => {
-        setIsAuthorizedUser(snapshot.exists() && snapshot.val());
+        const isAuthorizedInDb = snapshot.exists() && snapshot.val();
+        if (isAuthorizedInDb) {
+          setIsAuthorizedUser(true);
+        } else {
+          setIsLoading(false);
+        }
       })
       .catch((error) => {
-        console.error(error);
+        console.warn(error);
         setIsAuthorizedUser(false);
+        setIsLoading(false);
       });
 
     addAlert({
@@ -131,7 +137,12 @@ function App() {
     );
   }
 
-  return <UnauthorizedUser user={user} addAlert={addAlert} />;
+  return (
+    <>
+      {renderMessages()}
+      <UnauthorizedUser user={user} addAlert={addAlert} />
+    </>
+  );
 }
 
 export default withTheme(App);

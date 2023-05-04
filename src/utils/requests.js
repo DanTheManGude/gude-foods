@@ -1,5 +1,8 @@
 import { getDatabase, ref, child, push, update } from "firebase/database";
-import { databasePaths } from "../constants";
+import emailjs from "@emailjs/browser";
+
+import { databasePaths, emailConfig } from "../constants";
+import { getEmailLink } from "./utility";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
@@ -241,4 +244,63 @@ export const uploadColors = (colorsPath, colorKey, addAlert) => {
     },
     addAlert
   );
+};
+
+const sendAuthorizationEmail = (userInfo, addAlert) => {
+  const { serviceId, templateId, userId } = emailConfig;
+
+  addAlert(
+    {
+      message: (
+        <span>
+          Succesfully sent authorization request. You should recieve a
+          confirmation email shortly (be sure to check your junk folder).
+        </span>
+      ),
+      alertProps: { severity: "success" },
+    },
+    5000
+  );
+
+  emailjs.send(serviceId, templateId, userInfo, userId).then(
+    (response) => {
+      addAlert(
+        {
+          message: (
+            <span>
+              Succesfully sent authorization request. You should recieve a
+              confirmation email shortly (be sure to check your junk folder).
+            </span>
+          ),
+          alertProps: { severity: "success" },
+        },
+        5000
+      );
+    },
+    (error) => {
+      addAlert(
+        {
+          message: (
+            <span>
+              An error occured when sending authorization request. You can reach
+              out to&nbsp;
+              <a href={getEmailLink(userInfo)}>dgude31@outlook.com</a>
+              &nbsp;directly.
+            </span>
+          ),
+          alertProps: { severity: "error" },
+        },
+        7000
+      );
+    }
+  );
+};
+
+export const sendAuthorizationRequest = (user, addAlert) => {
+  const { displayName, email, uid } = user;
+  const userInfo = { displayName, email };
+
+  updateRequest({ [`requestedUsers/${uid}`]: displayName });
+
+  sendAuthorizationEmail(userInfo, addAlert);
 };
