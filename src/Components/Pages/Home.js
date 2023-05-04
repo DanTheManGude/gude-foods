@@ -10,7 +10,11 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
 import newUserData from "../../newUserData.json";
-import { setAllData } from "../../utils/requests";
+import {
+  setAllData,
+  removeUserFromRequestedUsers,
+  approveRequestedUser,
+} from "../../utils/requests";
 
 import {
   AddAlertContext,
@@ -18,13 +22,60 @@ import {
   DatabaseContext,
 } from "../Contexts";
 
-function Home() {
+function Home(props) {
+  const { requestedUsers } = props;
+
   let navigate = useNavigate();
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
   const { glossary, basicFoodTagAssociation, shoppingList, cookbook, menu } =
     database;
+
+  const renderRequestedUsersCard = () => {
+    if (!requestedUsers) {
+      return null;
+    }
+
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Requested Users
+            </Typography>
+            <Typography>There are users who requested access.</Typography>
+            <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="left">
+              {Object.keys(requestedUsers).map((uid) => (
+                <Stack
+                  direction="row"
+                  alignItems="flex-end"
+                  spacing={2}
+                  key={uid}
+                >
+                  <Typography fontSize={20}>{requestedUsers[uid]}:</Typography>
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={() => removeUserFromRequestedUsers(uid)}
+                  >
+                    Reject
+                  </Button>
+                  <Button
+                    color="success"
+                    variant="contained"
+                    onClick={() => approveRequestedUser(uid)}
+                  >
+                    Accept
+                  </Button>
+                </Stack>
+              ))}
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  };
 
   const renderNewUserCard = () => {
     if (glossary) {
@@ -353,6 +404,7 @@ function Home() {
         Home
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+        {renderRequestedUsersCard()}
         {renderNewUserCard()}
         {memoMenuCard}
         {renderShoppingListCard()}
