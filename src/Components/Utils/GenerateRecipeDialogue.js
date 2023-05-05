@@ -136,17 +136,20 @@ function GenerateRecipeDialogue(props) {
         try {
           const generatedRecipe = parseResponse(_responseText);
 
-          const aiTag = Object.keys(glossary.recipeTags).find(
-            (tagId) => glossary.recipeTags[tagId] === "AI"
-          );
-          const saltIngredient = Object.keys(glossary.basicFoods).find(
-            (foodId) => glossary.basicFoods[foodId] === "salt"
-          );
+          const aiTag =
+            glossary.recipeTags &&
+            Object.keys(glossary.recipeTags).find(
+              (tagId) => glossary.recipeTags[tagId] === "AI"
+            );
 
           const tagsList = tags;
           if (aiTag && !tagsList.includes(aiTag)) {
             tagsList.unshift(aiTag);
           }
+
+          const saltIngredient = Object.keys(glossary.basicFoods).find(
+            (foodId) => glossary.basicFoods[foodId] === "salt"
+          );
 
           const ingredients = ingredientsList.reduce(
             (acc, ingredientId) => ({ ...acc, [ingredientId]: "" }),
