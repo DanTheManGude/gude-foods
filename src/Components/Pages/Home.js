@@ -261,9 +261,7 @@ function Home(props) {
       glossary &&
       glossary.basicFoods &&
       Object.keys(glossary.basicFoods).filter(
-        (foodId) =>
-          !basicFoodTagAssociation ||
-          !basicFoodTagAssociation.hasOwnProperty(foodId)
+        (foodId) => !basicFoodTagAssociation || !basicFoodTagAssociation[foodId]
       ).length;
 
     if (!count) {
