@@ -159,12 +159,16 @@ function GenerateRecipeDialogue(props) {
             ingredients[saltIngredient] = "a grain";
           }
 
+          const notes = `${additionalNotes}\n${generatedRecipe.ingredientText.join(
+            `\n`
+          )}`;
+
           handleClose();
           setAiGeneratedRecipe({
             ...generatedRecipe,
             tags: tagsList,
             ingredients,
-            notes: additionalNotes,
+            notes,
           });
           navigate("/aiRecipe");
         } catch (error) {
