@@ -28,6 +28,7 @@ function App() {
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [requestedUsers, setIsRequestedUsers] = useState();
+  const [allowUnrestrictedUsers, setAllowUnrestrictedUsers] = useState(false);
 
   const prevUserRef = useRef();
 
@@ -86,6 +87,14 @@ function App() {
       }
     });
 
+    onValue(ref(getDatabase(), `allowUnrestrictedUsers`), (snapshot) => {
+      if (snapshot.exists()) {
+        setAllowUnrestrictedUsers(snapshot.val());
+      } else {
+        setAllowUnrestrictedUsers(false);
+      }
+    });
+
     addAlert({
       message: "Succesfully logged in with Google",
       title: `Hello ${user.displayName}`,
@@ -125,7 +134,7 @@ function App() {
     </List>
   );
 
-  if (isAuthorizedUser) {
+  if (isAuthorizedUser || allowUnrestrictedUsers) {
     return (
       <>
         {renderMessages()}
