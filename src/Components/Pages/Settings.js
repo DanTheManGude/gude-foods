@@ -16,7 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
+import Switch from "@mui/material/Switch";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { defaultColorKey, colorOptions } from "../../constants";
@@ -31,7 +31,7 @@ import {
 } from "../Contexts";
 
 function Settings(props) {
-  const { user } = props;
+  const { user, isAdmin, allowUnrestrictedUsers } = props;
 
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
@@ -59,6 +59,39 @@ function Settings(props) {
     };
 
     downloadData(data);
+  };
+
+  const renderUnrestrictedUsersCard = () => {
+    const { isAdmin, allowUnrestrictedUsers } = props;
+
+    if (!isAdmin) {
+      return null;
+    }
+
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Unrestricted user access
+            </Typography>
+            <Typography>
+              Currently allowUnrestrictedUsers is&nbsp;
+              <strong>{allowUnrestrictedUsers.toString()}</strong>.
+            </Typography>
+            <Typography>Change setting to allow any user access.</Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Stack direction="row" spacing={3}>
+              <Button color="secondary" variant="outlined" onClick={() => {}}>
+                Add every account as a user
+              </Button>
+              <Switch checked={allowUnrestrictedUsers} onChange={() => {}} />
+            </Stack>
+          </CardActions>
+        </Card>
+      </Box>
+    );
   };
 
   const renderAppCard = () => {
@@ -257,6 +290,7 @@ function Settings(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         <UserCard user={user} addAlert={addAlert} />
         {renderColorCard()}
+        {renderUnrestrictedUsersCard()}
         {renderAppCard()}
         {renderDownloadData()}
         {renderImportData()}
