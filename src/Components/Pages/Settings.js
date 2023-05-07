@@ -66,7 +66,7 @@ function Settings(props) {
     downloadData(data);
   };
 
-  const renderUnrestrictedUsersCard = () => {
+  const renderUserManagmentCard = () => {
     if (!isAdmin) {
       return null;
     }
@@ -76,7 +76,7 @@ function Settings(props) {
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              Unrestricted user access
+              User managment
             </Typography>
             <Typography>
               Change setting to allow any user access to an account without
@@ -291,8 +291,8 @@ function Settings(props) {
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         <UserCard user={user} addAlert={addAlert} />
+        {renderUserManagmentCard()}
         {renderColorCard()}
-        {renderUnrestrictedUsersCard()}
         {renderAppCard()}
         {renderDownloadData()}
         {renderImportData()}
