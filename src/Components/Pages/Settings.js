@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -36,11 +37,14 @@ import {
 } from "../Contexts";
 
 function Settings(props) {
-  const { user, isAdmin, allowUnrestrictedUsers } = props;
+  const { user, actingUser, clearActingUser, isAdmin, allowUnrestrictedUsers } =
+    props;
 
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
+
+  let navigate = useNavigate();
 
   const { colorKeyPath } = dataPaths;
   const { colorKey: _colorKey } = database;
@@ -66,7 +70,7 @@ function Settings(props) {
     downloadData(data);
   };
 
-  const renderUnrestrictedUsersCard = () => {
+  const renderUserManagmentCard = () => {
     if (!isAdmin) {
       return null;
     }
@@ -76,7 +80,7 @@ function Settings(props) {
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              Unrestricted user access
+              User managment
             </Typography>
             <Typography>
               Change setting to allow any user access to an account without
@@ -84,12 +88,21 @@ function Settings(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Switch
-              checked={allowUnrestrictedUsers}
-              onChange={(event) => {
-                updateAllowUnrestrictedUsers(event.target.checked);
-              }}
-            />
+            <Stack direction={"row"} spacing={3}>
+              <Button
+                color="secondary"
+                variant="outlined"
+                onClick={() => navigate("/users")}
+              >
+                View all users
+              </Button>
+              <Switch
+                checked={allowUnrestrictedUsers}
+                onChange={(event) => {
+                  updateAllowUnrestrictedUsers(event.target.checked);
+                }}
+              />
+            </Stack>
           </CardActions>
         </Card>
       </Box>
@@ -290,9 +303,14 @@ function Settings(props) {
         Settings
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        <UserCard user={user} addAlert={addAlert} />
+        <UserCard
+          user={user}
+          actingUser={actingUser}
+          clearActingUser={clearActingUser}
+          addAlert={addAlert}
+        />
+        {renderUserManagmentCard()}
         {renderColorCard()}
-        {renderUnrestrictedUsersCard()}
         {renderAppCard()}
         {renderDownloadData()}
         {renderImportData()}

@@ -12,6 +12,7 @@ import Cooking from "../Pages/Cooking";
 import ShoppingList from "../Pages/ShoppingList";
 import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
+import Users from "../Pages/Users";
 import AiRecipe from "../Pages/AiRecipe";
 
 import {
@@ -32,6 +33,12 @@ function PagesContainer(props) {
   const [dataPaths, setDataPaths] = useState({});
   const [filteringOptions, setFilteringOptions] = useState();
   const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
+  const [actingUser, setActingUser] = useState();
+  const [userList, setUserList] = useState([]);
+
+  const clearActingUser = () => {
+    setActingUser();
+  };
 
   useEffect(() => {
     if (!user || !setColorKey) {
@@ -39,7 +46,7 @@ function PagesContainer(props) {
     }
     const db = getDatabase();
 
-    const createFullPath = getCreateFullPath(user);
+    const createFullPath = getCreateFullPath(actingUser || user);
 
     onValue(ref(db, createFullPath(databasePaths.colorKey)), (snapshot) => {
       const snapshotValue = snapshot.val();
@@ -63,8 +70,39 @@ function PagesContainer(props) {
         [`${key}Path`]: fullPath,
       }));
     });
-    updateRequest({ [createFullPath("name")]: user.displayName });
-  }, [user, setColorKey]);
+    if (!actingUser) {
+      updateRequest({ [createFullPath("name")]: user.displayName });
+    }
+  }, [user, actingUser, setColorKey]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    const db = getDatabase();
+
+    onValue(ref(db, "users"), (snapshot) => {
+      const users = snapshot.val();
+      onValue(ref(db, "accounts"), (snapshot) => {
+        const accounts = snapshot.val();
+        setUserList(
+          Object.keys(accounts).map((userUid) => ({
+            uid: userUid,
+            displayName: accounts[userUid].name,
+            isAuthorized: !!users[userUid],
+            basicFoodsCount:
+              accounts[userUid].glossary &&
+              accounts[userUid].glossary.basicFoods
+                ? Object.entries(accounts[userUid].glossary.basicFoods).length
+                : 0,
+            recipeCount: accounts[userUid].cookbook
+              ? Object.entries(accounts[userUid].cookbook).length
+              : 0,
+          }))
+        );
+      });
+    });
+  }, [user]);
 
   return (
     <DatabaseContext.Provider value={database}>
@@ -95,11 +133,27 @@ function PagesContainer(props) {
             element={
               <Settings
                 user={user}
+                actingUser={actingUser}
+                clearActingUser={clearActingUser}
                 isAdmin={isAdmin}
                 allowUnrestrictedUsers={allowUnrestrictedUsers}
               />
             }
           />
+          {isAdmin && (
+            <Route
+              path="users"
+              element={
+                <Users
+                  user={user}
+                  userList={userList}
+                  actingUser={actingUser}
+                  clearActingUser={clearActingUser}
+                  setActingUser={setActingUser}
+                />
+              }
+            />
+          )}
           {aiGeneratedRecipe && (
             <Route
               path="aiRecipe"
