@@ -46,7 +46,7 @@ function PagesContainer(props) {
     }
     const db = getDatabase();
 
-    const createFullPath = getCreateFullPath(user);
+    const createFullPath = getCreateFullPath(actingUser || user);
 
     onValue(ref(db, createFullPath(databasePaths.colorKey)), (snapshot) => {
       const snapshotValue = snapshot.val();
@@ -70,8 +70,10 @@ function PagesContainer(props) {
         [`${key}Path`]: fullPath,
       }));
     });
-    updateRequest({ [createFullPath("name")]: user.displayName });
-  }, [user, setColorKey]);
+    if (!actingUser) {
+      updateRequest({ [createFullPath("name")]: user.displayName });
+    }
+  }, [user, actingUser, setColorKey]);
 
   useEffect(() => {
     if (!user) {
