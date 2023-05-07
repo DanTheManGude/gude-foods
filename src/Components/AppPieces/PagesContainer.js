@@ -88,6 +88,14 @@ function PagesContainer(props) {
             uid: userUid,
             displayName: accounts[userUid].name,
             isAuthorized: !!users[userUid],
+            basicFoodsCount:
+              accounts[userUid].glossary &&
+              accounts[userUid].glossary.basicFoods
+                ? Object.entries(accounts[userUid].glossary.basicFoods).length
+                : 0,
+            recipeCount: accounts[userUid].cookbook
+              ? Object.entries(accounts[userUid].cookbook).length
+              : 0,
           }))
         );
       });
