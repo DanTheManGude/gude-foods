@@ -27,6 +27,8 @@ function App() {
   const [user, setUser] = useState();
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [isAdmin, setIsAdmin] = useState(false);
   const [requestedUsers, setIsRequestedUsers] = useState();
   const [allowUnrestrictedUsers, setAllowUnrestrictedUsers] = useState(false);
 
@@ -95,6 +97,14 @@ function App() {
       }
     });
 
+    onValue(ref(getDatabase(), `admin`), (snapshot) => {
+      if (snapshot.exists()) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
     addAlert({
       message: "Succesfully logged in with Google",
       title: `Hello ${user.displayName}`,
@@ -140,7 +150,12 @@ function App() {
         {renderMessages()}
         <NavBar />
         <AddAlertContext.Provider value={addAlert}>
-          <PagesContainer user={user} requestedUsers={requestedUsers} />
+          <PagesContainer
+            user={user}
+            isAdmin={isAdmin}
+            requestedUsers={requestedUsers}
+            allowUnrestrictedUsers={allowUnrestrictedUsers}
+          />
         </AddAlertContext.Provider>
         <BottomNav />
       </>
