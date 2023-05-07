@@ -8,7 +8,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Button from "@mui/material/Button";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import {} from "../../utils/requests";
+import { setAuthorizationForUser } from "../../utils/requests";
 
 import { AddAlertContext, DatabaseContext } from "../Contexts";
 
@@ -40,7 +40,9 @@ function Users(props) {
                 variant="outlined"
                 size="large"
                 sx={{ flex: 1 }}
-                onClick={() => {}}
+                onClick={() => {
+                  setAuthorizationForUser(uid, !isAuthorized);
+                }}
               >
                 <Typography>
                   {isAuthorized ? "Remove" : "Add"} Access

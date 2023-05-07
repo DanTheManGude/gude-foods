@@ -309,3 +309,7 @@ export const approveRequestedUser = (uid) => {
 export const updateAllowUnrestrictedUsers = (newValue) => {
   updateRequest({ [`allowUnrestrictedUsers`]: newValue });
 };
+
+export const setAuthorizationForUser = (uid, newValue) => {
+  updateRequest({ [`users/${uid}`]: newValue });
+};
