@@ -12,6 +12,7 @@ import Cooking from "../Pages/Cooking";
 import ShoppingList from "../Pages/ShoppingList";
 import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
+import Users from "../Pages/Users";
 import AiRecipe from "../Pages/AiRecipe";
 
 import {
@@ -108,6 +109,19 @@ function PagesContainer(props) {
               />
             }
           />
+          {isAdmin && (
+            <Route
+              path="users"
+              element={
+                <Users
+                  user={user}
+                  actingUser={actingUser}
+                  clearActingUser={clearActingUser}
+                  setActingUser={setActingUser}
+                />
+              }
+            />
+          )}
           {aiGeneratedRecipe && (
             <Route
               path="aiRecipe"
