@@ -20,7 +20,12 @@ import Switch from "@mui/material/Switch";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { defaultColorKey, colorOptions } from "../../constants";
-import { setAllData, deleteRequest, uploadColors } from "../../utils/requests";
+import {
+  setAllData,
+  deleteRequest,
+  uploadColors,
+  updateAllowUnrestrictedUsers,
+} from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import ImportFileButton from "../Utils/ImportFileButton";
 import UserCard from "../Utils/UserCard";
@@ -76,18 +81,17 @@ function Settings(props) {
               Unrestricted user access
             </Typography>
             <Typography>
-              Currently allowUnrestrictedUsers is&nbsp;
-              <strong>{allowUnrestrictedUsers.toString()}</strong>.
+              Change setting to allow any user access to an account without
+              authorization.
             </Typography>
-            <Typography>Change setting to allow any user access.</Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Stack direction="row" spacing={3}>
-              <Button color="secondary" variant="outlined" onClick={() => {}}>
-                Add every account as a user
-              </Button>
-              <Switch checked={allowUnrestrictedUsers} onChange={() => {}} />
-            </Stack>
+            <Switch
+              checked={allowUnrestrictedUsers}
+              onChange={(event) => {
+                updateAllowUnrestrictedUsers(event.target.checked);
+              }}
+            />
           </CardActions>
         </Card>
       </Box>

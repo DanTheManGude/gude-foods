@@ -305,3 +305,7 @@ export const approveRequestedUser = (uid) => {
   removeUserFromRequestedUsers(uid);
   updateRequest({ [`users/${uid}`]: true });
 };
+
+export const updateAllowUnrestrictedUsers = (newValue) => {
+  updateRequest({ [`allowUnrestrictedUsers`]: newValue });
+};
