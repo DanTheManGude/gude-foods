@@ -24,7 +24,7 @@ const getCreateFullPath = (user) => (pathName) =>
   `accounts/${user.uid}/${pathName}`;
 
 function PagesContainer(props) {
-  const { user, requestedUsers } = props;
+  const { user, isAdmin, requestedUsers, allowUnrestrictedUsers } = props;
 
   const setColorKey = useContext(ColorKeyContext);
 
@@ -72,7 +72,9 @@ function PagesContainer(props) {
         <Routes>
           <Route
             path="/home"
-            element={<Home requestedUsers={requestedUsers} />}
+            element={
+              <Home requestedUsers={isAdmin ? requestedUsers : undefined} />
+            }
           />
           <Route
             path="cookbook"
@@ -88,7 +90,16 @@ function PagesContainer(props) {
           <Route path="cooking/:recipeId" element={<Cooking />} />
           <Route path="shoppingList" element={<ShoppingList />} />
           <Route path="glossary" element={<Glossary />} />
-          <Route path="settings" element={<Settings user={user} />} />
+          <Route
+            path="settings"
+            element={
+              <Settings
+                user={user}
+                isAdmin={isAdmin}
+                allowUnrestrictedUsers={allowUnrestrictedUsers}
+              />
+            }
+          />
           {aiGeneratedRecipe && (
             <Route
               path="aiRecipe"

@@ -16,11 +16,16 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
+import Switch from "@mui/material/Switch";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { defaultColorKey, colorOptions } from "../../constants";
-import { setAllData, deleteRequest, uploadColors } from "../../utils/requests";
+import {
+  setAllData,
+  deleteRequest,
+  uploadColors,
+  updateAllowUnrestrictedUsers,
+} from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import ImportFileButton from "../Utils/ImportFileButton";
 import UserCard from "../Utils/UserCard";
@@ -31,7 +36,7 @@ import {
 } from "../Contexts";
 
 function Settings(props) {
-  const { user } = props;
+  const { user, isAdmin, allowUnrestrictedUsers } = props;
 
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
@@ -59,6 +64,36 @@ function Settings(props) {
     };
 
     downloadData(data);
+  };
+
+  const renderUnrestrictedUsersCard = () => {
+    if (!isAdmin) {
+      return null;
+    }
+
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Unrestricted user access
+            </Typography>
+            <Typography>
+              Change setting to allow any user access to an account without
+              authorization.
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Switch
+              checked={allowUnrestrictedUsers}
+              onChange={(event) => {
+                updateAllowUnrestrictedUsers(event.target.checked);
+              }}
+            />
+          </CardActions>
+        </Card>
+      </Box>
+    );
   };
 
   const renderAppCard = () => {
@@ -257,6 +292,7 @@ function Settings(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         <UserCard user={user} addAlert={addAlert} />
         {renderColorCard()}
+        {renderUnrestrictedUsersCard()}
         {renderAppCard()}
         {renderDownloadData()}
         {renderImportData()}
