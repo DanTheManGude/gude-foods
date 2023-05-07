@@ -46,7 +46,7 @@ function Users(props) {
                   }}
                 >
                   <Typography>
-                    {isAuthorized ? "Remove" : "Add"} Access
+                    {isAuthorized ? "Revoke" : "Give"} Access
                   </Typography>
                 </Button>
               )}
