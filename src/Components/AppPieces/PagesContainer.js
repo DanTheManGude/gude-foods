@@ -29,11 +29,12 @@ function PagesContainer(props) {
 
   const setColorKey = useContext(ColorKeyContext);
 
-  const [actingUser, setActingUser] = useState();
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
   const [filteringOptions, setFilteringOptions] = useState();
   const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
+  const [actingUser, setActingUser] = useState();
+  const [userList, setUserList] = useState([]);
 
   const clearActingUser = () => {
     setActingUser();
@@ -59,7 +60,6 @@ function PagesContainer(props) {
       const fullPath = createFullPath(pathName);
 
       onValue(ref(db, fullPath), (snapshot) => {
-        console.log(fullPath);
         setDatabase((_database) => ({
           ..._database,
           [key]: snapshot.val(),
@@ -72,6 +72,27 @@ function PagesContainer(props) {
     });
     updateRequest({ [createFullPath("name")]: user.displayName });
   }, [user, setColorKey]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    const db = getDatabase();
+
+    onValue(ref(db, "users"), (snapshot) => {
+      const users = snapshot.val();
+      onValue(ref(db, "accounts"), (snapshot) => {
+        const accounts = snapshot.val();
+        setUserList(
+          Object.keys(accounts).map((userUid) => ({
+            uid: userUid,
+            displayName: accounts[userUid].name,
+            isAuthorized: !!users[userUid],
+          }))
+        );
+      });
+    });
+  }, [user]);
 
   return (
     <DatabaseContext.Provider value={database}>
@@ -115,6 +136,7 @@ function PagesContainer(props) {
               element={
                 <Users
                   user={user}
+                  userList={userList}
                   actingUser={actingUser}
                   clearActingUser={clearActingUser}
                   setActingUser={setActingUser}

@@ -2,12 +2,18 @@ import { useContext } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Button from "@mui/material/Button";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import {} from "../../utils/requests";
 
 import { AddAlertContext, DatabaseContext } from "../Contexts";
 
 function Users(props) {
-  const { user, userList, activeUser, setActiveUser, clearActiveUser } = props;
+  const { user, userList, actingUser, setActingUser, clearActingUser } = props;
 
   const addAlert = useContext(AddAlertContext);
   const database = useContext(DatabaseContext);
@@ -17,7 +23,7 @@ function Users(props) {
     const { displayName, uid, isAuthorized } = userEntry;
 
     return (
-      <Accordion key={uid}>
+      <Accordion key={uid} sx={{ width: "95%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">{displayName}</Typography>
         </AccordionSummary>
@@ -28,29 +34,33 @@ function Users(props) {
             justifyContent="space-around"
             alignItems="center"
           >
-            <Button
-              color="warning"
-              variant="outlined"
-              size="large"
-              disabled={uid === user.uid}
-              sx={{ flex: 1 }}
-              onClick={() => {}}
-            >
-              <Typography color="secondary">
-                {isAuthorized ? "Remove" : "Add"} Authorization
-              </Typography>
-            </Button>
+            {uid !== user.uid && (
+              <Button
+                color="secondary"
+                variant="outlined"
+                size="large"
+                sx={{ flex: 1 }}
+                onClick={() => {}}
+              >
+                <Typography>
+                  {isAuthorized ? "Remove" : "Add"} Access
+                </Typography>
+              </Button>
+            )}
             <Button
               color="secondary"
               variant="contained"
               size="large"
               sx={{ flex: 1 }}
-              disabled={uid === activeUser.uid}
+              disabled={
+                (actingUser && uid === actingUser.uid) ||
+                (!actingUser && uid === user.uid)
+              }
               onClick={() => {
                 if (uid === user.uid) {
-                  clearActiveUser();
+                  clearActingUser();
                 }
-                setActiveUser(userEntry);
+                setActingUser(userEntry);
               }}
             >
               <Typography>
