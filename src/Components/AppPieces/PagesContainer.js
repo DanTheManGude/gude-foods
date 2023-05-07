@@ -28,10 +28,15 @@ function PagesContainer(props) {
 
   const setColorKey = useContext(ColorKeyContext);
 
+  const [actingUser, setActingUser] = useState();
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
   const [filteringOptions, setFilteringOptions] = useState();
   const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
+
+  const clearActingUser = () => {
+    setActingUser();
+  };
 
   useEffect(() => {
     if (!user || !setColorKey) {
@@ -53,6 +58,7 @@ function PagesContainer(props) {
       const fullPath = createFullPath(pathName);
 
       onValue(ref(db, fullPath), (snapshot) => {
+        console.log(fullPath);
         setDatabase((_database) => ({
           ..._database,
           [key]: snapshot.val(),
@@ -95,6 +101,8 @@ function PagesContainer(props) {
             element={
               <Settings
                 user={user}
+                actingUser={actingUser}
+                clearActingUser={clearActingUser}
                 isAdmin={isAdmin}
                 allowUnrestrictedUsers={allowUnrestrictedUsers}
               />

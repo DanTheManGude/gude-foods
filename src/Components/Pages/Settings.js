@@ -36,7 +36,8 @@ import {
 } from "../Contexts";
 
 function Settings(props) {
-  const { user, isAdmin, allowUnrestrictedUsers } = props;
+  const { user, actingUser, clearActingUser, isAdmin, allowUnrestrictedUsers } =
+    props;
 
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
@@ -290,7 +291,12 @@ function Settings(props) {
         Settings
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        <UserCard user={user} addAlert={addAlert} />
+        <UserCard
+          user={user}
+          actingUser={actingUser}
+          clearActingUser={clearActingUser}
+          addAlert={addAlert}
+        />
         {renderUserManagmentCard()}
         {renderColorCard()}
         {renderAppCard()}
