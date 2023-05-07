@@ -63,6 +63,7 @@ function App() {
   useEffect(() => {
     if (!user) {
       setIsAuthorizedUser(false);
+      setAllowUnrestrictedUsers(false);
       return;
     }
 
