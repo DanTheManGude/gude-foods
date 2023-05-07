@@ -67,8 +67,6 @@ function Settings(props) {
   };
 
   const renderUnrestrictedUsersCard = () => {
-    const { isAdmin, allowUnrestrictedUsers } = props;
-
     if (!isAdmin) {
       return null;
     }
