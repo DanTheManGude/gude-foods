@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -43,6 +44,8 @@ function Settings(props) {
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
 
+  let navigate = useNavigate();
+
   const { colorKeyPath } = dataPaths;
   const { colorKey: _colorKey } = database;
   const colorKey = _colorKey || defaultColorKey;
@@ -85,12 +88,21 @@ function Settings(props) {
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Switch
-              checked={allowUnrestrictedUsers}
-              onChange={(event) => {
-                updateAllowUnrestrictedUsers(event.target.checked);
-              }}
-            />
+            <Stack direction={"row"} spacing={3}>
+              <Button
+                color="secondary"
+                variant="outlined"
+                onClick={() => navigate("/users")}
+              >
+                View all users
+              </Button>
+              <Switch
+                checked={allowUnrestrictedUsers}
+                onChange={(event) => {
+                  updateAllowUnrestrictedUsers(event.target.checked);
+                }}
+              />
+            </Stack>
           </CardActions>
         </Card>
       </Box>
