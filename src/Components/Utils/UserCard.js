@@ -24,7 +24,8 @@ function UserCard(props) {
             </Typography>
             <Typography>
               You are currently acting as:{" "}
-              <strong>{actingUser.displayName}</strong> ({actingUser.uid})
+              <strong>{actingUser.displayName}</strong>{" "}
+              <code>{actingUser.uid}</code>
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
