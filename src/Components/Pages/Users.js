@@ -5,12 +5,47 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Switch from "@mui/material/Switch";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { setAuthorizationForUser } from "../../utils/requests";
+import {
+  setAuthorizationForUser,
+  updateAllowUnrestrictedUsers,
+} from "../../utils/requests";
 
 function Users(props) {
-  const { user, userList, actingUser, setActingUser, clearActingUser } = props;
+  const {
+    user,
+    userList,
+    actingUser,
+    setActingUser,
+    clearActingUser,
+    allowUnrestrictedUsers,
+  } = props;
+
+  const renderUserManagmentCard = () => {
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Stack direction={"row"} spacing={2} alignItems={"center"}>
+              <Typography>Allow unrestricted user access:</Typography>
+              <Switch
+                checked={allowUnrestrictedUsers}
+                onChange={(event) => {
+                  updateAllowUnrestrictedUsers(event.target.checked);
+                }}
+              />
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  };
 
   const renderUser = (userEntry) => {
     const { displayName, uid, isAuthorized, basicFoodsCount, recipeCount } =
@@ -39,7 +74,7 @@ function Users(props) {
                 <Button
                   color="secondary"
                   variant="outlined"
-                  size="large"
+                  size="medium"
                   sx={{ flex: 1 }}
                   onClick={() => {
                     setAuthorizationForUser(uid, !isAuthorized);
@@ -53,7 +88,7 @@ function Users(props) {
               <Button
                 color="secondary"
                 variant="contained"
-                size="large"
+                size="medium"
                 sx={{ flex: 1 }}
                 disabled={
                   (actingUser && uid === actingUser.uid) ||
@@ -106,13 +141,16 @@ function Users(props) {
       >
         Users
       </Typography>
-      <Stack sx={{ width: "95%" }} spacing={0.5}>
-        {userList.some((userEntry) => !userEntry.isAuthorized) && (
-          <Paper elevation={0} sx={{ paddingY: "10px", paddingX: "10px" }}>
-            {renderUserStack(false)}
-          </Paper>
-        )}
-        {renderUserStack(true)}
+      <Stack spacing={3}>
+        {renderUserManagmentCard()}
+        <Stack sx={{ width: "95%" }} spacing={0.5}>
+          {userList.some((userEntry) => !userEntry.isAuthorized) && (
+            <Paper elevation={0} sx={{ paddingY: "10px", paddingX: "10px" }}>
+              {renderUserStack(false)}
+            </Paper>
+          )}
+          {renderUserStack(true)}
+        </Stack>
       </Stack>
     </div>
   );
