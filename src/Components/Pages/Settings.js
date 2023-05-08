@@ -55,8 +55,11 @@ function Settings(props) {
   };
 
   const onDownload = () => {
+    const userInfo = !actingUser
+      ? { name: user.displayName, email: user.email, uid: user.uid }
+      : { name: actingUser.displayName, uid: actingUser.uid };
     const data = {
-      user: { name: user.displayName, email: user.email, uid: user.uid },
+      user: userInfo,
       ...database,
     };
 
@@ -202,7 +205,9 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <ImportFileButton
-              onSuccess={(fileData) => setAllData(fileData, addAlert)}
+              onSuccess={(fileData) =>
+                setAllData(fileData, dataPaths, addAlert)
+              }
               buttonProps={{
                 variant: "outlined",
                 color: "secondary",

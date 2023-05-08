@@ -164,15 +164,15 @@ export const updateFromCookbookImport = (
   );
 };
 
-export const setAllData = (allUserData, dataPaths, addAlert) => {
+export const setAllData = (fileData, dataPaths, addAlert) => {
   updateRequest(
     Object.keys(databasePaths).reduce(
       (acc, databaseEntryName) => ({
         ...acc,
-        ...(allUserData.hasOwnProperty(databaseEntryName)
+        ...(fileData.hasOwnProperty(databaseEntryName)
           ? {
               [dataPaths[`${databaseEntryName}Path`]]:
-                allUserData[databaseEntryName],
+                fileData[databaseEntryName],
             }
           : {}),
       }),
