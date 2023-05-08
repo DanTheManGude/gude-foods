@@ -205,7 +205,9 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <ImportFileButton
-              onSuccess={(fileData) => setAllData(fileData, addAlert)}
+              onSuccess={(fileData) =>
+                setAllData(fileData, dataPaths, addAlert)
+              }
               buttonProps={{
                 variant: "outlined",
                 color: "secondary",
