@@ -17,16 +17,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Switch from "@mui/material/Switch";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { defaultColorKey, colorOptions } from "../../constants";
-import {
-  setAllData,
-  deleteRequest,
-  uploadColors,
-  updateAllowUnrestrictedUsers,
-} from "../../utils/requests";
+import { setAllData, deleteRequest, uploadColors } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 import ImportFileButton from "../Utils/ImportFileButton";
 import UserCard from "../Utils/UserCard";
@@ -37,8 +31,7 @@ import {
 } from "../Contexts";
 
 function Settings(props) {
-  const { user, actingUser, clearActingUser, isAdmin, allowUnrestrictedUsers } =
-    props;
+  const { user, actingUser, clearActingUser, isAdmin } = props;
 
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
@@ -84,25 +77,17 @@ function Settings(props) {
             </Typography>
             <Typography>
               Change setting to allow any user access to an account without
-              authorization.
+              authorization and act as other users.
             </Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Stack direction={"row"} spacing={3}>
-              <Button
-                color="secondary"
-                variant="outlined"
-                onClick={() => navigate("/users")}
-              >
-                View all users
-              </Button>
-              <Switch
-                checked={allowUnrestrictedUsers}
-                onChange={(event) => {
-                  updateAllowUnrestrictedUsers(event.target.checked);
-                }}
-              />
-            </Stack>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={() => navigate("/users")}
+            >
+              View all users
+            </Button>
           </CardActions>
         </Card>
       </Box>

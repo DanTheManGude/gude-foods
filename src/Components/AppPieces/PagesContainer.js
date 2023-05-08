@@ -136,7 +136,6 @@ function PagesContainer(props) {
                 actingUser={actingUser}
                 clearActingUser={clearActingUser}
                 isAdmin={isAdmin}
-                allowUnrestrictedUsers={allowUnrestrictedUsers}
               />
             }
           />
@@ -150,6 +149,7 @@ function PagesContainer(props) {
                   actingUser={actingUser}
                   clearActingUser={clearActingUser}
                   setActingUser={setActingUser}
+                  allowUnrestrictedUsers={allowUnrestrictedUsers}
                 />
               }
             />
