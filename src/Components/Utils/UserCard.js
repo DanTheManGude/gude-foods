@@ -23,8 +23,9 @@ function UserCard(props) {
               Current user
             </Typography>
             <Typography>
-              You are currently acting as:{" "}
-              <strong>{actingUser.displayName}</strong>{" "}
+              You are currently acting as:&nbsp;
+              <strong>{actingUser.displayName}</strong>
+              <br />
               <code>{actingUser.uid}</code>
             </Typography>
           </CardContent>
