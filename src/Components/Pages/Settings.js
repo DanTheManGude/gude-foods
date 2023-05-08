@@ -55,8 +55,11 @@ function Settings(props) {
   };
 
   const onDownload = () => {
+    const userInfo = !actingUser
+      ? { name: user.displayName, email: user.email, uid: user.uid }
+      : { name: actingUser.displayName, uid: actingUser.uid };
     const data = {
-      user: { name: user.displayName, email: user.email, uid: user.uid },
+      user: userInfo,
       ...database,
     };
 
