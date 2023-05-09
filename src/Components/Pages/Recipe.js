@@ -215,7 +215,7 @@ function Recipe() {
             <Button
               key="delete"
               color="error"
-              variant="outlined"
+              variant="contained"
               size="small"
               sx={{ flexGrow: "1" }}
               onClick={() => {
@@ -244,12 +244,12 @@ function Recipe() {
               downloadData(recipeData, recipeData.name);
             }}
           >
-            <Typography>Export</Typography>
+            <Typography>Share</Typography>
           </Button>
           <Button
             key="shoppingList"
-            color="secondary"
-            variant="outlined"
+            color="primary"
+            variant="contained"
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
@@ -270,8 +270,8 @@ function Recipe() {
           </Button>
           <Button
             key="edit"
-            color="success"
-            variant="outlined"
+            color="secondary"
+            variant="contained"
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
