@@ -256,7 +256,7 @@ function Cookbook(props) {
                   key={tagId}
                   label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
                   size="small"
-                  variant="outlined"
+                  variant="contained"
                   color="tertiary"
                 />
               ))}

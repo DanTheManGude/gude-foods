@@ -16,7 +16,7 @@ export const renderEditingButtons = (onCancel, onSave) => (
   <>
     <Button
       key="cancel"
-      color="secondary"
+      color="warning"
       variant="contained"
       size="small"
       sx={{ flexGrow: "1" }}

@@ -370,7 +370,6 @@ function GenerateRecipeDialogue(props) {
         <DialogActions>
           {!isLoading && !responseText && (
             <Button
-              autoFocus
               variant="outlined"
               onClick={handleRemoveApiKey}
               color="error"
@@ -379,12 +378,7 @@ function GenerateRecipeDialogue(props) {
             </Button>
           )}
 
-          <Button
-            autoFocus
-            onClick={handleClose}
-            color="secondary"
-            variant="outlined"
-          >
+          <Button onClick={handleClose} color="secondary" variant="outlined">
             <Typography>Close</Typography>
           </Button>
           {responseText ? (
