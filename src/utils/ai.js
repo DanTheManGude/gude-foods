@@ -73,9 +73,6 @@ export const parseResponse = (textResponse) => {
   });
 
   const errorText = "Parsing text";
-  if (!recipe.name) {
-    throw Error(`${errorText}- no name`);
-  }
   if (recipe.ingredientText.length === 0) {
     throw Error(`${errorText}- no ingredients`);
   }
@@ -90,7 +87,7 @@ export const reportAiError = (addAlert, reportErrorValues) => {
   const { serviceId, reportAiTemplateId, userId } = emailConfig;
 
   emailjs.send(serviceId, reportAiTemplateId, reportErrorValues, userId).then(
-    (respone) => {
+    () => {
       addAlert(
         {
           title: <span>Thanks for sharing</span>,
@@ -105,7 +102,7 @@ export const reportAiError = (addAlert, reportErrorValues) => {
         5000
       );
     },
-    (error) => {
+    () => {
       addAlert({
         message: <span>An error occured when reporting the error</span>,
         alertProps: { severity: "error" },
