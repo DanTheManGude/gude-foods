@@ -34,7 +34,7 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const { open, onClose, setAiGeneratedRecipe } = props;
+  const { open, onClose, setAiGeneratedRecipe, userDisplayName } = props;
 
   const [reportErrorValues, setReportErrorValues] = useState();
   const addAlert = useContext(AddAlertContext);
@@ -174,11 +174,11 @@ function GenerateRecipeDialogue(props) {
         } catch (error) {
           setResponseText(_responseText);
           console.warn(error);
-          setReportErrorValues([
+          setReportErrorValues({
             promptText,
-            JSON.stringify(response),
-            error.toString(),
-          ]);
+            response: JSON.stringify(response),
+            error: error.toString(),
+          });
         }
 
         stopLoading();
@@ -278,7 +278,7 @@ function GenerateRecipeDialogue(props) {
   };
 
   const handleReportError = () => {
-    reportAiError(addAlert, ...reportErrorValues);
+    reportAiError(addAlert, { ...reportErrorValues, userDisplayName });
     setReportErrorValues();
   };
 

@@ -86,37 +86,30 @@ export const parseResponse = (textResponse) => {
   return recipe;
 };
 
-export const reportAiError = (addAlert, promptText, response, error) => {
+export const reportAiError = (addAlert, reportErrorValues) => {
   const { serviceId, reportAiTemplateId, userId } = emailConfig;
 
-  emailjs
-    .send(
-      serviceId,
-      reportAiTemplateId,
-      { promptText, response, error },
-      userId
-    )
-    .then(
-      (response) => {
-        addAlert(
-          {
-            title: <span>Thanks for sharing</span>,
-            message: (
-              <span>
-                Succesfully reported the error. Thank you for helping make Gude
-                Foods better.
-              </span>
-            ),
-            alertProps: { severity: "success" },
-          },
-          5000
-        );
-      },
-      (error) => {
-        addAlert({
-          message: <span>An error occured when reporting the error</span>,
-          alertProps: { severity: "error" },
-        });
-      }
-    );
+  emailjs.send(serviceId, reportAiTemplateId, reportErrorValues, userId).then(
+    (respone) => {
+      addAlert(
+        {
+          title: <span>Thanks for sharing</span>,
+          message: (
+            <span>
+              Succesfully reported the error. Thank you for helping make Gude
+              Foods better.
+            </span>
+          ),
+          alertProps: { severity: "success" },
+        },
+        5000
+      );
+    },
+    (error) => {
+      addAlert({
+        message: <span>An error occured when reporting the error</span>,
+        alertProps: { severity: "error" },
+      });
+    }
+  );
 };

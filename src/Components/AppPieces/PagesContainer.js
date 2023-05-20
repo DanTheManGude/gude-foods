@@ -121,6 +121,7 @@ function PagesContainer(props) {
                 filteringOptions={filteringOptions}
                 setFilteringOptions={setFilteringOptions}
                 setAiGeneratedRecipe={setAiGeneratedRecipe}
+                userDisplayName={user.displayName}
               />
             }
           />
