@@ -52,9 +52,54 @@ function Users(props) {
     );
   };
 
+  const renderButtonOwnUser = () => (
+    <Button
+      color="secondary"
+      variant="contained"
+      size="medium"
+      sx={{ flex: 1 }}
+      disabled={!actingUser}
+      onClick={() => {
+        clearActingUser();
+      }}
+    >
+      <Typography>Back to own user</Typography>
+    </Button>
+  );
+
+  const renderButtonOtherUser = (userEntry) => {
+    const { uid, isAuthorized } = userEntry;
+    return (
+      <>
+        <Button
+          color="secondary"
+          variant="outlined"
+          size="medium"
+          sx={{ flex: 1 }}
+          onClick={() => {
+            setAuthorizationForUser(uid, !isAuthorized);
+          }}
+        >
+          <Typography>{isAuthorized ? "Revoke" : "Give"} Access</Typography>
+        </Button>
+        <Button
+          color="secondary"
+          variant="contained"
+          size="medium"
+          sx={{ flex: 1 }}
+          disabled={actingUser && uid === actingUser.uid}
+          onClick={() => {
+            setActingUser(userEntry);
+          }}
+        >
+          <Typography>Act as user</Typography>
+        </Button>
+      </>
+    );
+  };
+
   const renderUser = (userEntry) => {
-    const { displayName, uid, isAuthorized, basicFoodsCount, recipeCount } =
-      userEntry;
+    const { displayName, uid, basicFoodsCount, recipeCount } = userEntry;
 
     return (
       <Accordion key={uid} sx={{ width: "100%" }}>
@@ -75,41 +120,9 @@ function Users(props) {
               justifyContent="space-around"
               alignItems="center"
             >
-              {uid !== user.uid && (
-                <Button
-                  color="secondary"
-                  variant="outlined"
-                  size="medium"
-                  sx={{ flex: 1 }}
-                  onClick={() => {
-                    setAuthorizationForUser(uid, !isAuthorized);
-                  }}
-                >
-                  <Typography>
-                    {isAuthorized ? "Revoke" : "Give"} Access
-                  </Typography>
-                </Button>
-              )}
-              <Button
-                color="secondary"
-                variant="contained"
-                size="medium"
-                sx={{ flex: 1 }}
-                disabled={
-                  (actingUser && uid === actingUser.uid) ||
-                  (!actingUser && uid === user.uid)
-                }
-                onClick={() => {
-                  if (uid === user.uid) {
-                    clearActingUser();
-                  }
-                  setActingUser(userEntry);
-                }}
-              >
-                <Typography>
-                  {uid === user.uid ? "Back to own user" : "Act as user"}
-                </Typography>
-              </Button>
+              {uid === user.uid
+                ? renderButtonOwnUser()
+                : renderButtonOtherUser(userEntry)}
             </Stack>
           </Stack>
         </AccordionDetails>
