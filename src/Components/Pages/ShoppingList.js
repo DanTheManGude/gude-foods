@@ -259,7 +259,7 @@ function ShoppingList() {
               {isActiveInput ? (
                 <Button
                   color={"secondary"}
-                  variant="outlined"
+                  variant="contained"
                   size="small"
                   sx={{ width: "115px" }}
                   disabled={disabled}
@@ -324,7 +324,7 @@ function ShoppingList() {
       <Stack direction="row" spacing={2} alignItems="center">
         <Button
           color="secondary"
-          variant="contained"
+          variant="outlined"
           size="small"
           sx={{ width: "168px" }}
           onClick={() => {
@@ -358,7 +358,7 @@ function ShoppingList() {
       <Stack direction="row" spacing={2} alignItems="center">
         <Button
           color="secondary"
-          variant="contained"
+          variant="outlined"
           size="small"
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.unchecked).length}
@@ -385,7 +385,7 @@ function ShoppingList() {
         </Button>
         <Button
           color="secondary"
-          variant="contained"
+          variant="outlined"
           size="small"
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.checked).length}
@@ -452,7 +452,7 @@ function ShoppingList() {
         </Stack>
         <Button
           color="primary"
-          variant="outlined"
+          variant="contained"
           size="small"
           sx={{ width: "90px" }}
           disabled={!(newFoodId && newFoodAmount)}
