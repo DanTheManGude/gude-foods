@@ -28,14 +28,16 @@ import {
   AddAlertContext,
   DataPathsContext,
   DatabaseContext,
+  UserContext,
 } from "../Contexts";
 
 function Settings(props) {
-  const { user, actingUser, clearActingUser, isAdmin } = props;
+  const { actingUser, clearActingUser, isAdmin } = props;
 
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
+  const user = useContext(UserContext);
 
   let navigate = useNavigate();
 

@@ -42,7 +42,6 @@ function Cookbook(props) {
     filteringOptions = {},
     setFilteringOptions,
     setAiGeneratedRecipe,
-    userDisplayName,
   } = props;
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
@@ -404,7 +403,6 @@ function Cookbook(props) {
           setOpenGenerateRecipeDialogue(false);
         }}
         setAiGeneratedRecipe={setAiGeneratedRecipe}
-        userDisplayName={userDisplayName}
       />
     </div>
   );

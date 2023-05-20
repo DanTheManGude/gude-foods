@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
@@ -17,15 +19,18 @@ import {
   updateAllowUnrestrictedUsers,
 } from "../../utils/requests";
 
+import { UserContext } from "../Contexts";
+
 function Users(props) {
   const {
-    user,
     userList,
     actingUser,
     setActingUser,
     clearActingUser,
     allowUnrestrictedUsers,
   } = props;
+
+  const user = useContext(UserContext);
 
   const renderUserManagmentCard = () => {
     return (

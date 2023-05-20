@@ -23,6 +23,7 @@ import {
   DatabaseContext,
   DataPathsContext,
   AddAlertContext,
+  UserContext,
 } from "../Contexts";
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
@@ -34,7 +35,7 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const { open, onClose, setAiGeneratedRecipe, userDisplayName } = props;
+  const { open, onClose, setAiGeneratedRecipe } = props;
 
   const [reportErrorValues, setReportErrorValues] = useState();
   const addAlert = useContext(AddAlertContext);
@@ -47,6 +48,7 @@ function GenerateRecipeDialogue(props) {
     basicFoodTagAssociation,
     openAIKey: savedOpenAiKey,
   } = database;
+  const user = useContext(UserContext);
 
   let navigate = useNavigate();
 
@@ -278,7 +280,10 @@ function GenerateRecipeDialogue(props) {
   };
 
   const handleReportError = () => {
-    reportAiError(addAlert, { ...reportErrorValues, userDisplayName });
+    reportAiError(addAlert, {
+      ...reportErrorValues,
+      who: `${user.displayName} - ${user.uid}`,
+    });
     setReportErrorValues();
   };
 
