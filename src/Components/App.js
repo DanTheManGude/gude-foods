@@ -19,7 +19,7 @@ import NavBar from "./AppPieces/NavBar";
 import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
 
-import { AddAlertContext } from "./Contexts";
+import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
 
 function App() {
@@ -151,12 +151,13 @@ function App() {
         {renderMessages()}
         <NavBar />
         <AddAlertContext.Provider value={addAlert}>
-          <PagesContainer
-            user={user}
-            isAdmin={isAdmin}
-            requestedUsers={requestedUsers}
-            allowUnrestrictedUsers={allowUnrestrictedUsers}
-          />
+          <UserContext.Provider value={user}>
+            <PagesContainer
+              isAdmin={isAdmin}
+              requestedUsers={requestedUsers}
+              allowUnrestrictedUsers={allowUnrestrictedUsers}
+            />
+          </UserContext.Provider>
         </AddAlertContext.Provider>
         <BottomNav />
       </>

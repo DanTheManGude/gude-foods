@@ -19,14 +19,16 @@ import {
   DatabaseContext,
   DataPathsContext,
   ColorKeyContext,
+  UserContext,
 } from "../Contexts";
 
 const getCreateFullPath = (user) => (pathName) =>
   `accounts/${user.uid}/${pathName}`;
 
 function PagesContainer(props) {
-  const { user, isAdmin, requestedUsers, allowUnrestrictedUsers } = props;
+  const { isAdmin, requestedUsers, allowUnrestrictedUsers } = props;
 
+  const user = useContext(UserContext);
   const setColorKey = useContext(ColorKeyContext);
 
   const [database, setDatabase] = useState({});
@@ -132,7 +134,6 @@ function PagesContainer(props) {
             path="settings"
             element={
               <Settings
-                user={user}
                 actingUser={actingUser}
                 clearActingUser={clearActingUser}
                 isAdmin={isAdmin}
@@ -144,7 +145,6 @@ function PagesContainer(props) {
               path="users"
               element={
                 <Users
-                  user={user}
                   userList={userList}
                   actingUser={actingUser}
                   clearActingUser={clearActingUser}
