@@ -209,7 +209,7 @@ function ShoppingList() {
                         onClick={() => {
                           navigate(`/recipe/${recipeId}`);
                         }}
-                        sx={{ color: "white" }}
+                        color={"text.primary"}
                       >
                         {cookbook[recipeId].name}
                       </Link>
@@ -555,7 +555,7 @@ function ShoppingList() {
       <>
         {!Object.keys(shoppingMap.unchecked).length ? (
           <Typography
-            color="#fff"
+            color={"text.primary"}
             sx={{
               paddingBottom: 1.5,
               textAlign: "center",

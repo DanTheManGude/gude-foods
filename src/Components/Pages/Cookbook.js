@@ -306,7 +306,7 @@ function Cookbook(props) {
     const recipeList = calculateRecipeList();
     if (!recipeList.length) {
       return (
-        <Typography fontWeight="bold" color="white">
+        <Typography fontWeight="bold" color={"text.primary"}>
           Looks like there are no recipes.
         </Typography>
       );
