@@ -58,7 +58,7 @@ function UserCard(props) {
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button color="primary" variant="contained" onClick={handleLogout}>
+          <Button color="primary" variant="outlined" onClick={handleLogout}>
             Logout
           </Button>
         </CardActions>
