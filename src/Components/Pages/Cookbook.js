@@ -306,9 +306,16 @@ function Cookbook(props) {
     const recipeList = calculateRecipeList();
     if (!recipeList.length) {
       return (
-        <Typography fontWeight="bold" color={"text.primary"}>
-          Looks like there are no recipes.
-        </Typography>
+        <Stack sx={{ width: "95%" }} spacing={2} alignItems="center">
+          <Typography fontWeight="bold" color={"text.primary"}>
+            {Object.keys(cookbook).length
+              ? "Looks like no recipes match that search."
+              : "There are no recipes in the cookbook."}
+          </Typography>
+          <Typography color={"text.primary"}>
+            Need an idea for a recipe? Try generating one with AI.
+          </Typography>
+        </Stack>
       );
     }
     return (
