@@ -122,7 +122,7 @@ export const renderTagList = (
         key={tagId}
         label={<Typography>{glossaryRecipeTags[tagId]}</Typography>}
         size="small"
-        variant="outlined"
+        variant="contained"
         color="tertiary"
         onDelete={editable ? getDeleteTagHandler(tagId) : undefined}
       />

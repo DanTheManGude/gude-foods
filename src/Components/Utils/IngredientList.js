@@ -140,8 +140,8 @@ function IngredientList(props) {
       />
       <Button
         id={`add-ingredient-button`}
-        color="secondary"
-        variant="outlined"
+        color="primary"
+        variant="contained"
         size="small"
         onClick={() => addIngredient(newIngredientId)}
         disabled={!newIngredientId}
