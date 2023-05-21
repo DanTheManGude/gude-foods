@@ -275,7 +275,7 @@ function Settings(props) {
         >
           <Typography>Cancel</Typography>
         </Button>
-        <Button onClick={handleDelete} color="error" variant="outlined">
+        <Button onClick={handleDelete} color="error" variant="contained">
           <Typography>Delete</Typography>
         </Button>
       </DialogActions>
