@@ -97,7 +97,7 @@ function Home(props) {
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
               color="primary"
-              variant="outlined"
+              variant="contained"
               onClick={() => {
                 setAllData(newUserData, dataPaths, addAlert);
               }}
@@ -156,7 +156,7 @@ function Home(props) {
                 navigate(`/cookbook`);
               }}
             >
-              <Typography color="secondary">Go to cookbook</Typography>
+              <Typography>Go to cookbook</Typography>
             </Button>
           </CardActions>
         </Card>
@@ -179,13 +179,13 @@ function Home(props) {
 
       renderedButton = (
         <Button
-          color="secondary"
+          color="primary"
           variant="outlined"
           onClick={() => {
             navigate(`/recipe/create`);
           }}
         >
-          <Typography color="secondary">Create a recipe</Typography>
+          <Typography>Create a recipe</Typography>
         </Button>
       );
     } else {
@@ -228,7 +228,7 @@ function Home(props) {
             navigate(`/recipe/${recipeId}`);
           }}
         >
-          <Typography color="secondary">Go to recipe</Typography>
+          <Typography>Go to recipe</Typography>
         </Button>
       );
     }
@@ -287,7 +287,7 @@ function Home(props) {
                 navigate(`/glossary`);
               }}
             >
-              <Typography color="secondary">Go to Glossary</Typography>
+              <Typography>Go to Glossary</Typography>
             </Button>
           </CardActions>
         </Card>
@@ -346,7 +346,7 @@ function Home(props) {
                 navigate(`/shoppingList`);
               }}
             >
-              <Typography color="secondary">Go to Shopping List</Typography>
+              <Typography>Go to Shopping List</Typography>
             </Button>
           </CardActions>
         </Card>
@@ -380,7 +380,7 @@ function Home(props) {
                 navigate(`/cookbook`);
               }}
             >
-              <Typography color="secondary">Go to Cookbook</Typography>
+              <Typography>Go to Cookbook</Typography>
             </Button>
           </CardActions>
         </Card>

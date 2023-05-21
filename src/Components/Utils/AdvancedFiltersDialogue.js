@@ -114,10 +114,14 @@ function AdvancedFiltersDialogue(props) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button color="warning" onClick={clearFilteringOptions}>
+        <Button
+          color="warning"
+          variant="outlined"
+          onClick={clearFilteringOptions}
+        >
           Clear
         </Button>
-        <Button color="success" variant="outlined" onClick={onClose}>
+        <Button color="success" variant="contained" onClick={onClose}>
           Close
         </Button>
       </DialogActions>

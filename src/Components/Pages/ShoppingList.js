@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { TransitionGroup } from "react-transition-group";
 
-import styled from "@emotion/styled";
+import { styled } from "@mui/material/styles";
 
 import Paper from "@mui/material/Paper";
 import Collapse from "@mui/material/Collapse";
@@ -49,14 +49,16 @@ const deleteKeys = {
   CHECKED: "the checked items",
 };
 
-const MenuCount = styled(Button)`
+const MenuCount = styled(Button)(
+  ({ theme }) => `
   &&& {
     &.Mui-disabled {
-      color: #fff;
-      border-color: #ddd;
+      color: ${theme.palette.text.primary};
+      border-color: ${theme.palette.text.primary};
     }
   }
-`;
+`
+);
 
 function ShoppingList() {
   const addAlert = useContext(AddAlertContext);
@@ -189,43 +191,46 @@ function ShoppingList() {
         <AccordionDetails>
           <Stack spacing={2} alignItems="left">
             <TransitionGroup>
-              {Object.keys(recipeList).map((recipeId, index) => (
-                <Collapse key={index}>
-                  <Stack
-                    key={recipeId}
-                    direction="row"
-                    spacing={1}
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <Typography sx={{ minWidth: "fit-content" }}>
-                      {recipeList[recipeId] &&
-                        menu[recipeId] &&
-                        `[${menu[recipeId]}] `}
-                      {cookbook[recipeId].ingredients[basicFoodId]}:
-                    </Typography>
-                    <Typography noWrap sx={{ width: "fill-available" }}>
-                      <Link
-                        onClick={() => {
-                          navigate(`/recipe/${recipeId}`);
-                        }}
-                        sx={{ color: "white" }}
+              {Object.keys(recipeList).map(
+                (recipeId, index) =>
+                  cookbook[recipeId] && (
+                    <Collapse key={index}>
+                      <Stack
+                        key={recipeId}
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        justifyContent="space-between"
                       >
-                        {cookbook[recipeId].name}
-                      </Link>
-                    </Typography>
-                    <IconButton
-                      onClick={() => {
-                        deleteRequest([
-                          `${shoppingListPath}/${basicFoodId}/list/${recipeId}`,
-                        ]);
-                      }}
-                    >
-                      <ClearIcon color="secondary" />
-                    </IconButton>
-                  </Stack>
-                </Collapse>
-              ))}
+                        <Typography sx={{ minWidth: "fit-content" }}>
+                          {recipeList[recipeId] &&
+                            menu[recipeId] &&
+                            `[${menu[recipeId]}] `}
+                          {cookbook[recipeId].ingredients[basicFoodId]}:
+                        </Typography>
+                        <Typography noWrap sx={{ width: "fill-available" }}>
+                          <Link
+                            onClick={() => {
+                              navigate(`/recipe/${recipeId}`);
+                            }}
+                            color={"text.primary"}
+                          >
+                            {cookbook[recipeId].name}
+                          </Link>
+                        </Typography>
+                        <IconButton
+                          onClick={() => {
+                            deleteRequest([
+                              `${shoppingListPath}/${basicFoodId}/list/${recipeId}`,
+                            ]);
+                          }}
+                        >
+                          <ClearIcon color="secondary" />
+                        </IconButton>
+                      </Stack>
+                    </Collapse>
+                  )
+              )}
             </TransitionGroup>
 
             <Stack
@@ -259,7 +264,7 @@ function ShoppingList() {
               {isActiveInput ? (
                 <Button
                   color={"secondary"}
-                  variant="outlined"
+                  variant="contained"
                   size="small"
                   sx={{ width: "115px" }}
                   disabled={disabled}
@@ -324,7 +329,7 @@ function ShoppingList() {
       <Stack direction="row" spacing={2} alignItems="center">
         <Button
           color="secondary"
-          variant="contained"
+          variant="outlined"
           size="small"
           sx={{ width: "168px" }}
           onClick={() => {
@@ -358,7 +363,7 @@ function ShoppingList() {
       <Stack direction="row" spacing={2} alignItems="center">
         <Button
           color="secondary"
-          variant="contained"
+          variant="outlined"
           size="small"
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.unchecked).length}
@@ -385,7 +390,7 @@ function ShoppingList() {
         </Button>
         <Button
           color="secondary"
-          variant="contained"
+          variant="outlined"
           size="small"
           sx={{ width: "168px" }}
           disabled={!Object.keys(shoppingMap.checked).length}
@@ -452,7 +457,7 @@ function ShoppingList() {
         </Stack>
         <Button
           color="primary"
-          variant="outlined"
+          variant="contained"
           size="small"
           sx={{ width: "90px" }}
           disabled={!(newFoodId && newFoodAmount)}
@@ -506,6 +511,7 @@ function ShoppingList() {
                   onClick={() => {
                     incrementMenuRecipe(recipeId);
                   }}
+                  sx={{ borderLeftColor: "text.primary" }}
                 >
                   <AddIcon />
                 </Button>
@@ -555,7 +561,7 @@ function ShoppingList() {
       <>
         {!Object.keys(shoppingMap.unchecked).length ? (
           <Typography
-            color="#fff"
+            color={"text.primary"}
             sx={{
               paddingBottom: 1.5,
               textAlign: "center",

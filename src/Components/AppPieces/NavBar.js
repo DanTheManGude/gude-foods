@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 
-import styled from "@emotion/styled";
+import { styled } from "@mui/material/styles";
 
+import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,6 +16,7 @@ const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 const NavBar = () => {
   let navigate = useNavigate();
+  const theme = useTheme();
 
   return (
     <>
@@ -36,7 +38,9 @@ const NavBar = () => {
                 textDecoration: "none",
               }}
             >
-              <Link to={`/`}>Gude Foods</Link>
+              <Link style={{ color: theme.palette.text.primary }} to={`/`}>
+                Gude Foods
+              </Link>
             </Typography>
 
             <Typography
@@ -53,7 +57,9 @@ const NavBar = () => {
                 textDecoration: "none",
               }}
             >
-              <Link to={`/`}>Gude Foods</Link>
+              <Link style={{ color: theme.palette.text.primary }} to={`/`}>
+                Gude Foods
+              </Link>
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
@@ -62,9 +68,11 @@ const NavBar = () => {
                   onClick={() => {
                     navigate(`/${page}`);
                   }}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  sx={{ my: 2, display: "block" }}
                 >
-                  <Typography>{presentationNames[page]}</Typography>
+                  <Typography color={"text.primary"}>
+                    {presentationNames[page]}
+                  </Typography>
                 </Button>
               ))}
             </Box>

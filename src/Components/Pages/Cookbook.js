@@ -146,7 +146,7 @@ function Cookbook(props) {
         />
         <Box sx={{ flexGrow: "3", maxWidth: "40%" }}>
           <Button
-            color="secondary"
+            color="primary"
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
@@ -190,17 +190,6 @@ function Cookbook(props) {
                 size="large"
                 sx={{ flex: 1 }}
                 onClick={() => {
-                  navigate(`/recipe/${recipeId}`);
-                }}
-              >
-                <Typography color="secondary">View full recipe</Typography>
-              </Button>
-              <Button
-                color="secondary"
-                variant="outlined"
-                size="large"
-                sx={{ flex: 1 }}
-                onClick={() => {
                   addRecipeToShoppingList(
                     ingredients,
                     recipeId,
@@ -211,6 +200,19 @@ function Cookbook(props) {
                 }}
               >
                 <Typography>Add to shopping list</Typography>
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                size="large"
+                sx={{ flex: 1 }}
+                onClick={() => {
+                  navigate(`/recipe/${recipeId}`);
+                }}
+              >
+                <Typography color="secondary.contrastText">
+                  View full recipe
+                </Typography>
               </Button>
             </Stack>
             {menu.hasOwnProperty(recipeId) && (
@@ -254,7 +256,7 @@ function Cookbook(props) {
                   key={tagId}
                   label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
                   size="small"
-                  variant="outlined"
+                  variant="contained"
                   color="tertiary"
                 />
               ))}
@@ -290,7 +292,7 @@ function Cookbook(props) {
         onSuccess={(recipeData) => {
           handleImportedData({ recipe: recipeData });
         }}
-        buttonProps={{ color: "secondary", variant: "outlined" }}
+        buttonProps={{ color: "secondary", variant: "contained" }}
         buttonText="Import recipe"
         id="import-recipe"
       />
@@ -304,9 +306,16 @@ function Cookbook(props) {
     const recipeList = calculateRecipeList();
     if (!recipeList.length) {
       return (
-        <Typography fontWeight="bold" color="white">
-          Looks like there are no recipes.
-        </Typography>
+        <Stack sx={{ width: "95%" }} spacing={2} alignItems="center">
+          <Typography fontWeight="bold" color={"text.primary"}>
+            {Object.keys(cookbook).length
+              ? "Looks like no recipes match that search."
+              : "There are no recipes in the cookbook."}
+          </Typography>
+          <Typography color={"text.primary"}>
+            Need an idea for a recipe? Try generating one with AI.
+          </Typography>
+        </Stack>
       );
     }
     return (

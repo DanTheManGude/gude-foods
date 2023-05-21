@@ -239,7 +239,7 @@ function Settings(props) {
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
               color="error"
-              variant="outlined"
+              variant="contained"
               onClick={() => {
                 setOpenDeleteDialog(true);
               }}
@@ -267,7 +267,7 @@ function Settings(props) {
       </DialogContent>
       <DialogActions>
         <Button
-          autoFocus
+          variant="outlined"
           onClick={() => {
             setOpenDeleteDialog(false);
           }}
@@ -275,7 +275,7 @@ function Settings(props) {
         >
           <Typography>Cancel</Typography>
         </Button>
-        <Button onClick={handleDelete} color="error" variant="outlined">
+        <Button onClick={handleDelete} color="error" variant="contained">
           <Typography>Delete</Typography>
         </Button>
       </DialogActions>

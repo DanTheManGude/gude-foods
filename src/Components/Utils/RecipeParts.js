@@ -17,7 +17,7 @@ export const renderEditingButtons = (onCancel, onSave) => (
     <Button
       key="cancel"
       color="warning"
-      variant="outlined"
+      variant="contained"
       size="small"
       sx={{ flexGrow: "1" }}
       onClick={onCancel}
@@ -27,7 +27,7 @@ export const renderEditingButtons = (onCancel, onSave) => (
     <Button
       key="save"
       color="success"
-      variant="outlined"
+      variant="contained"
       size="small"
       onClick={onSave}
       sx={{ flexGrow: "1" }}
@@ -122,7 +122,7 @@ export const renderTagList = (
         key={tagId}
         label={<Typography>{glossaryRecipeTags[tagId]}</Typography>}
         size="small"
-        variant="outlined"
+        variant="contained"
         color="tertiary"
         onDelete={editable ? getDeleteTagHandler(tagId) : undefined}
       />

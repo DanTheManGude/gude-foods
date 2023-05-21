@@ -20,10 +20,10 @@ function DeleteDialog(props) {
         <Typography>Do you want to delete {comfirmationMessageDO}?</Typography>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={onClose} color="secondary">
+        <Button onClick={onClose} color="secondary" variant="outlined">
           <Typography>Cancel</Typography>
         </Button>
-        <Button onClick={handleDelete} color="error" variant="outlined">
+        <Button onClick={handleDelete} color="error" variant="contained">
           <Typography>Delete</Typography>
         </Button>
       </DialogActions>

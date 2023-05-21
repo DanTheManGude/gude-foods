@@ -56,7 +56,7 @@ function Cooking() {
       >
         <Button
           color="secondary"
-          variant="outlined"
+          variant="contained"
           size="small"
           sx={{ flexGrow: "1" }}
           onClick={() => {
@@ -84,6 +84,7 @@ function Cooking() {
             )}
           </IconButton>
           <IconButton
+            color="primary"
             onClick={() => {
               const newMuted = !muted;
 

@@ -31,8 +31,8 @@ function UserCard(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
-              color="secondary"
-              variant="outlined"
+              color="primary"
+              variant="contained"
               onClick={clearActingUser}
             >
               Back to own user
@@ -58,7 +58,7 @@ function UserCard(props) {
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button color="secondary" variant="outlined" onClick={handleLogout}>
+          <Button color="primary" variant="outlined" onClick={handleLogout}>
             Logout
           </Button>
         </CardActions>

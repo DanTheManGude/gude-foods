@@ -117,8 +117,8 @@ function InstructionList(props) {
         }}
       >
         <Button
-          color="secondary"
-          variant="outlined"
+          color="primary"
+          variant="contained"
           size="small"
           onClick={addStep}
           sx={{ minWidth: "64px", height: "40px" }}
@@ -173,7 +173,7 @@ function InstructionList(props) {
               <Button
                 key={"cookRecipe"}
                 color="secondary"
-                variant="outlined"
+                variant="contained"
                 size="small"
                 onClick={() => {
                   navigate(`/cooking/${recipeId}`);

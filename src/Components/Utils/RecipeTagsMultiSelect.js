@@ -49,7 +49,7 @@ function RecipeTagsMultiSelect(props) {
           )}
           ChipProps={{
             color: "tertiary",
-            variant: "outlined",
+            variant: "contained",
           }}
         />
       </Box>

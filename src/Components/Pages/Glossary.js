@@ -70,7 +70,7 @@ function Glossary() {
       return (
         <Button
           color="secondary"
-          variant="outlined"
+          variant="contained"
           size="small"
           sx={{ width: "109px" }}
           disabled={disabled}
