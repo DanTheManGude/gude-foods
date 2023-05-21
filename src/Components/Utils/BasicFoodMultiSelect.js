@@ -120,7 +120,7 @@ function BasicFoodMultiSelect(props) {
             )}
             ChipProps={{
               color: "secondary",
-              variant: "outlined",
+              variant: "contained",
             }}
           />
         </Box>
