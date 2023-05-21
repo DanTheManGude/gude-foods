@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 
-import styled from "@emotion/styled";
+import { styled } from "@mui/material/styles";
 
 import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
