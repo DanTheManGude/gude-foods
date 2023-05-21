@@ -232,6 +232,19 @@ export const saveRecipe = (
   );
 };
 
+export const createRecipeTag = (glossaryPath, successHandler, tagName) => {
+  const pathRoot = `${glossaryPath}/recipeTags`;
+  const newKey = createKey(pathRoot);
+
+  updateRequest(
+    { [`${pathRoot}/${newKey}`]: tagName },
+    (successAlert) => {
+      successHandler(newKey);
+    },
+    console.error
+  );
+};
+
 export const updateOpenAIKey = (enteredOpenAIKey, openAIKeyPath, addAlert) => {
   updateRequest(
     {

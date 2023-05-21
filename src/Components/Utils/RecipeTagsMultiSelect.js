@@ -1,13 +1,19 @@
+import { useContext } from "react";
+
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
+import { DataPathsContext } from "../Contexts";
 import { createRecipeTag } from "../../utils/requests";
 
 function RecipeTagsMultiSelect(props) {
   const { glossary, tagsList, updateTagsList } = props;
+
+  const { glossaryPath } = useContext(DataPathsContext);
+
   return (
     <Stack
       key="tagsIncludes"
@@ -63,12 +69,19 @@ function RecipeTagsMultiSelect(props) {
           onChange={(event, selection) => {
             const inputValue = selection.length && selection.at(-1).inputValue;
             if (inputValue) {
-              createRecipeTag(inputValue);
+              createRecipeTag(
+                glossaryPath,
+                (newTagId) => {
+                  const newTagsList = selection
+                    .toSpliced(-1, 1, { tagId: newTagId })
+                    .map((option) => option.tagId);
+                  updateTagsList(newTagsList);
+                },
+                inputValue
+              );
               return;
             }
-
-            const newTagsList = selection.map((option) => option.tagId);
-            updateTagsList(newTagsList);
+            updateTagsList(selection.map((option) => option.tagId));
           }}
           renderInput={(params) => (
             <TextField {...params} label="Tags" placeholder="Enter tags" />
