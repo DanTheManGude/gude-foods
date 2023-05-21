@@ -69,7 +69,7 @@ function Glossary() {
     if (isActiveEntry) {
       return (
         <Button
-          color="secondary"
+          color="primary"
           variant="contained"
           size="small"
           sx={{ width: "109px" }}
