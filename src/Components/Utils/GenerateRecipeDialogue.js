@@ -35,7 +35,7 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const { open, onClose, setAiGeneratedRecipe } = props;
+  const { open, onClose, setAiGeneratedRecipe, filteringOptions } = props;
 
   const [reportErrorValues, setReportErrorValues] = useState();
   const addAlert = useContext(AddAlertContext);
@@ -77,6 +77,22 @@ function GenerateRecipeDialogue(props) {
 
     onClose();
   };
+
+  useEffect(() => {
+    if (!open) {
+      const {
+        ingredientsList: filteredIngredientsList,
+        tagsList: filteredTagsList,
+      } = filteringOptions;
+      console.log("running");
+      if (filteredIngredientsList) {
+        setIngredientsList(filteredIngredientsList);
+      }
+      if (filteredTagsList) {
+        setTags(filteredTagsList);
+      }
+    }
+  }, [open, filteringOptions]);
 
   useEffect(() => {
     const newPrompt = [promptPrefix];

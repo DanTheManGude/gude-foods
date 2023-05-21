@@ -407,6 +407,7 @@ function Cookbook(props) {
         setFilteringOptions={setFilteringOptions}
       />
       <GenerateRecipeDialogue
+        filteringOptions={filteringOptions}
         open={openGenerateRecipeDialogue}
         onClose={() => {
           setOpenGenerateRecipeDialogue(false);
