@@ -4,6 +4,8 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
+import { createRecipeTag } from "../../utils/requests";
+
 function RecipeTagsMultiSelect(props) {
   const { glossary, tagsList, updateTagsList } = props;
   return (
@@ -36,11 +38,35 @@ function RecipeTagsMultiSelect(props) {
           isOptionEqualToValue={(optionA, optionB) =>
             optionA.tagId === optionB.tagId
           }
+          filterOptions={(options, params) => {
+            const { inputValue, getOptionLabel } = params;
+            const filtered = options.filter((option) =>
+              getOptionLabel(option)
+                .toLocaleUpperCase()
+                .includes(inputValue.toUpperCase())
+            );
+            const isExisting = options.some(
+              (option) => inputValue === option.title
+            );
+            if (inputValue !== "" && !isExisting) {
+              filtered.push({
+                inputValue,
+                title: `Create "${inputValue}"`,
+              });
+            }
+            return filtered;
+          }}
           value={tagsList.map((tagId) => ({
             tagId,
             title: glossary.recipeTags[tagId],
           }))}
           onChange={(event, selection) => {
+            const inputValue = selection.length && selection.at(-1).inputValue;
+            if (inputValue) {
+              createRecipeTag(inputValue);
+              return;
+            }
+
             const newTagsList = selection.map((option) => option.tagId);
             updateTagsList(newTagsList);
           }}
