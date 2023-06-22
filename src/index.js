@@ -8,10 +8,11 @@ import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import firebaseConfig from "./firebaseConfig.json";
 
 import "./styles/index.css";
-import { captchaSiteKey } from "./constants";
 import App from "./Components/App";
 
 const firebaseApp = initializeApp(firebaseConfig);
+
+const captchaSiteKey = process.env.REACT_APP_CAPTCHA;
 
 initializeAppCheck(firebaseApp, {
   provider: new ReCaptchaV3Provider(captchaSiteKey),
