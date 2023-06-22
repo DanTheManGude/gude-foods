@@ -1,4 +1,5 @@
-export const emailConfig = JSON.parse(process.env.REACT_APP_EMAIL);
+export const emailConfig =
+  process.env.REACT_APP_EMAIL && JSON.parse(process.env.REACT_APP_EMAIL);
 
 export const fontFamilies = [
   "Dosis",
