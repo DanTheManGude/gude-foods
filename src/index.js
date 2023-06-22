@@ -5,14 +5,13 @@ import { BrowserRouter } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
-import firebaseConfig from "./firebaseConfig.json";
-
 import "./styles/index.css";
-import { captchaSiteKey } from "./constants";
 import App from "./Components/App";
 
+const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE);
 const firebaseApp = initializeApp(firebaseConfig);
 
+const captchaSiteKey = process.env.REACT_APP_CAPTCHA;
 initializeAppCheck(firebaseApp, {
   provider: new ReCaptchaV3Provider(captchaSiteKey),
   isTokenAutoRefreshEnabled: true,

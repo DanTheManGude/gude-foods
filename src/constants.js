@@ -1,4 +1,5 @@
-export const captchaSiteKey = "6LckpNMfAAAAAAQU4bt6WgEnUgFBHTzhDzQNPAmK";
+export const emailConfig =
+  process.env.REACT_APP_EMAIL && JSON.parse(process.env.REACT_APP_EMAIL);
 
 export const fontFamilies = [
   "Dosis",
@@ -83,13 +84,6 @@ export const databasePaths = {
 
 export const UNKNOWN_TAG = "UNKNOWN_TAG";
 export const unknownSectionName = "Unknown Section";
-
-export const emailConfig = {
-  serviceId: "service_sbv0ia4",
-  authorizationEmailTemplateId: "template_214p9la",
-  reportAiTemplateId: "template_fe1e5ws",
-  userId: "user_2K4sBJkaEW2m7T8CPrYhp",
-};
 
 export const presentationNames = {
   glossary: "Glossary",
