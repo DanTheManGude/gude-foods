@@ -55,6 +55,7 @@ function GenerateRecipeDialogue(props) {
   const [prompt, setPrompt] = useState([promptPrefix]);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [tags, setTags] = useState([]);
+  const [recipeName, setRecipeName] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [responseText, setResponseText] = useState("");
@@ -69,6 +70,7 @@ function GenerateRecipeDialogue(props) {
   }
 
   const handleClose = () => {
+    setRecipeName("");
     setIngredientsList([]);
     setTags([]);
     setAdditionalNotes("");
@@ -92,6 +94,16 @@ function GenerateRecipeDialogue(props) {
   useEffect(() => {
     const newPrompt = [promptPrefix];
 
+    if (recipeName) {
+      newPrompt.push(
+        <PromptTypography key="recipeNameStarter">{` for `}</PromptTypography>
+      );
+      newPrompt.push(
+        <PromptTypography key="recipeName" sx={{ textDecoration: "underline" }}>
+          {`${recipeName}`}
+        </PromptTypography>
+      );
+    }
     if (ingredientsList.length) {
       newPrompt.push(
         <PromptTypography key="ingredientStarter">
@@ -108,7 +120,7 @@ function GenerateRecipeDialogue(props) {
     }
     if (tags.length) {
       newPrompt.push(
-        <PromptTypography key="tagsStarter"> with attributes </PromptTypography>
+        <PromptTypography key="tagsStarter">{` with attributes `}</PromptTypography>
       );
       newPrompt.push(
         <PromptTypography key="tags" sx={{ fontStyle: "italic" }}>
@@ -118,13 +130,10 @@ function GenerateRecipeDialogue(props) {
     }
     if (additionalNotes) {
       newPrompt.push(
-        <PromptTypography key="additionalNotesStarter"> that </PromptTypography>
+        <PromptTypography key="additionalNotesStarter">{` that `}</PromptTypography>
       );
       newPrompt.push(
-        <PromptTypography
-          key="additionalNotesText"
-          sx={{ textDecoration: "underline" }}
-        >
+        <PromptTypography key="additionalNotesText">
           {additionalNotes}
         </PromptTypography>
       );
@@ -132,7 +141,7 @@ function GenerateRecipeDialogue(props) {
 
     newPrompt.push(<PromptTypography key="closer">.</PromptTypography>);
     setPrompt(newPrompt);
-  }, [ingredientsList, tags, additionalNotes, glossary]);
+  }, [recipeName, ingredientsList, tags, additionalNotes, glossary]);
 
   const handleGenerate = () => {
     startLoading();
@@ -227,6 +236,33 @@ function GenerateRecipeDialogue(props) {
   const renderControls = () => {
     return (
       <>
+        <Stack
+          key="ingredientsIncludes"
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
+          sx={{ width: "100%" }}
+        >
+          <Box sx={{ width: "20%" }}>
+            <Typography>Recipe name:</Typography>
+          </Box>
+          <Box sx={{ width: "70%" }}>
+            <TextField
+              label="Recipe Name"
+              fullWidth={true}
+              value={recipeName}
+              onChange={(event) => {
+                setRecipeName(event.target.value);
+              }}
+              variant="outlined"
+              inputProps={{
+                autoCapitalize: "none",
+              }}
+            />
+          </Box>
+        </Stack>
+
         <BasicFoodMultiSelect
           glossary={glossary}
           basicFoodTagAssociation={basicFoodTagAssociation}
@@ -239,6 +275,7 @@ function GenerateRecipeDialogue(props) {
           tagsList={tags}
           updateTagsList={setTags}
         />
+
         <Paper elevation={2} sx={{ width: "100%" }}>
           <Box sx={{ padding: 2 }}>
             <TextField
