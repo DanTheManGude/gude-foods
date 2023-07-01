@@ -116,7 +116,7 @@ function AdvancedFiltersDialogue(props) {
       <DialogActions>
         <Button
           color="warning"
-          variant="outlined"
+          variant="contained"
           onClick={clearFilteringOptions}
         >
           Clear
