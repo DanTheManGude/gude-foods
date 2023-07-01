@@ -46,6 +46,7 @@ function Settings(props) {
   const colorKey = _colorKey || defaultColorKey;
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [shouldShowPreview, setShouldShowPreview] = useState(false);
 
   const updateColors = (givenColorKey) => {
     uploadColors(colorKeyPath, givenColorKey, addAlert);
@@ -146,23 +147,43 @@ function Settings(props) {
               <Typography>
                 Change the colors used in the app for your account.
               </Typography>
-              <FormControl fullWidth size="small" variant="outlined">
-                <InputLabel>{labelText}</InputLabel>
-                <Select
-                  sx={{ maxWidth: "200px" }}
-                  value={colorKey}
-                  onChange={(event) => {
-                    updateColors(event.target.value);
+              <Stack
+                direction="row"
+                spacing={2}
+                alignItems="center"
+                justifyContent="flex-end"
+              >
+                <Button
+                  color="secondary"
+                  variant="outlined"
+                  onClick={() => {
+                    setShouldShowPreview(!shouldShowPreview);
                   }}
-                  label={labelText}
                 >
-                  {colorOptions.map((option) => (
-                    <MenuItem key={option.key} value={option.key}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  {shouldShowPreview ? "Hide preview" : "Show preview"}
+                </Button>
+                <FormControl
+                  size="small"
+                  variant="outlined"
+                  sx={{ width: "80%", maxWidth: "200px" }}
+                >
+                  <InputLabel>{labelText}</InputLabel>
+                  <Select
+                    value={colorKey}
+                    onChange={(event) => {
+                      updateColors(event.target.value);
+                      setShouldShowPreview(true);
+                    }}
+                    label={labelText}
+                  >
+                    {colorOptions.map((option) => (
+                      <MenuItem key={option.key} value={option.key}>
+                        {option.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Stack>
             </Stack>
           </CardContent>
         </Card>
