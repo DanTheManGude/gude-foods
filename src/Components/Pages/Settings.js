@@ -17,13 +17,17 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { defaultColorKey, colorOptions } from "../../constants";
 import { setAllData, deleteRequest, uploadColors } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
+
 import ImportFileButton from "../Utils/ImportFileButton";
 import UserCard from "../Utils/UserCard";
+import FavoriteTag from "../Utils/FavoriteTag";
+
 import {
   AddAlertContext,
   DataPathsContext,
@@ -134,6 +138,74 @@ function Settings(props) {
     );
   };
 
+  const renderPreview = () => {
+    if (!shouldShowPreview) {
+      return null;
+    }
+
+    return (
+      <Stack spacing={1.5}>
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          justifyContent="space-around"
+        >
+          <Button color="primary" variant="contained">
+            primary filled
+          </Button>
+          <Button color="secondary" variant="contained">
+            secondary filled
+          </Button>
+        </Stack>
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          justifyContent="space-around"
+        >
+          <Button color="primary" variant="outlined">
+            primary outlined
+          </Button>
+          <Button color="secondary" variant="outlined">
+            secondary outlined
+          </Button>
+        </Stack>
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          justifyContent="space-around"
+        >
+          <Button color="error" variant="contained">
+            Delete
+          </Button>
+          <Button color="warning" variant="contained">
+            Warning
+          </Button>
+          <Button color="success" variant="contained">
+            Success
+          </Button>
+        </Stack>
+        <Stack direction="row" spacing={1}>
+          <FavoriteTag />
+          <Chip
+            label={<Typography>Tag A</Typography>}
+            size="small"
+            variant="contained"
+            color="tertiary"
+          />
+          <Chip
+            label={<Typography>Tag B</Typography>}
+            size="small"
+            variant="contained"
+            color="tertiary"
+          />
+        </Stack>
+      </Stack>
+    );
+  };
+
   const renderColorCard = () => {
     const labelText = "Select theme";
     return (
@@ -184,6 +256,7 @@ function Settings(props) {
                   </Select>
                 </FormControl>
               </Stack>
+              {renderPreview()}
             </Stack>
           </CardContent>
         </Card>

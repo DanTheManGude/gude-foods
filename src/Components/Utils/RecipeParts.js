@@ -5,7 +5,6 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
-import StarIcon from "@mui/icons-material/Star";
 import Stack from "@mui/material/Stack";
 
 import FavoriteSwitch from "../Utils/FavoriteSwitch";
