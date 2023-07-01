@@ -42,9 +42,9 @@ export const allColors = {
       alt: { main: "#D6D365" },
     },
     background: [
-      { percent: 0, color: "#333333" },
-      { percent: 75, color: "#111111" },
-      { percent: 100, color: "#000000" },
+      { percent: 0, color: "#20202a" },
+      { percent: 75, color: "#14141a" },
+      { percent: 100, color: "#09090c" },
     ],
   },
   light: {
