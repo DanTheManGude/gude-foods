@@ -13,7 +13,6 @@ import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import StarIcon from "@mui/icons-material/Star";
 
 import {
   addRecipeToShoppingList,
@@ -30,6 +29,7 @@ import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
 import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
+import FavoriteTag from "../Utils/FavoriteTag";
 
 import {
   DatabaseContext,
@@ -232,25 +232,7 @@ function Cookbook(props) {
               </Button>
             )}
             <Stack direction="row" spacing={1}>
-              {isFavorite && (
-                <Chip
-                  key={"favorite"}
-                  label={
-                    <StarIcon
-                      sx={{
-                        "&&": {
-                          color: "alt.main",
-                          verticalAlign: "bottom",
-                        },
-                      }}
-                      fontSize="small"
-                    />
-                  }
-                  size="small"
-                  variant="outlined"
-                  color="tertiary"
-                />
-              )}
+              {isFavorite && <FavoriteTag />}
               {tags.map((tagId) => (
                 <Chip
                   key={tagId}
