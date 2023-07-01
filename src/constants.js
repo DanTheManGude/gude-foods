@@ -16,7 +16,9 @@ export const fontFamilies = [
   "sans-serif",
 ];
 
-export const defaultColorKey = "default";
+export const localStorageColorKey = "gude-foods-color";
+export const defaultColorKey =
+  localStorage.getItem(localStorageColorKey) || "default";
 
 export const allColors = {
   default: {
