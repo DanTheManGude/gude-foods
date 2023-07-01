@@ -36,15 +36,15 @@ export const allColors = {
   dark: {
     palette: {
       mode: "dark",
-      primary: { main: "#ffad76" },
-      secondary: { main: "#AF7ADB", contrastText: "#1e201e" },
-      tertiary: { main: "#79B2A8", contrastText: "#000" },
-      alt: { main: "#D6D365" },
+      primary: { main: "#5797db" },
+      secondary: { main: "#8367C7", contrastText: "#1e201e" },
+      tertiary: { main: "#5fb89e", contrastText: "#000" },
+      alt: { main: "#FFB800" },
     },
     background: [
-      { percent: 0, color: "#20202a" },
-      { percent: 75, color: "#14141a" },
-      { percent: 100, color: "#09090c" },
+      { percent: 0, color: "#151716" },
+      { percent: 75, color: "#151716" },
+      { percent: 100, color: "#151716" },
     ],
   },
   light: {
