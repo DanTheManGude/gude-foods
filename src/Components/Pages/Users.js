@@ -159,7 +159,7 @@ function Users(props) {
       >
         Users
       </Typography>
-      <Stack spacing={3}>
+      <Stack spacing={3} alignItems="center">
         {renderUserManagmentCard()}
         <Stack sx={{ width: "95%" }} spacing={0.5}>
           {userList.some((userEntry) => !userEntry.isAuthorized) && (
