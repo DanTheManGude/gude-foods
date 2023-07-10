@@ -15,6 +15,8 @@ import Switch from "@mui/material/Switch";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+import { longestEntryPathDelimiter } from "../../constants";
+
 import {
   setAuthorizationForUser,
   updateAllowUnrestrictedUsers,
@@ -37,6 +39,25 @@ function Users(props) {
   const user = useContext(UserContext);
 
   const [longestEntryInfo, setLongestEntryInfo] = useState();
+
+  const handleLongestEntry = () => {
+    const { path } = findLongestEntry(accounts);
+
+    const parts = path.split(longestEntryPathDelimiter);
+    const accountUid = parts[0];
+    const value = parts.pop();
+
+    const displayName = userList.find(
+      (userEntry) => userEntry.uid === accountUid
+    ).displayName;
+
+    console.log(path);
+    setLongestEntryInfo({
+      displayName,
+      path: parts.join("/"),
+      value,
+    });
+  };
 
   const renderUserManagmentCard = () => {
     return (
@@ -163,7 +184,7 @@ function Users(props) {
             </Typography>
             {longestEntryInfo && (
               <>
-                <Typography>Name: {longestEntryInfo.name}</Typography>
+                <Typography>Name: {longestEntryInfo.displayName}</Typography>
                 <Typography>
                   Path: <code>{longestEntryInfo.path}</code>
                 </Typography>
@@ -177,9 +198,7 @@ function Users(props) {
             <Button
               color="secondary"
               variant="contained"
-              onClick={() => {
-                findLongestEntry(accounts, setLongestEntryInfo);
-              }}
+              onClick={handleLongestEntry}
             >
               <Typography>Find longest entry</Typography>
             </Button>
