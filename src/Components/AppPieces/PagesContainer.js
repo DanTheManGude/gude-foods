@@ -37,6 +37,7 @@ function PagesContainer(props) {
   const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
   const [actingUser, setActingUser] = useState();
   const [userList, setUserList] = useState([]);
+  const [accounts, setAccounts] = useState();
 
   const clearActingUser = () => {
     setActingUser();
@@ -86,19 +87,21 @@ function PagesContainer(props) {
     onValue(ref(db, "users"), (snapshot) => {
       const users = snapshot.val();
       onValue(ref(db, "accounts"), (snapshot) => {
-        const accounts = snapshot.val();
+        const accountsSnapshot = snapshot.val();
+        setAccounts(accountsSnapshot);
         setUserList(
-          Object.keys(accounts).map((userUid) => ({
+          Object.keys(accountsSnapshot).map((userUid) => ({
             uid: userUid,
-            displayName: accounts[userUid].name,
+            displayName: accountsSnapshot[userUid].name,
             isAuthorized: !!users[userUid],
             basicFoodsCount:
-              accounts[userUid].glossary &&
-              accounts[userUid].glossary.basicFoods
-                ? Object.entries(accounts[userUid].glossary.basicFoods).length
+              accountsSnapshot[userUid].glossary &&
+              accountsSnapshot[userUid].glossary.basicFoods
+                ? Object.entries(accountsSnapshot[userUid].glossary.basicFoods)
+                    .length
                 : 0,
-            recipeCount: accounts[userUid].cookbook
-              ? Object.entries(accounts[userUid].cookbook).length
+            recipeCount: accountsSnapshot[userUid].cookbook
+              ? Object.entries(accountsSnapshot[userUid].cookbook).length
               : 0,
           }))
         );
@@ -146,6 +149,7 @@ function PagesContainer(props) {
               element={
                 <Users
                   userList={userList}
+                  accounts={accounts}
                   actingUser={actingUser}
                   clearActingUser={clearActingUser}
                   setActingUser={setActingUser}

@@ -27,6 +27,7 @@ import { UserContext } from "../Contexts";
 function Users(props) {
   const {
     userList,
+    accounts,
     actingUser,
     setActingUser,
     clearActingUser,
@@ -177,7 +178,7 @@ function Users(props) {
               color="secondary"
               variant="contained"
               onClick={() => {
-                findLongestEntry(setLongestEntryInfo);
+                findLongestEntry(accounts, setLongestEntryInfo);
               }}
             >
               <Typography>Find longest entry</Typography>
