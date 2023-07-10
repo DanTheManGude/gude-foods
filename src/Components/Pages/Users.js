@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -20,6 +20,8 @@ import {
   updateAllowUnrestrictedUsers,
 } from "../../utils/requests";
 
+import { findLongestEntry } from "../../utils/utility";
+
 import { UserContext } from "../Contexts";
 
 function Users(props) {
@@ -32,6 +34,8 @@ function Users(props) {
   } = props;
 
   const user = useContext(UserContext);
+
+  const [longestEntryInfo, setLongestEntryInfo] = useState();
 
   const renderUserManagmentCard = () => {
     return (
@@ -156,16 +160,24 @@ function Users(props) {
             <Typography variant="h6" color="text.secondary" gutterBottom>
               Longest Entry
             </Typography>
-            <Typography>Name:</Typography>
-            <Typography>Path:</Typography>
-            <Typography>Value:</Typography>
+            {longestEntryInfo && (
+              <>
+                <Typography>Name: {longestEntryInfo.name}</Typography>
+                <Typography>
+                  Path: <code>{longestEntryInfo.path}</code>
+                </Typography>
+                <Typography>
+                  Value: <code>{`${longestEntryInfo.value}`}</code>
+                </Typography>
+              </>
+            )}
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
               color="secondary"
               variant="contained"
               onClick={() => {
-                console.log("longest-entry");
+                findLongestEntry(setLongestEntryInfo);
               }}
             >
               <Typography>Find longest entry</Typography>
