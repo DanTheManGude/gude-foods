@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
 import Switch from "@mui/material/Switch";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -147,6 +148,34 @@ function Users(props) {
     </Stack>
   );
 
+  const renderLongestEntryCard = () => {
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Longest Entry
+            </Typography>
+            <Typography>Name:</Typography>
+            <Typography>Path:</Typography>
+            <Typography>Value:</Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() => {
+                console.log("longest-entry");
+              }}
+            >
+              <Typography>Find longest entry</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
+
   return (
     <div>
       <Typography
@@ -169,6 +198,7 @@ function Users(props) {
           )}
           {renderUserStack(true)}
         </Stack>
+        {renderLongestEntryCard()}
       </Stack>
     </div>
   );
