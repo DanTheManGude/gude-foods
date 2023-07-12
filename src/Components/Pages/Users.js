@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
@@ -12,6 +13,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -36,6 +38,7 @@ function Users(props) {
     allowUnrestrictedUsers,
   } = props;
 
+  const theme = useTheme();
   const user = useContext(UserContext);
 
   const [longestEntryInfo, setLongestEntryInfo] = useState();
@@ -175,6 +178,7 @@ function Users(props) {
   );
 
   const renderLongestEntryCard = () => {
+    const disabledColor = theme.palette.text.primary;
     return (
       <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
@@ -183,15 +187,39 @@ function Users(props) {
               Longest Entry
             </Typography>
             {longestEntryInfo && (
-              <>
+              <Stack spacing={1}>
                 <Typography>Name: {longestEntryInfo.displayName}</Typography>
-                <Typography>
-                  Path: <code>{longestEntryInfo.path}</code>
-                </Typography>
-                <Typography>
-                  Value: <code>{`${longestEntryInfo.value}`}</code>
-                </Typography>
-              </>
+                <TextField
+                  label="Path"
+                  multiline
+                  disabled
+                  value={longestEntryInfo.path}
+                  variant="filled"
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: disabledColor,
+                    },
+                    "& .MuiFormLabel-root": {
+                      WebkitTextFillColor: disabledColor,
+                    },
+                  }}
+                />
+                <TextField
+                  label="Value"
+                  multiline
+                  disabled
+                  value={longestEntryInfo.value}
+                  variant="filled"
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: disabledColor,
+                    },
+                    "& .MuiFormLabel-root": {
+                      WebkitTextFillColor: disabledColor,
+                    },
+                  }}
+                />
+              </Stack>
             )}
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
