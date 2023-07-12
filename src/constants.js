@@ -94,10 +94,10 @@ export const presentationNames = {
 };
 
 export const pages = [
-  "glossary",
+  "home",
   "shoppingList",
   "cookbook",
-  "home",
+  "glossary",
   "settings",
 ];
 
