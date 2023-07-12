@@ -100,3 +100,5 @@ export const pages = [
   "home",
   "settings",
 ];
+
+export const longestEntryPathDelimiter = "___/___";
