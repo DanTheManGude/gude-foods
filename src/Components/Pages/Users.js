@@ -54,7 +54,6 @@ function Users(props) {
       (userEntry) => userEntry.uid === accountUid
     ).displayName;
 
-    console.log(path);
     setLongestEntryInfo({
       displayName,
       path: parts.join("/"),
