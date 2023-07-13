@@ -39,7 +39,7 @@ export const allColors = {
     palette: {
       mode: "dark",
       primary: { main: "#5797db", contrastText: "#1e201e" },
-      secondary: { main: "#8367C7", contrastText: "#1e201e" },
+      secondary: { main: "#c86434", contrastText: "#1e201e" },
       tertiary: { main: "#5fb89e", contrastText: "#000" },
       alt: { main: "#FFB800" },
     },
