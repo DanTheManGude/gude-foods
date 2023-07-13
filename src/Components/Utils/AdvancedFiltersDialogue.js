@@ -115,13 +115,13 @@ function AdvancedFiltersDialogue(props) {
       </DialogContent>
       <DialogActions>
         <Button
-          color="warning"
+          color="secondary"
           variant="contained"
           onClick={clearFilteringOptions}
         >
           Clear
         </Button>
-        <Button color="success" variant="contained" onClick={onClose}>
+        <Button color="primary" variant="contained" onClick={onClose}>
           Close
         </Button>
       </DialogActions>
