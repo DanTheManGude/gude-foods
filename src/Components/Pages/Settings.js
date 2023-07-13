@@ -93,7 +93,7 @@ function Settings(props) {
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
               color="secondary"
-              variant="outlined"
+              variant="contained"
               onClick={() => navigate("/users")}
             >
               View all users
@@ -226,7 +226,7 @@ function Settings(props) {
                 justifyContent="flex-end"
               >
                 <Button
-                  color="secondary"
+                  color="primary"
                   variant="outlined"
                   onClick={() => {
                     setShouldShowPreview(!shouldShowPreview);
@@ -361,11 +361,11 @@ function Settings(props) {
       </DialogContent>
       <DialogActions>
         <Button
-          variant="outlined"
+          variant="contained"
           onClick={() => {
             setOpenDeleteDialog(false);
           }}
-          color="secondary"
+          color="primary"
         >
           <Typography>Cancel</Typography>
         </Button>

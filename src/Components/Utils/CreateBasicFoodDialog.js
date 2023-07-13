@@ -80,7 +80,7 @@ function CreateBasicFoodDialog(props) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" onClick={onClose} variant="outlined">
+        <Button color="secondary" onClick={onClose} variant="contained">
           Cancel
         </Button>
         <Button

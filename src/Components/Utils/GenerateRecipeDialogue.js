@@ -380,15 +380,15 @@ function GenerateRecipeDialogue(props) {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button variant="outlined" onClick={handleClose} color="secondary">
+            <Button variant="outlined" onClick={handleClose} color="primary">
               <Typography>Close</Typography>
             </Button>
 
             <Button
               disabled={!enteredOpenAIKey}
-              variant="outlined"
+              variant="contained"
               onClick={handleEnteredOpenAIKey}
-              color="primary"
+              color="secondary"
             >
               <Typography>Use only now</Typography>
             </Button>
@@ -426,7 +426,7 @@ function GenerateRecipeDialogue(props) {
             </Button>
           )}
 
-          <Button onClick={handleClose} color="secondary" variant="outlined">
+          <Button onClick={handleClose} color="secondary" variant="contained">
             <Typography>Close</Typography>
           </Button>
           {responseText ? (

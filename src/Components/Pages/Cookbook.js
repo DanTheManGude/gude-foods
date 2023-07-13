@@ -186,7 +186,7 @@ function Cookbook(props) {
             >
               <Button
                 color="secondary"
-                variant="outlined"
+                variant="contained"
                 size="large"
                 sx={{ flex: 1 }}
                 onClick={() => {
@@ -202,7 +202,7 @@ function Cookbook(props) {
                 <Typography>Add to shopping list</Typography>
               </Button>
               <Button
-                color="secondary"
+                color="primary"
                 variant="contained"
                 size="large"
                 sx={{ flex: 1 }}
@@ -210,7 +210,7 @@ function Cookbook(props) {
                   navigate(`/recipe/${recipeId}`);
                 }}
               >
-                <Typography color="secondary.contrastText">
+                <Typography color="primary.contrastText">
                   View full recipe
                 </Typography>
               </Button>
@@ -263,7 +263,7 @@ function Cookbook(props) {
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
         color="primary"
-        variant="outlined"
+        variant="contained"
         onClick={() => {
           setOpenGenerateRecipeDialogue(true);
         }}
@@ -274,7 +274,7 @@ function Cookbook(props) {
         onSuccess={(recipeData) => {
           handleImportedData({ recipe: recipeData });
         }}
-        buttonProps={{ color: "secondary", variant: "contained" }}
+        buttonProps={{ color: "primary", variant: "outlined" }}
         buttonText="Import recipe"
         id="import-recipe"
       />
@@ -316,7 +316,7 @@ function Cookbook(props) {
     <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
       <Button
         color="secondary"
-        variant="outlined"
+        variant="contained"
         onClick={() => {
           const cookbookData = Object.keys(cookbook).reduce((acc, recipeId) => {
             const recipeEntry = cookbook[recipeId];

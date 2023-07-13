@@ -328,7 +328,7 @@ function ShoppingList() {
     return (
       <Stack direction="row" spacing={2} alignItems="center">
         <Button
-          color="secondary"
+          color="primary"
           variant="outlined"
           size="small"
           sx={{ width: "168px" }}
@@ -339,7 +339,7 @@ function ShoppingList() {
           <Typography>Delete all</Typography>
         </Button>
         <Button
-          color="secondary"
+          color="primary"
           variant="contained"
           size="small"
           sx={{ width: "168px" }}
