@@ -16,7 +16,9 @@ export const fontFamilies = [
   "sans-serif",
 ];
 
-export const defaultColorKey = "default";
+export const localStorageColorKey = "gude-foods-color";
+export const defaultColorKey =
+  localStorage.getItem(localStorageColorKey) || "default";
 
 export const allColors = {
   default: {
@@ -36,15 +38,15 @@ export const allColors = {
   dark: {
     palette: {
       mode: "dark",
-      primary: { main: "#ffad76" },
-      secondary: { main: "#AF7ADB", contrastText: "#1e201e" },
-      tertiary: { main: "#79B2A8", contrastText: "#000" },
-      alt: { main: "#D6D365" },
+      primary: { main: "#5797db", contrastText: "#1e201e" },
+      secondary: { main: "#c86434", contrastText: "#1e201e" },
+      tertiary: { main: "#5fb89e", contrastText: "#000" },
+      alt: { main: "#FFB800" },
     },
     background: [
-      { percent: 0, color: "#333333" },
-      { percent: 75, color: "#111111" },
-      { percent: 100, color: "#000000" },
+      { percent: 0, color: "#151816" },
+      { percent: 75, color: "#111513" },
+      { percent: 100, color: "#0e110f" },
     ],
   },
   light: {

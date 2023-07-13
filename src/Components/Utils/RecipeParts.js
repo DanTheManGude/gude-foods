@@ -5,10 +5,10 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
-import StarIcon from "@mui/icons-material/Star";
 import Stack from "@mui/material/Stack";
 
 import FavoriteSwitch from "../Utils/FavoriteSwitch";
+import FavoriteTag from "../Utils/FavoriteTag";
 
 import { createKey, updateRequest } from "../../utils/requests";
 
@@ -78,25 +78,7 @@ const renderFavorite = (editable, isFavorite, updateIsFavorite) => {
   }
 
   if (isFavorite) {
-    return (
-      <Chip
-        key={"favorite"}
-        label={
-          <StarIcon
-            sx={{
-              "&&": {
-                color: "alt.main",
-                verticalAlign: "bottom",
-              },
-            }}
-            fontSize="small"
-          />
-        }
-        size="small"
-        variant="outlined"
-        color="tertiary"
-      />
-    );
+    return <FavoriteTag />;
   }
 
   return null;

@@ -83,7 +83,7 @@ function Users(props) {
 
   const renderButtonOwnUser = () => (
     <Button
-      color="secondary"
+      color="primary"
       variant="contained"
       size="medium"
       sx={{ flex: 1 }}
@@ -101,7 +101,7 @@ function Users(props) {
     return (
       <>
         <Button
-          color="secondary"
+          color="primary"
           variant="outlined"
           size="medium"
           sx={{ flex: 1 }}
@@ -112,7 +112,7 @@ function Users(props) {
           <Typography>{isAuthorized ? "Revoke" : "Give"} Access</Typography>
         </Button>
         <Button
-          color="secondary"
+          color="primary"
           variant="contained"
           size="medium"
           sx={{ flex: 1 }}

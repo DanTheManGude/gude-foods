@@ -150,8 +150,8 @@ function Home(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
-              color="secondary"
-              variant="outlined"
+              color="primary"
+              variant="contained"
               onClick={() => {
                 navigate(`/cookbook`);
               }}
@@ -281,7 +281,7 @@ function Home(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
-              color="secondary"
+              color="primary"
               variant="outlined"
               onClick={() => {
                 navigate(`/glossary`);
@@ -340,7 +340,7 @@ function Home(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
-              color="secondary"
+              color="primary"
               variant="outlined"
               onClick={() => {
                 navigate(`/shoppingList`);
