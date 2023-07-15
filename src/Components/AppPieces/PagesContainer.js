@@ -39,6 +39,8 @@ function PagesContainer(props) {
   const [userList, setUserList] = useState([]);
   const [accounts, setAccounts] = useState();
 
+  const [hasThemeSaved, setHasThemeSaved] = useState(false);
+
   const clearActingUser = () => {
     setActingUser();
   };
@@ -55,6 +57,7 @@ function PagesContainer(props) {
       const snapshotValue = snapshot.val();
       if (snapshotValue) {
         setColorKey(snapshotValue);
+        setHasThemeSaved(true);
       }
     });
 
@@ -116,7 +119,10 @@ function PagesContainer(props) {
           <Route
             path="/home"
             element={
-              <Home requestedUsers={isAdmin ? requestedUsers : undefined} />
+              <Home
+                requestedUsers={isAdmin ? requestedUsers : undefined}
+                hasThemeSaved={hasThemeSaved}
+              />
             }
           />
           <Route

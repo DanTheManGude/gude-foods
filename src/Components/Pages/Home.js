@@ -22,8 +22,10 @@ import {
   DatabaseContext,
 } from "../Contexts";
 
+import ColorCard from "../Utils/ColorCard";
+
 function Home(props) {
-  const { requestedUsers } = props;
+  const { requestedUsers, hasThemeSaved } = props;
 
   let navigate = useNavigate();
   const addAlert = useContext(AddAlertContext);
@@ -31,6 +33,14 @@ function Home(props) {
   const database = useContext(DatabaseContext);
   const { glossary, basicFoodTagAssociation, shoppingList, cookbook, menu } =
     database;
+
+  const renderThemeSettingsCard = () => {
+    if (hasThemeSaved) {
+      return null;
+    }
+
+    return <ColorCard />;
+  };
 
   const renderRequestedUsersCard = () => {
     if (!requestedUsers) {
@@ -403,6 +413,7 @@ function Home(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderRequestedUsersCard()}
         {renderNewUserCard()}
+        {renderThemeSettingsCard()}
         {memoMenuCard}
         {renderShoppingListCard()}
         {renderGlossaryCard()}
