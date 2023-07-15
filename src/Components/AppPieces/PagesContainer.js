@@ -39,7 +39,7 @@ function PagesContainer(props) {
   const [userList, setUserList] = useState([]);
   const [accounts, setAccounts] = useState();
 
-  const [hasThemeSaved, setHasThemeSaved] = useState(false);
+  const [themeIsNotSet, setThemeIsNotSet] = useState(false);
 
   const clearActingUser = () => {
     setActingUser();
@@ -57,7 +57,8 @@ function PagesContainer(props) {
       const snapshotValue = snapshot.val();
       if (snapshotValue) {
         setColorKey(snapshotValue);
-        setHasThemeSaved(true);
+      } else {
+        setThemeIsNotSet(true);
       }
     });
 
@@ -121,7 +122,7 @@ function PagesContainer(props) {
             element={
               <Home
                 requestedUsers={isAdmin ? requestedUsers : undefined}
-                hasThemeSaved={hasThemeSaved}
+                themeIsNotSet={themeIsNotSet}
               />
             }
           />

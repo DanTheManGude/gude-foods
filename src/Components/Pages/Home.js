@@ -25,7 +25,7 @@ import {
 import ColorCard from "../Utils/ColorCard";
 
 function Home(props) {
-  const { requestedUsers, hasThemeSaved } = props;
+  const { requestedUsers, themeIsNotSet } = props;
 
   let navigate = useNavigate();
   const addAlert = useContext(AddAlertContext);
@@ -35,11 +35,11 @@ function Home(props) {
     database;
 
   const renderThemeSettingsCard = () => {
-    if (hasThemeSaved) {
-      return null;
+    if (themeIsNotSet) {
+      return <ColorCard />;
     }
 
-    return <ColorCard />;
+    return null;
   };
 
   const renderRequestedUsersCard = () => {
