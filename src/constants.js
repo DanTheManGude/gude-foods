@@ -103,3 +103,5 @@ export const pages = [
 ];
 
 export const longestEntryPathDelimiter = "___/___";
+
+export const corsProxySite = "https://thingproxy.freeboard.io/fetch/";
