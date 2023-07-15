@@ -152,23 +152,10 @@ function Settings(props) {
           justifyContent="space-around"
         >
           <Button color="primary" variant="contained">
-            primary filled
+            Primary filled
           </Button>
           <Button color="secondary" variant="contained">
-            secondary filled
-          </Button>
-        </Stack>
-        <Stack
-          direction="row"
-          spacing={1}
-          alignItems="center"
-          justifyContent="space-around"
-        >
-          <Button color="primary" variant="outlined">
-            primary outlined
-          </Button>
-          <Button color="secondary" variant="outlined">
-            secondary outlined
+            Secondary filled
           </Button>
         </Stack>
         <Stack
@@ -178,15 +165,13 @@ function Settings(props) {
           justifyContent="space-around"
         >
           <Button color="error" variant="contained">
-            Delete
+            Delete action
           </Button>
-          <Button color="warning" variant="contained">
-            Warning
-          </Button>
-          <Button color="success" variant="contained">
-            Success
+          <Button color="secondary" variant="outlined">
+            Secondary outlined
           </Button>
         </Stack>
+
         <Stack direction="row" spacing={1}>
           <FavoriteTag />
           <Chip

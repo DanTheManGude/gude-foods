@@ -84,7 +84,7 @@ function CreateBasicFoodDialog(props) {
           Cancel
         </Button>
         <Button
-          color="success"
+          color="primary"
           disabled={!createBasicFood.name}
           variant="contained"
           onClick={handleCreate}

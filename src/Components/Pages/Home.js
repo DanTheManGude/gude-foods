@@ -62,7 +62,7 @@ function Home(props) {
                     Reject
                   </Button>
                   <Button
-                    color="success"
+                    color="primary"
                     variant="contained"
                     onClick={() => approveRequestedUser(uid)}
                   >
