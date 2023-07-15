@@ -24,7 +24,7 @@ import { uploadColors } from "../../utils/requests";
 
 const labelText = "Select theme";
 
-function ColorCard() {
+function ColorCard({ showingOnHome }) {
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
@@ -100,8 +100,10 @@ function ColorCard() {
             Theme
           </Typography>
           <Stack sx={{ width: "100%" }} spacing={3}>
-            <Typography>
+            <Typography style={{ whiteSpace: "pre-line" }}>
               Change the colors used in the app for your account.
+              {showingOnHome &&
+                "\nYou can change these settings later on the Settings page."}
             </Typography>
             <Stack
               direction="row"

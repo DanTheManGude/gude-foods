@@ -36,7 +36,7 @@ function Home(props) {
 
   const renderThemeSettingsCard = () => {
     if (themeIsNotSet) {
-      return <ColorCard />;
+      return <ColorCard showingOnHome={true} />;
     }
 
     return null;
