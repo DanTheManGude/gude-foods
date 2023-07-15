@@ -217,7 +217,7 @@ function Cookbook(props) {
             </Stack>
             {menu.hasOwnProperty(recipeId) && (
               <Button
-                color="warning"
+                color="secondary"
                 variant="outlined"
                 onClick={() => {
                   removeRecipeFromMenuAndShoppingList(

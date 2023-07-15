@@ -291,7 +291,7 @@ function ShoppingList() {
                     );
                   }}
                 >
-                  <ClearIcon color="warning" />
+                  <ClearIcon color="error" />
                 </IconButton>
               )}
             </Stack>
@@ -527,7 +527,7 @@ function ShoppingList() {
                   )
                 }
               >
-                <ClearIcon color="warning" />
+                <ClearIcon color="secondary" />
               </IconButton>
             </Stack>
           ))}

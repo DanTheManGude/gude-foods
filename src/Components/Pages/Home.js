@@ -22,8 +22,10 @@ import {
   DatabaseContext,
 } from "../Contexts";
 
+import ColorCard from "../Utils/ColorCard";
+
 function Home(props) {
-  const { requestedUsers } = props;
+  const { requestedUsers, themeIsNotSet } = props;
 
   let navigate = useNavigate();
   const addAlert = useContext(AddAlertContext);
@@ -31,6 +33,14 @@ function Home(props) {
   const database = useContext(DatabaseContext);
   const { glossary, basicFoodTagAssociation, shoppingList, cookbook, menu } =
     database;
+
+  const renderThemeSettingsCard = () => {
+    if (themeIsNotSet) {
+      return <ColorCard showingOnHome={true} />;
+    }
+
+    return null;
+  };
 
   const renderRequestedUsersCard = () => {
     if (!requestedUsers) {
@@ -62,7 +72,7 @@ function Home(props) {
                     Reject
                   </Button>
                   <Button
-                    color="success"
+                    color="primary"
                     variant="contained"
                     onClick={() => approveRequestedUser(uid)}
                   >
@@ -403,6 +413,7 @@ function Home(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderRequestedUsersCard()}
         {renderNewUserCard()}
+        {renderThemeSettingsCard()}
         {memoMenuCard}
         {renderShoppingListCard()}
         {renderGlossaryCard()}
