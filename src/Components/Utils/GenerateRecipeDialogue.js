@@ -346,7 +346,7 @@ function GenerateRecipeDialogue(props) {
                 make the request, and parse the response into a cookbook ready
                 recipe.
               </Typography>
-              <Typography fontWeight={600}>
+              <Typography fontWeight={"fontWeightBold"}>
                 An OpenAPI account is required and your api keys can be found
                 <Link
                   href="https://platform.openai.com/account/api-keys"

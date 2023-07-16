@@ -138,7 +138,7 @@ function Cooking() {
                     alignItems="center"
                     spacing={1}
                   >
-                    <Typography sx={{ fontWeight: 700, fontSize }}>
+                    <Typography sx={{ fontWeight: "fontWeightBold", fontSize }}>
                       {index + 1}.
                     </Typography>
                     &nbsp;

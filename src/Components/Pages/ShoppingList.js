@@ -565,7 +565,7 @@ function ShoppingList() {
             sx={{
               paddingBottom: 1.5,
               textAlign: "center",
-              fontWeight: "500",
+              fontWeight: "fontWeightMedium",
               fontSize: "1.1rem",
             }}
           >
