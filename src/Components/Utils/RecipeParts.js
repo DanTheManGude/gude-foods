@@ -51,6 +51,18 @@ export const renderNameInput = (name, updateName, error) => (
   />
 );
 
+export const renderDescriptionInput = (description, updateDescription) => (
+  <TextField
+    label="Description"
+    variant="standard"
+    multiline={true}
+    value={description}
+    onChange={(event) => {
+      updateDescription(event.target.value);
+    }}
+  />
+);
+
 export const renderNotesContainer = (renderedContents) => (
   <Paper elevation={2} sx={{ width: "100%" }}>
     <Box sx={{ padding: 2 }}>{renderedContents}</Box>

@@ -20,6 +20,7 @@ import DeleteDialog from "../Utils/DeleteDialog";
 import {
   renderEditingButtons,
   renderNameInput,
+  renderDescriptionInput,
   renderNotesContainer,
   renderNotesInput,
   renderTagList,
@@ -107,6 +108,9 @@ function Recipe() {
 
   const updateName = (name) => {
     updateRecipe({ name });
+  };
+  const updateDescription = (description) => {
+    updateRecipe({ description });
   };
   const updateIngredients = (setter) => {
     updateRecipe((_recipeEntry) => ({
@@ -309,6 +313,33 @@ function Recipe() {
     );
   };
 
+  const renderDescription = () => {
+    const { description = "" } = recipeEntry;
+
+    if (isEditing) {
+      return renderDescriptionInput(description, updateDescription);
+    }
+
+    if (!description) {
+      return null;
+    }
+
+    return (
+      <Typography
+        key="description"
+        sx={{
+          color: "text.primary",
+          textAlign: "left",
+          width: "100%",
+          marginBottom: 1,
+          fontWeight: "fontWeightMedium",
+        }}
+      >
+        {description}
+      </Typography>
+    );
+  };
+
   const renderNotes = () => {
     const { notes = "" } = recipeEntry;
 
@@ -356,6 +387,7 @@ function Recipe() {
         {renderTopButtonControls()}
         <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
           {renderName()}
+          {renderDescription()}
           <IngredientList
             ingredients={recipeEntry.ingredients}
             editable={isEditing}
