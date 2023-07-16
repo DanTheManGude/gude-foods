@@ -28,6 +28,7 @@ import {
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
+import NewRecipeDialogue from "../Utils/NewRecipeDialogue";
 import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
 import FavoriteTag from "../Utils/FavoriteTag";
 
@@ -65,6 +66,7 @@ function Cookbook(props) {
 
   const [openGenerateRecipeDialogue, setOpenGenerateRecipeDialogue] =
     useState(false);
+  const [openNewRecipeDialogue, setOpenNewRecipeDialogue] = useState(false);
   const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
   const {
@@ -360,7 +362,7 @@ function Cookbook(props) {
         right: "35px",
       }}
       onClick={() => {
-        navigate(`/recipe/create`);
+        setOpenNewRecipeDialogue(true);
       }}
     >
       <AddIcon />
@@ -393,6 +395,12 @@ function Cookbook(props) {
         }}
         filteringOptions={filteringOptions}
         setFilteringOptions={setFilteringOptions}
+      />
+      <NewRecipeDialogue
+        open={openNewRecipeDialogue}
+        onClose={() => {
+          setOpenNewRecipeDialogue(false);
+        }}
       />
       <GenerateRecipeDialogue
         filteringOptions={filteringOptions}
