@@ -1,8 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 
-import { styled } from "@mui/material/styles";
-
-import { useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,12 +9,15 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import { pages, presentationNames } from "../../constants";
+import { isDevelopment } from "../../utils/utility";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 const NavBar = () => {
   let navigate = useNavigate();
   const theme = useTheme();
+
+  console.log(isDevelopment());
 
   return (
     <>
