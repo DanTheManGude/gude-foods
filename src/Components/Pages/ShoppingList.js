@@ -168,7 +168,7 @@ function ShoppingList() {
       : collatedAmount;
 
     return (
-      <Accordion key={basicFoodId} disableGutters variant="outlined">
+      <Accordion key={basicFoodId} variant="outlined">
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Stack direction="row" alignItems="center">
             <Checkbox
