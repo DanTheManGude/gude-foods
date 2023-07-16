@@ -17,13 +17,34 @@ const NavBar = () => {
   let navigate = useNavigate();
   const theme = useTheme();
 
-  console.log(isDevelopment());
+  const inDevelopment = isDevelopment();
+  const transparant = "#00000000";
+  const stripeColor = `${theme.palette.primary.main}30`;
 
   return (
     <>
-      <AppBar position="fixed" sx={{ left: "2%", width: "96%" }}>
-        <Container maxWidth="xl">
-          <Toolbar sx={{ justifyContent: "center" }}>
+      <AppBar
+        position="fixed"
+        sx={{
+          left: "2%",
+          width: "96%",
+        }}
+      >
+        <Container
+          maxWidth="xl"
+          sx={
+            inDevelopment
+              ? {
+                  background: `repeating-linear-gradient(-45deg, ${transparant}, ${transparant} 10px, ${stripeColor} 10px, ${stripeColor} 20px)`,
+                }
+              : {}
+          }
+        >
+          <Toolbar
+            sx={{
+              justifyContent: "center",
+            }}
+          >
             <Typography
               variant="h5"
               noWrap
