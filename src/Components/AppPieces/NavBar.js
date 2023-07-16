@@ -1,8 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 
-import { styled } from "@mui/material/styles";
-
-import { useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,6 +9,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import { pages, presentationNames } from "../../constants";
+import { isDevelopment } from "../../utils/utility";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -18,11 +17,34 @@ const NavBar = () => {
   let navigate = useNavigate();
   const theme = useTheme();
 
+  const inDevelopment = isDevelopment();
+  const transparant = "#00000000";
+  const stripeColor = `${theme.palette.primary.main}30`;
+
   return (
     <>
-      <AppBar position="fixed" sx={{ left: "2%", width: "96%" }}>
-        <Container maxWidth="xl">
-          <Toolbar sx={{ justifyContent: "center" }}>
+      <AppBar
+        position="fixed"
+        sx={{
+          left: "2%",
+          width: "96%",
+        }}
+      >
+        <Container
+          maxWidth="xl"
+          sx={
+            inDevelopment
+              ? {
+                  background: `repeating-linear-gradient(-45deg, ${transparant}, ${transparant} 10px, ${stripeColor} 10px, ${stripeColor} 20px)`,
+                }
+              : {}
+          }
+        >
+          <Toolbar
+            sx={{
+              justifyContent: "center",
+            }}
+          >
             <Typography
               variant="h5"
               noWrap
