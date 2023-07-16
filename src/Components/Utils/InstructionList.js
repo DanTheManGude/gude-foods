@@ -88,7 +88,7 @@ function InstructionList(props) {
 
   const renderStepText = (instructionText, index) => (
     <>
-      <Typography sx={{ fontWeight: 700, width: "17px" }}>
+      <Typography sx={{ fontWeight: "fontWeightBold", width: "17px" }}>
         {index + 1}.
       </Typography>
       &nbsp;

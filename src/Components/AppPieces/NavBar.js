@@ -22,7 +22,7 @@ const NavBar = () => {
     <>
       <AppBar position="fixed" sx={{ left: "2%", width: "96%" }}>
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ justifyContent: "center" }}>
+          <Toolbar sx={{ justifyContent: "center" }}>
             <Typography
               variant="h5"
               noWrap

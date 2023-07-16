@@ -168,7 +168,7 @@ function ShoppingList() {
       : collatedAmount;
 
     return (
-      <Accordion key={basicFoodId} disableGutters variant="outlined">
+      <Accordion key={basicFoodId} variant="outlined">
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Stack direction="row" alignItems="center">
             <Checkbox
@@ -527,7 +527,7 @@ function ShoppingList() {
                   )
                 }
               >
-                <ClearIcon color="secondary" />
+                <ClearIcon color="error" />
               </IconButton>
             </Stack>
           ))}
@@ -565,7 +565,7 @@ function ShoppingList() {
             sx={{
               paddingBottom: 1.5,
               textAlign: "center",
-              fontWeight: "500",
+              fontWeight: "fontWeightMedium",
               fontSize: "1.1rem",
             }}
           >

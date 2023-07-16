@@ -27,6 +27,22 @@ export const constructTheme = (palette) =>
     typography: {
       fontFamily: fontFamilies.join(","),
     },
+    components: {
+      MuiAccordion: {
+        defaultProps: {
+          disableGutters: true,
+        },
+      },
+      MuiAccordionSummary: {
+        styleOverrides: {
+          root: {
+            "&.Mui-expanded": {
+              margin: 0,
+            },
+          },
+        },
+      },
+    },
   });
 
 export const constructBackgroundStyleText = (backgroundList) =>

@@ -35,7 +35,7 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const { open, onClose, setAiGeneratedRecipe, filteringOptions } = props;
+  const { open, onClose, setExternalRecipe, filteringOptions } = props;
 
   const [reportErrorValues, setReportErrorValues] = useState();
   const addAlert = useContext(AddAlertContext);
@@ -186,13 +186,13 @@ function GenerateRecipeDialogue(props) {
           )}`;
 
           handleClose();
-          setAiGeneratedRecipe({
+          setExternalRecipe({
             ...generatedRecipe,
             tags: tagsList,
             ingredients,
             notes,
           });
-          navigate("/aiRecipe");
+          navigate("/externalRecipe");
         } catch (error) {
           setResponseText(_responseText);
           console.warn(error);
@@ -346,7 +346,7 @@ function GenerateRecipeDialogue(props) {
                 make the request, and parse the response into a cookbook ready
                 recipe.
               </Typography>
-              <Typography fontWeight={600}>
+              <Typography fontWeight={"fontWeightBold"}>
                 An OpenAPI account is required and your api keys can be found
                 <Link
                   href="https://platform.openai.com/account/api-keys"

@@ -13,7 +13,7 @@ import ShoppingList from "../Pages/ShoppingList";
 import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
 import Users from "../Pages/Users";
-import AiRecipe from "../Pages/AiRecipe";
+import ExternalRecipe from "../Pages/ExternalRecipe";
 
 import {
   DatabaseContext,
@@ -34,7 +34,7 @@ function PagesContainer(props) {
   const [database, setDatabase] = useState({});
   const [dataPaths, setDataPaths] = useState({});
   const [filteringOptions, setFilteringOptions] = useState();
-  const [aiGeneratedRecipe, setAiGeneratedRecipe] = useState();
+  const [externalRecipe, setExternalRecipe] = useState();
   const [actingUser, setActingUser] = useState();
   const [userList, setUserList] = useState([]);
   const [accounts, setAccounts] = useState();
@@ -132,7 +132,7 @@ function PagesContainer(props) {
               <Cookbook
                 filteringOptions={filteringOptions}
                 setFilteringOptions={setFilteringOptions}
-                setAiGeneratedRecipe={setAiGeneratedRecipe}
+                setExternalRecipe={setExternalRecipe}
               />
             }
           />
@@ -165,10 +165,10 @@ function PagesContainer(props) {
               }
             />
           )}
-          {aiGeneratedRecipe && (
+          {externalRecipe && (
             <Route
-              path="aiRecipe"
-              element={<AiRecipe givenRecipe={aiGeneratedRecipe} />}
+              path="externalRecipe"
+              element={<ExternalRecipe givenRecipe={externalRecipe} />}
             />
           )}
           <Route path="*" element={<Navigate to="/home" />} />

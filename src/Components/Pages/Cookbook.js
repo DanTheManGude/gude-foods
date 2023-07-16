@@ -41,7 +41,7 @@ function Cookbook(props) {
   const {
     filteringOptions = {},
     setFilteringOptions,
-    setAiGeneratedRecipe,
+    setExternalRecipe,
   } = props;
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
@@ -166,6 +166,7 @@ function Cookbook(props) {
   const renderRecipe = (recipeId) => {
     const {
       name = "Unknown name",
+      description = "",
       ingredients = [],
       tags = [],
       isFavorite = false,
@@ -177,7 +178,12 @@ function Cookbook(props) {
           <Typography variant="h6">{name}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
+            {description && (
+              <Typography key="description" fontWeight="fontWeightMedium">
+                {description}
+              </Typography>
+            )}
             <Stack
               spacing={2}
               direction="row"
@@ -394,7 +400,7 @@ function Cookbook(props) {
         onClose={() => {
           setOpenGenerateRecipeDialogue(false);
         }}
-        setAiGeneratedRecipe={setAiGeneratedRecipe}
+        setExternalRecipe={setExternalRecipe}
       />
     </div>
   );
