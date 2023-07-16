@@ -527,7 +527,7 @@ function ShoppingList() {
                   )
                 }
               >
-                <ClearIcon color="secondary" />
+                <ClearIcon color="error" />
               </IconButton>
             </Stack>
           ))}
