@@ -35,7 +35,7 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const { open, onClose, setAiGeneratedRecipe, filteringOptions } = props;
+  const { open, onClose, setExternalRecipe, filteringOptions } = props;
 
   const [reportErrorValues, setReportErrorValues] = useState();
   const addAlert = useContext(AddAlertContext);
@@ -186,7 +186,7 @@ function GenerateRecipeDialogue(props) {
           )}`;
 
           handleClose();
-          setAiGeneratedRecipe({
+          setExternalRecipe({
             ...generatedRecipe,
             tags: tagsList,
             ingredients,

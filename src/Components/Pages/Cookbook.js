@@ -41,7 +41,7 @@ function Cookbook(props) {
   const {
     filteringOptions = {},
     setFilteringOptions,
-    setAiGeneratedRecipe,
+    setExternalRecipe,
   } = props;
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
@@ -394,7 +394,7 @@ function Cookbook(props) {
         onClose={() => {
           setOpenGenerateRecipeDialogue(false);
         }}
-        setAiGeneratedRecipe={setAiGeneratedRecipe}
+        setExternalRecipe={setExternalRecipe}
       />
     </div>
   );
