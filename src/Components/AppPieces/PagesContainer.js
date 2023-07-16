@@ -13,7 +13,7 @@ import ShoppingList from "../Pages/ShoppingList";
 import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
 import Users from "../Pages/Users";
-import AiRecipe from "../Pages/AiRecipe";
+import ExternalRecipe from "../Pages/ExternalRecipe";
 
 import {
   DatabaseContext,
@@ -167,8 +167,8 @@ function PagesContainer(props) {
           )}
           {aiGeneratedRecipe && (
             <Route
-              path="aiRecipe"
-              element={<AiRecipe givenRecipe={aiGeneratedRecipe} />}
+              path="externalRecipe"
+              element={<ExternalRecipe givenRecipe={aiGeneratedRecipe} />}
             />
           )}
           <Route path="*" element={<Navigate to="/home" />} />

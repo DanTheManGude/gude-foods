@@ -26,7 +26,7 @@ import {
   DatabaseContext,
 } from "../Contexts";
 
-function AiRecipe(props) {
+function ExternalRecipe(props) {
   const { givenRecipe } = props;
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
@@ -145,4 +145,4 @@ function AiRecipe(props) {
   );
 }
 
-export default AiRecipe;
+export default ExternalRecipe;

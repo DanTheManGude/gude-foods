@@ -192,7 +192,7 @@ function GenerateRecipeDialogue(props) {
             ingredients,
             notes,
           });
-          navigate("/aiRecipe");
+          navigate("/externalRecipe");
         } catch (error) {
           setResponseText(_responseText);
           console.warn(error);
