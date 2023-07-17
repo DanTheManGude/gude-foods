@@ -45,7 +45,11 @@ function NewRecipeDialogue(props) {
       <ImportFileButton
         isForRecipe={true}
         onSuccess={console.log}
-        buttonProps={{ color: "primary", variant: "outlined" }}
+        buttonProps={{
+          color: "primary",
+          variant: "outlined",
+          sx: { width: "100%" },
+        }}
         buttonText="Upload a file from Gude Foods"
         id="import-recipe"
       />
