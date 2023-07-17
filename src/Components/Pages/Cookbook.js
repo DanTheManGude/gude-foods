@@ -278,14 +278,6 @@ function Cookbook(props) {
       >
         <Typography>Generate Recipe with AI</Typography>
       </Button>
-      <ImportFileButton
-        onSuccess={(recipeData) => {
-          handleImportedData({ recipe: recipeData });
-        }}
-        buttonProps={{ color: "primary", variant: "outlined" }}
-        buttonText="Import recipe"
-        id="import-recipe"
-      />
     </Stack>
   );
 
@@ -342,9 +334,6 @@ function Cookbook(props) {
         <Typography>Export Cookbook</Typography>
       </Button>
       <ImportFileButton
-        onSuccess={(cookbookData) => {
-          handleImportedData(cookbookData);
-        }}
         buttonProps={{ color: "secondary", variant: "outlined" }}
         buttonText="Import cookbook"
         id="import-cookbook"

@@ -7,6 +7,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 
+import ImportFileButton from "../Utils/ImportFileButton";
+
 function NewRecipeDialogue(props) {
   const { open, onClose } = props;
 
@@ -26,8 +28,8 @@ function NewRecipeDialogue(props) {
       open={open}
     >
       <DialogTitle>New recipe</DialogTitle>
-      <DialogContent dividers>
-        <Stack spacing={1.5}>
+      <DialogContent dividers={true}>
+        <Stack spacing={2}>
           <Button
             color="primary"
             variant="contained"
@@ -40,9 +42,12 @@ function NewRecipeDialogue(props) {
           <Button color="primary" variant="outlined" onClick={() => {}}>
             Generate recipe with AI
           </Button>
-          <Button color="primary" variant="outlined" onClick={() => {}}>
-            Upload a recipe file from Gude Foods
-          </Button>
+          <ImportFileButton
+            isForRecipe={true}
+            buttonProps={{ color: "primary", variant: "outlined" }}
+            buttonText="Upload a file from Gude Foods"
+            id="upload-recipe"
+          />
           <Button color="primary" variant="outlined" disabled>
             Import a recipe file from a website
           </Button>
