@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -23,6 +24,8 @@ function ImportFileButton(props) {
   } = props;
   const inputId = `import-file-button-${id}`;
 
+  let navigate = useNavigate();
+
   const addAlert = useContext(AddAlertContext);
 
   const database = useContext(DatabaseContext);
@@ -45,7 +48,22 @@ function ImportFileButton(props) {
       cookbookPath
     );
 
-    updateFromCookbookImport(transformedData, dataPaths, recipeOrder, addAlert);
+    const updateHandler = (alert) => {
+      if (isForRecipe) {
+        navigate(
+          `/recipe/${Object.keys(transformedData.formattedCookbook)[0]}`
+        );
+      }
+
+      addAlert(alert);
+    };
+
+    updateFromCookbookImport(
+      transformedData,
+      dataPaths,
+      recipeOrder,
+      updateHandler
+    );
   };
 
   const handeFileImport = (file) => {
