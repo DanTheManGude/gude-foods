@@ -54,7 +54,7 @@ export const addRecipeToShoppingList = (
   addAlert
 ) => {
   const menu = _menu || {};
-  const ingredients = cookbook[recipeId];
+  const ingredients = cookbook[recipeId].ingredients;
 
   updateRequest(
     {
