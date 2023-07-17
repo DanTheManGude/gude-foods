@@ -65,10 +65,7 @@ function NewRecipeDialogue(props) {
       <Dialog
         sx={{
           "& .MuiDialog-paper": {
-            width: "81%",
-          },
-          "& .MuiDialog-container": {
-            marginBottom: "100px",
+            width: "80%",
           },
         }}
         maxWidth="xs"
