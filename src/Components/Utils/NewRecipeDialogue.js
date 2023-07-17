@@ -24,6 +24,7 @@ function NewRecipeDialogue(props) {
   const renderButtonStack = () => (
     <Stack spacing={2}>
       <Button
+        size="large"
         color="primary"
         variant="contained"
         onClick={() => {
@@ -54,7 +55,7 @@ function NewRecipeDialogue(props) {
         id="import-recipe"
       />
       <Button color="primary" variant="outlined" disabled>
-        <Typography>Import a recipe file from a website</Typography>
+        <Typography>Import a recipe from a website</Typography>
       </Button>
     </Stack>
   );
