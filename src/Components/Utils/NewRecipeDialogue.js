@@ -30,7 +30,7 @@ function NewRecipeDialogue(props) {
           navigate(`/recipe/create`);
         }}
       >
-        Create your own recipe
+        <Typography>Create your own recipe</Typography>
       </Button>
       <Button
         color="primary"
@@ -54,7 +54,7 @@ function NewRecipeDialogue(props) {
         id="import-recipe"
       />
       <Button color="primary" variant="outlined" disabled>
-        Import a recipe file from a website
+        <Typography>Import a recipe file from a website</Typography>
       </Button>
     </Stack>
   );
@@ -78,7 +78,7 @@ function NewRecipeDialogue(props) {
 
         <DialogActions>
           <Button color="secondary" onClick={onClose} variant="contained">
-            Cancel
+            <Typography>Cancel</Typography>
           </Button>
         </DialogActions>
       </Dialog>

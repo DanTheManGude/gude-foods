@@ -69,14 +69,14 @@ function Home(props) {
                     variant="outlined"
                     onClick={() => removeUserFromRequestedUsers(uid)}
                   >
-                    Reject
+                    <Typography>Reject</Typography>
                   </Button>
                   <Button
                     color="primary"
                     variant="contained"
                     onClick={() => approveRequestedUser(uid)}
                   >
-                    Accept
+                    <Typography>Accept</Typography>
                   </Button>
                 </Stack>
               ))}

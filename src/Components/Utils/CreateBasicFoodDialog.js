@@ -1,5 +1,6 @@
 import { useContext } from "react";
 
+import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -81,7 +82,7 @@ function CreateBasicFoodDialog(props) {
       </DialogContent>
       <DialogActions>
         <Button color="secondary" onClick={onClose} variant="contained">
-          Cancel
+          <Typography>Cancel</Typography>
         </Button>
         <Button
           color="primary"
@@ -89,7 +90,7 @@ function CreateBasicFoodDialog(props) {
           variant="contained"
           onClick={handleCreate}
         >
-          Create
+          <Typography>Create</Typography>
         </Button>
       </DialogActions>
     </Dialog>

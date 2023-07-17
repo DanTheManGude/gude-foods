@@ -53,10 +53,10 @@ function ColorCard({ showingOnHome }) {
           justifyContent="space-around"
         >
           <Button color="primary" variant="contained">
-            Primary filled
+            <Typography>Primary filled</Typography>
           </Button>
           <Button color="secondary" variant="contained">
-            Secondary filled
+            <Typography>Secondary filled</Typography>
           </Button>
         </Stack>
         <Stack
@@ -66,10 +66,10 @@ function ColorCard({ showingOnHome }) {
           justifyContent="space-around"
         >
           <Button color="error" variant="contained">
-            Delete action
+            <Typography>Delete action</Typography>
           </Button>
           <Button color="secondary" variant="outlined">
-            Secondary outlined
+            <Typography>Secondary outlined</Typography>
           </Button>
         </Stack>
 
@@ -118,7 +118,9 @@ function ColorCard({ showingOnHome }) {
                   setShouldShowPreview(!shouldShowPreview);
                 }}
               >
-                {shouldShowPreview ? "Hide preview" : "Show preview"}
+                <Typography>
+                  {shouldShowPreview ? "Hide preview" : "Show preview"}
+                </Typography>
               </Button>
               <FormControl
                 size="small"

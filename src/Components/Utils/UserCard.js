@@ -35,7 +35,7 @@ function UserCard(props) {
               variant="contained"
               onClick={clearActingUser}
             >
-              Back to own user
+              <Typography>Back to own user</Typography>
             </Button>
           </CardActions>
         </Card>
@@ -59,7 +59,7 @@ function UserCard(props) {
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
           <Button color="primary" variant="contained" onClick={handleLogout}>
-            Logout
+            <Typography>Logout</Typography>
           </Button>
         </CardActions>
       </Card>
