@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -8,11 +10,13 @@ import Dialog from "@mui/material/Dialog";
 function NewRecipeDialogue(props) {
   const { open, onClose } = props;
 
+  let navigate = useNavigate();
+
   return (
     <Dialog
       sx={{
         "& .MuiDialog-paper": {
-          width: "80%",
+          width: "81%",
         },
         "& .MuiDialog-container": {
           marginBottom: "100px",
@@ -21,9 +25,28 @@ function NewRecipeDialogue(props) {
       maxWidth="xs"
       open={open}
     >
-      <DialogTitle color="primary">New recipe</DialogTitle>
+      <DialogTitle>New recipe</DialogTitle>
       <DialogContent dividers>
-        <Stack></Stack>
+        <Stack spacing={1.5}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              navigate(`/recipe/create`);
+            }}
+          >
+            Create your own recipe
+          </Button>
+          <Button color="primary" variant="outlined" onClick={() => {}}>
+            Generate recipe with AI
+          </Button>
+          <Button color="primary" variant="outlined" onClick={() => {}}>
+            Upload a recipe file from Gude Foods
+          </Button>
+          <Button color="primary" variant="outlined" disabled>
+            Import a recipe file from a website
+          </Button>
+        </Stack>
       </DialogContent>
 
       <DialogActions>
