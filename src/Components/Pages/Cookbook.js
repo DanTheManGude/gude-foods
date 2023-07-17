@@ -153,7 +153,6 @@ function Cookbook(props) {
     const {
       name = "Unknown name",
       description = "",
-      ingredients = [],
       tags = [],
       isFavorite = false,
     } = cookbook[recipeId];

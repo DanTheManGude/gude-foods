@@ -51,7 +51,6 @@ function Recipe() {
     cookbook: _cookbook,
     recipeOrder: _recipeOrder,
     shoppingList,
-    menu: _menu,
   } = database;
 
   const recipeOrder = _recipeOrder || [];
