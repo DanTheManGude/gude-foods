@@ -14,10 +14,7 @@ import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import {
-  addRecipeToShoppingList,
-  removeRecipeFromMenuAndShoppingList,
-} from "../../utils/requests";
+import { removeRecipeFromMenuAndShoppingList } from "../../utils/requests";
 import {
   downloadData,
   transformRecipeForExport,
@@ -28,6 +25,7 @@ import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
 import NewRecipeDialogue from "../Utils/NewRecipeDialogue";
 import FavoriteTag from "../Utils/FavoriteTag";
+import AddToShoppingListDialogue from "../Utils/AddToShoppingListDialogue";
 
 import {
   DatabaseContext,
@@ -61,6 +59,8 @@ function Cookbook(props) {
 
   let navigate = useNavigate();
 
+  const [addToShoppingListDialogueOpen, setAddToShoppingListDialogueOpen] =
+    useState(false);
   const [openNewRecipeDialogue, setOpenNewRecipeDialogue] = useState(false);
   const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
@@ -182,13 +182,7 @@ function Cookbook(props) {
                 size="large"
                 sx={{ flex: 1 }}
                 onClick={() => {
-                  addRecipeToShoppingList(
-                    ingredients,
-                    recipeId,
-                    { recipeOrder, menu },
-                    dataPaths,
-                    addAlert
-                  );
+                  setAddToShoppingListDialogueOpen(true);
                 }}
               >
                 <Typography>Add to shopping list</Typography>
@@ -361,6 +355,12 @@ function Cookbook(props) {
         }}
         filteringOptions={filteringOptions}
         setExternalRecipe={setExternalRecipe}
+      />
+      <AddToShoppingListDialogue
+        open={addToShoppingListDialogueOpen}
+        onClose={() => {
+          setAddToShoppingListDialogueOpen(false);
+        }}
       />
     </div>
   );

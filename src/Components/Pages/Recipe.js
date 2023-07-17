@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 
 import {
   updateRequest,
-  addRecipeToShoppingList,
   shoppingListDeletesByRecipe,
   saveRecipe,
 } from "../../utils/requests";
@@ -28,6 +27,7 @@ import {
 } from "../Utils/RecipeParts";
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
+import AddToShoppingListDialogue from "../Utils/AddToShoppingListDialogue";
 
 import {
   DatabaseContext,
@@ -73,6 +73,8 @@ function Recipe() {
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [addToShoppingListDialogueOpen, setAddToShoppingListDialogueOpen] =
+    useState(false);
 
   useEffect(() => {
     const cookbook = _cookbook || {};
@@ -257,13 +259,7 @@ function Recipe() {
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
-              addRecipeToShoppingList(
-                originalRecipe.ingredients,
-                recipeId,
-                { recipeOrder, menu },
-                dataPaths,
-                addAlert
-              );
+              setAddToShoppingListDialogueOpen(true);
             }}
           >
             <Typography>
@@ -411,6 +407,12 @@ function Recipe() {
         titleDO="recipe"
         comfirmationMessageDO={`"${recipeEntry.name}"`}
         handleDelete={handleDelete}
+      />
+      <AddToShoppingListDialogue
+        open={addToShoppingListDialogueOpen}
+        onClose={() => {
+          setAddToShoppingListDialogueOpen(false);
+        }}
       />
     </div>
   );

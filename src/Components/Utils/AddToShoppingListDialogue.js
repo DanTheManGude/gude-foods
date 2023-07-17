@@ -8,7 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import { addRecipeToShoppingList } from "../../utils/requests";
 
 function AddToShoppingListDialogue(props) {
-  const { open } = props;
+  const { open, onClose } = props;
 
   const handleAdd = () => {
     addRecipeToShoppingList();
