@@ -59,7 +59,7 @@ function Cookbook(props) {
   const recipeOrder = _recipeOrder || [];
 
   const dataPaths = useContext(DataPathsContext);
-  const { shoppingListPath, menuPath, glossaryPath, cookbookPath } = dataPaths;
+  const { shoppingListPath, menuPath } = dataPaths;
 
   let navigate = useNavigate();
 
@@ -72,17 +72,6 @@ function Cookbook(props) {
     tagsList = [],
     isFavoriteFilter = false,
   } = filteringOptions;
-
-  const handleImportedData = (importedCookbook) => {
-    const transformedData = transformCookbookFromImport(
-      importedCookbook,
-      glossary,
-      glossaryPath,
-      cookbookPath
-    );
-
-    updateFromCookbookImport(transformedData, dataPaths, recipeOrder, addAlert);
-  };
 
   const calculateRecipeList = () => {
     const recipeList = recipeOrder.filter((recipeId) => {
