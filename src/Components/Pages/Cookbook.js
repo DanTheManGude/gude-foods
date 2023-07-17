@@ -29,7 +29,6 @@ import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
 import NewRecipeDialogue from "../Utils/NewRecipeDialogue";
-import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
 import FavoriteTag from "../Utils/FavoriteTag";
 
 import {
@@ -64,8 +63,6 @@ function Cookbook(props) {
 
   let navigate = useNavigate();
 
-  const [openGenerateRecipeDialogue, setOpenGenerateRecipeDialogue] =
-    useState(false);
   const [openNewRecipeDialogue, setOpenNewRecipeDialogue] = useState(false);
   const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
@@ -267,20 +264,6 @@ function Cookbook(props) {
     </Stack>
   );
 
-  const renderNewRecipeButtons = () => (
-    <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
-      <Button
-        color="primary"
-        variant="contained"
-        onClick={() => {
-          setOpenGenerateRecipeDialogue(true);
-        }}
-      >
-        <Typography>Generate Recipe with AI</Typography>
-      </Button>
-    </Stack>
-  );
-
   const renderRecipeList = () => {
     if (!cookbook) {
       return null;
@@ -373,7 +356,6 @@ function Cookbook(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
         {renderRecipeList()}
-        {renderNewRecipeButtons()}
         {renderImportExportCookbookButtons()}
       </Stack>
       {renderCreateRecipeButton()}
@@ -390,13 +372,7 @@ function Cookbook(props) {
         onClose={() => {
           setOpenNewRecipeDialogue(false);
         }}
-      />
-      <GenerateRecipeDialogue
         filteringOptions={filteringOptions}
-        open={openGenerateRecipeDialogue}
-        onClose={() => {
-          setOpenGenerateRecipeDialogue(false);
-        }}
         setExternalRecipe={setExternalRecipe}
       />
     </div>
