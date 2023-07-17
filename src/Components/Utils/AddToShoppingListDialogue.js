@@ -39,6 +39,7 @@ function AddToShoppingListDialogue(props) {
       dataPaths,
       addAlert
     );
+    onClose();
   };
 
   return (
