@@ -17,12 +17,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
-  updateFromCookbookImport,
 } from "../../utils/requests";
 import {
   downloadData,
   transformRecipeForExport,
-  transformCookbookFromImport,
 } from "../../utils/dataTransfer";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
