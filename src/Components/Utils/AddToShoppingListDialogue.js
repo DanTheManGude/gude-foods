@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -7,11 +9,36 @@ import Dialog from "@mui/material/Dialog";
 
 import { addRecipeToShoppingList } from "../../utils/requests";
 
+import {
+  DatabaseContext,
+  DataPathsContext,
+  AddAlertContext,
+} from "../Contexts";
+
 function AddToShoppingListDialogue(props) {
-  const { open, onClose } = props;
+  const { open, onClose, recipeId } = props;
+
+  const database = useContext(DatabaseContext);
+  const addAlert = useContext(AddAlertContext);
+
+  const {
+    cookbook: _cookbook,
+    recipeOrder: _recipeOrder,
+    menu: _menu,
+  } = database;
+  const cookbook = _cookbook || {};
+  const menu = _menu || {};
+  const recipeOrder = _recipeOrder || [];
+
+  const dataPaths = useContext(DataPathsContext);
 
   const handleAdd = () => {
-    addRecipeToShoppingList();
+    addRecipeToShoppingList(
+      recipeId,
+      { recipeOrder, menu, cookbook },
+      dataPaths,
+      addAlert
+    );
   };
 
   return (

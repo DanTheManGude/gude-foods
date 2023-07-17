@@ -55,7 +55,6 @@ function Recipe() {
   } = database;
 
   const recipeOrder = _recipeOrder || [];
-  const menu = _menu || {};
   const glossary = _glossary || {};
 
   let navigate = useNavigate();
@@ -413,6 +412,7 @@ function Recipe() {
         onClose={() => {
           setAddToShoppingListDialogueOpen(false);
         }}
+        recipeId={recipeId}
       />
     </div>
   );

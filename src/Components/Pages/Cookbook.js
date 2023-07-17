@@ -59,8 +59,8 @@ function Cookbook(props) {
 
   let navigate = useNavigate();
 
-  const [addToShoppingListDialogueOpen, setAddToShoppingListDialogueOpen] =
-    useState(false);
+  const [addToShoppingListRecipeId, setAddToShoppingListRecipeId] =
+    useState(null);
   const [openNewRecipeDialogue, setOpenNewRecipeDialogue] = useState(false);
   const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
@@ -182,7 +182,7 @@ function Cookbook(props) {
                 size="large"
                 sx={{ flex: 1 }}
                 onClick={() => {
-                  setAddToShoppingListDialogueOpen(true);
+                  setAddToShoppingListRecipeId(recipeId);
                 }}
               >
                 <Typography>Add to shopping list</Typography>
@@ -357,10 +357,11 @@ function Cookbook(props) {
         setExternalRecipe={setExternalRecipe}
       />
       <AddToShoppingListDialogue
-        open={addToShoppingListDialogueOpen}
+        open={!!addToShoppingListRecipeId}
         onClose={() => {
-          setAddToShoppingListDialogueOpen(false);
+          setAddToShoppingListRecipeId(null);
         }}
+        recipeId={addToShoppingListRecipeId}
       />
     </div>
   );
