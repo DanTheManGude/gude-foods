@@ -280,7 +280,7 @@ function ShoppingList() {
                     clearActiveEditingCollated();
                   }}
                 >
-                  <Typography>{"Update"}</Typography>
+                  <Typography>Update</Typography>
                 </Button>
               ) : (
                 <IconButton

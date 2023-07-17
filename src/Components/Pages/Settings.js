@@ -82,7 +82,7 @@ function Settings(props) {
               variant="contained"
               onClick={() => navigate("/users")}
             >
-              View all users
+              <Typography>View all users</Typography>
             </Button>
           </CardActions>
         </Card>
@@ -138,7 +138,7 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button color="secondary" variant="outlined" onClick={onDownload}>
-              Download
+              <Typography>Download</Typography>
             </Button>
           </CardActions>
         </Card>
@@ -198,7 +198,7 @@ function Settings(props) {
                 setOpenDeleteDialog(true);
               }}
             >
-              Delete
+              <Typography>Delete</Typography>
             </Button>
           </CardActions>
         </Card>

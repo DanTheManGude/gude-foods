@@ -17,18 +17,16 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   addRecipeToShoppingList,
   removeRecipeFromMenuAndShoppingList,
-  updateFromCookbookImport,
 } from "../../utils/requests";
 import {
   downloadData,
   transformRecipeForExport,
-  transformCookbookFromImport,
 } from "../../utils/dataTransfer";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
-import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
+import NewRecipeDialogue from "../Utils/NewRecipeDialogue";
 import FavoriteTag from "../Utils/FavoriteTag";
 
 import {
@@ -59,12 +57,11 @@ function Cookbook(props) {
   const recipeOrder = _recipeOrder || [];
 
   const dataPaths = useContext(DataPathsContext);
-  const { shoppingListPath, menuPath, glossaryPath, cookbookPath } = dataPaths;
+  const { shoppingListPath, menuPath } = dataPaths;
 
   let navigate = useNavigate();
 
-  const [openGenerateRecipeDialogue, setOpenGenerateRecipeDialogue] =
-    useState(false);
+  const [openNewRecipeDialogue, setOpenNewRecipeDialogue] = useState(false);
   const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
     useState(false);
   const {
@@ -73,17 +70,6 @@ function Cookbook(props) {
     tagsList = [],
     isFavoriteFilter = false,
   } = filteringOptions;
-
-  const handleImportedData = (importedCookbook) => {
-    const transformedData = transformCookbookFromImport(
-      importedCookbook,
-      glossary,
-      glossaryPath,
-      cookbookPath
-    );
-
-    updateFromCookbookImport(transformedData, dataPaths, recipeOrder, addAlert);
-  };
 
   const calculateRecipeList = () => {
     const recipeList = recipeOrder.filter((recipeId) => {
@@ -265,28 +251,6 @@ function Cookbook(props) {
     </Stack>
   );
 
-  const renderNewRecipeButtons = () => (
-    <Stack direction="row" sx={{ width: "100%" }} justifyContent="space-evenly">
-      <Button
-        color="primary"
-        variant="contained"
-        onClick={() => {
-          setOpenGenerateRecipeDialogue(true);
-        }}
-      >
-        <Typography>Generate Recipe with AI</Typography>
-      </Button>
-      <ImportFileButton
-        onSuccess={(recipeData) => {
-          handleImportedData({ recipe: recipeData });
-        }}
-        buttonProps={{ color: "primary", variant: "outlined" }}
-        buttonText="Import recipe"
-        id="import-recipe"
-      />
-    </Stack>
-  );
-
   const renderRecipeList = () => {
     if (!cookbook) {
       return null;
@@ -340,9 +304,6 @@ function Cookbook(props) {
         <Typography>Export Cookbook</Typography>
       </Button>
       <ImportFileButton
-        onSuccess={(cookbookData) => {
-          handleImportedData(cookbookData);
-        }}
         buttonProps={{ color: "secondary", variant: "outlined" }}
         buttonText="Import cookbook"
         id="import-cookbook"
@@ -360,7 +321,7 @@ function Cookbook(props) {
         right: "35px",
       }}
       onClick={() => {
-        navigate(`/recipe/create`);
+        setOpenNewRecipeDialogue(true);
       }}
     >
       <AddIcon />
@@ -382,7 +343,6 @@ function Cookbook(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
         {renderRecipeList()}
-        {renderNewRecipeButtons()}
         {renderImportExportCookbookButtons()}
       </Stack>
       {renderCreateRecipeButton()}
@@ -394,12 +354,12 @@ function Cookbook(props) {
         filteringOptions={filteringOptions}
         setFilteringOptions={setFilteringOptions}
       />
-      <GenerateRecipeDialogue
-        filteringOptions={filteringOptions}
-        open={openGenerateRecipeDialogue}
+      <NewRecipeDialogue
+        open={openNewRecipeDialogue}
         onClose={() => {
-          setOpenGenerateRecipeDialogue(false);
+          setOpenNewRecipeDialogue(false);
         }}
+        filteringOptions={filteringOptions}
         setExternalRecipe={setExternalRecipe}
       />
     </div>

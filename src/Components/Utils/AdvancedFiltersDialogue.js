@@ -119,10 +119,10 @@ function AdvancedFiltersDialogue(props) {
           variant="contained"
           onClick={clearFilteringOptions}
         >
-          Clear
+          <Typography>Clear</Typography>
         </Button>
         <Button color="primary" variant="contained" onClick={onClose}>
-          Close
+          <Typography>Close</Typography>
         </Button>
       </DialogActions>
     </Dialog>

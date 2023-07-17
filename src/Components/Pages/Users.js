@@ -101,7 +101,7 @@ function Users(props) {
     return (
       <>
         <Button
-          color="primary"
+          color={isAuthorized ? "error" : "primary"}
           variant="outlined"
           size="medium"
           sx={{ flex: 1 }}
