@@ -245,15 +245,6 @@ export const createRecipeTag = (glossaryPath, successHandler, tagName) => {
   );
 };
 
-export const updateOpenAIKey = (enteredOpenAIKey, openAIKeyPath, addAlert) => {
-  updateRequest(
-    {
-      [openAIKeyPath]: enteredOpenAIKey,
-    },
-    addAlert
-  );
-};
-
 export const uploadColors = (colorsPath, colorKey, addAlert) => {
   updateRequest(
     { [colorsPath]: colorKey },

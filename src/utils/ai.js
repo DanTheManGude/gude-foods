@@ -2,31 +2,19 @@ import emailjs from "@emailjs/browser";
 
 import { emailConfig } from "../constants";
 
-export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
+export const generateRecipe = (prompt, onSuccess, onFailure) => {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${openAIKey}`,
     },
-    body: JSON.stringify({
-      model: "text-davinci-003",
-      prompt,
-      temperature: 0,
-      max_tokens: 500,
-    }),
+    body: JSON.stringify({ prompt }),
   };
-  fetch("https://api.openai.com/v1/completions", requestOptions)
-    .then((resp) => resp.json())
-    .then((response) => {
-      if (response.choices) {
-        onSuccess(response.choices[0].text, response);
-        return;
-      }
-      if (response.error) {
-        throw response.error.message;
-      }
-      throw response;
+  fetch("/api/generate-recipe", requestOptions)
+    .then((response) => response.text())
+    .then((responseText) => {
+      console.log(responseText);
+      onSuccess(responseText);
     })
     .catch(onFailure);
 };

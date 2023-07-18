@@ -80,7 +80,6 @@ export const databasePaths = {
   cookbook: "cookbook",
   recipeOrder: "recipeOrder",
   menu: "menu",
-  openAIKey: "openAIKey",
   colorKey: "colorKey",
 };
 
