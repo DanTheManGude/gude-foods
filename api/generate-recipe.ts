@@ -5,10 +5,12 @@ export const config = {
 export default async (request: Request) => {
   const openAIKey = process.env.OPENAI_KEY;
 
-  const text = await request.text();
-  const data = JSON.parse(text);
+  const url = new URL(request.url);
+  const search = new URLSearchParams(url.search);
 
-  const { prompt } = data;
+  const { promptText, length: maxTokens = "600" } = Object.fromEntries(
+    search.entries()
+  );
 
   const requestOptions = {
     method: "POST",
@@ -18,9 +20,9 @@ export default async (request: Request) => {
     },
     body: JSON.stringify({
       model: "text-davinci-003",
-      prompt,
+      prompt: promptText,
       temperature: 0,
-      max_tokens: 800,
+      max_tokens: Number(maxTokens),
     }),
   };
 

@@ -2,15 +2,12 @@ import emailjs from "@emailjs/browser";
 
 import { emailConfig } from "../constants";
 
-export const generateRecipe = (prompt, onSuccess, onFailure) => {
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt }),
-  };
-  fetch("/api/generate-recipe", requestOptions)
+export const generateRecipe = (params, onSuccess, onFailure) => {
+  const searchParamsText = Object.entries(params)
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join("&");
+
+  fetch(`/api/generate-recipe?${searchParamsText}`)
     .then((response) => response.text())
     .then((responseText) => {
       onSuccess(responseText);
