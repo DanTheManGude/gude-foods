@@ -152,9 +152,8 @@ function GenerateRecipeDialogue(props) {
     }, "");
 
     generateRecipe(
-      usableOpenAIKey,
       promptText,
-      (_responseText, response) => {
+      (_responseText) => {
         try {
           const generatedRecipe = parseResponse(_responseText);
 
@@ -198,7 +197,7 @@ function GenerateRecipeDialogue(props) {
           console.warn(error);
           setReportErrorValues({
             promptText,
-            response: JSON.stringify(response),
+            response: _responseText,
             error: error.toString(),
           });
         }
