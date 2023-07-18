@@ -14,6 +14,7 @@ import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
+import Slider from "@mui/material/Slider";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 import { generateRecipe, parseResponse, reportAiError } from "../../utils/ai";
@@ -44,6 +45,7 @@ function GenerateRecipeDialogue(props) {
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [responseText, setResponseText] = useState("");
+  const [length, setLength] = useState(600);
 
   const startLoading = () => setIsLoading(true);
   const stopLoading = () => setIsLoading(false);
@@ -125,13 +127,15 @@ function GenerateRecipeDialogue(props) {
   const handleGenerate = () => {
     startLoading();
 
-    const promptText = prompt.reduce((acc, promptElement) => {
-      const promptElementText = promptElement.props.children;
-      return `${acc}${promptElementText}`;
-    }, "");
+    const promptText = encodeURIComponent(
+      prompt.reduce(
+        (acc, promptElement) => `${acc}${promptElement.props.children}`,
+        ""
+      )
+    );
 
     generateRecipe(
-      { promptText },
+      { promptText, length },
       (_responseText) => {
         try {
           const generatedRecipe = parseResponse(_responseText);
@@ -271,6 +275,19 @@ function GenerateRecipeDialogue(props) {
             />
           </Box>
         </Paper>
+
+        <Box sx={{ width: "100%" }}>
+          <Typography>Length</Typography>
+          <Slider
+            onChange={(event, newValue) => {
+              setLength(newValue);
+            }}
+            value={length}
+            valueLabelDisplay="off"
+            min={200}
+            max={1100}
+          />
+        </Box>
       </>
     );
   };

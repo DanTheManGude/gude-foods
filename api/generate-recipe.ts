@@ -7,7 +7,10 @@ export default async (request: Request) => {
 
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
-  const prompt = search.get("promptText");
+
+  const { prompt, length: maxTokens = "600" } = Object.fromEntries(
+    search.entries()
+  );
 
   const requestOptions = {
     method: "POST",
@@ -19,7 +22,7 @@ export default async (request: Request) => {
       model: "text-davinci-003",
       prompt,
       temperature: 0,
-      max_tokens: 800,
+      max_tokens: Number(maxTokens),
     }),
   };
 
