@@ -3,14 +3,7 @@ import emailjs from "@emailjs/browser";
 import { emailConfig } from "../constants";
 
 export const generateRecipe = (prompt, onSuccess, onFailure) => {
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt }),
-  };
-  fetch("/api/generate-recipe", requestOptions)
+  fetch(`/api/generate-recipe?prompt=${encodeURIComponent(prompt)}`)
     .then((response) => response.text())
     .then((responseText) => {
       onSuccess(responseText);

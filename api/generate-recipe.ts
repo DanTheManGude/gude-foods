@@ -5,9 +5,9 @@ export const config = {
 export default async (request: Request) => {
   const openAIKey = process.env.OPENAI_KEY;
 
-  const data = await request.json();
-
-  const { prompt } = data;
+  const url = new URL(request.url);
+  const search = new URLSearchParams(url.search);
+  const prompt = search.get("prompt");
 
   const requestOptions = {
     method: "POST",
