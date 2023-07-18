@@ -2,8 +2,17 @@ import emailjs from "@emailjs/browser";
 
 import { emailConfig } from "../constants";
 
-export const generateRecipe = (prompt, onSuccess, onFailure) => {
-  fetch(`/api/generate-recipe?prompt=${encodeURIComponent(prompt)}`)
+export const generateRecipe = (params, onSuccess, onFailure) => {
+  const searchParamsText = new URLSearchParams(
+    Object.entries(params).reduce(
+      (acc, [key, value]) => ({ ...acc, [key]: encodeURIComponent(value) }),
+      {}
+    )
+  ).toString();
+
+  debugger;
+
+  fetch(`/api/generate-recipe?${searchParamsText}}`)
     .then((response) => response.text())
     .then((responseText) => {
       onSuccess(responseText);

@@ -131,7 +131,7 @@ function GenerateRecipeDialogue(props) {
     }, "");
 
     generateRecipe(
-      promptText,
+      { promptText },
       (_responseText) => {
         try {
           const generatedRecipe = parseResponse(_responseText);

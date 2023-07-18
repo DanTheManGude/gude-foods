@@ -7,7 +7,7 @@ export default async (request: Request) => {
 
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
-  const prompt = search.get("prompt");
+  const prompt = search.get("promptText");
 
   const requestOptions = {
     method: "POST",
