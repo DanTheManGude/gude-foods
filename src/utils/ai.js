@@ -13,7 +13,6 @@ export const generateRecipe = (prompt, onSuccess, onFailure) => {
   fetch("/api/generate-recipe", requestOptions)
     .then((response) => response.text())
     .then((responseText) => {
-      console.log(responseText);
       onSuccess(responseText);
     })
     .catch(onFailure);

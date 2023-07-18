@@ -1,27 +1,44 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { Configuration, OpenAIApi } from "openai";
+export const config = {
+  runtime: "edge",
+};
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_KEY,
-});
-const openai = new OpenAIApi(configuration);
+export default async (request: Request) => {
+  const openAIKey = process.env.OPENAI_KEY;
 
-export default async function (
-  request: VercelRequest,
-  response: VercelResponse
-) {
-  try {
-    const completion = await openai.createCompletion({
+  const text = await request.text();
+  const data = JSON.parse(text);
+
+  const { prompt } = data;
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${openAIKey}`,
+    },
+    body: JSON.stringify({
       model: "text-davinci-003",
-      prompt: request.body.prompt,
+      prompt,
       temperature: 0,
-      max_tokens: 1000,
-    });
+      max_tokens: 800,
+    }),
+  };
 
-    const responseText = completion.data.choices[0].text;
-    response.status(200).send(responseText);
-    return;
+  try {
+    const resp = await fetch(
+      "https://api.openai.com/v1/completions",
+      requestOptions
+    ).then((r) => r.json());
+
+    if (resp.choices) {
+      const responseText: string = resp.choices[0].text;
+      return new Response(responseText, { status: 200 });
+    }
+    if (resp.error) {
+      throw resp.error.message;
+    }
+    throw resp;
   } catch (error) {
-    response.status(500).send(error.toString());
+    return new Response(error.toString(), { status: 500 });
   }
-}
+};
