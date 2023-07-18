@@ -39,7 +39,8 @@ function AddToShoppingListDialogue(props) {
   const handleAdd = () => {
     addRecipeToShoppingList(
       recipeId,
-      { recipeOrder, menu, cookbook },
+      ingredients,
+      { recipeOrder, menu },
       dataPaths,
       addAlert
     );

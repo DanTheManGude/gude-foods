@@ -49,19 +49,20 @@ export const shoppingListDeletesByRecipe = (
 
 export const addRecipeToShoppingList = (
   recipeId,
-  { recipeOrder, menu: _menu, cookbook },
+  ingredients,
+  { recipeOrder, menu: _menu },
   { shoppingListPath, recipeOrderPath, menuPath },
   addAlert
 ) => {
   const menu = _menu || {};
-  const ingredients = cookbook[recipeId].ingredients;
 
   updateRequest(
     {
       ...Object.keys(ingredients).reduce(
         (updates, foodId) => ({
           ...updates,
-          [`${shoppingListPath}/${foodId}/list/${recipeId}`]: true,
+          [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
+            ingredients[foodId],
         }),
         {}
       ),
