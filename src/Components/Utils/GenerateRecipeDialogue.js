@@ -127,12 +127,10 @@ function GenerateRecipeDialogue(props) {
   const handleGenerate = () => {
     startLoading();
 
-    const promptText = encodeURIComponent(
-      prompt.reduce(
-        (acc, promptElement) => `${acc}${promptElement.props.children}`,
-        ""
-      )
-    );
+    const promptText = prompt.reduce((acc, promptElement) => {
+      const promptElementText = promptElement.props.children;
+      return `${acc}${promptElementText}`;
+    }, "");
 
     generateRecipe(
       { promptText, length },

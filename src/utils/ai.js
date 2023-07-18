@@ -3,7 +3,9 @@ import emailjs from "@emailjs/browser";
 import { emailConfig } from "../constants";
 
 export const generateRecipe = (params, onSuccess, onFailure) => {
-  const searchParamsText = new URLSearchParams(params).toString();
+  const searchParamsText = Object.entries(params)
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join("&");
 
   fetch(`/api/generate-recipe?${searchParamsText}`)
     .then((response) => response.text())
