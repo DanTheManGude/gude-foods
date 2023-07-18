@@ -160,7 +160,7 @@ function ShoppingList() {
       return null;
     }
 
-    const { collatedAmount = "", list: recipeList = [] } = foodEntry;
+    const { collatedAmount = "", list: recipeList = {} } = foodEntry;
     const isActiveInput = activeEditingCollated.key === basicFoodId;
     const disabled = !!activeEditingCollated.key && !isActiveInput;
     const inputValue = isActiveInput
@@ -191,8 +191,8 @@ function ShoppingList() {
         <AccordionDetails>
           <Stack spacing={2} alignItems="left">
             <TransitionGroup>
-              {Object.keys(recipeList).map(
-                (recipeId, index) =>
+              {Object.entries(recipeList).map(
+                ([recipeId, amount], index) =>
                   cookbook[recipeId] && (
                     <Collapse key={index}>
                       <Stack
@@ -206,7 +206,7 @@ function ShoppingList() {
                           {recipeList[recipeId] &&
                             menu[recipeId] &&
                             `[${menu[recipeId]}] `}
-                          {cookbook[recipeId].ingredients[basicFoodId]}:
+                          {amount}:
                         </Typography>
                         <Typography noWrap sx={{ width: "fill-available" }}>
                           <Link
