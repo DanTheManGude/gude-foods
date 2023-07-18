@@ -15,19 +15,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import { updateOpenAIKey } from "../../utils/requests";
 import { generateRecipe, parseResponse, reportAiError } from "../../utils/ai";
-import {
-  DatabaseContext,
-  DataPathsContext,
-  AddAlertContext,
-  UserContext,
-} from "../Contexts";
+import { DatabaseContext, AddAlertContext, UserContext } from "../Contexts";
 import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
-import { Link } from "@mui/material";
 
 const PromptTypography = (props) => <Typography component="span" {...props} />;
 const promptPrefix = (
@@ -39,15 +31,8 @@ function GenerateRecipeDialogue(props) {
 
   const [reportErrorValues, setReportErrorValues] = useState();
   const addAlert = useContext(AddAlertContext);
-  const dataPaths = useContext(DataPathsContext);
-  const { openAIKeyPath } = dataPaths;
   const database = useContext(DatabaseContext);
-  const {
-    glossary,
-    basicFoodTagOrder,
-    basicFoodTagAssociation,
-    openAIKey: savedOpenAiKey,
-  } = database;
+  const { glossary, basicFoodTagOrder, basicFoodTagAssociation } = database;
   const user = useContext(UserContext);
 
   let navigate = useNavigate();
@@ -59,15 +44,9 @@ function GenerateRecipeDialogue(props) {
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [responseText, setResponseText] = useState("");
-  const [enteredOpenAIKey, setEnteredOpenAIKey] = useState("");
-  const [usableOpenAIKey, setUseableOpenAIKey] = useState();
 
   const startLoading = () => setIsLoading(true);
   const stopLoading = () => setIsLoading(false);
-
-  if (savedOpenAiKey && usableOpenAIKey !== savedOpenAiKey) {
-    setUseableOpenAIKey(savedOpenAiKey);
-  }
 
   const handleClose = () => {
     setRecipeName("");
@@ -311,21 +290,6 @@ function GenerateRecipeDialogue(props) {
     </Box>
   );
 
-  const handleSaveOpenAIKey = () => {
-    updateOpenAIKey(enteredOpenAIKey, openAIKeyPath, addAlert);
-  };
-
-  const handleEnteredOpenAIKey = () => {
-    setUseableOpenAIKey(enteredOpenAIKey);
-  };
-
-  const handleRemoveApiKey = () => {
-    if (savedOpenAiKey) {
-      updateOpenAIKey(null, openAIKeyPath, addAlert);
-    }
-    setUseableOpenAIKey();
-  };
-
   const handleReportError = () => {
     reportAiError(addAlert, {
       ...reportErrorValues,
@@ -335,75 +299,6 @@ function GenerateRecipeDialogue(props) {
   };
 
   const renderDiaglogContentAndActions = () => {
-    if (!usableOpenAIKey) {
-      return (
-        <>
-          <DialogContent dividers>
-            <Stack sx={{ width: "100%" }} spacing={2} alignItems="center">
-              <Typography>
-                Use OpenAI to create a recipe. Gude Foods will craft the prompt,
-                make the request, and parse the response into a cookbook ready
-                recipe.
-              </Typography>
-              <Typography fontWeight={"fontWeightBold"}>
-                An OpenAPI account is required and your api keys can be found
-                <Link
-                  href="https://platform.openai.com/account/api-keys"
-                  target="_blank"
-                  rel="noopener"
-                  color="secondary"
-                >
-                  {" here."}
-                  <OpenInNewIcon
-                    fontSize="inherit"
-                    sx={{ verticalAlign: "sub" }}
-                  />
-                </Link>
-              </Typography>
-              <Typography>
-                Save the key to Gude Foods for future use, or only use it now.
-              </Typography>
-              <TextField
-                label="Enter your OpenAI API key"
-                fullWidth={true}
-                value={enteredOpenAIKey}
-                onChange={(event) => {
-                  setEnteredOpenAIKey(event.target.value);
-                }}
-                variant="outlined"
-                inputProps={{
-                  autoCapitalize: "none",
-                }}
-                color="info"
-              />
-            </Stack>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={handleClose} color="primary">
-              <Typography>Close</Typography>
-            </Button>
-
-            <Button
-              disabled={!enteredOpenAIKey}
-              variant="contained"
-              onClick={handleEnteredOpenAIKey}
-              color="secondary"
-            >
-              <Typography>Use only now</Typography>
-            </Button>
-            <Button
-              disabled={!enteredOpenAIKey}
-              variant="contained"
-              onClick={handleSaveOpenAIKey}
-              color="primary"
-            >
-              <Typography>Save</Typography>
-            </Button>
-          </DialogActions>
-        </>
-      );
-    }
-
     return (
       <>
         <DialogContent dividers>
@@ -415,20 +310,10 @@ function GenerateRecipeDialogue(props) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          {!isLoading && !responseText && (
-            <Button
-              variant="outlined"
-              onClick={handleRemoveApiKey}
-              color="error"
-            >
-              <Typography>Delete key</Typography>
-            </Button>
-          )}
-
           <Button onClick={handleClose} color="secondary" variant="contained">
             <Typography>Close</Typography>
           </Button>
-          {responseText ? (
+          {!responseText ? (
             <>
               <Button
                 color="primary"
@@ -468,7 +353,7 @@ function GenerateRecipeDialogue(props) {
     <Dialog
       sx={{
         "& .MuiDialog-paper": {
-          width: "80%",
+          width: "83%",
         },
         "& .MuiDialog-container": {
           marginBottom: "100px",
