@@ -42,7 +42,12 @@ const getIngredientSorting =
   };
 
 function IngredientList(props) {
-  const { ingredients = {}, editable, updateIngredients } = props;
+  const {
+    ingredients = {},
+    editable,
+    updateIngredients,
+    contentsOnly = false,
+  } = props;
 
   const database = useContext(DatabaseContext);
   const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
@@ -152,17 +157,23 @@ function IngredientList(props) {
     </Stack>
   );
 
+  const renderContents = () => (
+    <Stack spacing={editable ? 2 : 1}>
+      {renderItems().concat(editable && renderAddItemControl())}
+    </Stack>
+  );
+
+  if (contentsOnly) {
+    return renderContents();
+  }
+
   return (
     <>
       <Accordion key={"ingredients"} sx={{ width: "100%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">Ingredients</Typography>
         </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={editable ? 2 : 1}>
-            {renderItems().concat(editable && renderAddItemControl())}
-          </Stack>
-        </AccordionDetails>
+        <AccordionDetails>{renderContents()}</AccordionDetails>
       </Accordion>
     </>
   );

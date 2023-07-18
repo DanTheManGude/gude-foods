@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -9,6 +9,8 @@ import Dialog from "@mui/material/Dialog";
 
 import { addRecipeToShoppingList } from "../../utils/requests";
 
+import IngredientList from "../Utils/IngredientList";
+
 import {
   DatabaseContext,
   DataPathsContext,
@@ -18,19 +20,21 @@ import {
 function AddToShoppingListDialogue(props) {
   const { open, onClose, recipeId } = props;
 
+  const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
 
-  const {
-    cookbook: _cookbook,
-    recipeOrder: _recipeOrder,
-    menu: _menu,
-  } = database;
-  const cookbook = _cookbook || {};
+  const { cookbook, recipeOrder: _recipeOrder, menu: _menu } = database;
   const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];
 
-  const dataPaths = useContext(DataPathsContext);
+  const [ingredients, setIngredients] = useState({});
+
+  useEffect(() => {
+    if (cookbook && cookbook[recipeId]) {
+      setIngredients(cookbook[recipeId].ingredients);
+    }
+  }, [cookbook, recipeId]);
 
   const handleAdd = () => {
     addRecipeToShoppingList(
@@ -53,7 +57,14 @@ function AddToShoppingListDialogue(props) {
       open={open}
     >
       <DialogTitle>Add to Shopping List</DialogTitle>
-      <DialogContent dividers={true}>{}</DialogContent>
+      <DialogContent dividers={true}>
+        <IngredientList
+          ingredients={ingredients}
+          editable={true}
+          updateIngredients={setIngredients}
+          contentsOnly={true}
+        />
+      </DialogContent>
 
       <DialogActions>
         <Button color="secondary" onClick={onClose} variant="contained">
