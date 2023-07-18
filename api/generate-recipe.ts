@@ -5,8 +5,7 @@ export const config = {
 export default async (request: Request) => {
   const openAIKey = process.env.OPENAI_KEY;
 
-  const text = await request.text();
-  const data = JSON.parse(text);
+  const data = await request.json();
 
   const { prompt } = data;
 
