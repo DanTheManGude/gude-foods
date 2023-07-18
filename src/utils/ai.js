@@ -16,19 +16,39 @@ export const generateRecipe = (openAIKey, prompt, onSuccess, onFailure) => {
       max_tokens: 500,
     }),
   };
-  fetch("https://api.openai.com/v1/completions", requestOptions)
-    .then((resp) => resp.json())
+  fetch("/api/generate-recipe", requestOptions)
+    .then((resp) => resp.text())
     .then((response) => {
-      if (response.choices) {
-        onSuccess(response.choices[0].text, response);
-        return;
-      }
-      if (response.error) {
-        throw response.error.message;
-      }
-      throw response;
+      console.log(response);
     })
-    .catch(onFailure);
+    .catch(console.warn);
+
+  // const requestOptions = {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${openAIKey}`,
+  //   },
+  //   body: JSON.stringify({
+  //     model: "text-davinci-003",
+  //     prompt,
+  //     temperature: 0,
+  //     max_tokens: 500,
+  //   }),
+  // };
+  // fetch("https://api.openai.com/v1/completions", requestOptions)
+  //   .then((resp) => resp.json())
+  //   .then((response) => {
+  //     if (response.choices) {
+  //       onSuccess(response.choices[0].text, response);
+  //       return;
+  //     }
+  //     if (response.error) {
+  //       throw response.error.message;
+  //     }
+  //     throw response;
+  //   })
+  //   .catch(onFailure);
 };
 
 export const parseResponse = (textResponse) => {
