@@ -11,6 +11,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 
 import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
+import ExternalRecipeImportDialogue from "../Utils/ExternalRecipeImportDialogue";
 import ImportFileButton from "../Utils/ImportFileButton";
 
 function NewRecipeDialogue(props) {
@@ -20,6 +21,10 @@ function NewRecipeDialogue(props) {
 
   const [openGenerateRecipeDialogue, setOpenGenerateRecipeDialogue] =
     useState(false);
+  const [
+    openExternalRecipeImportDialogue,
+    setOpenExternalRecipeImportDialogue,
+  ] = useState(false);
 
   const renderButtonStack = () => (
     <Stack spacing={2}>
@@ -54,7 +59,15 @@ function NewRecipeDialogue(props) {
         buttonText="Upload a file from Gude Foods"
         id="import-recipe"
       />
-      <Button color="primary" variant="outlined" disabled>
+      <Button
+        color="primary"
+        variant="outlined"
+        onClick={() => {
+          setOpenExternalRecipeImportDialogue(true);
+          onClose();
+        }}
+        disabled
+      >
         <Typography>Import a recipe from a website</Typography>
       </Button>
     </Stack>
@@ -85,6 +98,13 @@ function NewRecipeDialogue(props) {
         open={openGenerateRecipeDialogue}
         onClose={() => {
           setOpenGenerateRecipeDialogue(false);
+        }}
+        setExternalRecipe={setExternalRecipe}
+      />
+      <ExternalRecipeImportDialogue
+        open={openExternalRecipeImportDialogue}
+        onClose={() => {
+          setOpenExternalRecipeImportDialogue(false);
         }}
         setExternalRecipe={setExternalRecipe}
       />
