@@ -118,3 +118,9 @@ export const fetchRecipeDataFromUrl = (url) =>
 
       return recipeData;
     });
+
+export const parseRecipeData = (recipeData) => {
+  const recipe = {};
+
+  return recipe;
+};
