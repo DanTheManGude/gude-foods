@@ -131,5 +131,7 @@ export const parseRecipeData = (recipeData) => {
 
   console.log(recipeData);
 
+  recipe.name = recipeData.name;
+
   return recipe;
 };
