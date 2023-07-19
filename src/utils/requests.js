@@ -42,7 +42,7 @@ export const shoppingListDeletesByRecipe = (
     ? Object.keys(shoppingList)
         .filter((foodId) => {
           const foodEntry = shoppingList[foodId];
-          return foodEntry.list && foodEntry.list[recipeId];
+          return foodEntry.list && foodEntry.list.hasOwnProperty(recipeId);
         })
         .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
     : [];
