@@ -10,22 +10,49 @@ import Dialog from "@mui/material/Dialog";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 
+import { fetchRecipeDataFromUrl, parseRecipeData } from "../../utils/utility";
+
 function NewRecipeDialogue(props) {
   const { open, onClose, setExternalRecipe } = props;
 
   let navigate = useNavigate();
 
-  const handleSetExternalRecipe = (externalRecipe) => {
-    setExternalRecipe(externalRecipe);
-    navigate("/externalRecipe");
-  };
-
   const [externalUrl, setExternalUrl] = useState();
+  const [errorString, setErrorString] = useState();
 
   const handleImportFromUrl = () => {
-    const externalRecipe = {};
+    setErrorString();
 
-    handleSetExternalRecipe(externalRecipe);
+    fetchRecipeDataFromUrl(externalUrl)
+      .then((recipeData) => {
+        const externalRecipe = parseRecipeData(recipeData);
+        setExternalRecipe(externalRecipe);
+        navigate("/externalRecipe");
+      })
+      .catch((error) => {
+        setErrorString(error.toString());
+      });
+  };
+
+  const maybeRenderError = () => {
+    if (!errorString) {
+      return null;
+    }
+    return (
+      <>
+        <Typography>
+          <Typography
+            color="error"
+            sx={{ fontWeight: "medium" }}
+            variant="span"
+          >
+            An Error occured:
+          </Typography>
+          <br />
+          <Typography variant="span">{errorString}</Typography>
+        </Typography>
+      </>
+    );
   };
 
   return (
@@ -46,6 +73,7 @@ function NewRecipeDialogue(props) {
               Paste a URL of a website that features a recipe. The recipe will
               available for editing before it is saved to your cookbook.
             </Typography>
+            {maybeRenderError()}
             <TextField
               size="small"
               onChange={(event) => {
