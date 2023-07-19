@@ -120,7 +120,16 @@ export const fetchRecipeDataFromUrl = (url) =>
     });
 
 export const parseRecipeData = (recipeData) => {
-  const recipe = {};
+  const recipe = {
+    name: "",
+    ingredientText: [],
+    instructions: [],
+    tags: [],
+    ingredients: {},
+    notes: "",
+  };
+
+  console.log(recipeData);
 
   return recipe;
 };
