@@ -1,10 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import DomParser from "dom-parser";
+import { JSDOM } from "jsdom";
 
 const parseSiteForRecipe = (siteText) => {
   console.log(siteText);
-
-  const document = new DomParser().parseFromString(siteText);
+  const document = new JSDOM(siteText).window.document;
   const nodes = document.querySelectorAll('script[type="application/ld+json"]');
 
   if (!nodes.length) {
@@ -20,7 +19,7 @@ const parseSiteForRecipe = (siteText) => {
   const data = JSON.parse(elementTextContent);
 
   if (data["@type"] === "Recipe") {
-    return new Response(JSON.stringify(data));
+    return data;
   }
 
   if (!Array.isArray(data["@graph"])) {
@@ -35,7 +34,7 @@ const parseSiteForRecipe = (siteText) => {
     throw Error("Can not find Recipe data");
   }
 
-  return new Response(JSON.stringify(recipeData));
+  return recipeData;
 };
 
 export default async function (

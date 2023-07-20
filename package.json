@@ -46,7 +46,8 @@
     ]
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.1",
     "@vercel/node": "^2.15.6",
-    "dom-parser": "^0.1.6"
+    "jsdom": "^22.1.0"
   }
 }

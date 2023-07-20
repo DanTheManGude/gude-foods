@@ -26,7 +26,7 @@ function NewRecipeDialogue(props) {
     fetchRecipeFromUrl(externalUrl)
       .then((externalRecipe) => {
         setExternalRecipe(externalRecipe);
-        //navigate("/externalRecipe");
+        navigate("/externalRecipe");
       })
       .catch((error) => {
         setErrorString(error.toString());
