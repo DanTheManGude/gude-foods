@@ -1,9 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import {
-  fontFamilies,
-  longestEntryPathDelimiter,
-  corsProxySite,
-} from "../constants";
+import { fontFamilies, longestEntryPathDelimiter } from "../constants";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -86,39 +82,6 @@ export const findLongestEntry = (item) => {
   }
 };
 
-export const fetchRecipeDataFromUrl = (url) =>
-  fetch(`${corsProxySite}${url}`)
-    .then((response) => response.text())
-    .then((text) => {
-      const document = new DOMParser().parseFromString(text, "text/html");
-      const nodes = document.querySelectorAll(
-        'script[type="application/ld+json"]'
-      );
-      if (!nodes.length) {
-        throw Error("Can not find nodes");
-      }
-
-      const data = JSON.parse(nodes[0].textContent);
-
-      if (data["@type"] === "Recipe") {
-        return data;
-      }
-
-      if (!Array.isArray(data["@graph"])) {
-        throw Error("Can not parse data");
-      }
-
-      const recipeData = data["@graph"].find(
-        (entry) => entry["@type"] === "Recipe"
-      );
-
-      if (!recipeData) {
-        throw Error("Can not find Recipe data");
-      }
-
-      return recipeData;
-    });
-
 export const parseRecipeData = (recipeData) => {
   const recipe = {
     name: "",
@@ -135,3 +98,19 @@ export const parseRecipeData = (recipeData) => {
 
   return recipe;
 };
+
+export async function fetchRecipeFromUrl(externalUrl) {
+  const response = await fetch(
+    `/api/fetch-external-recipe?externalUrl=${encodeURIComponent(externalUrl)}`
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw errorText;
+  }
+
+  const recipeData = await response.json();
+  const recipe = parseRecipeData(recipeData);
+
+  return recipe;
+}

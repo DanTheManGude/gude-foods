@@ -10,24 +10,23 @@ import Dialog from "@mui/material/Dialog";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 
-import { fetchRecipeDataFromUrl, parseRecipeData } from "../../utils/utility";
+import { fetchRecipeFromUrl } from "../../utils/utility";
 
 function NewRecipeDialogue(props) {
   const { open, onClose, setExternalRecipe } = props;
 
   let navigate = useNavigate();
 
-  const [externalUrl, setExternalUrl] = useState();
-  const [errorString, setErrorString] = useState();
+  const [externalUrl, setExternalUrl] = useState("");
+  const [errorString, setErrorString] = useState("");
 
   const handleImportFromUrl = () => {
     setErrorString();
 
-    fetchRecipeDataFromUrl(externalUrl)
-      .then((recipeData) => {
-        const externalRecipe = parseRecipeData(recipeData);
+    fetchRecipeFromUrl(externalUrl)
+      .then((externalRecipe) => {
         setExternalRecipe(externalRecipe);
-        navigate("/externalRecipe");
+        //navigate("/externalRecipe");
       })
       .catch((error) => {
         setErrorString(error.toString());
