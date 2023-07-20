@@ -20,6 +20,11 @@ function NewRecipeDialogue(props) {
   const [externalUrl, setExternalUrl] = useState("");
   const [errorString, setErrorString] = useState("");
 
+  const handleClose = () => {
+    setErrorString();
+    onClose();
+  };
+
   const handleImportFromUrl = () => {
     setErrorString();
 
@@ -82,7 +87,7 @@ function NewRecipeDialogue(props) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button color="secondary" onClick={onClose} variant="contained">
+          <Button color="secondary" onClick={handleClose} variant="contained">
             <Typography>Cancel</Typography>
           </Button>
           <Button
