@@ -6,32 +6,35 @@ const parseSiteForRecipe = (siteText) => {
   const document = new JSDOM(siteText).window.document;
   const nodes = document.querySelectorAll('script[type="application/ld+json"]');
 
-  if (!nodes.length) {
-    throw Error("Can not find nodes");
-  }
+  let recipeData;
 
-  const elementTextContent = nodes[0].textContent;
+  nodes.forEach((node) => {
+    if (recipeData) {
+      return;
+    }
 
-  if (!elementTextContent) {
-    throw Error("Element has no text content");
-  }
+    const elementTextContent = node.textContent;
 
-  const data = JSON.parse(elementTextContent);
+    if (!elementTextContent) {
+      return;
+    }
 
-  if (data["@type"] === "Recipe") {
-    return data;
-  }
+    const data = JSON.parse(elementTextContent);
 
-  if (!Array.isArray(data["@graph"])) {
-    throw Error("Can not parse data");
-  }
+    if (data["@type"] === "Recipe") {
+      recipeData = data;
+      return;
+    }
 
-  const recipeData = data["@graph"].find(
-    (entry) => entry["@type"] === "Recipe"
-  );
+    if (!Array.isArray(data["@graph"])) {
+      return;
+    }
+
+    recipeData = data["@graph"].find((entry) => entry["@type"] === "Recipe");
+  });
 
   if (!recipeData) {
-    throw Error("Can not find Recipe data");
+    throw Error("Website has no recipes");
   }
 
   return recipeData;
