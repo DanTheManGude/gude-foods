@@ -2,7 +2,6 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { JSDOM } from "jsdom";
 
 const parseSiteForRecipe = (siteText) => {
-  console.log(siteText);
   const document = new JSDOM(siteText).window.document;
   const nodes = document.querySelectorAll('script[type="application/ld+json"]');
 
