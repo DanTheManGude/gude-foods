@@ -93,7 +93,7 @@ export const parseRecipeData = (recipeData) => {
   } = recipeData;
   const urlId = recipeData["@id"];
 
-  const notes = `${urlId}\n${description}\n\n${ingredientText}`;
+  const notes = `${urlId}\n${description}\n\n${ingredientText.join(`\n`)}`;
 
   let instructions = [];
 
