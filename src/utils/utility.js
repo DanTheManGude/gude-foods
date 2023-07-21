@@ -1,9 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import {
-  fontFamilies,
-  longestEntryPathDelimiter,
-  corsProxySite,
-} from "../constants";
+import { fontFamilies, longestEntryPathDelimiter } from "../constants";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -86,52 +82,59 @@ export const findLongestEntry = (item) => {
   }
 };
 
-export const fetchRecipeDataFromUrl = (url) =>
-  fetch(`${corsProxySite}${url}`)
-    .then((response) => response.text())
-    .then((text) => {
-      const document = new DOMParser().parseFromString(text, "text/html");
-      const nodes = document.querySelectorAll(
-        'script[type="application/ld+json"]'
-      );
-      if (!nodes.length) {
-        throw Error("Can not find nodes");
-      }
-
-      const data = JSON.parse(nodes[0].textContent);
-
-      if (data["@type"] === "Recipe") {
-        return data;
-      }
-
-      if (!Array.isArray(data["@graph"])) {
-        throw Error("Can not parse data");
-      }
-
-      const recipeData = data["@graph"].find(
-        (entry) => entry["@type"] === "Recipe"
-      );
-
-      if (!recipeData) {
-        throw Error("Can not find Recipe data");
-      }
-
-      return recipeData;
-    });
-
 export const parseRecipeData = (recipeData) => {
+  const {
+    name = "",
+    description = "",
+    recipeIngredient: ingredientText = "",
+    recipeInstructions: instructionsData = [],
+  } = recipeData;
+  const urlId = recipeData["@id"];
+
+  const notes = `${urlId}\n${description}\n\n${ingredientText.join(`\n`)}`;
+
+  let instructions = [];
+
+  if (typeof instructionsData === "string") {
+    instructions = instructionsData.split(". ");
+  } else {
+    const parseSteps = (step) => {
+      const type = step["@type"];
+      if (type === "HowToStep") {
+        instructions.push(step.text);
+      } else if (type === "HowToSection") {
+        step.itemListElement.forEach(parseSteps);
+      }
+    };
+
+    instructionsData.forEach(parseSteps);
+  }
+
   const recipe = {
-    name: "",
-    ingredientText: [],
-    instructions: [],
+    name,
+    description: "",
+    instructions,
     tags: [],
     ingredients: {},
-    notes: "",
+    notes,
+    ingredientText,
   };
-
-  console.log(recipeData);
-
-  recipe.name = recipeData.name;
 
   return recipe;
 };
+
+export async function fetchRecipeFromUrl(externalUrl) {
+  const response = await fetch(
+    `/api/fetch-external-recipe?externalUrl=${encodeURIComponent(externalUrl)}`
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw errorText;
+  }
+
+  const recipeData = await response.json();
+  const recipe = parseRecipeData(recipeData);
+
+  return recipe;
+}

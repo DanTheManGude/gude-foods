@@ -12,6 +12,7 @@ import { saveRecipe } from "../../utils/requests";
 import {
   renderEditingButtons,
   renderNameInput,
+  renderDescriptionInput,
   renderNotesContainer,
   renderNotesInput,
   renderTagList,
@@ -38,6 +39,7 @@ function ExternalRecipe(props) {
 
   const {
     name: givenName,
+    description: givenDescription,
     ingredients: givenIngredients,
     instructions: givenInstructions,
     tags: givenTags,
@@ -48,6 +50,7 @@ function ExternalRecipe(props) {
   let navigate = useNavigate();
 
   const [name, setName] = useState(givenName);
+  const [description, setDescription] = useState(givenDescription);
   const [ingredients, setIngredients] = useState(givenIngredients);
   const [instructions, setInstructions] = useState(givenInstructions);
   const [notes, setNotes] = useState(givenNotes);
@@ -120,6 +123,7 @@ function ExternalRecipe(props) {
       </Stack>
       <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
         {renderNameInput(name, setName, !name)}
+        {renderDescriptionInput(description, setDescription)}
         {renderGivenInstructions()}
         <IngredientList
           ingredients={ingredients}

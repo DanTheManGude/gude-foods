@@ -9,28 +9,34 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import Chip from "@mui/material/Chip";
 
-import { fetchRecipeDataFromUrl, parseRecipeData } from "../../utils/utility";
+import { fetchRecipeFromUrl } from "../../utils/utility";
 
 function NewRecipeDialogue(props) {
   const { open, onClose, setExternalRecipe } = props;
 
   let navigate = useNavigate();
 
-  const [externalUrl, setExternalUrl] = useState();
-  const [errorString, setErrorString] = useState();
+  const [externalUrl, setExternalUrl] = useState("");
+  const [errorString, setErrorString] = useState("");
+
+  const handleClose = () => {
+    setErrorString();
+    onClose();
+  };
 
   const handleImportFromUrl = () => {
     setErrorString();
 
-    fetchRecipeDataFromUrl(externalUrl)
-      .then((recipeData) => {
-        const externalRecipe = parseRecipeData(recipeData);
+    fetchRecipeFromUrl(externalUrl)
+      .then((externalRecipe) => {
         setExternalRecipe(externalRecipe);
         navigate("/externalRecipe");
       })
       .catch((error) => {
         setErrorString(error.toString());
+        console.log(error);
       });
   };
 
@@ -66,7 +72,17 @@ function NewRecipeDialogue(props) {
         maxWidth="xs"
         open={open}
       >
-        <DialogTitle color="primary">Import recipe from URL</DialogTitle>
+        <DialogTitle color="primary">
+          <Stack direction="row" alignItems="baseline" spacing={2}>
+            <span>Import recipe from URL</span>
+            <Chip
+              label={<Typography>Beta</Typography>}
+              size="small"
+              variant="contained"
+              color="success"
+            />
+          </Stack>
+        </DialogTitle>
         <DialogContent dividers={true}>
           <Stack spacing={2}>
             <Typography>
@@ -83,7 +99,7 @@ function NewRecipeDialogue(props) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button color="secondary" onClick={onClose} variant="contained">
+          <Button color="secondary" onClick={handleClose} variant="contained">
             <Typography>Cancel</Typography>
           </Button>
           <Button

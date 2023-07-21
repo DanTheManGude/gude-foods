@@ -17,8 +17,9 @@
     "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "start": "REACT_APP_VERSION=$(node -pe 'require(\"./package.json\").version') react-scripts start",
-    "build": "REACT_APP_VERSION=$(node -pe 'require(\"./package.json\").version') react-scripts build",
+    "start": "react-scripts start",
+    "start-vercel": "vercel dev",
+    "build": "react-scripts build",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "vercel --prod",
@@ -45,6 +46,8 @@
     ]
   },
   "devDependencies": {
-    "@vercel/node": "^2.15.5"
+    "@types/jsdom": "^21.1.1",
+    "@vercel/node": "^2.15.6",
+    "jsdom": "^22.1.0"
   }
 }

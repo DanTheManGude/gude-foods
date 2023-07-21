@@ -66,7 +66,6 @@ function NewRecipeDialogue(props) {
           setOpenExternalRecipeImportDialogue(true);
           onClose();
         }}
-        disabled
       >
         <Typography>Import a recipe from a website</Typography>
       </Button>
