@@ -18,7 +18,11 @@ const parseSiteForRecipe = (siteText) => {
       return;
     }
 
-    const data = JSON.parse(elementTextContent);
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = elementTextContent;
+    const text = textarea.value;
+
+    const data = JSON.parse(text);
 
     if (data["@type"] === "Recipe") {
       recipeData = data;
