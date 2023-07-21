@@ -9,6 +9,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import Chip from "@mui/material/Chip";
 
 import { fetchRecipeFromUrl } from "../../utils/utility";
 
@@ -71,7 +72,17 @@ function NewRecipeDialogue(props) {
         maxWidth="xs"
         open={open}
       >
-        <DialogTitle color="primary">Import recipe from URL</DialogTitle>
+        <DialogTitle color="primary">
+          <Stack direction="row" alignItems="baseline" spacing={2}>
+            <span>Import recipe from URL</span>
+            <Chip
+              label={<Typography>Beta</Typography>}
+              size="small"
+              variant="contained"
+              color="success"
+            />
+          </Stack>
+        </DialogTitle>
         <DialogContent dividers={true}>
           <Stack spacing={2}>
             <Typography>
