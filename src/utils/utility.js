@@ -87,6 +87,7 @@ export const parseRecipeData = (recipeData) => {
 
   const recipe = {
     name: "",
+    description: "",
     ingredientText: [],
     instructions: [],
     tags: [],
@@ -95,6 +96,7 @@ export const parseRecipeData = (recipeData) => {
   };
 
   recipe.name = recipeData.name;
+  recipe.description = recipeData.description;
 
   return recipe;
 };
