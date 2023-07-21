@@ -85,18 +85,22 @@ export const findLongestEntry = (item) => {
 export const parseRecipeData = (recipeData) => {
   console.log(recipeData);
 
+  const {
+    name = "",
+    description: notes = "",
+    recipeIngredient: ingredientText = "",
+  } = recipeData;
+
   const recipe = {
-    name: "",
+    name,
     description: "",
     ingredientText: [],
     instructions: [],
     tags: [],
     ingredients: {},
-    notes: "",
+    notes,
+    ingredientText,
   };
-
-  recipe.name = recipeData.name;
-  recipe.description = recipeData.description;
 
   return recipe;
 };

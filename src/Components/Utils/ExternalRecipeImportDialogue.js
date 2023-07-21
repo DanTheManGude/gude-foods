@@ -30,6 +30,7 @@ function NewRecipeDialogue(props) {
 
     fetchRecipeFromUrl(externalUrl)
       .then((externalRecipe) => {
+        console.log(externalRecipe);
         setExternalRecipe(externalRecipe);
         navigate("/externalRecipe");
       })
