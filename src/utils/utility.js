@@ -89,16 +89,33 @@ export const parseRecipeData = (recipeData) => {
     name = "",
     description = "",
     recipeIngredient: ingredientText = "",
+    recipeInstructions: instructionsData = [],
   } = recipeData;
   const urlId = recipeData["@id"];
 
-  const notes = `${urlId}\n${description}`;
+  const notes = `${urlId}\n${description}\n\n${ingredientText}`;
+
+  let instructions = [];
+
+  if (typeof instructionsData === "string") {
+    instructions = instructionsData.split(". ");
+  } else {
+    const parseSteps = (step) => {
+      const type = step["@type"];
+      if (type === "HowToStep") {
+        instructions.push(step.text);
+      } else if (type === "HowToStep") {
+        step.itemListElement.forEach(parseSteps);
+      }
+    };
+
+    instructionsData.forEach(parseSteps);
+  }
 
   const recipe = {
     name,
     description: "",
-    ingredientText: [],
-    instructions: [],
+    instructions,
     tags: [],
     ingredients: {},
     notes,
