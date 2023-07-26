@@ -21,7 +21,7 @@ function NewRecipeDialogue(props) {
 
   const [externalUrl, setExternalUrl] = useState("");
   const [errorString, setErrorString] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setErrorString();
@@ -30,6 +30,7 @@ function NewRecipeDialogue(props) {
 
   const handleImportFromUrl = () => {
     setErrorString();
+    setLoading(true);
 
     fetchRecipeFromUrl(externalUrl)
       .then((externalRecipe) => {
@@ -38,6 +39,7 @@ function NewRecipeDialogue(props) {
       })
       .catch((error) => {
         setErrorString(error.toString());
+        setLoading(false);
         console.log(error);
       });
   };
