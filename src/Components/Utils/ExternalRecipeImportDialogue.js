@@ -10,6 +10,7 @@ import Dialog from "@mui/material/Dialog";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Chip from "@mui/material/Chip";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { fetchRecipeFromUrl } from "../../utils/utility";
 
@@ -20,6 +21,7 @@ function NewRecipeDialogue(props) {
 
   const [externalUrl, setExternalUrl] = useState("");
   const [errorString, setErrorString] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setErrorString();
@@ -28,6 +30,7 @@ function NewRecipeDialogue(props) {
 
   const handleImportFromUrl = () => {
     setErrorString();
+    setLoading(true);
 
     fetchRecipeFromUrl(externalUrl)
       .then((externalRecipe) => {
@@ -36,6 +39,7 @@ function NewRecipeDialogue(props) {
       })
       .catch((error) => {
         setErrorString(error.toString());
+        setLoading(false);
         console.log(error);
       });
   };
@@ -106,9 +110,16 @@ function NewRecipeDialogue(props) {
             color="primary"
             onClick={handleImportFromUrl}
             variant="contained"
-            disabled={!externalUrl}
+            disabled={!externalUrl || loading}
           >
-            <Typography>Import</Typography>
+            {loading ? (
+              <>
+                <Typography sx={{ marginRight: "12px" }}>Loading</Typography>
+                <CircularProgress color="primary" size="24px" />
+              </>
+            ) : (
+              <Typography>Import</Typography>
+            )}
           </Button>
         </DialogActions>
       </Dialog>
