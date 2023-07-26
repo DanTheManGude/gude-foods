@@ -46,6 +46,7 @@ function UnauthorizedUser(props) {
       <Button color="primary" variant="contained" onClick={handleNotifyClick}>
         <Typography>Request Access</Typography>
       </Button>
+      <UserCard user={user} addAlert={addAlert} />
     </Stack>
   );
 
