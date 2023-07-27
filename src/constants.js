@@ -52,10 +52,10 @@ export const allColors = {
   light: {
     palette: {
       mode: "light",
-      primary: { main: "#ffad76" },
-      secondary: { main: "#AF7ADB", contrastText: "#1e201e" },
-      tertiary: { main: "#79B2A8", contrastText: "#000" },
-      alt: { main: "#D6D365" },
+      primary: { main: "#43A7FA", contrastText: "#1e201e" },
+      secondary: { main: "#8783D1 ", contrastText: "#1e201e" },
+      tertiary: { main: "#77CBB9", contrastText: "#1e201e" },
+      alt: { main: "#FFC145" },
     },
     background: [
       { percent: 0, color: "#ffffff" },
