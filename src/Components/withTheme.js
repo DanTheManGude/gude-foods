@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 
-import { defaultColorKey, allColors, localStorageColorKey } from "../constants";
+import {
+  defaultColorKey,
+  allColors,
+  localStorageColorKey,
+  standardComponentOverridesForTheme,
+} from "../constants";
 import { constructTheme, constructBackgroundStyleText } from "../utils/utility";
 import { ColorKeyContext } from "./Contexts";
 
@@ -17,7 +22,11 @@ const withTheme = (Component) => (props) => {
     ? colorKey
     : defaultColorKey;
 
-  const { palette, background } = allColors[validColorKey];
+  const {
+    palette,
+    background,
+    components = standardComponentOverridesForTheme,
+  } = allColors[validColorKey];
 
   useEffect(() => {
     document
@@ -29,7 +38,7 @@ const withTheme = (Component) => (props) => {
   }, [background]);
 
   return (
-    <ThemeProvider theme={constructTheme(palette)}>
+    <ThemeProvider theme={constructTheme(palette, components)}>
       <ColorKeyContext.Provider value={updateColors}>
         <Component {...props} />
       </ColorKeyContext.Provider>

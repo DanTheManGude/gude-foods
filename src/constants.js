@@ -20,6 +20,23 @@ export const localStorageColorKey = "gude-foods-color";
 export const defaultColorKey =
   localStorage.getItem(localStorageColorKey) || "default";
 
+export const standardComponentOverridesForTheme = {
+  MuiAccordion: {
+    defaultProps: {
+      disableGutters: true,
+    },
+  },
+  MuiAccordionSummary: {
+    styleOverrides: {
+      root: {
+        "&.Mui-expanded": {
+          margin: 0,
+        },
+      },
+    },
+  },
+};
+
 export const allColors = {
   default: {
     palette: {
@@ -59,9 +76,32 @@ export const allColors = {
     },
     background: [
       { percent: 0, color: "#ffffff" },
-      { percent: 25, color: "#dddddd" },
-      { percent: 100, color: "#eeeeee" },
+      { percent: 25, color: "#f0f0f0" },
+      { percent: 100, color: "#d8d8d8" },
     ],
+    components: {
+      ...standardComponentOverridesForTheme,
+      MuiAccordion: {
+        ...(standardComponentOverridesForTheme.hasOwnProperty("MuiAccordion")
+          ? standardComponentOverridesForTheme.MuiAccordion
+          : {}),
+        styleOverrides: {
+          root: {
+            backgroundColor: "#f2f4f0",
+          },
+        },
+      },
+      MuiPaper: {
+        ...(standardComponentOverridesForTheme.hasOwnProperty("MuiPaper")
+          ? standardComponentOverridesForTheme.MuiPaper
+          : {}),
+        styleOverrides: {
+          root: {
+            backgroundColor: "#f0eced",
+          },
+        },
+      },
+    },
   },
 };
 
