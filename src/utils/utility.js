@@ -24,28 +24,13 @@ export const waitForElm = (selector) => {
   });
 };
 
-export const constructTheme = (palette) =>
+export const constructTheme = (palette, components) =>
   createTheme({
     palette,
     typography: {
       fontFamily: fontFamilies.join(","),
     },
-    components: {
-      MuiAccordion: {
-        defaultProps: {
-          disableGutters: true,
-        },
-      },
-      MuiAccordionSummary: {
-        styleOverrides: {
-          root: {
-            "&.Mui-expanded": {
-              margin: 0,
-            },
-          },
-        },
-      },
-    },
+    components,
   });
 
 export const constructBackgroundStyleText = (backgroundList) =>

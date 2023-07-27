@@ -611,7 +611,7 @@ function ShoppingList() {
         spacing={3}
         alignItems="center"
       >
-        <Stack sx={{ width: "95%" }} spacing={0}>
+        <Stack sx={{ width: "95%" }} spacing={0.5}>
           {(basicFoodTagOrder || [])
             .concat(UNKNOWN_TAG)
             .filter((tagId) => shoppingMap.unchecked.hasOwnProperty(tagId))

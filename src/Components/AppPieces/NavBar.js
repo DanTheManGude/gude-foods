@@ -109,7 +109,7 @@ const NavBar = () => {
               <Link to={`/`}>
                 <img
                   width="32px"
-                  src={"/favicon-32x32.png"}
+                  src={"/logo.png"}
                   alt="App Logo"
                   style={{ borderRadius: "5px" }}
                 />

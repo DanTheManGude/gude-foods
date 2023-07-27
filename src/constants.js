@@ -20,6 +20,23 @@ export const localStorageColorKey = "gude-foods-color";
 export const defaultColorKey =
   localStorage.getItem(localStorageColorKey) || "default";
 
+export const standardComponentOverridesForTheme = {
+  MuiAccordion: {
+    defaultProps: {
+      disableGutters: true,
+    },
+  },
+  MuiAccordionSummary: {
+    styleOverrides: {
+      root: {
+        "&.Mui-expanded": {
+          margin: 0,
+        },
+      },
+    },
+  },
+};
+
 export const allColors = {
   default: {
     palette: {
@@ -52,16 +69,39 @@ export const allColors = {
   light: {
     palette: {
       mode: "light",
-      primary: { main: "#ffad76" },
-      secondary: { main: "#AF7ADB", contrastText: "#1e201e" },
-      tertiary: { main: "#79B2A8", contrastText: "#000" },
-      alt: { main: "#D6D365" },
+      primary: { main: "#43A7FA", contrastText: "#1e201e" },
+      secondary: { main: "#8783D1 ", contrastText: "#1e201e" },
+      tertiary: { main: "#77CBB9", contrastText: "#1e201e" },
+      alt: { main: "#FFC145" },
     },
     background: [
       { percent: 0, color: "#ffffff" },
-      { percent: 25, color: "#dddddd" },
-      { percent: 100, color: "#eeeeee" },
+      { percent: 25, color: "#f1f1f1" },
+      { percent: 100, color: "#ececf1" },
     ],
+    components: {
+      ...standardComponentOverridesForTheme,
+      MuiAccordion: {
+        ...(standardComponentOverridesForTheme.hasOwnProperty("MuiAccordion")
+          ? standardComponentOverridesForTheme.MuiAccordion
+          : {}),
+        styleOverrides: {
+          root: {
+            backgroundColor: "#f2f4f0",
+          },
+        },
+      },
+      MuiPaper: {
+        ...(standardComponentOverridesForTheme.hasOwnProperty("MuiPaper")
+          ? standardComponentOverridesForTheme.MuiPaper
+          : {}),
+        styleOverrides: {
+          root: {
+            backgroundColor: "#f0eced",
+          },
+        },
+      },
+    },
   },
 };
 
