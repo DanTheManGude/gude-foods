@@ -76,8 +76,8 @@ export const allColors = {
     },
     background: [
       { percent: 0, color: "#ffffff" },
-      { percent: 25, color: "#f0f0f0" },
-      { percent: 100, color: "#d8d8d8" },
+      { percent: 25, color: "#f1f1f1" },
+      { percent: 100, color: "#ececf1" },
     ],
     components: {
       ...standardComponentOverridesForTheme,
