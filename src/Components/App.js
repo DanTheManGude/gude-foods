@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
@@ -18,6 +18,7 @@ import PagesContainer from "./AppPieces/PagesContainer";
 import NavBar from "./AppPieces/NavBar";
 import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
+import ShareRecipe from "./Pages/ShareRecipe";
 
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
@@ -35,6 +36,7 @@ function App() {
   const prevUserRef = useRef();
 
   let navigate = useNavigate();
+  let location = useLocation();
 
   const addAlert = (alert, removalTime = 3001) => {
     setAlertList((prevList) => prevList.concat(alert));
@@ -169,6 +171,18 @@ function App() {
       <div style={{ textAlign: "center", paddingTop: "20%" }}>
         <CircularProgress color="primary" size="30%" sx={{ margin: "auto" }} />
       </div>
+    );
+  }
+
+  if (location.pathname === "/share") {
+    return (
+      <>
+        {renderMessages()}
+        <NavBar />
+        <AddAlertContext.Provider value={addAlert}>
+          <ShareRecipe isAuthorized={false} />
+        </AddAlertContext.Provider>
+      </>
     );
   }
 
