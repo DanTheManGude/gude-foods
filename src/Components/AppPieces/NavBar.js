@@ -13,7 +13,7 @@ import { isDevelopment } from "../../utils/utility";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
-const NavBar = () => {
+const NavBar = ({ isAuthorized }) => {
   let navigate = useNavigate();
   const theme = useTheme();
 
@@ -83,7 +83,12 @@ const NavBar = () => {
                 Gude Foods
               </Link>
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", md: isAuthorized ? "flex" : "none" },
+              }}
+            >
               {pages.map((page) => (
                 <Button
                   key={page}

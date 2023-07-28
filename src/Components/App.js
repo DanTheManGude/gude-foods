@@ -178,7 +178,7 @@ function App() {
     return (
       <>
         {renderMessages()}
-        <NavBar />
+        <NavBar isAuthorized={false} />
         <AddAlertContext.Provider value={addAlert}>
           <ShareRecipe isAuthorized={false} />
         </AddAlertContext.Provider>
@@ -189,6 +189,7 @@ function App() {
   return (
     <>
       {renderMessages()}
+      <NavBar isAuthorized={false} />
       <UnauthorizedUser user={user} addAlert={addAlert} />
     </>
   );
