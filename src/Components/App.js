@@ -180,7 +180,9 @@ function App() {
         {renderMessages()}
         <NavBar isAuthorized={false} />
         <AddAlertContext.Provider value={addAlert}>
-          <ShareRecipe isAuthorized={false} />
+          <UserContext.Provider value={user}>
+            <ShareRecipe isAuthorized={false} />
+          </UserContext.Provider>
         </AddAlertContext.Provider>
       </>
     );

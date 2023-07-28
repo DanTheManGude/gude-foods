@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
+import { UserContext } from "../Contexts";
+
 function ShareRecipe(props) {
   const { isAuthorized } = props;
 
   let navigate = useNavigate();
   let location = useLocation();
+  const user = useContext(UserContext);
 
   const [recipe, setRecipe] = useState();
 
@@ -41,12 +44,13 @@ function ShareRecipe(props) {
   }
 
   const renderControls = () => {
-    console.log(isAuthorized);
+    console.log("isAuthorized:", isAuthorized);
+    console.log("user:", user);
     return <></>;
   };
 
   const renderRecipeBody = () => {
-    console.log(recipe);
+    console.log("recipe:", recipe);
     return <></>;
   };
 
