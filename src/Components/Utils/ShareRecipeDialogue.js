@@ -7,7 +7,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
+import { constructShareRecipeLink } from "../../utils/utility";
 import {
   downloadData,
   transformRecipeForExport,
@@ -24,7 +26,9 @@ function ShareRecipeDialogue(props) {
   const glossary = _glossary || {};
 
   const handleCopyLink = () => {
-    console.log("link");
+    const shareLink = constructShareRecipeLink(recipe);
+
+    navigator.clipboard.writeText(shareLink);
   };
 
   const handleDownloadRecipe = () => {
@@ -41,6 +45,7 @@ function ShareRecipeDialogue(props) {
         color="primary"
         variant="contained"
         onClick={handleCopyLink}
+        endIcon={<ContentCopyRoundedIcon />}
       >
         <Typography>Copy link of recipe details</Typography>
       </Button>

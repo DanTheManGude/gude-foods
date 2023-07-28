@@ -123,3 +123,13 @@ export async function fetchRecipeFromUrl(externalUrl) {
 
   return recipe;
 }
+
+export const constructShareRecipeLink = (recipe) => {
+  const recipeString = JSON.stringify(recipe);
+  const recipeData = encodeURIComponent(recipeString);
+  const urlBase = window.location.origin;
+
+  const link = `${urlBase}/share?recipeData=${recipeData}`;
+
+  return link;
+};

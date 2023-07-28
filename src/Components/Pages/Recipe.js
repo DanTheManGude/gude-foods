@@ -233,7 +233,7 @@ function Recipe() {
         <>
           <Button
             key="export"
-            color="secondary"
+            color="primary"
             variant="outlined"
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
