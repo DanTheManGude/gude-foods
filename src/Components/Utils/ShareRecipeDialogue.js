@@ -47,7 +47,7 @@ function ShareRecipeDialogue(props) {
         onClick={handleCopyLink}
         endIcon={<ContentCopyRoundedIcon />}
       >
-        <Typography>Copy link of recipe details</Typography>
+        <Typography>Copy link to recipe</Typography>
       </Button>
       <Button
         key="export"
