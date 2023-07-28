@@ -14,6 +14,7 @@ import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
 import Users from "../Pages/Users";
 import ExternalRecipe from "../Pages/ExternalRecipe";
+import ShareRecipe from "../Pages/ShareRecipe";
 
 import {
   DatabaseContext,
@@ -171,6 +172,7 @@ function PagesContainer(props) {
               element={<ExternalRecipe givenRecipe={externalRecipe} />}
             />
           )}
+          <Route path="share" element={<ShareRecipe isAuthorized={true} />} />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </DataPathsContext.Provider>
