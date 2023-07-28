@@ -10,10 +10,6 @@ import {
   shoppingListDeletesByRecipe,
   saveRecipe,
 } from "../../utils/requests";
-import {
-  downloadData,
-  transformRecipeForExport,
-} from "../../utils/dataTransfer";
 
 import DeleteDialog from "../Utils/DeleteDialog";
 import {
@@ -28,6 +24,7 @@ import {
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
 import AddToShoppingListDialogue from "../Utils/AddToShoppingListDialogue";
+import ShareRecipeDialogue from "../Utils/ShareRecipeDialogue";
 
 import {
   DatabaseContext,
@@ -73,6 +70,7 @@ function Recipe() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [addToShoppingListDialogueOpen, setAddToShoppingListDialogueOpen] =
     useState(false);
+  const [openShareDialogue, setOpenShareDialogue] = useState(false);
 
   useEffect(() => {
     const cookbook = _cookbook || {};
@@ -240,12 +238,7 @@ function Recipe() {
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
-              const recipeData = transformRecipeForExport(
-                recipeEntry,
-                glossary
-              );
-
-              downloadData(recipeData, recipeData.name);
+              setOpenShareDialogue(true);
             }}
           >
             <Typography>Share</Typography>
@@ -412,6 +405,13 @@ function Recipe() {
           setAddToShoppingListDialogueOpen(false);
         }}
         recipeId={recipeId}
+      />
+      <ShareRecipeDialogue
+        open={openShareDialogue}
+        onClose={() => {
+          setOpenShareDialogue(false);
+        }}
+        recipe={recipeEntry}
       />
     </div>
   );
