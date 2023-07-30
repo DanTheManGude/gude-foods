@@ -47,6 +47,7 @@ function IngredientList(props) {
     editable,
     updateIngredients,
     contentsOnly = false,
+    idsAsNames = false,
   } = props;
 
   const database = useContext(DatabaseContext);
@@ -81,7 +82,7 @@ function IngredientList(props) {
   const renderIngredientText = (ingredientId) => (
     <>
       <Typography sx={{ fontWeight: "bold" }}>
-        {glossary.basicFoods[ingredientId]}:
+        {idsAsNames ? ingredientId : glossary.basicFoods[ingredientId]}:
       </Typography>
       <Typography>{ingredients[ingredientId]}</Typography>
     </>

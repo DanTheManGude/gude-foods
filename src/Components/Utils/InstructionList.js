@@ -167,21 +167,21 @@ function InstructionList(props) {
       <AccordionDetails>
         <Stack spacing={editable ? 2 : 1}>
           {renderSteps().concat(
-            editable ? (
-              renderAddInstructionControl()
-            ) : (
-              <Button
-                key={"cookRecipe"}
-                color="secondary"
-                variant="contained"
-                size="small"
-                onClick={() => {
-                  navigate(`/cooking/${recipeId}`);
-                }}
-              >
-                <Typography>Cook recipe</Typography>
-              </Button>
-            )
+            editable
+              ? renderAddInstructionControl()
+              : recipeId && (
+                  <Button
+                    key={"cookRecipe"}
+                    color="secondary"
+                    variant="contained"
+                    size="small"
+                    onClick={() => {
+                      navigate(`/cooking/${recipeId}`);
+                    }}
+                  >
+                    <Typography>Cook recipe</Typography>
+                  </Button>
+                )
           )}
         </Stack>
       </AccordionDetails>
