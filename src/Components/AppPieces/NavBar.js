@@ -22,7 +22,7 @@ const NavBar = ({ isAuthorized }) => {
   const otherStripe = `${theme.palette.background.paper
     .split("")
     .map((item, index, array) =>
-      item == "#" || array.length === 7 ? item : item + item
+      item === "#" || array.length === 7 ? item : item + item
     )
     .join("")}aa`;
   const stripeColor = `${theme.palette.primary.main}30`;

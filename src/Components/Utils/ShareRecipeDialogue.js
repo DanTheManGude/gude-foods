@@ -26,7 +26,7 @@ function ShareRecipeDialogue(props) {
   const glossary = _glossary || {};
 
   const handleCopyLink = () => {
-    const shareLink = constructShareRecipeLink(recipe);
+    const shareLink = constructShareRecipeLink(recipe, glossary);
 
     navigator.clipboard.writeText(shareLink);
   };
@@ -46,7 +46,6 @@ function ShareRecipeDialogue(props) {
         variant="contained"
         onClick={handleCopyLink}
         endIcon={<ContentCopyRoundedIcon />}
-        disabled={true}
       >
         <Typography>Copy link to recipe</Typography>
       </Button>
