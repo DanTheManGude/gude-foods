@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 import { fontFamilies, longestEntryPathDelimiter } from "../constants";
+import { transformRecipeForExport } from "./dataTransfer";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -124,12 +125,12 @@ export async function fetchRecipeFromUrl(externalUrl) {
   return recipe;
 }
 
-export const constructShareRecipeLink = (recipe) => {
-  const recipeString = JSON.stringify(recipe);
-  const recipeData = encodeURIComponent(recipeString);
+export const constructShareRecipeLink = (recipe, glossary) => {
+  const recipeData = transformRecipeForExport(recipe, glossary);
+  const recipeString = encodeURIComponent(JSON.stringify(recipeData));
   const urlBase = window.location.origin;
 
-  const link = `${urlBase}/share?recipeData=${recipeData}`;
+  const link = `${urlBase}/share?recipeData=${recipeString}`;
 
   return link;
 };

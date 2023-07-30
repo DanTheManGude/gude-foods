@@ -26,7 +26,7 @@ function ShareRecipeDialogue(props) {
   const glossary = _glossary || {};
 
   const handleCopyLink = () => {
-    const shareLink = constructShareRecipeLink(recipe);
+    const shareLink = constructShareRecipeLink(recipe, glossary);
 
     navigator.clipboard.writeText(shareLink);
   };
