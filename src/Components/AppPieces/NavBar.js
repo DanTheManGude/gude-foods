@@ -18,7 +18,13 @@ const NavBar = ({ isAuthorized }) => {
   const theme = useTheme();
 
   const inDevelopment = isDevelopment();
-  const transparant = "#00000000";
+
+  const otherStripe = `${theme.palette.background.paper
+    .split("")
+    .map((item, index, array) =>
+      item == "#" || array.length === 7 ? item : item + item
+    )
+    .join("")}aa`;
   const stripeColor = `${theme.palette.primary.main}30`;
 
   return (
@@ -35,7 +41,7 @@ const NavBar = ({ isAuthorized }) => {
           sx={
             inDevelopment
               ? {
-                  background: `repeating-linear-gradient(-45deg, ${transparant}, ${transparant} 10px, ${stripeColor} 10px, ${stripeColor} 20px)`,
+                  background: `repeating-linear-gradient(-45deg, ${otherStripe}, ${otherStripe} 10px, ${stripeColor} 10px, ${stripeColor} 20px)`,
                 }
               : {}
           }
