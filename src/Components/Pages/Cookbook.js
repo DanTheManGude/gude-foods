@@ -216,7 +216,12 @@ function Cookbook(props) {
                 <Typography>Remove recipe from Menu</Typography>
               </Button>
             )}
-            <Stack direction="row" spacing={1}>
+            <Stack
+              direction="row"
+              spacing={1}
+              flexWrap="wrap"
+              useFlexGap="true"
+            >
               {isFavorite && <FavoriteTag />}
               {tags.map((tagId) => (
                 <Chip

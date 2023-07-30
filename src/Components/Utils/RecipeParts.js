@@ -109,6 +109,8 @@ export const renderTagList = (
     key="tags"
     sx={{ width: "95%" }}
     alignItems={"center"}
+    flexWrap="wrap"
+    useFlexGap="true"
   >
     {renderFavorite(editable, isFavorite, updateIsFavorite)}
     {tags.map((tagId) => (
