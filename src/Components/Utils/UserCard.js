@@ -8,7 +8,8 @@ import Button from "@mui/material/Button";
 import { signOutGoogle } from "../../utils/googleAuth";
 
 function UserCard(props) {
-  const { user, actingUser, clearActingUser, addAlert } = props;
+  const { user, actingUser, clearActingUser, addAlert, useOutlinedButton } =
+    props;
 
   const handleLogout = () => {
     signOutGoogle(addAlert);
@@ -58,7 +59,11 @@ function UserCard(props) {
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button color="primary" variant="contained" onClick={handleLogout}>
+          <Button
+            color="primary"
+            variant={useOutlinedButton ? "outlined" : "contained"}
+            onClick={handleLogout}
+          >
             <Typography>Logout</Typography>
           </Button>
         </CardActions>
