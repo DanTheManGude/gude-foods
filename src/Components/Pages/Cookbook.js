@@ -220,7 +220,7 @@ function Cookbook(props) {
               direction="row"
               spacing={1}
               flexWrap="wrap"
-              useFlexGap="true"
+              useFlexGap={true}
             >
               {isFavorite && <FavoriteTag />}
               {tags.map((tagId) => (
