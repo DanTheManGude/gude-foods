@@ -64,7 +64,7 @@ function App() {
       navigate("/home");
     }
     prevUserRef.current = user;
-  }, [user, navigate]);
+  }, [user, navigate, location.pathname]);
 
   useEffect(() => {
     if (!user) {
