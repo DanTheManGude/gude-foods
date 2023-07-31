@@ -15,11 +15,17 @@ import {
   transformRecipeForExport,
 } from "../../utils/dataTransfer";
 
-import { DatabaseContext } from "../Contexts";
+import { DatabaseContext, AddAlertContext } from "../Contexts";
+
+const errorCopyAlert = {
+  message: <span>There was an error trying to copy to your clipboard.</span>,
+  alertProps: { severity: "warning" },
+};
 
 function ShareRecipeDialogue(props) {
   const { open, onClose, recipe } = props;
 
+  const addAlert = useContext(AddAlertContext);
   const database = useContext(DatabaseContext);
   const { glossary: _glossary } = database;
 
@@ -28,7 +34,23 @@ function ShareRecipeDialogue(props) {
   const handleCopyLink = () => {
     const shareLink = constructShareRecipeLink(recipe, glossary);
 
-    navigator.clipboard.writeText(shareLink);
+    if (!navigator?.clipboard?.writeText) {
+      addAlert(errorCopyAlert);
+      return;
+    }
+
+    navigator.clipboard
+      .writeText(shareLink)
+      .then(() => {
+        addAlert({
+          message: <span>The link has been copied to your clipboard.</span>,
+          alertProps: { severity: "success" },
+        });
+        onClose();
+      })
+      .catch(() => {
+        addAlert(errorCopyAlert);
+      });
   };
 
   const handleDownloadRecipe = () => {
