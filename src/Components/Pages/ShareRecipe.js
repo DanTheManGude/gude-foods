@@ -8,9 +8,10 @@ import Stack from "@mui/material/Stack";
 import { transformCookbookFromImport } from "../../utils/dataTransfer";
 import { updateFromCookbookImport } from "../../utils/requests";
 
-import { renderNotesContainer, renderTagList } from "../Utils/RecipeParts";
+import UnauthorizedUser from "../AppPieces/UnauthorizedUser";
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
+import { renderNotesContainer, renderTagList } from "../Utils/RecipeParts";
 
 import {
   UserContext,
@@ -86,19 +87,20 @@ function ShareRecipe(props) {
   };
 
   const renderControls = () => {
-    console.log("user:", user);
     if (isAuthorized) {
       return (
         <Button
           color="primary"
           variant="contained"
           onClick={handleSave}
-          sx={{ width: "85%" }}
+          sx={{ width: "85%", marginTop: 1 }}
         >
           <Typography>Save recipe to cookbook</Typography>
         </Button>
       );
     }
+
+    return <UnauthorizedUser user={user} addAlert={addAlert} />;
   };
 
   const renderTags = () => {
@@ -120,7 +122,7 @@ function ShareRecipe(props) {
   const { name, description, ingredients, instructions = [], notes } = recipe;
 
   return (
-    <Stack sx={{ paddingTop: 2 }} spacing={2} alignItems="center">
+    <Stack spacing={2} alignItems="center">
       {renderControls()}
       <Stack key="contents" spacing={2} sx={{ width: "95%" }}>
         <Typography

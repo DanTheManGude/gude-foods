@@ -13,8 +13,16 @@ import UserCard from "../Utils/UserCard";
 const textStyles = {
   color: "primary.main",
   textAlign: "center",
-  width: "85%",
 };
+
+const MainStack = (props) => (
+  <Stack
+    {...props}
+    sx={{ paddingTop: 1.5 }}
+    spacing={1.5}
+    alignItems="center"
+  />
+);
 
 function UnauthorizedUser(props) {
   const { user, addAlert } = props;
@@ -36,27 +44,24 @@ function UnauthorizedUser(props) {
   };
 
   const rendeRequestMessageAndButton = () => (
-    <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+    <MainStack>
       <Typography sx={textStyles}>
-        You must be authorized to use the site.
-      </Typography>
-      <Typography sx={textStyles}>
-        You can request that you would like to be authorized.
+        You must be approved to create and save data.
       </Typography>
       <Button color="primary" variant="contained" onClick={handleNotifyClick}>
         <Typography>Request Access</Typography>
       </Button>
-      <UserCard user={user} addAlert={addAlert} />
-    </Stack>
+      <UserCard user={user} addAlert={addAlert} useOutlinedButton={true} />
+    </MainStack>
   );
 
   const renderHasRequestedMessage = () => (
-    <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+    <MainStack>
       <Typography sx={textStyles}>
         You have requested access. Check back here shortly.
       </Typography>
       <UserCard user={user} addAlert={addAlert} />
-    </Stack>
+    </MainStack>
   );
 
   if (!!user) {
@@ -67,12 +72,12 @@ function UnauthorizedUser(props) {
   }
 
   return (
-    <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
+    <MainStack>
       <Typography sx={textStyles}>
-        Please sign in with Google to use the app.
+        Login or sign up with your Google account
       </Typography>
       <GoogleLoginButton addAlert={addAlert} />
-    </Stack>
+    </MainStack>
   );
 }
 

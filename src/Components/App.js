@@ -56,11 +56,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (prevUserRef.current && prevUserRef.current !== user) {
+    if (
+      prevUserRef.current &&
+      prevUserRef.current !== user &&
+      location.pathname !== "/share"
+    ) {
       navigate("/home");
     }
     prevUserRef.current = user;
-  }, [user, navigate]);
+  }, [user, navigate, location.pathname]);
 
   useEffect(() => {
     if (!user) {
