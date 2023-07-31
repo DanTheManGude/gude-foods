@@ -57,7 +57,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 5000);
+    }, 50); //HACK for faster loading
   }, []);
 
   useEffect(() => {
