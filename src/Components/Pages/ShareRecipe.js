@@ -93,8 +93,7 @@ function ShareRecipe(props) {
           color="primary"
           variant="contained"
           onClick={handleSave}
-          sx={{ width: "85%" }}
-          paddingTop={2}
+          sx={{ width: "85%", marginTop: 1 }}
         >
           <Typography>Save recipe to cookbook</Typography>
         </Button>
