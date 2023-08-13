@@ -123,71 +123,70 @@
     },
     "-N1gkKezPF6878GJNOSE": {
       "list": {
-        "-ND5dLHg2sM4-Okmy4lw": true,
-        "-NESuvDlqD3t7Vi9zoGn": true
+        "-ND5dLHg2sM4-Okmy4lw": "1",
+        "-NESuvDlqD3t7Vi9zoGn": "1"
       }
     },
     "-NA_wP7hl89NLs3ssJiu": {
       "list": {
-        "-NESuvDlqD3t7Vi9zoGn": true
+        "-NESuvDlqD3t7Vi9zoGn": "one cup"
       }
     },
     "-ND5dXO4AzZKgjsbKQ6k": {
-      "collatedAmount": "1 packet",
       "list": {
-        "-ND5dLHg2sM4-Okmy4lw": true
+        "-ND5dLHg2sM4-Okmy4lw": "2 or 3"
       }
     },
     "-ND5dfPPF1YAkeKk1MFV": {
       "list": {
-        "-ND5dLHg2sM4-Okmy4lw": true
+        "-ND5dLHg2sM4-Okmy4lw": "1"
       }
     },
     "-ND5dy9ingtEE0TsjlRX": {
       "list": {
-        "-ND5dLHg2sM4-Okmy4lw": true
+        "-ND5dLHg2sM4-Okmy4lw": "a handful"
       }
     },
     "-NDBkRJc8AO_VkAUDVu_": {
+      "collatedAmount": "just a bit",
       "list": {
-        "-ND5dLHg2sM4-Okmy4lw": true,
-        "-NESuvDlqD3t7Vi9zoGn": true,
-        "-NEX_Gwyg5CUYY-jaPFW": true
+        "-ND5dLHg2sM4-Okmy4lw": "a drizzle",
+        "-NESuvDlqD3t7Vi9zoGn": "a drizzle "
       }
     },
     "-NE2KXCUsVSfnYhxx6mN": {
       "list": {
-        "-NEX_Gwyg5CUYY-jaPFW": true
+        "-NEX_Gwyg5CUYY-jaPFW": "most of a box"
       }
     },
     "-NE2KhCTPucfS3OvioPJ": {
       "list": {
-        "-NEX_Gwyg5CUYY-jaPFW": true
+        "-NEX_Gwyg5CUYY-jaPFW": "16 oz"
       }
     },
     "-NE2KxbD4EhS67vpdue4": {
       "list": {
-        "-NEX_Gwyg5CUYY-jaPFW": true
+        "-NEX_Gwyg5CUYY-jaPFW": "1 lb"
       }
     },
     "-NE2LC2BBJMg5XXASpYw": {
       "list": {
-        "-NEX_Gwyg5CUYY-jaPFW": true
+        "-NEX_Gwyg5CUYY-jaPFW": "a few shakes"
       }
     },
     "-NESvPg4NgIvUVAeUu5Z": {
       "list": {
-        "-NESuvDlqD3t7Vi9zoGn": true
+        "-NESuvDlqD3t7Vi9zoGn": "one cup"
       }
     },
     "-NESx376uUIRCs9J1WC0": {
       "list": {
-        "-ND5dLHg2sM4-Okmy4lw": true
+        "-ND5dLHg2sM4-Okmy4lw": "little bit of any type"
       }
     },
     "-NEX_zdRNRFfR_OKQ-cr": {
       "list": {
-        "-NEX_Gwyg5CUYY-jaPFW": true
+        "-NEX_Gwyg5CUYY-jaPFW": "1"
       }
     }
   },
