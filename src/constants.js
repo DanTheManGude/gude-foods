@@ -128,10 +128,11 @@ export const unknownSectionName = "Unknown Section";
 
 export const presentationNames = {
   glossary: "Glossary",
-  shoppingList: "Shopping List",
+  shoppingList: "Shopping",
   cookbook: "Cookbook",
   home: "Home",
   settings: "Settings",
+  admin: "Admin",
 };
 
 export const pages = [

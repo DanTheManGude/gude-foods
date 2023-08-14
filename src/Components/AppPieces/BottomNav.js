@@ -19,6 +19,7 @@ const pageIcons = {
 };
 
 function BottomNav(props) {
+  const { isAdmin } = props;
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -47,7 +48,7 @@ function BottomNav(props) {
           value={page}
           label={presentationNames[page]}
           icon={pageIcons[page]}
-          sx={{ paddingX: "4px" }}
+          sx={{}}
         />
       ))}
     </BottomNavigation>
