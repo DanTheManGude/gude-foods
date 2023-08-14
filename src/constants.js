@@ -72,7 +72,7 @@ export const allColors = {
       primary: { main: "#43A7FA", contrastText: "#1e201e" },
       secondary: { main: "#8783D1 ", contrastText: "#1e201e" },
       tertiary: { main: "#77CBB9", contrastText: "#1e201e" },
-      alt: { main: "#FFC144" },
+      alt: { main: "#FFC145" },
     },
     background: [
       { percent: 0, color: "#ffffff" },
@@ -132,7 +132,6 @@ export const presentationNames = {
   cookbook: "Cookbook",
   home: "Home",
   settings: "Settings",
-  admin: "Admin",
 };
 
 export const pages = [
