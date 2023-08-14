@@ -91,6 +91,10 @@ function Settings(props) {
   };
 
   const renderAppCard = () => {
+    if (!isAdmin) {
+      return null;
+    }
+
     return (
       <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
