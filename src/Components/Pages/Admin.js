@@ -127,6 +127,30 @@ function Settings(props) {
     </Box>
   );
 
+  const renderShareRecipeCard = () => (
+    <Box sx={{ width: "95%" }}>
+      <Card variant="outlined">
+        <CardContent>
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            Shared Recipes
+          </Typography>
+          <Typography>
+            View all of the shared recipes and remove them.
+          </Typography>
+        </CardContent>
+        <CardActions sx={{ justifyContent: "flex-end" }}>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => navigate("/sharedRecipes")}
+          >
+            <Typography>View shared recipes</Typography>
+          </Button>
+        </CardActions>
+      </Card>
+    </Box>
+  );
+
   const renderLongestEntryCard = () => {
     const disabledColor = theme.palette.text.primary;
     return (
@@ -212,6 +236,7 @@ function Settings(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderActingUserCard()}
         {renderUserManagmentCard()}
+        {renderShareRecipeCard()}
         {renderLongestEntryCard()}
         {renderAppCard()}
       </Stack>
