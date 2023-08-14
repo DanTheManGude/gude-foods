@@ -18,8 +18,9 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
-import PagesContainer from "./AppPieces/PagesContainer";
+import { aboutText } from "../constants";
 
+import PagesContainer from "./AppPieces/PagesContainer";
 import NavBar from "./AppPieces/NavBar";
 import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
@@ -201,12 +202,17 @@ function App() {
     <>
       {renderMessages()}
       <NavBar isAuthorized={false} />
-      <Card variant="outlined">
+      <Card
+        variant="outlined"
+        sx={{ marginLeft: "5%", marginRight: "5%", marginTop: 1 }}
+      >
         <CardHeader
           title={<Typography variant="h6">Welcome</Typography>}
         ></CardHeader>
         <CardContent>
-          <Typography>Some cool info</Typography>
+          <Typography style={{ whiteSpace: "pre-line" }}>
+            {aboutText}
+          </Typography>
         </CardContent>
       </Card>
       <UnauthorizedUser user={user} addAlert={addAlert} />
