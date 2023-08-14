@@ -76,6 +76,7 @@ function App() {
     if (!user) {
       setIsAuthorizedUser(false);
       setAllowUnrestrictedUsers(false);
+      setIsAdmin(false);
       return;
     }
 
@@ -113,8 +114,6 @@ function App() {
     onValue(ref(getDatabase(), `admin`), (snapshot) => {
       if (snapshot.exists()) {
         setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
       }
     });
 
