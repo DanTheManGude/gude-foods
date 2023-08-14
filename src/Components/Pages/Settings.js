@@ -8,13 +8,10 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
-
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { aboutText } from "../../constants";
 import { setAllData, deleteRequest } from "../../utils/requests";
@@ -34,12 +31,12 @@ import {
 function Settings(props) {
   const { actingUser, clearActingUser, isAdmin } = props;
 
+  let navigate = useNavigate();
+
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
   const user = useContext(UserContext);
-
-  let navigate = useNavigate();
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -60,7 +57,7 @@ function Settings(props) {
     downloadData(data);
   };
 
-  const renderUserManagmentCard = () => {
+  const renderAdminCard = () => {
     if (!isAdmin) {
       return null;
     }
@@ -70,60 +67,19 @@ function Settings(props) {
         <Card variant="outlined">
           <CardContent>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              User managment
+              Admin
             </Typography>
-            <Typography>
-              Change setting to allow any user access to an account without
-              authorization and act as other users.
-            </Typography>
+            <Typography>View Admin page and controls.</Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
               color="secondary"
               variant="contained"
-              onClick={() => navigate("/users")}
+              onClick={() => navigate("/admin")}
             >
-              <Typography>View all users</Typography>
+              <Typography>Go to Admin page</Typography>
             </Button>
           </CardActions>
-        </Card>
-      </Box>
-    );
-  };
-
-  const renderAppCard = () => {
-    if (!isAdmin) {
-      return null;
-    }
-
-    return (
-      <Box sx={{ width: "95%" }}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Application
-            </Typography>
-            <Typography>
-              Current version: <strong>{process.env.REACT_APP_VERSION}</strong>
-            </Typography>
-            <Typography>
-              The source code for this website is hosted&nbsp;
-              <Link
-                underline="none"
-                href="https://github.com/DanTheManGude/gude-foods"
-                target="_blank"
-                rel="noopener"
-                color="secondary"
-              >
-                {"here "}
-                <OpenInNewIcon
-                  fontSize="inherit"
-                  sx={{ verticalAlign: "sub" }}
-                />
-              </Link>
-              .
-            </Typography>
-          </CardContent>
         </Card>
       </Box>
     );
@@ -273,13 +229,12 @@ function Settings(props) {
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         <UserCard
           user={user}
+          addAlert={addAlert}
           actingUser={actingUser}
           clearActingUser={clearActingUser}
-          addAlert={addAlert}
         />
-        {renderUserManagmentCard()}
+        {renderAdminCard()}
         <ColorCard />
-        {renderAppCard()}
         {renderAboutCard()}
         {renderDownloadData()}
         {renderImportData()}
