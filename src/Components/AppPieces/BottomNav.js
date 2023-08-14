@@ -7,6 +7,7 @@ import MenuBookSharpIcon from "@mui/icons-material/MenuBookSharp";
 import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
 import FormatListBulletedSharpIcon from "@mui/icons-material/FormatListBulletedSharp";
 import HouseSharp from "@mui/icons-material/HouseSharp";
+import BuildSharpIcon from "@mui/icons-material/BuildSharp";
 
 import { getPages, presentationNames } from "../../constants";
 
@@ -16,6 +17,7 @@ const pageIcons = {
   cookbook: <MenuBookSharpIcon />,
   home: <HouseSharp />,
   settings: <SettingsSharpIcon />,
+  admin: <BuildSharpIcon />,
 };
 
 function BottomNav(props) {
@@ -48,7 +50,7 @@ function BottomNav(props) {
           value={page}
           label={presentationNames[page]}
           icon={pageIcons[page]}
-          sx={{}}
+          sx={isAdmin ? { minWidth: "50px" } : {}}
         />
       ))}
     </BottomNavigation>

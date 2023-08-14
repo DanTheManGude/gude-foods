@@ -72,7 +72,7 @@ export const allColors = {
       primary: { main: "#43A7FA", contrastText: "#1e201e" },
       secondary: { main: "#8783D1 ", contrastText: "#1e201e" },
       tertiary: { main: "#77CBB9", contrastText: "#1e201e" },
-      alt: { main: "#FFC145" },
+      alt: { main: "#FFC144" },
     },
     background: [
       { percent: 0, color: "#ffffff" },
