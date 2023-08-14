@@ -8,7 +8,7 @@ import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
 import FormatListBulletedSharpIcon from "@mui/icons-material/FormatListBulletedSharp";
 import HouseSharp from "@mui/icons-material/HouseSharp";
 
-import { pages, presentationNames } from "../../constants";
+import { getPages, presentationNames } from "../../constants";
 
 const pageIcons = {
   glossary: <DescriptionSharpIcon />,
@@ -42,7 +42,7 @@ function BottomNav(props) {
         display: { md: "none" },
       }}
     >
-      {pages.map((page) => (
+      {getPages(isAdmin).map((page) => (
         <BottomNavigationAction
           key={page}
           value={page}

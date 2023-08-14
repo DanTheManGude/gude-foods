@@ -135,12 +135,13 @@ export const presentationNames = {
   admin: "Admin",
 };
 
-export const pages = [
+export const getPages = (isAdmin) => [
   "home",
   "shoppingList",
   "cookbook",
   "glossary",
   "settings",
+  ...(isAdmin ? ["admin"] : []),
 ];
 
 export const longestEntryPathDelimiter = "___/___";
