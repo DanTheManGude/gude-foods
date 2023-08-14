@@ -12,6 +12,7 @@ import Cooking from "../Pages/Cooking";
 import ShoppingList from "../Pages/ShoppingList";
 import Glossary from "../Pages/Glossary";
 import Settings from "../Pages/Settings";
+import Admin from "../Pages/Admin";
 import Users from "../Pages/Users";
 import ExternalRecipe from "../Pages/ExternalRecipe";
 import ShareRecipe from "../Pages/ShareRecipe";
@@ -143,14 +144,19 @@ function PagesContainer(props) {
           <Route path="glossary" element={<Glossary />} />
           <Route
             path="settings"
-            element={
-              <Settings
-                actingUser={actingUser}
-                clearActingUser={clearActingUser}
-                isAdmin={isAdmin}
-              />
-            }
+            element={<Settings actingUser={actingUser} />}
           />
+          {isAdmin && (
+            <Route
+              path="admin"
+              element={
+                <Admin
+                  actingUser={actingUser}
+                  clearActingUser={clearActingUser}
+                />
+              }
+            />
+          )}
           {isAdmin && (
             <Route
               path="users"
