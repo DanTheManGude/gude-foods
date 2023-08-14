@@ -9,7 +9,7 @@ import FormatListBulletedSharpIcon from "@mui/icons-material/FormatListBulletedS
 import HouseSharp from "@mui/icons-material/HouseSharp";
 import BuildSharpIcon from "@mui/icons-material/BuildSharp";
 
-import { getPages, presentationNames } from "../../constants";
+import { pages, presentationNames } from "../../constants";
 
 const pageIcons = {
   glossary: <DescriptionSharpIcon />,
@@ -20,8 +20,7 @@ const pageIcons = {
   admin: <BuildSharpIcon />,
 };
 
-function BottomNav(props) {
-  const { isAdmin } = props;
+function BottomNav() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -44,13 +43,13 @@ function BottomNav(props) {
         display: { md: "none" },
       }}
     >
-      {getPages(isAdmin).map((page) => (
+      {pages.map((page) => (
         <BottomNavigationAction
           key={page}
           value={page}
           label={presentationNames[page]}
           icon={pageIcons[page]}
-          sx={isAdmin ? { minWidth: "50px" } : {}}
+          sx={{ paddingX: "4px" }}
         />
       ))}
     </BottomNavigation>

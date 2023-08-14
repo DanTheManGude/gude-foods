@@ -17,7 +17,7 @@ import { longestEntryPathDelimiter } from "../../constants";
 import { findLongestEntry } from "../../utils/utility";
 
 function Settings(props) {
-  const { actingUser, clearActingUser, accounts, userList } = props;
+  const { accounts, userList } = props;
 
   let navigate = useNavigate();
   const theme = useTheme();
@@ -40,37 +40,6 @@ function Settings(props) {
       path: parts.join("/"),
       value,
     });
-  };
-
-  const renderActingUserCard = () => {
-    if (actingUser) {
-      return (
-        <Box sx={{ width: "95%" }}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6" color="text.secondary" gutterBottom>
-                Acting as user
-              </Typography>
-              <Typography>
-                You are currently acting as:&nbsp;
-                <strong>{actingUser.displayName}</strong>
-                <br />
-                <code>{actingUser.uid}</code>
-              </Typography>
-            </CardContent>
-            <CardActions sx={{ justifyContent: "flex-end" }}>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={clearActingUser}
-              >
-                <Typography>Back to own user</Typography>
-              </Button>
-            </CardActions>
-          </Card>
-        </Box>
-      );
-    }
   };
 
   const renderUserManagmentCard = () => (
@@ -240,7 +209,6 @@ function Settings(props) {
         Admin
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        {renderActingUserCard()}
         {renderUserManagmentCard()}
         {renderShareRecipeCard()}
         {renderLongestEntryCard()}

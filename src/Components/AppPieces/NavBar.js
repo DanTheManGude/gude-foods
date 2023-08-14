@@ -8,12 +8,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
-import { getPages, presentationNames } from "../../constants";
+import { pages, presentationNames } from "../../constants";
 import { isDevelopment } from "../../utils/utility";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
-const NavBar = ({ isAuthorized, isAdmin }) => {
+const NavBar = ({ isAuthorized }) => {
   let navigate = useNavigate();
   const theme = useTheme();
 
@@ -95,7 +95,7 @@ const NavBar = ({ isAuthorized, isAdmin }) => {
                 display: { xs: "none", md: isAuthorized ? "flex" : "none" },
               }}
             >
-              {getPages(isAdmin).map((page) => (
+              {pages.map((page) => (
                 <Button
                   key={page}
                   onClick={() => {

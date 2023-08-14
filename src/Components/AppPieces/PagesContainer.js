@@ -144,19 +144,18 @@ function PagesContainer(props) {
           <Route path="glossary" element={<Glossary />} />
           <Route
             path="settings"
-            element={<Settings actingUser={actingUser} />}
+            element={
+              <Settings
+                isAdmin={isAdmin}
+                actingUser={actingUser}
+                clearActingUser={clearActingUser}
+              />
+            }
           />
           {isAdmin && (
             <Route
               path="admin"
-              element={
-                <Admin
-                  userList={userList}
-                  accounts={accounts}
-                  actingUser={actingUser}
-                  clearActingUser={clearActingUser}
-                />
-              }
+              element={<Admin userList={userList} accounts={accounts} />}
             />
           )}
           {isAdmin && (

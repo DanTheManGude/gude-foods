@@ -29,7 +29,9 @@ import {
 } from "../Contexts";
 
 function Settings(props) {
-  const { actingUser } = props;
+  const { actingUser, clearActingUser, isAdmin } = props;
+
+  let navigate = useNavigate();
 
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
@@ -53,6 +55,34 @@ function Settings(props) {
     };
 
     downloadData(data);
+  };
+
+  const renderAdminCard = () => {
+    if (!isAdmin) {
+      return null;
+    }
+
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Admin
+            </Typography>
+            <Typography>View Admin page and controls.</Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() => navigate("/admin")}
+            >
+              <Typography>Go to Admin page</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
   };
 
   const renderAboutCard = () => {
@@ -197,7 +227,13 @@ function Settings(props) {
         Settings
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
-        <UserCard user={user} addAlert={addAlert} actingUser={actingUser} />
+        <UserCard
+          user={user}
+          addAlert={addAlert}
+          actingUser={actingUser}
+          clearActingUser={clearActingUser}
+        />
+        {renderAdminCard()}
         <ColorCard />
         {renderAboutCard()}
         {renderDownloadData()}

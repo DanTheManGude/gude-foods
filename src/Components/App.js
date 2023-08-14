@@ -160,7 +160,7 @@ function App() {
     return (
       <>
         {renderMessages()}
-        <NavBar isAdmin={isAdmin} />
+        <NavBar />
         <AddAlertContext.Provider value={addAlert}>
           <UserContext.Provider value={user}>
             <PagesContainer
@@ -170,7 +170,7 @@ function App() {
             />
           </UserContext.Provider>
         </AddAlertContext.Provider>
-        <BottomNav isAdmin={isAdmin} />
+        <BottomNav />
       </>
     );
   }

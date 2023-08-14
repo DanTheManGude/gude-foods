@@ -128,20 +128,19 @@ export const unknownSectionName = "Unknown Section";
 
 export const presentationNames = {
   glossary: "Glossary",
-  shoppingList: "Shopping",
+  shoppingList: "Shopping List",
   cookbook: "Cookbook",
   home: "Home",
   settings: "Settings",
   admin: "Admin",
 };
 
-export const getPages = (isAdmin) => [
+export const pages = [
   "home",
   "shoppingList",
   "cookbook",
   "glossary",
   "settings",
-  ...(isAdmin ? ["admin"] : []),
 ];
 
 export const longestEntryPathDelimiter = "___/___";

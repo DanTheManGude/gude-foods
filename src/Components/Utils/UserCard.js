@@ -8,11 +8,41 @@ import Button from "@mui/material/Button";
 import { signOutGoogle } from "../../utils/googleAuth";
 
 function UserCard(props) {
-  const { user, actingUser, addAlert, useOutlinedButton } = props;
+  const { user, actingUser, clearActingUser, addAlert, useOutlinedButton } =
+    props;
 
   const handleLogout = () => {
     signOutGoogle(addAlert);
   };
+
+  if (actingUser) {
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Current user
+            </Typography>
+            <Typography>
+              You are currently acting as:&nbsp;
+              <strong>{actingUser.displayName}</strong>
+              <br />
+              <code>{actingUser.uid}</code>
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={clearActingUser}
+            >
+              <Typography>Back to own user</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  }
 
   if (!user) {
     return;
@@ -27,13 +57,6 @@ function UserCard(props) {
           <Typography>
             You are currently logged in as: <strong>{user.email}</strong>
           </Typography>
-          <br />
-          {actingUser && (
-            <Typography>
-              {`You are currently acting as: `}
-              <strong>{actingUser.displayName}</strong>
-            </Typography>
-          )}
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
           <Button
