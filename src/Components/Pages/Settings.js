@@ -16,6 +16,7 @@ import Dialog from "@mui/material/Dialog";
 
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
+import { aboutText } from "../../constants";
 import { setAllData, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
 
@@ -91,6 +92,10 @@ function Settings(props) {
   };
 
   const renderAppCard = () => {
+    if (!isAdmin) {
+      return null;
+    }
+
     return (
       <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
@@ -117,6 +122,23 @@ function Settings(props) {
                 />
               </Link>
               .
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  };
+
+  const renderAboutCard = () => {
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              About
+            </Typography>
+            <Typography style={{ whiteSpace: "pre-line" }}>
+              {aboutText}
             </Typography>
           </CardContent>
         </Card>
@@ -258,6 +280,7 @@ function Settings(props) {
         {renderUserManagmentCard()}
         <ColorCard />
         {renderAppCard()}
+        {renderAboutCard()}
         {renderDownloadData()}
         {renderImportData()}
         {renderDeleteData()}

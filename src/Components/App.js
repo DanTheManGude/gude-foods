@@ -2,19 +2,25 @@ import { useEffect, useState, useRef } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, child, get, onValue } from "firebase/database";
+
+import { TransitionGroup } from "react-transition-group";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Collapse from "@mui/material/Collapse";
-import { TransitionGroup } from "react-transition-group";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, child, get, onValue } from "firebase/database";
+import { aboutText } from "../constants";
 
 import PagesContainer from "./AppPieces/PagesContainer";
-
 import NavBar from "./AppPieces/NavBar";
 import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
@@ -52,7 +58,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 5000);
+    }, 50); //HACK for faster loading
   }, []);
 
   useEffect(() => {
@@ -70,6 +76,7 @@ function App() {
     if (!user) {
       setIsAuthorizedUser(false);
       setAllowUnrestrictedUsers(false);
+      setIsAdmin(false);
       return;
     }
 
@@ -107,8 +114,6 @@ function App() {
     onValue(ref(getDatabase(), `admin`), (snapshot) => {
       if (snapshot.exists()) {
         setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
       }
     });
 
@@ -196,6 +201,19 @@ function App() {
     <>
       {renderMessages()}
       <NavBar isAuthorized={false} />
+      <Card
+        variant="outlined"
+        sx={{ marginLeft: "5%", marginRight: "5%", marginTop: 1 }}
+      >
+        <CardHeader
+          title={<Typography variant="h6">Welcome</Typography>}
+        ></CardHeader>
+        <CardContent>
+          <Typography style={{ whiteSpace: "pre-line" }}>
+            {aboutText}
+          </Typography>
+        </CardContent>
+      </Card>
       <UnauthorizedUser user={user} addAlert={addAlert} />
     </>
   );
