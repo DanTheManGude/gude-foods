@@ -160,9 +160,15 @@ function Settings(props) {
             <Typography variant="h6" color="text.secondary" gutterBottom>
               Longest Entry
             </Typography>
+            <Typography>
+              View the longest single leaf value in firebase.
+            </Typography>
+            <br />
             {longestEntryInfo && (
               <Stack spacing={1}>
-                <Typography>Name: {longestEntryInfo.displayName}</Typography>
+                <Typography fontWeight="medium">
+                  Name: {longestEntryInfo.displayName}
+                </Typography>
                 <TextField
                   label="Path"
                   multiline
