@@ -151,6 +151,8 @@ function PagesContainer(props) {
               path="admin"
               element={
                 <Admin
+                  userList={userList}
+                  accounts={accounts}
                   actingUser={actingUser}
                   clearActingUser={clearActingUser}
                 />
@@ -163,7 +165,6 @@ function PagesContainer(props) {
               element={
                 <Users
                   userList={userList}
-                  accounts={accounts}
                   actingUser={actingUser}
                   clearActingUser={clearActingUser}
                   setActingUser={setActingUser}

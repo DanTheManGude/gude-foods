@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
-import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
@@ -11,55 +10,27 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Switch from "@mui/material/Switch";
-import TextField from "@mui/material/TextField";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
-import { longestEntryPathDelimiter } from "../../constants";
 
 import {
   setAuthorizationForUser,
   updateAllowUnrestrictedUsers,
 } from "../../utils/requests";
 
-import { findLongestEntry } from "../../utils/utility";
-
 import { UserContext } from "../Contexts";
 
 function Users(props) {
   const {
     userList,
-    accounts,
     actingUser,
     setActingUser,
     clearActingUser,
     allowUnrestrictedUsers,
   } = props;
 
-  const theme = useTheme();
   const user = useContext(UserContext);
-
-  const [longestEntryInfo, setLongestEntryInfo] = useState();
-
-  const handleLongestEntry = () => {
-    const { path } = findLongestEntry(accounts);
-
-    const parts = path.split(longestEntryPathDelimiter);
-    const accountUid = parts[0];
-    const value = parts.pop();
-
-    const displayName = userList.find(
-      (userEntry) => userEntry.uid === accountUid
-    ).displayName;
-
-    setLongestEntryInfo({
-      displayName,
-      path: parts.join("/"),
-      value,
-    });
-  };
 
   const renderUserManagmentCard = () => {
     return (
@@ -176,65 +147,6 @@ function Users(props) {
     </Stack>
   );
 
-  const renderLongestEntryCard = () => {
-    const disabledColor = theme.palette.text.primary;
-    return (
-      <Box sx={{ width: "95%" }}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Longest Entry
-            </Typography>
-            {longestEntryInfo && (
-              <Stack spacing={1}>
-                <Typography>Name: {longestEntryInfo.displayName}</Typography>
-                <TextField
-                  label="Path"
-                  multiline
-                  disabled
-                  value={longestEntryInfo.path}
-                  variant="filled"
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      WebkitTextFillColor: disabledColor,
-                    },
-                    "& .MuiFormLabel-root": {
-                      WebkitTextFillColor: disabledColor,
-                    },
-                  }}
-                />
-                <TextField
-                  label="Value"
-                  multiline
-                  disabled
-                  value={longestEntryInfo.value}
-                  variant="filled"
-                  sx={{
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      WebkitTextFillColor: disabledColor,
-                    },
-                    "& .MuiFormLabel-root": {
-                      WebkitTextFillColor: disabledColor,
-                    },
-                  }}
-                />
-              </Stack>
-            )}
-          </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={handleLongestEntry}
-            >
-              <Typography>Find longest entry</Typography>
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-    );
-  };
-
   return (
     <div>
       <Typography
@@ -257,7 +169,6 @@ function Users(props) {
           )}
           {renderUserStack(true)}
         </Stack>
-        {renderLongestEntryCard()}
       </Stack>
     </div>
   );
