@@ -18,7 +18,8 @@ import {
 import { DatabaseContext, AddAlertContext } from "../Contexts";
 
 const errorCopyAlert = {
-  message: <span>There was an error trying to copy to your clipboard.</span>,
+  title: <span>Error trying to copy to your clipboard</span>,
+  message: <span>Highlight the link and manually copy it.</span>,
   alertProps: { severity: "warning" },
 };
 
