@@ -64,6 +64,7 @@ function Recipe() {
     ingredients: {},
     isFavorite: false,
     notes: "",
+    sharedId: "",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);

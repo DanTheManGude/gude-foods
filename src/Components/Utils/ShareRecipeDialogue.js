@@ -25,12 +25,17 @@ const errorCopyAlert = {
 
 function ShareRecipeDialogue(props) {
   const { open, onClose, recipe } = props;
+  const { sharedId } = recipe;
 
   const addAlert = useContext(AddAlertContext);
   const database = useContext(DatabaseContext);
   const { glossary: _glossary } = database;
 
   const glossary = _glossary || {};
+
+  const handleStopSharing = () => {
+    console.log("handleStopSharing");
+  };
 
   const handleCopyLink = () => {
     const shareLink = constructShareRecipeLink(recipe, glossary);
@@ -99,6 +104,15 @@ function ShareRecipeDialogue(props) {
         <DialogContent dividers={true}>{renderButtonStack()}</DialogContent>
 
         <DialogActions>
+          {sharedId && (
+            <Button
+              color="error"
+              onClick={handleStopSharing}
+              variant="outlined"
+            >
+              <Typography>Stop sharing with link</Typography>
+            </Button>
+          )}
           <Button color="secondary" onClick={onClose} variant="contained">
             <Typography>Cancel</Typography>
           </Button>
