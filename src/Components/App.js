@@ -201,9 +201,10 @@ function App() {
     <>
       {renderMessages()}
       <NavBar isAuthorized={false} />
+      <UnauthorizedUser user={user} addAlert={addAlert} />
       <Card
         variant="outlined"
-        sx={{ marginLeft: "5%", marginRight: "5%", marginTop: 1 }}
+        sx={{ marginLeft: "5%", marginRight: "5%", marginTop: 2 }}
       >
         <CardHeader
           title={<Typography variant="h6">Welcome</Typography>}
@@ -214,7 +215,6 @@ function App() {
           </Typography>
         </CardContent>
       </Card>
-      <UnauthorizedUser user={user} addAlert={addAlert} />
     </>
   );
 }
