@@ -33,7 +33,10 @@ function App() {
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [authorizedLoading, setAuthorizedLoading] = useState(false);
+  const isLoading = initialLoading || authorizedLoading;
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [requestedUsers, setIsRequestedUsers] = useState();
@@ -57,8 +60,8 @@ function App() {
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
-    }, 50); //HACK for faster loading
+      setInitialLoading(false);
+    }, 5000); //HACK for faster loading
   }, []);
 
   useEffect(() => {
@@ -80,19 +83,21 @@ function App() {
       return;
     }
 
+    setAuthorizedLoading(true);
+    setInitialLoading(false);
+
     get(child(ref(getDatabase()), `users/${user.uid}`))
       .then((snapshot) => {
         const isAuthorizedInDb = snapshot.exists() && snapshot.val();
         if (isAuthorizedInDb) {
           setIsAuthorizedUser(true);
-        } else {
-          setIsLoading(false);
         }
+        setAuthorizedLoading(false);
       })
       .catch((error) => {
         console.warn(error);
         setIsAuthorizedUser(false);
-        setIsLoading(false);
+        setAuthorizedLoading(false);
       });
 
     onValue(ref(getDatabase(), `requestedUsers`), (snapshot) => {
