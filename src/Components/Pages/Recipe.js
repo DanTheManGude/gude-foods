@@ -413,6 +413,7 @@ function Recipe() {
           setOpenShareDialogue(false);
         }}
         recipe={recipeEntry}
+        recipeId={recipeId}
       />
     </div>
   );

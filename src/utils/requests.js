@@ -300,7 +300,7 @@ export const sendAuthorizationRequest = (user, addAlert) => {
 
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
 
-  if (false) sendAuthorizationEmail(userInfo, addAlert);
+  sendAuthorizationEmail(userInfo, addAlert);
 };
 
 export const removeUserFromRequestedUsers = (uid) => {
@@ -318,4 +318,26 @@ export const updateAllowUnrestrictedUsers = (newValue) => {
 
 export const setAuthorizationForUser = (uid, newValue) => {
   updateRequest({ [`users/${uid}`]: newValue });
+};
+
+export const createSharedRecipe = (sharedId, value, addAlert) => {
+  return new Promise((resolve) => {
+    updateRequest(
+      { [`shared/${sharedId}`]: value },
+      () => {
+        addAlert({
+          message: <span>Recipe has been shared with link</span>,
+          alertProps: { severity: "success" },
+        });
+        resolve(true);
+      },
+      () => {
+        addAlert({
+          message: <span>Error trying to share the recipe</span>,
+          alertProps: { severity: "error" },
+        });
+        resolve(false);
+      }
+    );
+  });
 };

@@ -9,24 +9,24 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
-import { constructShareRecipeLink } from "../../utils/utility";
+import { makeLinkAndMaybeShare } from "../../utils/utility";
 import {
   downloadData,
   transformRecipeForExport,
 } from "../../utils/dataTransfer";
 
-import { DatabaseContext, AddAlertContext } from "../Contexts";
+import { DatabaseContext, AddAlertContext, UserContext } from "../Contexts";
 
 const errorCopyAlert = {
-  title: <span>Error trying to copy to your clipboard</span>,
-  message: <span>Highlight the link and manually copy it.</span>,
-  alertProps: { severity: "warning" },
+  message: <span>Error trying to copy to your clipboard</span>,
+  alertProps: { severity: "error" },
 };
 
 function ShareRecipeDialogue(props) {
-  const { open, onClose, recipe } = props;
+  const { open, onClose, recipe, recipeId } = props;
   const { sharedId } = recipe;
 
+  const user = useContext(UserContext);
   const addAlert = useContext(AddAlertContext);
   const database = useContext(DatabaseContext);
   const { glossary: _glossary } = database;
@@ -37,8 +37,18 @@ function ShareRecipeDialogue(props) {
     console.log("handleStopSharing");
   };
 
-  const handleCopyLink = () => {
-    const shareLink = constructShareRecipeLink(recipe, glossary);
+  const handleCopyLink = async () => {
+    const shareLink = await makeLinkAndMaybeShare(
+      recipe,
+      glossary,
+      user,
+      recipeId,
+      addAlert
+    );
+
+    if (!shareLink) {
+      return;
+    }
 
     if (!navigator?.clipboard?.writeText) {
       addAlert(errorCopyAlert);
