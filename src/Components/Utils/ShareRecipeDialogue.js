@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -32,6 +33,7 @@ function ShareRecipeDialogue(props) {
   const { open, onClose, recipe, recipeId } = props;
   const { sharedId } = recipe;
 
+  let navigate = useNavigate();
   const user = useContext(UserContext);
   const addAlert = useContext(AddAlertContext);
   const database = useContext(DatabaseContext);
@@ -72,7 +74,6 @@ function ShareRecipeDialogue(props) {
           message: <span>The link has been copied to your clipboard.</span>,
           alertProps: { severity: "success" },
         });
-        onClose();
       })
       .catch(() => {
         addAlert(errorCopyAlert);
@@ -130,7 +131,18 @@ function ShareRecipeDialogue(props) {
               onClick={handleStopSharing}
               variant="outlined"
             >
-              <Typography>Stop sharing with link</Typography>
+              <Typography>Stop sharing</Typography>
+            </Button>
+          )}
+          {sharedId && (
+            <Button
+              color="primary"
+              onClick={() => {
+                navigate(`/share/${sharedId}`);
+              }}
+              variant="contained"
+            >
+              <Typography>Visit shared</Typography>
             </Button>
           )}
           <Button color="secondary" onClick={onClose} variant="contained">
