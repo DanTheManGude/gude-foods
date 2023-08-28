@@ -26,7 +26,7 @@ import {
 } from "../Contexts";
 
 function ShareRecipe(props) {
-  const { isAuthorized } = props;
+  const { isAuthorized, isAdmin, setActingUserByUid } = props;
 
   let navigate = useNavigate();
   const user = useContext(UserContext);
@@ -71,16 +71,14 @@ function ShareRecipe(props) {
         const sharedRecipeInfo = snapshot.exists() && snapshot.val();
         if (sharedRecipeInfo) {
           setRecipeInfo(sharedRecipeInfo);
+        } else {
+          updateLastViewedSharedRecipe(shareId);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        updateLastViewedSharedRecipe(shareId);
+      });
   }, [shareId]);
-
-  useEffect(() => {
-    if (!recipeInfo && shareId) {
-      updateLastViewedSharedRecipe(shareId);
-    }
-  }, [recipeInfo, shareId]);
 
   if (isLoading) {
     return <Loading />;
@@ -140,7 +138,23 @@ function ShareRecipe(props) {
           }}
           sx={{ width: "85%", marginTop: 1 }}
         >
-          <Typography>View recipe in cookbook</Typography>
+          <Typography>View recipe in your cookbook</Typography>
+        </Button>
+      );
+    }
+
+    if (recipeInfo && isAdmin) {
+      return (
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            setActingUserByUid(recipeInfo.userId);
+            navigate(`/recipe/${recipeInfo.recipeId}`);
+          }}
+          sx={{ width: "85%", marginTop: 1 }}
+        >
+          <Typography>View recipe in their cookbook</Typography>
         </Button>
       );
     }

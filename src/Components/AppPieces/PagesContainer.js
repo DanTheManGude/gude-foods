@@ -43,6 +43,12 @@ function PagesContainer(props) {
 
   const [themeIsNotSet, setThemeIsNotSet] = useState(false);
 
+  const setActingUserByUid = (uid) => {
+    const newUser = userList.find((userEntry) => userEntry.uid === uid);
+    if (newUser) {
+      setActingUser(newUser);
+    }
+  };
   const clearActingUser = () => {
     setActingUser();
   };
@@ -180,7 +186,13 @@ function PagesContainer(props) {
           )}
           <Route
             path="share/:shareId"
-            element={<ShareRecipe isAuthorized={true} />}
+            element={
+              <ShareRecipe
+                isAuthorized={true}
+                isAdmin={isAdmin}
+                setActingUserByUid={setActingUserByUid}
+              />
+            }
           />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
