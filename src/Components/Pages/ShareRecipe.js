@@ -42,6 +42,8 @@ function ShareRecipe(props) {
   const [recipeInfo, setRecipeInfo] = useState();
   const [isLoading, setIsLoading] = useState(Boolean(shareId));
 
+  const isOwnRecipe = () => recipeInfo && recipeInfo.userId === user.uid;
+
   useEffect(() => {
     if (!shareId) {
       return;
@@ -117,20 +119,35 @@ function ShareRecipe(props) {
   };
 
   const renderControls = () => {
-    if (isAuthorized) {
+    if (!isAuthorized) {
+      return <UnauthorizedUser user={user} addAlert={addAlert} />;
+    }
+
+    if (isOwnRecipe()) {
       return (
         <Button
           color="primary"
           variant="contained"
-          onClick={handleSave}
+          onClick={() => {
+            navigate(`/recipe/${recipeInfo.recipeId}`);
+          }}
           sx={{ width: "85%", marginTop: 1 }}
         >
-          <Typography>Save recipe to cookbook</Typography>
+          <Typography>View recipe in cookbook</Typography>
         </Button>
       );
     }
 
-    return <UnauthorizedUser user={user} addAlert={addAlert} />;
+    return (
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={handleSave}
+        sx={{ width: "85%", marginTop: 1 }}
+      >
+        <Typography>Save recipe to cookbook</Typography>
+      </Button>
+    );
   };
 
   const renderTags = () => {
