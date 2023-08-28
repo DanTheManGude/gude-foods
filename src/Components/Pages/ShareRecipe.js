@@ -7,7 +7,10 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
 import { transformCookbookFromImport } from "../../utils/dataTransfer";
-import { updateFromCookbookImport } from "../../utils/requests";
+import {
+  updateFromCookbookImport,
+  updateLastViewedSharedRecipe,
+} from "../../utils/requests";
 
 import UnauthorizedUser from "../AppPieces/UnauthorizedUser";
 import Loading from "../Utils/Loading";
@@ -42,8 +45,6 @@ function ShareRecipe(props) {
   const [recipeInfo, setRecipeInfo] = useState();
   const [isLoading, setIsLoading] = useState(Boolean(shareId));
 
-  const isOwnRecipe = () => recipeInfo && recipeInfo.userId === user.uid;
-
   useEffect(() => {
     if (!shareId) {
       return;
@@ -74,6 +75,12 @@ function ShareRecipe(props) {
       })
       .catch(() => {});
   }, [shareId]);
+
+  useEffect(() => {
+    if (!recipeInfo && shareId) {
+      updateLastViewedSharedRecipe(shareId);
+    }
+  }, [recipeInfo, shareId]);
 
   if (isLoading) {
     return <Loading />;
@@ -123,7 +130,7 @@ function ShareRecipe(props) {
       return <UnauthorizedUser user={user} addAlert={addAlert} />;
     }
 
-    if (isOwnRecipe()) {
+    if (recipeInfo && recipeInfo.userId === user.uid) {
       return (
         <Button
           color="primary"
