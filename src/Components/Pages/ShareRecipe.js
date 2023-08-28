@@ -1,5 +1,6 @@
-import { useState, useContext } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getDatabase, ref, child, get } from "firebase/database";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -9,6 +10,7 @@ import { transformCookbookFromImport } from "../../utils/dataTransfer";
 import { updateFromCookbookImport } from "../../utils/requests";
 
 import UnauthorizedUser from "../AppPieces/UnauthorizedUser";
+import Loading from "../Utils/Loading";
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
 import { renderNotesContainer, renderTagList } from "../Utils/RecipeParts";
@@ -35,33 +37,62 @@ function ShareRecipe(props) {
   const dataPaths = useContext(DataPathsContext);
   const { glossaryPath, cookbookPath } = dataPaths;
 
-  const [recipe, setRecipe] = useState();
   const { shareId } = useParams();
+  const [recipe, setRecipe] = useState();
+  const [recipeInfo, setRecipeInfo] = useState();
+  const [isLoading, setIsLoading] = useState(Boolean(shareId));
 
-  if (!recipe) {
-    const recipeData = null;
-
-    if (!recipeData) {
-      return (
-        <Stack alignItems="center" spacing={2} sx={{ paddingTop: 2 }}>
-          <Typography variant="h6" color={"text.primary"}>
-            It looks like there is no recipe being shared.
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={() => {
-              navigate("/");
-            }}
-          >
-            Go to home page
-          </Button>
-        </Stack>
-      );
+  useEffect(() => {
+    if (!shareId) {
+      return;
     }
 
-    const _recipe = JSON.parse(recipeData);
-    setRecipe(_recipe);
-    return null;
+    get(child(ref(getDatabase()), `shared/${shareId}/recipeData`))
+      .then((snapshot) => {
+        const sharedRecipe = snapshot.exists() && snapshot.val();
+        if (sharedRecipe) {
+          setRecipe(sharedRecipe);
+        }
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+
+    if (!isAuthorized) {
+      return;
+    }
+
+    get(child(ref(getDatabase()), `shared/${shareId}/info`))
+      .then((snapshot) => {
+        const sharedRecipeInfo = snapshot.exists() && snapshot.val();
+        if (sharedRecipeInfo) {
+          setRecipeInfo(sharedRecipeInfo);
+        }
+      })
+      .catch(() => {});
+  }, [shareId]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!recipe) {
+    return (
+      <Stack alignItems="center" spacing={2} sx={{ paddingTop: 2 }}>
+        <Typography variant="h6" color={"text.primary"}>
+          It looks like there is no recipe being shared.
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Go to home page
+        </Button>
+      </Stack>
+    );
   }
 
   const handleSave = () => {
