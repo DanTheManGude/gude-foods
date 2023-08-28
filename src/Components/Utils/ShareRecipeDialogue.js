@@ -31,7 +31,7 @@ const errorCopyAlert = {
 
 function ShareRecipeDialogue(props) {
   const { open, onClose, recipe, recipeId } = props;
-  const { sharedId } = recipe;
+  const { shareId } = recipe;
 
   let navigate = useNavigate();
   const user = useContext(UserContext);
@@ -44,7 +44,7 @@ function ShareRecipeDialogue(props) {
   const glossary = _glossary || {};
 
   const handleStopSharing = () => {
-    removeSharedRecipe(sharedId, `${cookbookPath}/${recipeId}`, addAlert);
+    removeSharedRecipe(shareId, `${cookbookPath}/${recipeId}`, addAlert);
     onClose();
   };
 
@@ -125,7 +125,7 @@ function ShareRecipeDialogue(props) {
         <DialogContent dividers={true}>{renderButtonStack()}</DialogContent>
 
         <DialogActions>
-          {sharedId && (
+          {shareId && (
             <Button
               color="error"
               onClick={handleStopSharing}
@@ -134,11 +134,11 @@ function ShareRecipeDialogue(props) {
               <Typography>Stop sharing</Typography>
             </Button>
           )}
-          {sharedId && (
+          {shareId && (
             <Button
               color="primary"
               onClick={() => {
-                navigate(`/share/${sharedId}`);
+                navigate(`/share/${shareId}`);
               }}
               variant="contained"
             >

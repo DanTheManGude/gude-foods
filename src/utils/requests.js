@@ -321,7 +321,7 @@ export const setAuthorizationForUser = (uid, newValue) => {
 };
 
 export const createSharedRecipe = (
-  sharedId,
+  shareId,
   sharedRecipe,
   recipePath,
   addAlert
@@ -329,8 +329,8 @@ export const createSharedRecipe = (
   return new Promise((resolve) => {
     updateRequest(
       {
-        [`shared/${sharedId}`]: sharedRecipe,
-        [`${recipePath}/sharedId`]: sharedId,
+        [`shared/${shareId}`]: sharedRecipe,
+        [`${recipePath}/shareId`]: shareId,
       },
       () => {
         addAlert({
@@ -350,9 +350,9 @@ export const createSharedRecipe = (
   });
 };
 
-export const removeSharedRecipe = (sharedId, recipePath, addAlert) => {
+export const removeSharedRecipe = (shareId, recipePath, addAlert) => {
   deleteRequest(
-    [`shared/${sharedId}`, `${recipePath}/sharedId`],
+    [`shared/${shareId}`, `${recipePath}/shareId`],
     () => {
       addAlert({
         message: <span>Succesfully stopped sharing from link</span>,
