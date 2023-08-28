@@ -14,6 +14,7 @@ import {
   downloadData,
   transformRecipeForExport,
 } from "../../utils/dataTransfer";
+import { removeSharedRecipe } from "../../utils/requests";
 
 import {
   DatabaseContext,
@@ -41,7 +42,8 @@ function ShareRecipeDialogue(props) {
   const glossary = _glossary || {};
 
   const handleStopSharing = () => {
-    console.log("handleStopSharing");
+    removeSharedRecipe(sharedId, `${cookbookPath}/${recipeId}`, addAlert);
+    onClose();
   };
 
   const handleCopyLink = async () => {

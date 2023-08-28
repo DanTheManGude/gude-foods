@@ -349,3 +349,21 @@ export const createSharedRecipe = (
     );
   });
 };
+
+export const removeSharedRecipe = (sharedId, recipePath, addAlert) => {
+  deleteRequest(
+    [`shared/${sharedId}`, `${recipePath}/sharedId`],
+    () => {
+      addAlert({
+        message: <span>Succesfully stopped sharing from link</span>,
+        alertProps: { severity: "success" },
+      });
+    },
+    () => {
+      addAlert({
+        message: <span>Error when trying to stop sharing</span>,
+        alertProps: { severity: "error" },
+      });
+    }
+  );
+};
