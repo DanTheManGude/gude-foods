@@ -178,7 +178,10 @@ function PagesContainer(props) {
               element={<ExternalRecipe givenRecipe={externalRecipe} />}
             />
           )}
-          <Route path="share" element={<ShareRecipe isAuthorized={true} />} />
+          <Route
+            path="share/:shareId"
+            element={<ShareRecipe isAuthorized={true} />}
+          />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </DataPathsContext.Provider>
