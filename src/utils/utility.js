@@ -137,6 +137,7 @@ export const makeLinkAndMaybeShare = async (
   glossary,
   user,
   recipeId,
+  cookbookPath,
   addAlert
 ) => {
   let shareId = recipe.shareId;
@@ -154,6 +155,7 @@ export const makeLinkAndMaybeShare = async (
         recipeData,
         info: { userId, recipeId, shareDate },
       },
+      `${cookbookPath}/${recipeId}`,
       addAlert
     );
 

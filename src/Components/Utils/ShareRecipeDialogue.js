@@ -15,7 +15,12 @@ import {
   transformRecipeForExport,
 } from "../../utils/dataTransfer";
 
-import { DatabaseContext, AddAlertContext, UserContext } from "../Contexts";
+import {
+  DatabaseContext,
+  AddAlertContext,
+  UserContext,
+  DataPathsContext,
+} from "../Contexts";
 
 const errorCopyAlert = {
   message: <span>Error trying to copy to your clipboard</span>,
@@ -29,7 +34,9 @@ function ShareRecipeDialogue(props) {
   const user = useContext(UserContext);
   const addAlert = useContext(AddAlertContext);
   const database = useContext(DatabaseContext);
+  const dataPaths = useContext(DataPathsContext);
   const { glossary: _glossary } = database;
+  const { cookbookPath } = dataPaths;
 
   const glossary = _glossary || {};
 
@@ -43,6 +50,7 @@ function ShareRecipeDialogue(props) {
       glossary,
       user,
       recipeId,
+      cookbookPath,
       addAlert
     );
 

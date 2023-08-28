@@ -320,10 +320,18 @@ export const setAuthorizationForUser = (uid, newValue) => {
   updateRequest({ [`users/${uid}`]: newValue });
 };
 
-export const createSharedRecipe = (sharedId, value, addAlert) => {
+export const createSharedRecipe = (
+  sharedId,
+  sharedRecipe,
+  recipePath,
+  addAlert
+) => {
   return new Promise((resolve) => {
     updateRequest(
-      { [`shared/${sharedId}`]: value },
+      {
+        [`shared/${sharedId}`]: sharedRecipe,
+        [`${recipePath}/sharedId`]: sharedId,
+      },
       () => {
         addAlert({
           message: <span>Recipe has been shared with link</span>,
