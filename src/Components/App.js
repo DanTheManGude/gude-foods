@@ -7,7 +7,6 @@ import { getDatabase, ref, child, get, onValue } from "firebase/database";
 
 import { TransitionGroup } from "react-transition-group";
 
-import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import List from "@mui/material/List";
@@ -25,6 +24,8 @@ import NavBar from "./AppPieces/NavBar";
 import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
 import ShareRecipe from "./Pages/ShareRecipe";
+
+import Loading from "./Utils/Loading";
 
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
@@ -181,11 +182,7 @@ function App() {
   }
 
   if (isLoading) {
-    return (
-      <div style={{ textAlign: "center", paddingTop: "20%" }}>
-        <CircularProgress color="primary" size="30%" sx={{ margin: "auto" }} />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (location.pathname.startsWith("/share/")) {
