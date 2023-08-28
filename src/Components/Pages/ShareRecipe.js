@@ -78,7 +78,7 @@ function ShareRecipe(props) {
       .catch(() => {
         updateLastViewedSharedRecipe(shareId);
       });
-  }, [shareId]);
+  }, [shareId, isAuthorized]);
 
   if (isLoading) {
     return <Loading />;
