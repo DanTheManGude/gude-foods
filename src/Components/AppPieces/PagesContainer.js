@@ -195,7 +195,12 @@ function PagesContainer(props) {
           {isAdmin && (
             <Route
               path="sharedRecipes"
-              element={<SharedRecipes sharedRecipes={sharedRecipes} />}
+              element={
+                <SharedRecipes
+                  sharedRecipes={sharedRecipes}
+                  accounts={accounts}
+                />
+              }
             />
           )}
           {externalRecipe && (

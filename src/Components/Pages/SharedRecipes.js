@@ -7,22 +7,35 @@ import Button from "@mui/material/Button";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function SharedRecipes(props) {
-  const { sharedRecipes } = props;
+  const { sharedRecipes, accounts } = props;
 
   const renderSharedRecipe = ([sharedId, sharedRecipe]) => {
     const { info, recipeData, lastViewed } = sharedRecipe;
     const { recipeId, shareDate, userId } = info;
     const { name } = recipeData;
 
+    const lastViewedMessage = lastViewed
+      ? `Last viewed: ${new Date(lastViewed).toLocaleString()}`
+      : "Not viewed";
+    const sharedDateMessage = `Shared on: ${new Date(
+      shareDate
+    ).toLocaleDateString()}`;
+    const createdByMessage = `Created by: ${accounts[userId].name}`;
+
     return (
-      <Accordion key={sharedId}>
+      <Accordion key={sharedId} sx={{ width: "95%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">{name}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Stack spacing={2}>
-            <Typography key="lastViewed">{lastViewed}</Typography>
-            <Typography key="shareDate">{shareDate}</Typography>
+          <Stack spacing={1}>
+            <Typography key="details">
+              {lastViewedMessage}
+              <br />
+              {sharedDateMessage}
+              <br />
+              {createdByMessage}
+            </Typography>
             <Stack
               key="actions"
               spacing={2}
