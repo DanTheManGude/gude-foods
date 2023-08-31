@@ -7,6 +7,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { removeSharedRecipe } from "../../utils/requests";
@@ -52,7 +53,17 @@ function SharedRecipes(props) {
     return (
       <Accordion key={sharedId} sx={{ width: "95%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">{recipeName}</Typography>
+          <Stack direction="row" spacing={2} alignItems="baseline">
+            <Typography variant="h6">{recipeName}</Typography>
+            {!lastViewed && (
+              <Chip
+                label={<Typography>Not viewed</Typography>}
+                size="small"
+                variant="outlined"
+                color="secondary"
+              />
+            )}
+          </Stack>
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={1}>
