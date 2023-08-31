@@ -199,6 +199,7 @@ function PagesContainer(props) {
                 <SharedRecipes
                   sharedRecipes={sharedRecipes}
                   accounts={accounts}
+                  setActingUserByUid={setActingUserByUid}
                 />
               }
             />

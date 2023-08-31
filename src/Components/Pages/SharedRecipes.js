@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -10,14 +11,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { removeSharedRecipe } from "../../utils/requests";
 
-import { AddAlertContext, DataPathsContext } from "../Contexts";
+import { UserContext, AddAlertContext, DataPathsContext } from "../Contexts";
 
 import DeleteDialog from "../Utils/DeleteDialog";
 
 function SharedRecipes(props) {
-  const { sharedRecipes, accounts } = props;
+  const { sharedRecipes, accounts, setActingUserByUid } = props;
 
-  //let navigate = useNavigate();
+  let navigate = useNavigate();
+  const user = useContext(UserContext);
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const { cookbookPath } = dataPaths;
@@ -85,8 +87,10 @@ function SharedRecipes(props) {
                 size="large"
                 sx={{ flex: 1 }}
                 onClick={() => {
-                  console.log("view");
-                  //navigate(`/recipe/${recipeId}`);
+                  if (user.uid !== userId) {
+                    setActingUserByUid(userId);
+                  }
+                  navigate(`/recipe/${recipeId}`);
                 }}
               >
                 <Typography color="primary.contrastText">
