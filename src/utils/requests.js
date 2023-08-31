@@ -3,6 +3,7 @@ import emailjs from "@emailjs/browser";
 
 import { databasePaths, emailConfig } from "../constants";
 import { getEmailLink } from "./utility";
+import { transformRecipeForExport } from "./dataTransfer";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
@@ -188,12 +189,12 @@ export const saveRecipe = (
   recipe,
   _recipeId,
   { cookbookPath, recipeOrderPath },
-  recipeOrder,
+  { recipeOrder, glossary },
   addAlert,
   successHandler,
   navigate
 ) => {
-  const { name, instructions, ingredients } = recipe;
+  const { name, instructions, ingredients, shareId } = recipe;
   const isCreating = !_recipeId;
 
   if (
@@ -218,6 +219,13 @@ export const saveRecipe = (
   const updates = {
     [`${cookbookPath}/${recipeId}`]: recipe,
   };
+
+  if (shareId) {
+    updates[`shared/${shareId}/recipeData`] = transformRecipeForExport(
+      recipe,
+      glossary
+    );
+  }
 
   if (isCreating) {
     updates[recipeOrderPath] = [recipeId, ...recipeOrder];

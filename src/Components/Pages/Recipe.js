@@ -171,7 +171,7 @@ function Recipe() {
       recipeEntry,
       recipeId,
       { cookbookPath, recipeOrderPath },
-      recipeOrder,
+      { recipeOrder, glossary },
       addAlert,
       saveSuccessHandler,
       navigate
