@@ -1,3 +1,5 @@
+import { useContext, useState } from "react";
+
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
@@ -6,26 +8,49 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Button from "@mui/material/Button";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+import { removeSharedRecipe } from "../../utils/requests";
+
+import { AddAlertContext, DataPathsContext } from "../Contexts";
+
+import DeleteDialog from "../Utils/DeleteDialog";
+
 function SharedRecipes(props) {
   const { sharedRecipes, accounts } = props;
+
+  //let navigate = useNavigate();
+  const addAlert = useContext(AddAlertContext);
+  const dataPaths = useContext(DataPathsContext);
+  const { cookbookPath } = dataPaths;
+
+  const [deleteSharedId, setDeleteSharedId] = useState();
+
+  const closeDeleteDialog = () => {
+    setDeleteSharedId();
+  };
+
+  if (!accounts) {
+    return null;
+  }
 
   const renderSharedRecipe = ([sharedId, sharedRecipe]) => {
     const { info, recipeData, lastViewed } = sharedRecipe;
     const { recipeId, shareDate, userId } = info;
-    const { name } = recipeData;
+    const { name: recipeName } = recipeData;
 
     const lastViewedMessage = lastViewed
       ? `Last viewed: ${new Date(lastViewed).toLocaleString()}`
       : "Not viewed";
+
     const sharedDateMessage = `Shared on: ${new Date(
       shareDate
     ).toLocaleDateString()}`;
+
     const createdByMessage = `Created by: ${accounts[userId].name}`;
 
     return (
       <Accordion key={sharedId} sx={{ width: "95%" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">{name}</Typography>
+          <Typography variant="h6">{recipeName}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={1}>
@@ -49,10 +74,10 @@ function SharedRecipes(props) {
                 size="large"
                 sx={{ flex: 1 }}
                 onClick={() => {
-                  console.log("remove");
+                  setDeleteSharedId(sharedId);
                 }}
               >
-                <Typography>Remove</Typography>
+                <Typography>Delete</Typography>
               </Button>
               <Button
                 color="primary"
@@ -85,6 +110,19 @@ function SharedRecipes(props) {
       .map(renderSharedRecipe);
   };
 
+  const getDeleteMessage = () => {
+    if (!deleteSharedId) {
+      return "";
+    }
+
+    const {
+      recipeData: { name: recipeName },
+      info: { userId },
+    } = sharedRecipes[deleteSharedId];
+
+    return `the recipe ${recipeName} created by ${accounts[userId].name}`;
+  };
+
   return (
     <div>
       <Typography
@@ -100,6 +138,20 @@ function SharedRecipes(props) {
       <Stack spacing={2} alignItems="center">
         {renderSharedRecipes()}
       </Stack>
+      <DeleteDialog
+        open={!!deleteSharedId}
+        onClose={closeDeleteDialog}
+        titleDO="shared recipe"
+        comfirmationMessageDO={getDeleteMessage()}
+        handleDelete={() => {
+          closeDeleteDialog();
+          removeSharedRecipe(
+            deleteSharedId,
+            `${cookbookPath}/${sharedRecipes[deleteSharedId].info.recipeId}`,
+            addAlert
+          );
+        }}
+      />
     </div>
   );
 }
