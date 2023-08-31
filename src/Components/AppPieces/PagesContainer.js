@@ -16,6 +16,7 @@ import Admin from "../Pages/Admin";
 import Users from "../Pages/Users";
 import ExternalRecipe from "../Pages/ExternalRecipe";
 import ShareRecipe from "../Pages/ShareRecipe";
+import SharedRecipes from "../Pages/SharedRecipes";
 
 import {
   DatabaseContext,
@@ -40,8 +41,16 @@ function PagesContainer(props) {
   const [actingUser, setActingUser] = useState();
   const [userList, setUserList] = useState([]);
   const [accounts, setAccounts] = useState();
+  const [sharedRecipes, setSharedRecipes] = useState();
 
   const [themeIsNotSet, setThemeIsNotSet] = useState(false);
+
+  const setActingUserByUid = (uid) => {
+    const newUser = userList.find((userEntry) => userEntry.uid === uid);
+    if (newUser) {
+      setActingUser(newUser);
+    }
+  };
 
   const clearActingUser = () => {
     setActingUser();
@@ -115,6 +124,17 @@ function PagesContainer(props) {
     });
   }, [user]);
 
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const db = getDatabase();
+
+    onValue(ref(db, "shared"), (snapshot) => {
+      const sharedRecipesSnapshot = snapshot.val();
+      setSharedRecipes(sharedRecipesSnapshot);
+    });
+  }, [isAdmin]);
+
   return (
     <DatabaseContext.Provider value={database}>
       <DataPathsContext.Provider value={dataPaths}>
@@ -172,13 +192,34 @@ function PagesContainer(props) {
               }
             />
           )}
+          {isAdmin && (
+            <Route
+              path="sharedRecipes"
+              element={
+                <SharedRecipes
+                  sharedRecipes={sharedRecipes}
+                  accounts={accounts}
+                  setActingUserByUid={setActingUserByUid}
+                />
+              }
+            />
+          )}
           {externalRecipe && (
             <Route
               path="externalRecipe"
               element={<ExternalRecipe givenRecipe={externalRecipe} />}
             />
           )}
-          <Route path="share" element={<ShareRecipe isAuthorized={true} />} />
+          <Route
+            path="share/:shareId"
+            element={
+              <ShareRecipe
+                isAuthorized={true}
+                isAdmin={isAdmin}
+                setActingUserByUid={setActingUserByUid}
+              />
+            }
+          />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </DataPathsContext.Provider>

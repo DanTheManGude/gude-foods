@@ -1,6 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 import { fontFamilies, longestEntryPathDelimiter } from "../constants";
 import { transformRecipeForExport } from "./dataTransfer";
+import { createKey, createSharedRecipe } from "./requests";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -125,12 +126,44 @@ export async function fetchRecipeFromUrl(externalUrl) {
   return recipe;
 }
 
-export const constructShareRecipeLink = (recipe, glossary) => {
-  const recipeData = transformRecipeForExport(recipe, glossary);
-  const recipeString = encodeURIComponent(JSON.stringify(recipeData));
+export const constructShareRecipeLink = (shareId) => {
   const urlBase = window.location.origin;
-
-  const link = `${urlBase}/share?recipeData=${recipeString}`;
-
+  const link = `${urlBase}/share/${shareId}`;
   return link;
+};
+
+export const makeLinkAndMaybeShare = async (
+  recipe,
+  glossary,
+  user,
+  recipeId,
+  cookbookPath,
+  addAlert
+) => {
+  let shareId = recipe.shareId;
+
+  if (!shareId) {
+    shareId = createKey("shared");
+
+    const recipeData = transformRecipeForExport(recipe, glossary);
+    const userId = user.uid;
+    const shareDate = Date.now();
+
+    const createSuccess = await createSharedRecipe(
+      shareId,
+      {
+        recipeData,
+        info: { userId, recipeId, shareDate },
+        lastViewed: 0,
+      },
+      `${cookbookPath}/${recipeId}`,
+      addAlert
+    );
+
+    if (!createSuccess) {
+      return "";
+    }
+  }
+
+  return constructShareRecipeLink(shareId);
 };

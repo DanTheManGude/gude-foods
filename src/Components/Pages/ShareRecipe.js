@@ -1,14 +1,19 @@
-import { useState, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getDatabase, ref, child, get } from "firebase/database";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
 import { transformCookbookFromImport } from "../../utils/dataTransfer";
-import { updateFromCookbookImport } from "../../utils/requests";
+import {
+  updateFromCookbookImport,
+  updateLastViewedSharedRecipe,
+} from "../../utils/requests";
 
 import UnauthorizedUser from "../AppPieces/UnauthorizedUser";
+import Loading from "../Utils/Loading";
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
 import { renderNotesContainer, renderTagList } from "../Utils/RecipeParts";
@@ -21,10 +26,9 @@ import {
 } from "../Contexts";
 
 function ShareRecipe(props) {
-  const { isAuthorized } = props;
+  const { isAuthorized, isAdmin, setActingUserByUid } = props;
 
   let navigate = useNavigate();
-  let location = useLocation();
   const user = useContext(UserContext);
   const addAlert = useContext(AddAlertContext);
 
@@ -36,33 +40,66 @@ function ShareRecipe(props) {
   const dataPaths = useContext(DataPathsContext);
   const { glossaryPath, cookbookPath } = dataPaths;
 
+  const { shareId } = useParams();
   const [recipe, setRecipe] = useState();
+  const [recipeInfo, setRecipeInfo] = useState();
+  const [isLoading, setIsLoading] = useState(Boolean(shareId));
 
-  if (!recipe) {
-    const { search } = location;
-    const params = new URLSearchParams(search);
-    const recipeData = params.get("recipeData");
-    if (!recipeData) {
-      return (
-        <Stack alignItems="center" spacing={2} sx={{ paddingTop: 2 }}>
-          <Typography variant="h6">
-            It looks like there is no recipe being shared.
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={() => {
-              navigate("/");
-            }}
-          >
-            Go to home page
-          </Button>
-        </Stack>
-      );
+  useEffect(() => {
+    if (!shareId) {
+      return;
     }
 
-    const _recipe = JSON.parse(recipeData);
-    setRecipe(_recipe);
-    return null;
+    get(child(ref(getDatabase()), `shared/${shareId}/recipeData`))
+      .then((snapshot) => {
+        const sharedRecipe = snapshot.exists() && snapshot.val();
+        if (sharedRecipe) {
+          setRecipe(sharedRecipe);
+        }
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+
+    if (!isAuthorized) {
+      return;
+    }
+
+    get(child(ref(getDatabase()), `shared/${shareId}/info`))
+      .then((snapshot) => {
+        const sharedRecipeInfo = snapshot.exists() && snapshot.val();
+        if (sharedRecipeInfo) {
+          setRecipeInfo(sharedRecipeInfo);
+        } else {
+          updateLastViewedSharedRecipe(shareId);
+        }
+      })
+      .catch(() => {
+        updateLastViewedSharedRecipe(shareId);
+      });
+  }, [shareId, isAuthorized]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!recipe) {
+    return (
+      <Stack alignItems="center" spacing={2} sx={{ paddingTop: 2 }}>
+        <Typography variant="h6" color={"text.primary"}>
+          It looks like there is no recipe being shared.
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Go to home page
+        </Button>
+      </Stack>
+    );
   }
 
   const handleSave = () => {
@@ -87,20 +124,51 @@ function ShareRecipe(props) {
   };
 
   const renderControls = () => {
-    if (isAuthorized) {
+    if (!isAuthorized) {
+      return <UnauthorizedUser user={user} addAlert={addAlert} />;
+    }
+
+    if (recipeInfo && recipeInfo.userId === user.uid) {
       return (
         <Button
           color="primary"
           variant="contained"
-          onClick={handleSave}
+          onClick={() => {
+            navigate(`/recipe/${recipeInfo.recipeId}`);
+          }}
           sx={{ width: "85%", marginTop: 1 }}
         >
-          <Typography>Save recipe to cookbook</Typography>
+          <Typography>View recipe in your cookbook</Typography>
         </Button>
       );
     }
 
-    return <UnauthorizedUser user={user} addAlert={addAlert} />;
+    if (recipeInfo && isAdmin) {
+      return (
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            setActingUserByUid(recipeInfo.userId);
+            navigate(`/recipe/${recipeInfo.recipeId}`);
+          }}
+          sx={{ width: "85%", marginTop: 1 }}
+        >
+          <Typography>View recipe in their cookbook</Typography>
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={handleSave}
+        sx={{ width: "85%", marginTop: 1 }}
+      >
+        <Typography>Save recipe to cookbook</Typography>
+      </Button>
+    );
   };
 
   const renderTags = () => {

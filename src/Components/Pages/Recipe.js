@@ -64,6 +64,7 @@ function Recipe() {
     ingredients: {},
     isFavorite: false,
     notes: "",
+    shareId: "",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -170,7 +171,7 @@ function Recipe() {
       recipeEntry,
       recipeId,
       { cookbookPath, recipeOrderPath },
-      recipeOrder,
+      { recipeOrder, glossary },
       addAlert,
       saveSuccessHandler,
       navigate
@@ -412,6 +413,7 @@ function Recipe() {
           setOpenShareDialogue(false);
         }}
         recipe={recipeEntry}
+        recipeId={recipeId}
       />
     </div>
   );

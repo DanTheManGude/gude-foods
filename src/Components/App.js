@@ -1,13 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, child, get, onValue } from "firebase/database";
 
 import { TransitionGroup } from "react-transition-group";
 
-import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import List from "@mui/material/List";
@@ -25,6 +24,8 @@ import NavBar from "./AppPieces/NavBar";
 import BottomNav from "./AppPieces/BottomNav";
 import UnauthorizedUser from "./AppPieces/UnauthorizedUser";
 import ShareRecipe from "./Pages/ShareRecipe";
+
+import Loading from "./Utils/Loading";
 
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
@@ -61,14 +62,14 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setInitialLoading(false);
-    }, 5000); //HACK for faster loading
+    }, 5000);
   }, []);
 
   useEffect(() => {
     if (
       prevUserRef.current &&
       prevUserRef.current !== user &&
-      location.pathname !== "/share"
+      !location.pathname.startsWith("/share")
     ) {
       navigate("/home");
     }
@@ -181,21 +182,22 @@ function App() {
   }
 
   if (isLoading) {
-    return (
-      <div style={{ textAlign: "center", paddingTop: "20%" }}>
-        <CircularProgress color="primary" size="30%" sx={{ margin: "auto" }} />
-      </div>
-    );
+    return <Loading />;
   }
 
-  if (location.pathname === "/share") {
+  if (location.pathname.startsWith("/share/")) {
     return (
       <>
         {renderMessages()}
         <NavBar isAuthorized={false} />
         <AddAlertContext.Provider value={addAlert}>
           <UserContext.Provider value={user}>
-            <ShareRecipe isAuthorized={false} />
+            <Routes>
+              <Route
+                path="share/:shareId"
+                element={<ShareRecipe isAuthorized={false} />}
+              />
+            </Routes>
           </UserContext.Provider>
         </AddAlertContext.Provider>
       </>

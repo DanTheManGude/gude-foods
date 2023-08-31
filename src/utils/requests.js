@@ -3,6 +3,7 @@ import emailjs from "@emailjs/browser";
 
 import { databasePaths, emailConfig } from "../constants";
 import { getEmailLink } from "./utility";
+import { transformRecipeForExport } from "./dataTransfer";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
@@ -188,12 +189,12 @@ export const saveRecipe = (
   recipe,
   _recipeId,
   { cookbookPath, recipeOrderPath },
-  recipeOrder,
+  { recipeOrder, glossary },
   addAlert,
   successHandler,
   navigate
 ) => {
-  const { name, instructions, ingredients } = recipe;
+  const { name, instructions, ingredients, shareId } = recipe;
   const isCreating = !_recipeId;
 
   if (
@@ -218,6 +219,13 @@ export const saveRecipe = (
   const updates = {
     [`${cookbookPath}/${recipeId}`]: recipe,
   };
+
+  if (shareId) {
+    updates[`shared/${shareId}/recipeData`] = transformRecipeForExport(
+      recipe,
+      glossary
+    );
+  }
 
   if (isCreating) {
     updates[recipeOrderPath] = [recipeId, ...recipeOrder];
@@ -300,7 +308,7 @@ export const sendAuthorizationRequest = (user, addAlert) => {
 
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
 
-  if (false) sendAuthorizationEmail(userInfo, addAlert);
+  sendAuthorizationEmail(userInfo, addAlert);
 };
 
 export const removeUserFromRequestedUsers = (uid) => {
@@ -318,4 +326,61 @@ export const updateAllowUnrestrictedUsers = (newValue) => {
 
 export const setAuthorizationForUser = (uid, newValue) => {
   updateRequest({ [`users/${uid}`]: newValue });
+};
+
+export const createSharedRecipe = (
+  shareId,
+  sharedRecipe,
+  recipePath,
+  addAlert
+) => {
+  return new Promise((resolve) => {
+    updateRequest(
+      {
+        [`shared/${shareId}`]: sharedRecipe,
+        [`${recipePath}/shareId`]: shareId,
+      },
+      () => {
+        addAlert({
+          message: <span>Recipe has been shared with link</span>,
+          alertProps: { severity: "success" },
+        });
+        resolve(true);
+      },
+      () => {
+        addAlert({
+          message: <span>Error trying to share the recipe</span>,
+          alertProps: { severity: "error" },
+        });
+        resolve(false);
+      }
+    );
+  });
+};
+
+export const removeSharedRecipe = (shareId, recipePath, addAlert) => {
+  deleteRequest(
+    [`shared/${shareId}`, `${recipePath}/shareId`],
+    () => {
+      addAlert({
+        message: <span>Succesfully stopped sharing from link</span>,
+        alertProps: { severity: "success" },
+      });
+    },
+    () => {
+      addAlert({
+        message: <span>Error when trying to stop sharing</span>,
+        alertProps: { severity: "error" },
+      });
+    }
+  );
+};
+
+export const updateLastViewedSharedRecipe = (shareId) => {
+  updateRequest(
+    {
+      [`shared/${shareId}/lastViewed`]: Date.now(),
+    },
+    () => {}
+  );
 };

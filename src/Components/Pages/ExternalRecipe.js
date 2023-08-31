@@ -66,7 +66,7 @@ function ExternalRecipe(props) {
       { name, ingredients, instructions, tags, isFavorite, notes },
       undefined,
       { cookbookPath, recipeOrderPath },
-      recipeOrder,
+      { recipeOrder, glossary },
       addAlert,
       () => {},
       navigate

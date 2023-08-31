@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -9,30 +10,57 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
-import { constructShareRecipeLink } from "../../utils/utility";
+import { makeLinkAndMaybeShare } from "../../utils/utility";
 import {
   downloadData,
   transformRecipeForExport,
 } from "../../utils/dataTransfer";
+import { removeSharedRecipe } from "../../utils/requests";
 
-import { DatabaseContext, AddAlertContext } from "../Contexts";
+import {
+  DatabaseContext,
+  AddAlertContext,
+  UserContext,
+  DataPathsContext,
+} from "../Contexts";
 
 const errorCopyAlert = {
-  message: <span>There was an error trying to copy to your clipboard.</span>,
-  alertProps: { severity: "warning" },
+  message: <span>Error trying to copy to your clipboard</span>,
+  alertProps: { severity: "error" },
 };
 
 function ShareRecipeDialogue(props) {
-  const { open, onClose, recipe } = props;
+  const { open, onClose, recipe, recipeId } = props;
+  const { shareId } = recipe;
 
+  let navigate = useNavigate();
+  const user = useContext(UserContext);
   const addAlert = useContext(AddAlertContext);
   const database = useContext(DatabaseContext);
+  const dataPaths = useContext(DataPathsContext);
   const { glossary: _glossary } = database;
+  const { cookbookPath } = dataPaths;
 
   const glossary = _glossary || {};
 
-  const handleCopyLink = () => {
-    const shareLink = constructShareRecipeLink(recipe, glossary);
+  const handleStopSharing = () => {
+    removeSharedRecipe(shareId, `${cookbookPath}/${recipeId}`, addAlert);
+    onClose();
+  };
+
+  const handleCopyLink = async () => {
+    const shareLink = await makeLinkAndMaybeShare(
+      recipe,
+      glossary,
+      user,
+      recipeId,
+      cookbookPath,
+      addAlert
+    );
+
+    if (!shareLink) {
+      return;
+    }
 
     if (!navigator?.clipboard?.writeText) {
       addAlert(errorCopyAlert);
@@ -46,7 +74,6 @@ function ShareRecipeDialogue(props) {
           message: <span>The link has been copied to your clipboard.</span>,
           alertProps: { severity: "success" },
         });
-        onClose();
       })
       .catch(() => {
         addAlert(errorCopyAlert);
@@ -98,6 +125,26 @@ function ShareRecipeDialogue(props) {
         <DialogContent dividers={true}>{renderButtonStack()}</DialogContent>
 
         <DialogActions>
+          {shareId && (
+            <Button
+              color="error"
+              onClick={handleStopSharing}
+              variant="outlined"
+            >
+              <Typography>Stop sharing</Typography>
+            </Button>
+          )}
+          {shareId && (
+            <Button
+              color="primary"
+              onClick={() => {
+                navigate(`/share/${shareId}`);
+              }}
+              variant="contained"
+            >
+              <Typography>Visit shared</Typography>
+            </Button>
+          )}
           <Button color="secondary" onClick={onClose} variant="contained">
             <Typography>Cancel</Typography>
           </Button>
