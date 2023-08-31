@@ -73,10 +73,13 @@ export const parseRecipeData = (recipeData, sourceUrl) => {
   const {
     name = "",
     description = "",
+    recipeYield: yieldText = "",
     recipeIngredient: ingredientText = "",
     recipeInstructions: instructionsData = [],
   } = recipeData;
-  const notes = `${sourceUrl}\n${description}\n\n${ingredientText.join(`\n`)}`;
+  const notes = `${sourceUrl}\n\n${yieldText}\n${description}\n\n${ingredientText.join(
+    `\n`
+  )}`;
 
   let instructions = [];
 
