@@ -125,29 +125,38 @@ function ShareRecipeDialogue(props) {
         <DialogContent dividers={true}>{renderButtonStack()}</DialogContent>
 
         <DialogActions>
-          {shareId && (
+          <Stack direction="row" spacing={2}>
+            {shareId && (
+              <Button
+                color="error"
+                onClick={handleStopSharing}
+                variant="outlined"
+                sx={{ flex: "5" }}
+              >
+                <Typography>Stop sharing</Typography>
+              </Button>
+            )}
+            {shareId && (
+              <Button
+                color="primary"
+                onClick={() => {
+                  navigate(`/share/${shareId}`);
+                }}
+                variant="contained"
+                sx={{ flex: "5" }}
+              >
+                <Typography>Visit shared</Typography>
+              </Button>
+            )}
             <Button
-              color="error"
-              onClick={handleStopSharing}
-              variant="outlined"
-            >
-              <Typography>Stop sharing</Typography>
-            </Button>
-          )}
-          {shareId && (
-            <Button
-              color="primary"
-              onClick={() => {
-                navigate(`/share/${shareId}`);
-              }}
+              color="secondary"
+              onClick={onClose}
               variant="contained"
+              sx={{ flex: "4" }}
             >
-              <Typography>Visit shared</Typography>
+              <Typography>Cancel</Typography>
             </Button>
-          )}
-          <Button color="secondary" onClick={onClose} variant="contained">
-            <Typography>Cancel</Typography>
-          </Button>
+          </Stack>
         </DialogActions>
       </Dialog>
     </>

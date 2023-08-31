@@ -69,16 +69,17 @@ export const findLongestEntry = (item) => {
   }
 };
 
-export const parseRecipeData = (recipeData) => {
+export const parseRecipeData = (recipeData, sourceUrl) => {
   const {
     name = "",
     description = "",
+    recipeYield: yieldText = "",
     recipeIngredient: ingredientText = "",
     recipeInstructions: instructionsData = [],
   } = recipeData;
-  const urlId = recipeData["@id"];
-
-  const notes = `${urlId}\n${description}\n\n${ingredientText.join(`\n`)}`;
+  const notes = `${sourceUrl}\n\n${yieldText}\n${description}\n\n${ingredientText.join(
+    `\n`
+  )}`;
 
   let instructions = [];
 
@@ -121,7 +122,7 @@ export async function fetchRecipeFromUrl(externalUrl) {
   }
 
   const recipeData = await response.json();
-  const recipe = parseRecipeData(recipeData);
+  const recipe = parseRecipeData(recipeData, externalUrl);
 
   return recipe;
 }
