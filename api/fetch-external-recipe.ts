@@ -22,18 +22,24 @@ const parseSiteForRecipe = (siteText) => {
     textarea.innerHTML = elementTextContent;
     const text = textarea.value;
 
-    const data = JSON.parse(text);
+    let workingData = JSON.parse(text);
 
-    if (data["@type"] === "Recipe") {
-      recipeData = data;
+    if (Array.isArray(workingData)) {
+      workingData = workingData[0];
+    }
+
+    if (workingData["@type"] === "Recipe") {
+      recipeData = workingData;
       return;
     }
 
-    if (!Array.isArray(data["@graph"])) {
+    if (!Array.isArray(workingData["@graph"])) {
       return;
     }
 
-    recipeData = data["@graph"].find((entry) => entry["@type"] === "Recipe");
+    recipeData = workingData["@graph"].find(
+      (entry) => entry["@type"] === "Recipe"
+    );
   });
 
   if (!recipeData) {
