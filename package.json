@@ -8,12 +8,12 @@
     "@emailjs/browser": "^3.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.5",
-    "firebase": "^9.22.2",
+    "@mui/icons-material": "^5.14.7",
+    "@mui/material": "^5.14.7",
+    "firebase": "^9.23.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.13.0",
+    "react-router-dom": "^6.15.0",
     "react-scripts": "^5.0.1"
   },
   "scripts": {
@@ -46,8 +46,8 @@
     ]
   },
   "devDependencies": {
-    "@types/jsdom": "^21.1.1",
-    "@vercel/node": "^2.15.6",
+    "@types/jsdom": "^21.1.2",
+    "@vercel/node": "^2.15.10",
     "jsdom": "^22.1.0"
   }
 }
