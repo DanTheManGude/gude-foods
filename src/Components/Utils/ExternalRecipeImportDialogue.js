@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -12,9 +12,12 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { fetchRecipeFromUrl } from "../../utils/utility";
+import { DatabaseContext } from "../Contexts";
 
-function NewRecipeDialogue(props) {
+function ExternalRecipeImportDialogue(props) {
   const { open, onClose, setExternalRecipe } = props;
+
+  const { glossary = { basicFoods: {} } } = useContext(DatabaseContext);
 
   let navigate = useNavigate();
 
@@ -33,6 +36,13 @@ function NewRecipeDialogue(props) {
 
     fetchRecipeFromUrl(externalUrl)
       .then((externalRecipe) => {
+        const saltIngredient = Object.keys(glossary.basicFoods).find(
+          (foodId) => glossary.basicFoods[foodId] === "salt"
+        );
+        if (saltIngredient) {
+          externalRecipe.ingredients[saltIngredient] = "a grain";
+        }
+
         setExternalRecipe(externalRecipe);
         navigate("/externalRecipe");
       })
@@ -120,4 +130,4 @@ function NewRecipeDialogue(props) {
   );
 }
 
-export default NewRecipeDialogue;
+export default ExternalRecipeImportDialogue;
