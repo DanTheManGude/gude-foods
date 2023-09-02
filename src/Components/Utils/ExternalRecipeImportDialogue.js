@@ -17,7 +17,8 @@ import { DatabaseContext } from "../Contexts";
 function ExternalRecipeImportDialogue(props) {
   const { open, onClose, setExternalRecipe } = props;
 
-  const { glossary = { basicFoods: {} } } = useContext(DatabaseContext);
+  const { glossary = { basicFoods: {}, recipeTags: {} } } =
+    useContext(DatabaseContext);
 
   let navigate = useNavigate();
 
@@ -41,6 +42,16 @@ function ExternalRecipeImportDialogue(props) {
         );
         if (saltIngredient) {
           externalRecipe.ingredients[saltIngredient] = "a grain";
+        }
+
+        const importedTag =
+          glossary.recipeTags &&
+          Object.keys(glossary.recipeTags).find(
+            (tagId) => glossary.recipeTags[tagId] === "imported"
+          );
+
+        if (importedTag) {
+          externalRecipe.tags.unshift(importedTag);
         }
 
         setExternalRecipe(externalRecipe);
