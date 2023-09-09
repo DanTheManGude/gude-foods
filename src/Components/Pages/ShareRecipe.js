@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getDatabase, ref, child, get } from "firebase/database";
 
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -26,7 +28,7 @@ import {
 } from "../Contexts";
 
 function ShareRecipe(props) {
-  const { isAuthorized, isAdmin, setActingUserByUid } = props;
+  const { isAuthorized, isAdmin, setActingUserByUid, accounts } = props;
 
   let navigate = useNavigate();
   const user = useContext(UserContext);
@@ -46,6 +48,16 @@ function ShareRecipe(props) {
   const [isLoading, setIsLoading] = useState(Boolean(shareId));
 
   useEffect(() => {
+    const recipeName = recipe && recipe.name;
+    if (recipeName) {
+      window.document.title = `${recipeName} - Gude Foods`;
+    }
+    return () => {
+      window.document.title = "Gude Foods";
+    };
+  }, [recipe]);
+
+  useEffect(() => {
     if (!shareId) {
       return;
     }
@@ -61,10 +73,6 @@ function ShareRecipe(props) {
       .catch(() => {
         setIsLoading(false);
       });
-
-    if (!isAuthorized) {
-      return;
-    }
 
     get(child(ref(getDatabase()), `shared/${shareId}/info`))
       .then((snapshot) => {
@@ -171,6 +179,38 @@ function ShareRecipe(props) {
     );
   };
 
+  const renderInfo = () => {
+    if (!recipeInfo || !accounts) {
+      return null;
+    }
+
+    const { shareDate, userId, lastViewed } = recipeInfo;
+
+    const lastViewedMessage = lastViewed
+      ? `Last viewed: ${new Date(lastViewed).toLocaleString()}`
+      : "Not viewed";
+
+    const sharedDateMessage = `Shared on: ${new Date(
+      shareDate
+    ).toLocaleDateString()}`;
+
+    const createdByMessage = `Created by: ${accounts[userId].name}`;
+
+    return (
+      <Card variant="outlined" sx={{ width: "95%" }}>
+        <CardContent>
+          <Typography key="details">
+            {lastViewedMessage}
+            <br />
+            {sharedDateMessage}
+            <br />
+            {createdByMessage}
+          </Typography>
+        </CardContent>
+      </Card>
+    );
+  };
+
   const renderTags = () => {
     const { tags = [], isFavorite = false } = recipe;
 
@@ -231,6 +271,7 @@ function ShareRecipe(props) {
           )}
         {renderTags()}
       </Stack>
+      {renderInfo()}
     </Stack>
   );
 }

@@ -217,6 +217,7 @@ function PagesContainer(props) {
                 isAuthorized={true}
                 isAdmin={isAdmin}
                 setActingUserByUid={setActingUserByUid}
+                accounts={isAdmin && accounts}
               />
             }
           />

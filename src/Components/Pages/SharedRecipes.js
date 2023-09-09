@@ -36,8 +36,8 @@ function SharedRecipes(props) {
   }
 
   const renderSharedRecipe = ([sharedId, sharedRecipe]) => {
-    const { info, recipeData, lastViewed } = sharedRecipe;
-    const { recipeId, shareDate, userId } = info;
+    const { info, recipeData } = sharedRecipe;
+    const { recipeId, shareDate, userId, lastViewed } = info;
     const { name: recipeName } = recipeData;
 
     const lastViewedMessage = lastViewed
@@ -121,7 +121,10 @@ function SharedRecipes(props) {
     }
 
     return Object.entries(sharedRecipes)
-      .sort((entryA, entryB) => entryB[1].lastViewed - entryA[1].lastViewed)
+      .sort(
+        (entryA, entryB) =>
+          entryB[1].info.lastViewed - entryA[1].info.lastViewed
+      )
       .map(renderSharedRecipe);
   };
 

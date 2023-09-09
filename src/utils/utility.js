@@ -154,8 +154,7 @@ export const makeLinkAndMaybeShare = async (
       shareId,
       {
         recipeData,
-        info: { userId, recipeId, shareDate },
-        lastViewed: 0,
+        info: { userId, recipeId, shareDate, lastViewed: 0 },
       },
       `${cookbookPath}/${recipeId}`,
       addAlert
