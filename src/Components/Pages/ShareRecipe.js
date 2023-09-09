@@ -72,10 +72,6 @@ function ShareRecipe(props) {
         setIsLoading(false);
       });
 
-    if (!isAuthorized) {
-      return;
-    }
-
     get(child(ref(getDatabase()), `shared/${shareId}/info`))
       .then((snapshot) => {
         const sharedRecipeInfo = snapshot.exists() && snapshot.val();
