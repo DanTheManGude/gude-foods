@@ -181,10 +181,6 @@ function App() {
     );
   }
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   if (location.pathname.startsWith("/share/")) {
     return (
       <>
@@ -202,6 +198,10 @@ function App() {
         </AddAlertContext.Provider>
       </>
     );
+  }
+
+  if (isLoading) {
+    return <Loading />;
   }
 
   return (
