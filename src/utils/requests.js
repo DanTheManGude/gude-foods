@@ -379,7 +379,7 @@ export const removeSharedRecipe = (shareId, recipePath, addAlert) => {
 export const updateLastViewedSharedRecipe = (shareId) => {
   updateRequest(
     {
-      [`shared/${shareId}/lastViewed`]: Date.now(),
+      [`shared/${shareId}/info/lastViewed`]: Date.now(),
     },
     () => {}
   );
