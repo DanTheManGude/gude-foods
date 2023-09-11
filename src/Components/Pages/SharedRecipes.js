@@ -38,17 +38,31 @@ function SharedRecipes(props) {
   const renderSharedRecipe = ([sharedId, sharedRecipe]) => {
     const { info, recipeData } = sharedRecipe;
     const { recipeId, shareDate, userId, lastViewed } = info;
-    const { name: recipeName } = recipeData;
+
+    let isRemovedRecipe = false;
+
+    let recipeName = "";
+    if (recipeData) {
+      if (recipeData.hasOwnProperty("name")) {
+        recipeName = recipeData.name;
+      } else {
+        recipeName = "-Recipe with no name-";
+      }
+    } else {
+      recipeName = "-Removed Recipe-";
+      isRemovedRecipe = true;
+    }
 
     const lastViewedMessage = lastViewed
       ? `Last viewed: ${new Date(lastViewed).toLocaleString()}`
       : "Not viewed";
 
-    const sharedDateMessage = `Shared on: ${new Date(
-      shareDate
-    ).toLocaleDateString()}`;
+    const sharedDateMessage =
+      shareDate && `Shared on: ${new Date(shareDate).toLocaleDateString()}`;
 
-    const createdByMessage = `Created by: ${accounts[userId].name}`;
+    const createdByMessage = isRemovedRecipe
+      ? `Share ID: ${sharedId}`
+      : `Created by: ${accounts[userId].name}`;
 
     return (
       <Accordion key={sharedId} sx={{ width: "95%" }}>
