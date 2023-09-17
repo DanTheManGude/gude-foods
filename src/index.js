@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+
 import "./styles/index.css";
 import App from "./Components/App";
 
@@ -25,3 +27,6 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+// Learn more about service workers: https://cra.link/PWA
+serviceWorkerRegistration.register();
