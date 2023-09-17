@@ -1,0 +1,156 @@
+{
+  "Chicken Wrap": {
+    "ingredients": {
+      "chicken breast": "1",
+      "tortilla": "2 or 3",
+      "orange pepper": "1",
+      "spinach": "a handful",
+      "olive oil": "a drizzle",
+      "shredded cheese": "little bit of any type"
+    },
+    "instructions": [
+      "Cut all things",
+      "Grill chicken in pan",
+      "Add any seasoning",
+      "Add chopped peppers when chicken is cooked",
+      "Add spinach, just on heat briefly",
+      "Add cheese",
+      "Distribute to tortilla"
+    ],
+    "isFavorite": true,
+    "name": "Chicken Wrap",
+    "notes": "Could substitute any vegetables really. Good fast AND cheap",
+    "shareId": "-Ncu6_MDYVJnmWskg1JF",
+    "tags": ["EZ", "yummy"]
+  },
+  "Baked Ziti": {
+    "ingredients": {
+      "penne": "most of a box",
+      "red sauce": "a little less than a jar",
+      "shredded mozzarella": "enough",
+      "ground beef": "1 lb",
+      "grated parmesan": "a few shakes",
+      "cherry tomatoes": "only a few"
+    },
+    "instructions": [
+      "Cook pasta",
+      "Cook meat",
+      "Add meat, pasta, sauce, and tomatoes in oven pan",
+      "Add shredded cheese on top",
+      "Bake until cheese is melty",
+      "Serve with sprinkled parmesan cheese "
+    ],
+    "isFavorite": true,
+    "name": "Baked Ziti",
+    "notes": "You can substitute the ziti with really any pasta",
+    "tags": []
+  },
+  "Chicken & Rice": {
+    "ingredients": {
+      "chicken breast": "1",
+      "rice": "one cup",
+      "olive oil": "a drizzle ",
+      "vegetable blend": "one cup"
+    },
+    "instructions": [
+      "Cook rice with water",
+      "Cut chicken into bite size pieces",
+      "Cook chicken over a drizzle of oil with spices of choice",
+      "Add vegetables when chicken is minimally cooked",
+      "Combine chicken, rice and vegetables "
+    ],
+    "isFavorite": false,
+    "name": "Chicken & Rice",
+    "notes": "Could substitute frozen vegetables with other vegetables",
+    "tags": ["EZ"]
+  },
+  "Lemon Spaghetti Chicken": {
+    "ingredients": {
+      "chicken breast": "1",
+      "grated parmesan": "a few good shakes",
+      "sour cream": "2 tbsp",
+      "butter": "1 tbsp",
+      "lemon": "1",
+      "chicken stock": "1/2 cup",
+      "spaghetti": "6 oz",
+      "zucchini": "1"
+    },
+    "instructions": [
+      "Boil salted water",
+      "Trim and cut zucchini into quarter",
+      "Zest lemon and cut into wedges",
+      "Cool spaghetti for 9-11 minutes (al dente)",
+      "Cook zucchini in pan",
+      "Cook chicken in pan with Italian seasoning",
+      "Simmer stock concentrate, lemon zest, and lemon juice",
+      "Cut chicken",
+      "Stir together spaghetti, zucchini, sour cream, butter, and chicken ",
+      "Sprinkle parmesan on top"
+    ],
+    "isFavorite": false,
+    "name": "Lemon Spaghetti Chicken",
+    "notes": "",
+    "shareId": "-Nd8CroyF-N3YTSw5S9F",
+    "tags": ["yummy"]
+  },
+  "Pasta and Beef": {
+    "ingredients": {
+      "olive oil": "drizzle",
+      "penne": "most of a box",
+      "red sauce": "16 oz",
+      "ground beef": "1 lb",
+      "grated parmesan": "a few shakes",
+      "red pepper": "1"
+    },
+    "instructions": [
+      "Cook pasta",
+      "Cook beef",
+      "Add diced pepper to beef when mostly cooked",
+      "Simmer sauce in pasta pot when done",
+      "Combine everything in pot",
+      "Sprinkle cheese on top"
+    ],
+    "isFavorite": false,
+    "name": "Pasta and Beef",
+    "notes": "Could substitute other pasta",
+    "tags": ["EZ"]
+  },
+  "Egg Sandwich": {
+    "ingredients": {
+      "eggs": "2",
+      "shredded cheese": "a sprinkle",
+      "bacon": "2 slices",
+      "bagel": "1"
+    },
+    "instructions": [
+      "Fry eggs",
+      "Toast bagel",
+      "Butter bagel",
+      "Cook bacon ",
+      "Combine all ingredients on bagel"
+    ],
+    "isFavorite": true,
+    "name": "Egg Sandwich",
+    "notes": "",
+    "tags": []
+  },
+  "Vegetarian Stuffed Peppers": {
+    "ingredients": {
+      "salt": "a grain"
+    },
+    "instructions": [
+      "Preheat oven to 375°F.",
+      "Place the bell pepper halves in a baking dish.",
+      "Heat the olive oil in a large skillet over medium heat. Add the onion and garlic and cook until softened, about 5 minutes.",
+      "Add the quinoa, black beans, corn, chili powder, cumin, smoked paprika, salt, and black pepper. Cook for an additional 5 minutes.",
+      "Remove from heat and stir in the cheese.",
+      "Fill each bell pepper half with the quinoa mixture.",
+      "Bake for 25 minutes, or until the peppers are tender.",
+      "Serve warm. Enjoy!"
+    ],
+    "isFavorite": false,
+    "name": "Vegetarian Stuffed Peppers",
+    "notes": "\n- 4 bell peppers, halved and seeded\n- 1 tablespoon olive oil\n- 1 onion, diced\n- 2 cloves garlic, minced\n- 1 cup cooked quinoa\n- 1 cup cooked black beans\n- 1 cup corn\n- 1 teaspoon chili powder\n- 1 teaspoon cumin\n- 1/2 teaspoon smoked paprika\n- 1/2 teaspoon salt\n- 1/4 teaspoon black pepper\n- 1/2 cup shredded cheese",
+    "tags": ["AI", "vegetarian"]
+  }
+}
