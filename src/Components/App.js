@@ -16,6 +16,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 import { aboutText } from "../constants";
 
@@ -27,6 +28,7 @@ import ShareRecipe from "./Pages/ShareRecipe";
 
 import Loading from "./Utils/Loading";
 
+import OfflineMode from "./OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
 
@@ -38,6 +40,9 @@ function App() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [authorizedLoading, setAuthorizedLoading] = useState(false);
   const isLoading = initialLoading || authorizedLoading;
+
+  const [usingOffline, setUsingOffline] = useState(false);
+  const disableUsingOffline = () => setUsingOffline(false);
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [requestedUsers, setIsRequestedUsers] = useState();
@@ -162,9 +167,8 @@ function App() {
     </List>
   );
 
-  console.log(navigator.onLine);
-  if (!navigator.onLine) {
-    return "Offline mode";
+  if (usingOffline) {
+    return <OfflineMode disableUsingOffline={disableUsingOffline} />;
   }
 
   if (isAuthorizedUser || allowUnrestrictedUsers) {
@@ -205,8 +209,28 @@ function App() {
     );
   }
 
-  if (isLoading) {
-    return <Loading />;
+  if (true || isLoading) {
+    return (
+      <>
+        <Loading />
+        <Button
+          sx={{
+            width: "60%",
+            position: "fixed",
+            margin: "5% auto",
+            left: "0",
+            right: "0",
+            bottom: "10%",
+          }}
+          variant="outlined"
+          onClick={() => {
+            setUsingOffline(true);
+          }}
+        >
+          <Typography>Use offline mode</Typography>
+        </Button>
+      </>
+    );
   }
 
   return (
