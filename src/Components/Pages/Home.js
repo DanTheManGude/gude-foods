@@ -40,7 +40,11 @@ function Home(props) {
     menu,
     recipeOrder: _recipeOrder,
   } = database;
-  const glossary = _glossary || { basicFoods: {}, recipeTags: {} };
+  const glossary = useMemo(
+    () => _glossary || { basicFoods: {}, recipeTags: {} },
+    [_glossary]
+  );
+
   const recipeOrder = _recipeOrder || [];
   const { glossaryPath, cookbookPath } = dataPaths;
 
