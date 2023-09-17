@@ -9,9 +9,10 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
-import newUserData from "../../newUserData.json";
+import newUserCookbook from "../../newUserCookbook.json";
+import { transformCookbookFromImport } from "../../utils/dataTransfer";
 import {
-  setAllData,
+  updateFromCookbookImport,
   removeUserFromRequestedUsers,
   approveRequestedUser,
 } from "../../utils/requests";
@@ -31,8 +32,32 @@ function Home(props) {
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
-  const { glossary, basicFoodTagAssociation, shoppingList, cookbook, menu } =
-    database;
+  const {
+    glossary: _glossary,
+    basicFoodTagAssociation,
+    shoppingList,
+    cookbook,
+    menu,
+    recipeOrder: _recipeOrder,
+  } = database;
+  const glossary = useMemo(
+    () => _glossary || { basicFoods: {}, recipeTags: {} },
+    [_glossary]
+  );
+
+  const recipeOrder = _recipeOrder || [];
+  const { glossaryPath, cookbookPath } = dataPaths;
+
+  const handleAddStarterCookbook = () => {
+    const transformedData = transformCookbookFromImport(
+      newUserCookbook,
+      glossary,
+      glossaryPath,
+      cookbookPath
+    );
+
+    updateFromCookbookImport(transformedData, dataPaths, recipeOrder, addAlert);
+  };
 
   const renderThemeSettingsCard = () => {
     if (themeIsNotSet) {
@@ -88,7 +113,7 @@ function Home(props) {
   };
 
   const renderNewUserCard = () => {
-    if (glossary) {
+    if (cookbook && Object.keys(cookbook).length) {
       return null;
     }
 
@@ -108,11 +133,9 @@ function Home(props) {
             <Button
               color="primary"
               variant="contained"
-              onClick={() => {
-                setAllData(newUserData, dataPaths, addAlert);
-              }}
+              onClick={handleAddStarterCookbook}
             >
-              <Typography>Add starter data</Typography>
+              <Typography>Add starter cookbook</Typography>
             </Button>
           </CardActions>
         </Card>

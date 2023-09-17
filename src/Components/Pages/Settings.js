@@ -142,6 +142,7 @@ function Settings(props) {
               onSuccess={(fileData) =>
                 setAllData(fileData, dataPaths, addAlert)
               }
+              isAllData={true}
               buttonProps={{
                 variant: "outlined",
                 color: "secondary",
