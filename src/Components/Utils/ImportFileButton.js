@@ -15,6 +15,8 @@ import {
 
 function ImportFileButton(props) {
   const {
+    isAllData = false,
+    onSuccess = () => {},
     isForRecipe = false,
     onFailure,
     buttonProps = {},
@@ -37,6 +39,11 @@ function ImportFileButton(props) {
   const { glossaryPath, cookbookPath } = dataPaths;
 
   const handleImportedData = (importedData) => {
+    if (isAllData) {
+      onSuccess(importedData);
+      return;
+    }
+
     const importedCookbook = isForRecipe
       ? { recipe: importedData }
       : importedData;
