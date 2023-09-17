@@ -162,6 +162,11 @@ function App() {
     </List>
   );
 
+  console.log(navigator.onLine);
+  if (!navigator.onLine) {
+    return "Offline mode";
+  }
+
   if (isAuthorizedUser || allowUnrestrictedUsers) {
     return (
       <>
