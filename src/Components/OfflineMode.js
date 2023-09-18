@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 import OfflineRecipeDialogue from "./Utils/OfflineRecipeDialogue";
+import RecipeData from "./Utils/RecipeData";
 
 function OfflineMode(props) {
   const { disableUsingOffline } = props;
@@ -80,8 +81,7 @@ function OfflineMode(props) {
       return null;
     }
 
-    console.log(recipe);
-    return "recipe";
+    return <RecipeData recipe={recipe} />;
   };
 
   return (
