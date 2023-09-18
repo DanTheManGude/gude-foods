@@ -167,6 +167,18 @@ function App() {
     </List>
   );
 
+  const renderUseOfflineButton = (buttonProps) => (
+    <Button
+      variant="outlined"
+      onClick={() => {
+        setUsingOffline(true);
+      }}
+      {...buttonProps}
+    >
+      <Typography>Use offline mode</Typography>
+    </Button>
+  );
+
   if (usingOffline) {
     return <OfflineMode disableUsingOffline={disableUsingOffline} />;
   }
@@ -209,26 +221,20 @@ function App() {
     );
   }
 
-  if (true || isLoading) {
+  if (isLoading) {
     return (
       <>
         <Loading />
-        <Button
-          sx={{
+        {renderUseOfflineButton({
+          sx: {
             width: "60%",
             position: "fixed",
             margin: "5% auto",
             left: "0",
             right: "0",
             bottom: "10%",
-          }}
-          variant="outlined"
-          onClick={() => {
-            setUsingOffline(true);
-          }}
-        >
-          <Typography>Use offline mode</Typography>
-        </Button>
+          },
+        })}
       </>
     );
   }
@@ -251,6 +257,9 @@ function App() {
           </Typography>
         </CardContent>
       </Card>
+      {renderUseOfflineButton({
+        sx: { width: "60%", margin: "20px auto", display: "flex" },
+      })}
     </>
   );
 }
