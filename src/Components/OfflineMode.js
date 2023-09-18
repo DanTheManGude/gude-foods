@@ -37,7 +37,7 @@ function OfflineMode(props) {
         }
       >
         <AlertTitle>Offline Mode</AlertTitle>
-        Only viewing recipes that you import is available.
+        Only viewing recipes that you saved is available.
       </Alert>
     </Collapse>
   );
