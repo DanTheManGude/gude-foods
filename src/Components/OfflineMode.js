@@ -5,14 +5,19 @@ import NavBar from "./AppPieces/NavBar";
 import Collapse from "@mui/material/Collapse";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { Button, Typography } from "@mui/material";
+
+import OfflineRecipeDialogue from "./Utils/OfflineRecipeDialogue";
 
 function OfflineMode(props) {
   const { disableUsingOffline } = props;
 
   const [showAlert, setShowAlert] = useState(true);
+  const [openSelectionDialogue, setOpenSelectionDialogue] = useState(false);
+  const [recipe, setRecipe] = useState();
 
   const renderAlert = () => (
     <Collapse in={showAlert}>
@@ -56,7 +61,11 @@ function OfflineMode(props) {
           <span>offline mode</span>
         </Typography>
       </Button>
-      <Button variant="contained" sx={{ flexGrow: "1" }}>
+      <Button
+        variant="contained"
+        sx={{ flexGrow: "1" }}
+        onClick={() => setOpenSelectionDialogue(true)}
+      >
         <Typography>
           <span>Select recipe</span>
           <br />
@@ -66,13 +75,28 @@ function OfflineMode(props) {
     </Stack>
   );
 
+  const renderRecipe = () => {
+    if (!recipe) {
+      return null;
+    }
+
+    console.log(recipe);
+    return "recipe";
+  };
+
   return (
     <>
       <NavBar isAuthorized={false} />
       <Stack alignItems="center" spacing={2} width={"100%"}>
         {renderAlert()}
         {renderActionButtons()}
+        {renderRecipe()}
       </Stack>
+      <OfflineRecipeDialogue
+        open={openSelectionDialogue}
+        onClose={() => setOpenSelectionDialogue(false)}
+        setRecipe={setRecipe}
+      />
     </>
   );
 }
