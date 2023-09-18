@@ -139,10 +139,10 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <ImportFileButton
-              onSuccess={(fileData) =>
+              customHandler={(fileData) =>
                 setAllData(fileData, dataPaths, addAlert)
               }
-              isAllData={true}
+              shouldUseCustomHandler={true}
               buttonProps={{
                 variant: "outlined",
                 color: "secondary",

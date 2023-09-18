@@ -145,3 +145,6 @@ export const pages = [
 export const longestEntryPathDelimiter = "___/___";
 
 export const aboutText = `Gude Foods is a website for you to keep your recipes in an online cookbook. Create and edit your own recipes with your own words.\n\nGude Foods also easily builds a shopping list for you. Select which recipes you want to make, and those ingredients will be added to your shopping list. The shopping list is grouped and orded by the departments that you decide.\n\nStumped thinking of recipe ideas? Gude Foods integrates with modern AI tools to create recipes with your personalized description. The AI integration is completely free to use. Gude Foods also supports importing recipes from the various websites on the web that feature a recipe.`;
+
+export const offlineRecipeListKey = "gude-foods-offline-recipe-id-list";
+export const offlineRecipeKeyPrefix = "gude-foods-recipe-";

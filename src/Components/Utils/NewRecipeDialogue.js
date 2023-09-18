@@ -50,7 +50,6 @@ function NewRecipeDialogue(props) {
       </Button>
       <ImportFileButton
         isForRecipe={true}
-        onSuccess={console.log}
         buttonProps={{
           color: "primary",
           variant: "outlined",

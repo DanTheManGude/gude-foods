@@ -16,6 +16,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 import { aboutText } from "../constants";
 
@@ -27,6 +28,7 @@ import ShareRecipe from "./Pages/ShareRecipe";
 
 import Loading from "./Utils/Loading";
 
+import OfflineMode from "./OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
 
@@ -38,6 +40,9 @@ function App() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [authorizedLoading, setAuthorizedLoading] = useState(false);
   const isLoading = initialLoading || authorizedLoading;
+
+  const [usingOffline, setUsingOffline] = useState(false);
+  const disableUsingOffline = () => setUsingOffline(false);
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [requestedUsers, setIsRequestedUsers] = useState();
@@ -162,6 +167,22 @@ function App() {
     </List>
   );
 
+  const renderUseOfflineButton = (buttonProps) => (
+    <Button
+      variant="outlined"
+      onClick={() => {
+        setUsingOffline(true);
+      }}
+      {...buttonProps}
+    >
+      <Typography>Use offline mode</Typography>
+    </Button>
+  );
+
+  if (usingOffline) {
+    return <OfflineMode disableUsingOffline={disableUsingOffline} />;
+  }
+
   if (isAuthorizedUser || allowUnrestrictedUsers) {
     return (
       <>
@@ -201,7 +222,21 @@ function App() {
   }
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <>
+        <Loading />
+        {renderUseOfflineButton({
+          sx: {
+            width: "60%",
+            position: "fixed",
+            margin: "5% auto",
+            left: "0",
+            right: "0",
+            bottom: "10%",
+          },
+        })}
+      </>
+    );
   }
 
   return (
@@ -222,6 +257,9 @@ function App() {
           </Typography>
         </CardContent>
       </Card>
+      {renderUseOfflineButton({
+        sx: { width: "60%", margin: "20px auto", display: "flex" },
+      })}
     </>
   );
 }
