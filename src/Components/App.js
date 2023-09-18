@@ -243,7 +243,7 @@ function App() {
     <>
       {renderMessages()}
       <NavBar isAuthorized={false} />
-      <UnauthorizedUser user={user} addAlert={addAlert} />
+      {navigator.onLine && <UnauthorizedUser user={user} addAlert={addAlert} />}
       <Card
         variant="outlined"
         sx={{ marginLeft: "5%", marginRight: "5%", marginTop: 2 }}
