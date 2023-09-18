@@ -10,6 +10,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
+import { offlineRecipeKeyPrefix, offlineRecipeListKey } from "../../constants";
 import { makeLinkAndMaybeShare } from "../../utils/utility";
 import {
   downloadData,
@@ -80,6 +81,35 @@ function ShareRecipeDialogue(props) {
       });
   };
 
+  const handleSaveForOffline = () => {
+    const recipeData = transformRecipeForExport(recipe, glossary);
+
+    try {
+      const offlineRecipeList =
+        JSON.parse(localStorage.getItem(offlineRecipeListKey)) || [];
+      offlineRecipeList.push(recipeId);
+
+      localStorage.setItem(
+        offlineRecipeListKey,
+        JSON.stringify(offlineRecipeList)
+      );
+
+      const localStorageKey = `${offlineRecipeKeyPrefix}${recipeId}`;
+      localStorage.setItem(localStorageKey, JSON.stringify(recipeData));
+
+      addAlert({
+        message: <span>This recipe has been saved to the browser.</span>,
+        alertProps: { severity: "success" },
+      });
+    } catch (error) {
+      console.error(error);
+      addAlert({
+        message: <span>There was an error trying to save the data.</span>,
+        alertProps: { severity: "error" },
+      });
+    }
+  };
+
   const handleDownloadRecipe = () => {
     const recipeData = transformRecipeForExport(recipe, glossary);
 
@@ -97,6 +127,15 @@ function ShareRecipeDialogue(props) {
         endIcon={<ContentCopyRoundedIcon />}
       >
         <Typography>Copy link to recipe</Typography>
+      </Button>
+      <Button
+        key="offline"
+        size="large"
+        color="primary"
+        variant="outlined"
+        onClick={handleSaveForOffline}
+      >
+        <Typography>Save data for offline use</Typography>
       </Button>
       <Button
         key="export"
