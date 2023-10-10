@@ -38,13 +38,14 @@ const NavBar = ({ isAuthorized }) => {
       >
         <Container
           maxWidth="xl"
-          sx={
-            inDevelopment
+          sx={{
+            minHeight: "68px",
+            ...(inDevelopment
               ? {
                   background: `repeating-linear-gradient(-45deg, ${otherStripe}, ${otherStripe} 10px, ${stripeColor} 10px, ${stripeColor} 20px)`,
                 }
-              : {}
-          }
+              : {}),
+          }}
         >
           <Toolbar
             sx={{
@@ -52,7 +53,7 @@ const NavBar = ({ isAuthorized }) => {
             }}
           >
             <Typography
-              variant="h5"
+              variant="h4"
               noWrap
               component="span"
               href="/"
@@ -111,7 +112,6 @@ const NavBar = ({ isAuthorized }) => {
             </Box>
             <Box
               sx={{
-                display: { md: "none" },
                 right: "0",
                 bottom: "7px",
               }}
