@@ -35,7 +35,7 @@ function ExternalRecipe(props) {
 
   const {
     name,
-    description,
+    description = "",
     ingredients,
     instructions,
     tags,
