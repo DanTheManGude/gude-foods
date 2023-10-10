@@ -53,7 +53,7 @@ function ExternalRecipe(props) {
 
   const handleSave = () => {
     saveRecipe(
-      { name, ingredients, instructions, tags, isFavorite, notes },
+      { name, ingredients, instructions, tags, isFavorite, notes, description },
       undefined,
       { cookbookPath, recipeOrderPath },
       { recipeOrder, glossary },
