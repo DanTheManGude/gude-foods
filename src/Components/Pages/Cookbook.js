@@ -315,7 +315,7 @@ function Cookbook(props) {
       size="large"
       sx={{
         position: "fixed",
-        bottom: "107px",
+        bottom: { xs: "107px", md: "20px" },
         right: "35px",
       }}
       onClick={() => {

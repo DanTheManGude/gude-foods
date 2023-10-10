@@ -140,7 +140,7 @@ function App() {
       sx={{
         width: "100%",
         zIndex: 2000,
-        top: "55px",
+        top: "60px",
         position: "fixed",
       }}
       spacing={8}
@@ -187,7 +187,7 @@ function App() {
     return (
       <>
         {renderMessages()}
-        <NavBar />
+        <NavBar isAuthorized={true} />
         <AddAlertContext.Provider value={addAlert}>
           <UserContext.Provider value={user}>
             <PagesContainer
