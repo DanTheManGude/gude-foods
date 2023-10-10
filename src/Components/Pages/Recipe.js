@@ -350,13 +350,13 @@ function Recipe() {
     const glossaryRecipeTags = glossary.recipeTags || [];
     return (
       <>
-        {renderTagList(
+        {renderTagList({
           isEditing,
-          { tags, isFavorite },
+          recipe: { tags, isFavorite },
           updateIsFavorite,
           getDeleteTag,
-          glossaryRecipeTags
-        )}
+          glossaryRecipeTags,
+        })}
 
         {isEditing
           ? renderTagControls(tags, addTag, glossaryRecipeTags, glossaryPath)

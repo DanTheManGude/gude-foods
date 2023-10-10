@@ -96,13 +96,13 @@ const renderFavorite = (editable, isFavorite, updateIsFavorite) => {
   return null;
 };
 
-export const renderTagList = (
+export const renderTagList = ({
   editable,
-  { tags, isFavorite },
+  recipe: { tags, isFavorite },
   updateIsFavorite,
   getDeleteTagHandler,
-  glossaryRecipeTags
-) => (
+  glossaryRecipeTags,
+}) => (
   <Stack
     direction="row"
     spacing={1}

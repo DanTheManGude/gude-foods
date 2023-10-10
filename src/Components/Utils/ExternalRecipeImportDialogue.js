@@ -105,7 +105,7 @@ function ExternalRecipeImportDialogue(props) {
           <Stack spacing={2}>
             <Typography>
               Paste a URL of a website that features a recipe. The recipe will
-              available for editing before it is saved to your cookbook.
+              available for viewing before it is saved to your cookbook.
             </Typography>
             {maybeRenderError()}
             <TextField

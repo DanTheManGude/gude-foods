@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
@@ -11,12 +11,8 @@ import { saveRecipe } from "../../utils/requests";
 
 import {
   renderEditingButtons,
-  renderNameInput,
-  renderDescriptionInput,
-  renderNotesContainer,
-  renderNotesInput,
   renderTagList,
-  renderTagControls,
+  renderNotesContainer,
 } from "../Utils/RecipeParts";
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
@@ -31,31 +27,25 @@ function ExternalRecipe(props) {
   const { givenRecipe } = props;
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
-  const { cookbookPath, recipeOrderPath, glossaryPath } = dataPaths;
+  const { cookbookPath, recipeOrderPath } = dataPaths;
   const database = useContext(DatabaseContext);
   const { recipeOrder: _recipeOrder, glossary } = database;
 
   const recipeOrder = _recipeOrder || [];
 
   const {
-    name: givenName,
-    description: givenDescription,
-    ingredients: givenIngredients,
-    instructions: givenInstructions,
-    tags: givenTags,
-    notes: givenNotes,
+    name,
+    description,
+    ingredients,
+    instructions,
+    tags,
+    notes,
     ingredientText,
   } = givenRecipe;
 
   let navigate = useNavigate();
 
-  const [name, setName] = useState(givenName);
-  const [description, setDescription] = useState(givenDescription);
-  const [ingredients, setIngredients] = useState(givenIngredients);
-  const [instructions, setInstructions] = useState(givenInstructions);
-  const [notes, setNotes] = useState(givenNotes);
-  const [tags, setTags] = useState(givenTags);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const isFavorite = false;
 
   const handleCancel = () => {
     navigate("/cookbook");
@@ -71,14 +61,6 @@ function ExternalRecipe(props) {
       () => {},
       navigate
     );
-  };
-
-  const getDeleteTagHandler = (removedTagId) => () => {
-    setTags((oldTags) => oldTags.filter((tagId) => tagId !== removedTagId));
-  };
-
-  const addTag = (newTagId) => {
-    setTags((oldTags) => oldTags.concat(newTagId));
   };
 
   const renderGivenInstructions = () => (
@@ -122,28 +104,44 @@ function ExternalRecipe(props) {
         {renderEditingButtons(handleCancel, handleSave)}
       </Stack>
       <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
-        {renderNameInput(name, setName, !name)}
-        {renderDescriptionInput(description, setDescription)}
-        {renderGivenInstructions()}
-        <IngredientList
-          ingredients={ingredients}
-          editable={true}
-          updateIngredients={setIngredients}
-        />
-        <InstructionList
-          instructions={instructions}
-          setInstructions={setInstructions}
-          editable={true}
-        />
-        {renderNotesContainer(renderNotesInput(notes, setNotes))}
-        {renderTagList(
-          true,
-          { tags, isFavorite },
-          setIsFavorite,
-          getDeleteTagHandler,
-          glossaryRecipeTags
+        <Typography
+          key="title"
+          variant="h5"
+          sx={{
+            color: "primary.main",
+            textAlign: "left",
+            width: "100%",
+            marginBottom: 1,
+          }}
+        >
+          {name}
+        </Typography>
+        {description && (
+          <Typography
+            key="description"
+            sx={{
+              color: "text.primary",
+              textAlign: "left",
+              width: "100%",
+              marginBottom: 1,
+              fontWeight: "fontWeightMedium",
+            }}
+          >
+            {description}
+          </Typography>
         )}
-        {renderTagControls(tags, addTag, glossaryRecipeTags, glossaryPath)}
+        {renderGivenInstructions()}
+        <IngredientList ingredients={ingredients} editable={false} />
+        <InstructionList instructions={instructions} editable={false} />
+        {renderNotesContainer(
+          <Typography style={{ whiteSpace: "pre-line" }}>{notes}</Typography>
+        )}
+
+        {renderTagList({
+          isEditing: false,
+          recipe: { tags, isFavorite },
+          glossaryRecipeTags,
+        })}
       </Stack>
     </Stack>
   );

@@ -17,13 +17,11 @@ function RecipeData(props) {
       (acc, tag) => ({ ...acc, [tag]: tag }),
       {}
     );
-    return renderTagList(
-      false,
-      { tags, isFavorite },
-      () => {},
-      () => {},
-      imatatedGlossaryRecipeTags
-    );
+    return renderTagList({
+      isEditing: false,
+      recipe: { tags, isFavorite },
+      glossaryRecipeTags: imatatedGlossaryRecipeTags,
+    });
   };
 
   return (
