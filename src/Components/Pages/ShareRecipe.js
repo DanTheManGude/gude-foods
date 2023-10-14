@@ -62,7 +62,7 @@ function ShareRecipe(props) {
     return () => {
       window.document.title = "Gude Foods";
     };
-  }, [recipe]);
+  }, [recipe, shareId, navigate]);
 
   useEffect(() => {
     if (!shareId) {
