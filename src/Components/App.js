@@ -58,10 +58,13 @@ function App(props) {
   let location = useLocation();
 
   const addAlert = (alert, removalTime = 3001) => {
-    setAlertList((prevList) => prevList.concat(alert));
-    setTimeout(() => {
-      setAlertList((prevList) => prevList.slice(1));
+    const alertId = setTimeout(() => {
+      setAlertList((prevList) =>
+        prevList.filter((alert) => alert.id !== alertId)
+      );
     }, removalTime);
+
+    setAlertList((prevList) => prevList.concat({ ...alert, id: alertId }));
   };
 
   useEffect(() => {
