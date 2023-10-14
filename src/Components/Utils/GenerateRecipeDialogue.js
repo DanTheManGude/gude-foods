@@ -165,12 +165,18 @@ function GenerateRecipeDialogue(props) {
             `\n`
           )}`;
 
+          const maybeDescription =
+            recipeName && generatedRecipe.name !== recipeName
+              ? { description: recipeName }
+              : {};
+
           handleClose();
           setExternalRecipe({
             ...generatedRecipe,
             tags: tagsList,
             ingredients,
             notes,
+            ...maybeDescription,
           });
           navigate("/externalRecipe");
         } catch (error) {
