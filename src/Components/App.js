@@ -34,9 +34,9 @@ import withTheme from "./withTheme";
 import { Stack } from "@mui/material";
 
 function App(props) {
-  const { cacheObserver } = props;
+  const { setSubscriber } = props;
 
-  const cacheObserverRef = useRef(cacheObserver);
+  const setSubscriberRef = useRef(setSubscriber);
 
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
@@ -72,7 +72,7 @@ function App(props) {
   });
 
   useEffect(() => {
-    cacheObserverRef.current.setSubscriber(() => {
+    setSubscriberRef.current(() => {
       addAlertRef.current(
         {
           title: "The current website is out of date.",
@@ -98,7 +98,7 @@ function App(props) {
         60000
       );
     });
-  }, [cacheObserverRef]);
+  }, [setSubscriberRef]);
 
   useEffect(() => {
     onAuthStateChanged(getAuth(), setUser);
