@@ -32,7 +32,11 @@ import OfflineMode from "./OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
 
-function App() {
+function App(props) {
+  const { cacheObserver } = props;
+
+  const cacheObserverRef = useRef(cacheObserver);
+
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
@@ -59,6 +63,18 @@ function App() {
       setAlertList((prevList) => prevList.slice(1));
     }, removalTime);
   };
+
+  useEffect(() => {
+    cacheObserverRef.current.setSubscriber(() => {
+      addAlert(
+        {
+          message: "The current website is out of date. Please refresh.",
+          alertProps: { severity: "warning" },
+        },
+        10000
+      );
+    });
+  }, [cacheObserverRef]);
 
   useEffect(() => {
     onAuthStateChanged(getAuth(), setUser);

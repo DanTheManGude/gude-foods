@@ -19,14 +19,30 @@ initializeAppCheck(firebaseApp, {
   isTokenAutoRefreshEnabled: true,
 });
 
+const cacheObserver = {
+  subscriber: () => {},
+  setSubscriber: function (newSubscriber) {
+    console.log(this);
+    this.subscriber = newSubscriber;
+  },
+  notify: function () {
+    this.subscriber(arguments);
+  },
+};
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <App cacheObserver={cacheObserver} />
     </BrowserRouter>
   </React.StrictMode>
 );
 
+setTimeout(() => {
+  console.log("timeout");
+  cacheObserver.notify();
+}, 3000);
+
 // Learn more about service workers: https://cra.link/PWA
-serviceWorkerRegistration.register();
+serviceWorkerRegistration.register({ onUpdate: cacheObserver.notify });
