@@ -23,6 +23,7 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "vercel --prod",
+    "local-prod": "npm run predeploy && serve -s build",
     "check": "echo 'Node Version:' && node -v && echo 'npm Version:' && npm -v",
     "hard-update": "rm package-lock.json && rm -rf node_modules/ && npm install",
     "postversion": "git push && git push --tags"

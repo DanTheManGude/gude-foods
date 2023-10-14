@@ -31,8 +31,13 @@ import Loading from "./Utils/Loading";
 import OfflineMode from "./OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
+import { Stack } from "@mui/material";
 
-function App() {
+function App(props) {
+  const { setSubscriber } = props;
+
+  const setSubscriberRef = useRef(setSubscriber);
+
   const [alertList, setAlertList] = useState([]);
   const [user, setUser] = useState();
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
@@ -53,12 +58,47 @@ function App() {
   let navigate = useNavigate();
   let location = useLocation();
 
-  const addAlert = (alert, removalTime = 3001) => {
-    setAlertList((prevList) => prevList.concat(alert));
-    setTimeout(() => {
-      setAlertList((prevList) => prevList.slice(1));
+  const removeAlert = (alertId) =>
+    setAlertList((prevList) =>
+      prevList.filter((alert) => alert.id !== alertId)
+    );
+
+  const addAlertRef = useRef((alert, removalTime = 3001) => {
+    const alertId = setTimeout(() => {
+      removeAlert(alertId);
     }, removalTime);
-  };
+
+    setAlertList((prevList) => prevList.concat({ ...alert, id: alertId }));
+  });
+
+  useEffect(() => {
+    setSubscriberRef.current(() => {
+      addAlertRef.current(
+        {
+          title: "The current website is out of date.",
+          message: (
+            <Stack direction="row" alignItems="baseline">
+              <Typography>Please </Typography>
+              <Button
+                color="error"
+                variant="text"
+                onClick={() => {
+                  window.location.reload(true);
+                }}
+                size="small"
+              >
+                <Typography>Refresh</Typography>
+              </Button>
+              <Typography> the page.</Typography>
+            </Stack>
+          ),
+          alertProps: { severity: "warning" },
+          dismissible: true,
+        },
+        60000
+      );
+    });
+  }, [setSubscriberRef]);
 
   useEffect(() => {
     onAuthStateChanged(getAuth(), setUser);
@@ -128,7 +168,7 @@ function App() {
       }
     });
 
-    addAlert({
+    addAlertRef.current({
       message: "Succesfully logged in with Google",
       title: `Hello ${user.displayName}`,
       alertProps: { severity: "success" },
@@ -146,16 +186,20 @@ function App() {
       spacing={8}
     >
       <TransitionGroup>
-        {alertList.map((alert, index) => {
-          const { message, title, alertProps } = alert;
+        {alertList.map((alert) => {
+          const { message, title, alertProps, dismissible, id } = alert;
           return (
-            <Collapse key={index}>
+            <Collapse key={id}>
               <ListItem
                 sx={{
                   justifyContent: "center",
                 }}
               >
-                <Alert sx={{ width: { xs: "85%", md: "60%" } }} {...alertProps}>
+                <Alert
+                  sx={{ width: { xs: "85%", md: "60%" } }}
+                  {...alertProps}
+                  onClose={dismissible ? () => removeAlert(id) : undefined}
+                >
                   {title && <AlertTitle>{title}</AlertTitle>}
                   {message}
                 </Alert>
@@ -188,7 +232,7 @@ function App() {
       <>
         {renderMessages()}
         <NavBar isAuthorized={true} />
-        <AddAlertContext.Provider value={addAlert}>
+        <AddAlertContext.Provider value={addAlertRef.current}>
           <UserContext.Provider value={user}>
             <PagesContainer
               isAdmin={isAdmin}
@@ -207,7 +251,7 @@ function App() {
       <>
         {renderMessages()}
         <NavBar isAuthorized={false} />
-        <AddAlertContext.Provider value={addAlert}>
+        <AddAlertContext.Provider value={addAlertRef.current}>
           <UserContext.Provider value={user}>
             <Routes>
               <Route
@@ -243,7 +287,9 @@ function App() {
     <>
       {renderMessages()}
       <NavBar isAuthorized={false} />
-      {navigator.onLine && <UnauthorizedUser user={user} addAlert={addAlert} />}
+      {navigator.onLine && (
+        <UnauthorizedUser user={user} addAlert={addAlertRef.current} />
+      )}
       <Card
         variant="outlined"
         sx={{ marginLeft: "5%", marginRight: "5%", marginTop: 2 }}
