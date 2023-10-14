@@ -38,10 +38,5 @@ root.render(
   </React.StrictMode>
 );
 
-setTimeout(() => {
-  console.log("timeout");
-  cacheObserver.notify();
-}, 1000);
-
 // Learn more about service workers: https://cra.link/PWA
 serviceWorkerRegistration.register({ onUpdate: cacheObserver.notify });
