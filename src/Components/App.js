@@ -31,6 +31,7 @@ import Loading from "./Utils/Loading";
 import OfflineMode from "./OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
+import { Stack } from "@mui/material";
 
 function App(props) {
   const { cacheObserver } = props;
@@ -71,10 +72,24 @@ function App(props) {
     cacheObserverRef.current.setSubscriber(() => {
       addAlert(
         {
-          message: "The current website is out of date. Please refresh.",
+          title: "The current website is out of date.",
+          message: (
+            <Stack direction="row" alignItems="baseline">
+              <Typography>Please </Typography>
+              <Button
+                color="error"
+                variant="text"
+                onClick={() => {}}
+                size="small"
+              >
+                <Typography>Refresh</Typography>
+              </Button>
+              <Typography> the page.</Typography>
+            </Stack>
+          ),
           alertProps: { severity: "warning" },
         },
-        10000
+        60000
       );
     });
   }, [cacheObserverRef]);

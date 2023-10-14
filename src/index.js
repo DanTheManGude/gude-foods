@@ -22,7 +22,6 @@ initializeAppCheck(firebaseApp, {
 const cacheObserver = {
   subscriber: () => {},
   setSubscriber: function (newSubscriber) {
-    console.log(this);
     this.subscriber = newSubscriber;
   },
   notify: function () {
@@ -42,7 +41,7 @@ root.render(
 setTimeout(() => {
   console.log("timeout");
   cacheObserver.notify();
-}, 3000);
+}, 1000);
 
 // Learn more about service workers: https://cra.link/PWA
 serviceWorkerRegistration.register({ onUpdate: cacheObserver.notify });
