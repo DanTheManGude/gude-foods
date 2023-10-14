@@ -26,7 +26,7 @@ import {
 } from "../Contexts";
 
 const errorCopyAlert = {
-  message: <span>Error trying to copy to your clipboard</span>,
+  message: <Typography>Error trying to copy. Try again please.</Typography>,
   alertProps: { severity: "error" },
 };
 
