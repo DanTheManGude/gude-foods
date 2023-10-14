@@ -25,7 +25,7 @@ const setSubscriber = (newSubscriber) => {
 };
 
 const notifySubscriber = () => {
-  this.subscriber();
+  cacheSubscriber();
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
