@@ -58,11 +58,14 @@ function App(props) {
   let navigate = useNavigate();
   let location = useLocation();
 
+  const removeAlert = (alertId) =>
+    setAlertList((prevList) =>
+      prevList.filter((alert) => alert.id !== alertId)
+    );
+
   const addAlert = (alert, removalTime = 3001) => {
     const alertId = setTimeout(() => {
-      setAlertList((prevList) =>
-        prevList.filter((alert) => alert.id !== alertId)
-      );
+      removeAlert(alertId);
     }, removalTime);
 
     setAlertList((prevList) => prevList.concat({ ...alert, id: alertId }));
@@ -90,6 +93,7 @@ function App(props) {
             </Stack>
           ),
           alertProps: { severity: "warning" },
+          dismissible: true,
         },
         60000
       );
@@ -182,16 +186,20 @@ function App(props) {
       spacing={8}
     >
       <TransitionGroup>
-        {alertList.map((alert, index) => {
-          const { message, title, alertProps } = alert;
+        {alertList.map((alert) => {
+          const { message, title, alertProps, dismissible, id } = alert;
           return (
-            <Collapse key={index}>
+            <Collapse key={id}>
               <ListItem
                 sx={{
                   justifyContent: "center",
                 }}
               >
-                <Alert sx={{ width: { xs: "85%", md: "60%" } }} {...alertProps}>
+                <Alert
+                  sx={{ width: { xs: "85%", md: "60%" } }}
+                  {...alertProps}
+                  onClose={dismissible ? () => removeAlert(id) : undefined}
+                >
                   {title && <AlertTitle>{title}</AlertTitle>}
                   {message}
                 </Alert>
