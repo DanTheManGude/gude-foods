@@ -63,17 +63,17 @@ function App(props) {
       prevList.filter((alert) => alert.id !== alertId)
     );
 
-  const addAlert = (alert, removalTime = 3001) => {
+  const addAlertRef = useRef((alert, removalTime = 3001) => {
     const alertId = setTimeout(() => {
       removeAlert(alertId);
     }, removalTime);
 
     setAlertList((prevList) => prevList.concat({ ...alert, id: alertId }));
-  };
+  });
 
   useEffect(() => {
     cacheObserverRef.current.setSubscriber(() => {
-      addAlert(
+      addAlertRef.current(
         {
           title: "The current website is out of date.",
           message: (
@@ -168,7 +168,7 @@ function App(props) {
       }
     });
 
-    addAlert({
+    addAlertRef.current({
       message: "Succesfully logged in with Google",
       title: `Hello ${user.displayName}`,
       alertProps: { severity: "success" },
@@ -232,7 +232,7 @@ function App(props) {
       <>
         {renderMessages()}
         <NavBar isAuthorized={true} />
-        <AddAlertContext.Provider value={addAlert}>
+        <AddAlertContext.Provider value={addAlertRef.current}>
           <UserContext.Provider value={user}>
             <PagesContainer
               isAdmin={isAdmin}
@@ -251,7 +251,7 @@ function App(props) {
       <>
         {renderMessages()}
         <NavBar isAuthorized={false} />
-        <AddAlertContext.Provider value={addAlert}>
+        <AddAlertContext.Provider value={addAlertRef.current}>
           <UserContext.Provider value={user}>
             <Routes>
               <Route
@@ -287,7 +287,9 @@ function App(props) {
     <>
       {renderMessages()}
       <NavBar isAuthorized={false} />
-      {navigator.onLine && <UnauthorizedUser user={user} addAlert={addAlert} />}
+      {navigator.onLine && (
+        <UnauthorizedUser user={user} addAlert={addAlertRef.current} />
+      )}
       <Card
         variant="outlined"
         sx={{ marginLeft: "5%", marginRight: "5%", marginTop: 2 }}
