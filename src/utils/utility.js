@@ -132,7 +132,7 @@ export const constructShareRecipeLink = (shareId) => {
   return link;
 };
 
-export const makeLinkAndMaybeShare = async (
+export const shareRecipe = async (
   recipe,
   glossary,
   user,
@@ -140,29 +140,19 @@ export const makeLinkAndMaybeShare = async (
   cookbookPath,
   addAlert
 ) => {
-  let shareId = recipe.shareId;
+  const shareId = createKey("shared");
 
-  if (!shareId) {
-    shareId = createKey("shared");
+  const recipeData = transformRecipeForExport(recipe, glossary);
+  const userId = user.uid;
+  const shareDate = Date.now();
 
-    const recipeData = transformRecipeForExport(recipe, glossary);
-    const userId = user.uid;
-    const shareDate = Date.now();
-
-    const createSuccess = await createSharedRecipe(
-      shareId,
-      {
-        recipeData,
-        info: { userId, recipeId, shareDate, lastViewed: 0 },
-      },
-      `${cookbookPath}/${recipeId}`,
-      addAlert
-    );
-
-    if (!createSuccess) {
-      return "";
-    }
-  }
-
-  return constructShareRecipeLink(shareId);
+  createSharedRecipe(
+    shareId,
+    {
+      recipeData,
+      info: { userId, recipeId, shareDate, lastViewed: 0 },
+    },
+    `${cookbookPath}/${recipeId}`,
+    addAlert
+  );
 };

@@ -4,6 +4,7 @@ import emailjs from "@emailjs/browser";
 import { databasePaths, emailConfig } from "../constants";
 import { getEmailLink } from "./utility";
 import { transformRecipeForExport } from "./dataTransfer";
+import { Typography } from "@mui/material";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
@@ -334,28 +335,24 @@ export const createSharedRecipe = (
   recipePath,
   addAlert
 ) => {
-  return new Promise((resolve) => {
-    updateRequest(
-      {
-        [`shared/${shareId}`]: sharedRecipe,
-        [`${recipePath}/shareId`]: shareId,
-      },
-      () => {
-        addAlert({
-          message: <span>Recipe has been shared with link</span>,
-          alertProps: { severity: "success" },
-        });
-        resolve(true);
-      },
-      () => {
-        addAlert({
-          message: <span>Error trying to share the recipe</span>,
-          alertProps: { severity: "error" },
-        });
-        resolve(false);
-      }
-    );
-  });
+  updateRequest(
+    {
+      [`shared/${shareId}`]: sharedRecipe,
+      [`${recipePath}/shareId`]: shareId,
+    },
+    () => {
+      addAlert({
+        message: <Typography>Recipe has been shared with link</Typography>,
+        alertProps: { severity: "success" },
+      });
+    },
+    () => {
+      addAlert({
+        message: <Typography>Error trying to share the recipe</Typography>,
+        alertProps: { severity: "error" },
+      });
+    }
+  );
 };
 
 export const removeSharedRecipe = (shareId, recipePath, addAlert) => {
