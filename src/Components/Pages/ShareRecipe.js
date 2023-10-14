@@ -45,15 +45,15 @@ function ShareRecipe(props) {
   const [recipeInfo, setRecipeInfo] = useState();
   const [isLoading, setIsLoading] = useState(Boolean(shareId));
 
-  useEffect(() => {
-    const recipeName = recipe && recipe.name;
-    if (recipeName) {
-      window.document.title = `${recipeName} - Gude Foods`;
-    }
-    return () => {
-      window.document.title = "Gude Foods";
-    };
-  }, [recipe]);
+  // useEffect(() => {
+  //   const recipeName = recipe && recipe.name;
+  //   if (recipeName) {
+  //     window.document.title = `${recipeName} - Gude Foods`;
+  //   }
+  //   return () => {
+  //     window.document.title = "Gude Foods";
+  //   };
+  // }, [recipe]);
 
   useEffect(() => {
     if (!shareId) {
