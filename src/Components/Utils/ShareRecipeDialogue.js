@@ -31,7 +31,7 @@ const errorCopyAlert = {
 
 function ShareRecipeDialogue(props) {
   const { open, onClose, recipe, recipeId } = props;
-  const { shareId } = recipe;
+  const { shareId, name } = recipe;
 
   let navigate = useNavigate();
   const user = useContext(UserContext);
@@ -57,7 +57,7 @@ function ShareRecipeDialogue(props) {
       return;
     }
 
-    const shareLink = constructShareRecipeLink(shareId);
+    const shareLink = constructShareRecipeLink(shareId, name);
 
     await navigator.clipboard
       .writeText(shareLink)
