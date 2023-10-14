@@ -50,7 +50,6 @@ function ShareRecipeDialogue(props) {
 
   const handleStopSharing = () => {
     removeSharedRecipe(shareId, `${cookbookPath}/${recipeId}`, addAlert);
-    onClose();
   };
 
   const handleStartSharing = () => {
