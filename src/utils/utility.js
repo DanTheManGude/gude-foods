@@ -132,7 +132,9 @@ export async function fetchRecipeFromUrl(externalUrl) {
 
 export const constructShareRecipeLink = (shareId, name) => {
   const urlBase = window.location.origin;
-  const link = `${urlBase}/share/${shareId}?name=${name}`;
+  const encodedName = encodeURIComponent(name);
+
+  const link = `${urlBase}/share/${shareId}?name=${encodedName}`;
   return link;
 };
 
