@@ -11,7 +11,7 @@ import Dialog from "@mui/material/Dialog";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 import { offlineRecipeKeyPrefix, offlineRecipeListKey } from "../../constants";
-import { makeLinkAndMaybeShare } from "../../utils/utility";
+import { shareRecipe, constructShareRecipeLink } from "../../utils/utility";
 import {
   downloadData,
   transformRecipeForExport,
@@ -53,30 +53,25 @@ function ShareRecipeDialogue(props) {
     onClose();
   };
 
+  const handleStartSharing = () => {
+    shareRecipe(recipe, glossary, user, recipeId, cookbookPath, addAlert);
+  };
+
   const handleCopyLink = async () => {
-    const shareLink = await makeLinkAndMaybeShare(
-      recipe,
-      glossary,
-      user,
-      recipeId,
-      cookbookPath,
-      addAlert
-    );
-
-    if (!shareLink) {
-      return;
-    }
-
     if (!navigator?.clipboard?.writeText) {
       addAlert(errorCopyAlert);
       return;
     }
 
-    navigator.clipboard
+    const shareLink = constructShareRecipeLink(shareId);
+
+    await navigator.clipboard
       .writeText(shareLink)
       .then(() => {
         addAlert({
-          message: <span>The link has been copied to your clipboard.</span>,
+          message: (
+            <Typography>The link has been copied to your clipboard.</Typography>
+          ),
           alertProps: { severity: "success" },
         });
       })
@@ -84,6 +79,8 @@ function ShareRecipeDialogue(props) {
         console.log(error);
         addAlert(errorCopyAlert);
       });
+
+    onClose();
   };
 
   const handleSaveForOffline = () => {
@@ -150,6 +147,35 @@ function ShareRecipeDialogue(props) {
     downloadData(recipeData, recipeData.name);
   };
 
+  const renderLinkSharingButton = () => {
+    if (shareId) {
+      return (
+        <Button
+          key="link"
+          size="large"
+          color="primary"
+          variant="contained"
+          onClick={handleCopyLink}
+          endIcon={<ContentCopyRoundedIcon />}
+        >
+          <Typography>Copy link to recipe</Typography>
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        key="link"
+        size="large"
+        color="primary"
+        variant="contained"
+        onClick={handleStartSharing}
+      >
+        <Typography>Share recipe with a link</Typography>
+      </Button>
+    );
+  };
+
   const renderLocalSaveButton = () => (
     <Stack direction="row" spacing={1} key="offline" sx={{ width: "100%" }}>
       <Button
@@ -179,16 +205,7 @@ function ShareRecipeDialogue(props) {
 
   const renderButtonStack = () => (
     <Stack spacing={2}>
-      <Button
-        key="link"
-        size="large"
-        color="primary"
-        variant="contained"
-        onClick={handleCopyLink}
-        endIcon={<ContentCopyRoundedIcon />}
-      >
-        <Typography>Copy link to recipe</Typography>
-      </Button>
+      {renderLinkSharingButton()}
       {renderLocalSaveButton()}
       <Button
         key="export"
