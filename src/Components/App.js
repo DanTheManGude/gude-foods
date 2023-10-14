@@ -79,7 +79,9 @@ function App(props) {
               <Button
                 color="error"
                 variant="text"
-                onClick={() => {}}
+                onClick={() => {
+                  window.location.reload(true);
+                }}
                 size="small"
               >
                 <Typography>Refresh</Typography>
