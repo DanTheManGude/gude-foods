@@ -69,7 +69,7 @@ const NavBar = ({ isAuthorized }) => {
               }}
             >
               <Link style={{ color: theme.palette.text.primary }} to={`/`}>
-                Gude Foods v2
+                Gude Foods
               </Link>
             </Typography>
 
@@ -88,7 +88,7 @@ const NavBar = ({ isAuthorized }) => {
               }}
             >
               <Link style={{ color: theme.palette.text.primary }} to={`/`}>
-                Gude Foods v2
+                Gude Foods
               </Link>
             </Typography>
             <Box
