@@ -80,7 +80,8 @@ function ShareRecipeDialogue(props) {
           alertProps: { severity: "success" },
         });
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         addAlert(errorCopyAlert);
       });
   };
