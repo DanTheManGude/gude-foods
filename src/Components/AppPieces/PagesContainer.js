@@ -29,7 +29,12 @@ const getCreateFullPath = (user) => (pathName) =>
   `accounts/${user.uid}/${pathName}`;
 
 function PagesContainer(props) {
-  const { isAdmin, requestedUsers, allowUnrestrictedUsers } = props;
+  const {
+    isAdmin,
+    requestedUsers,
+    allowUnrestrictedUsers,
+    enableUsingOffline,
+  } = props;
 
   const user = useContext(UserContext);
   const setColorKey = useContext(ColorKeyContext);
@@ -169,6 +174,7 @@ function PagesContainer(props) {
                 isAdmin={isAdmin}
                 actingUser={actingUser}
                 clearActingUser={clearActingUser}
+                enableUsingOffline={enableUsingOffline}
               />
             }
           />

@@ -50,6 +50,7 @@ function App(props) {
 
   const [usingOffline, setUsingOffline] = useState(false);
   const disableUsingOffline = () => setUsingOffline(false);
+  const enableUsingOffline = () => setUsingOffline(true);
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [requestedUsers, setIsRequestedUsers] = useState();
@@ -217,13 +218,7 @@ function App(props) {
   );
 
   const renderUseOfflineButton = (buttonProps) => (
-    <Button
-      variant="outlined"
-      onClick={() => {
-        setUsingOffline(true);
-      }}
-      {...buttonProps}
-    >
+    <Button variant="outlined" onClick={enableUsingOffline} {...buttonProps}>
       <Typography>Use offline mode</Typography>
     </Button>
   );
@@ -243,6 +238,7 @@ function App(props) {
               isAdmin={isAdmin}
               requestedUsers={requestedUsers}
               allowUnrestrictedUsers={allowUnrestrictedUsers}
+              enableUsingOffline={enableUsingOffline}
             />
           </UserContext.Provider>
         </AddAlertContext.Provider>
