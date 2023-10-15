@@ -148,3 +148,5 @@ export const aboutText = `Gude Foods is a website for you to keep your recipes i
 
 export const offlineRecipeListKey = "gude-foods-offline-recipe-id-list";
 export const offlineRecipeKeyPrefix = "gude-foods-recipe-";
+
+export const hasLoggedInBeforeKey = "hasLoggedInBefore";

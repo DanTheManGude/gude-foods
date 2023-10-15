@@ -17,8 +17,10 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material";
 
 import { aboutText } from "../constants";
+import { getHasLoggedInBefore } from "../utils/utility";
 
 import PagesContainer from "./AppPieces/PagesContainer";
 import NavBar from "./AppPieces/NavBar";
@@ -31,7 +33,6 @@ import Loading from "./Utils/Loading";
 import OfflineMode from "./OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
-import { Stack } from "@mui/material";
 
 function App(props) {
   const { setSubscriber } = props;
@@ -43,6 +44,7 @@ function App(props) {
   const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
 
   const [initialLoading, setInitialLoading] = useState(true);
+  const stopInitialLoading = () => setInitialLoading(false);
   const [authorizedLoading, setAuthorizedLoading] = useState(false);
   const isLoading = initialLoading || authorizedLoading;
 
@@ -105,9 +107,12 @@ function App(props) {
   }, []);
 
   useEffect(() => {
+    const hasLoggedInBefore = getHasLoggedInBefore();
+    const delay = hasLoggedInBefore ? 0 : 5000;
+
     setTimeout(() => {
-      setInitialLoading(false);
-    }, 5000);
+      stopInitialLoading();
+    }, delay);
   }, []);
 
   useEffect(() => {
@@ -130,7 +135,7 @@ function App(props) {
     }
 
     setAuthorizedLoading(true);
-    setInitialLoading(false);
+    stopInitialLoading();
 
     get(child(ref(getDatabase()), `users/${user.uid}`))
       .then((snapshot) => {
