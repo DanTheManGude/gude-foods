@@ -22,6 +22,7 @@ function ImportFileButton(props) {
     buttonProps = {},
     buttonText = "Import",
     typographyProps = {},
+    containerProps = {},
     id,
   } = props;
   const inputId = `import-file-button-${id}`;
@@ -108,7 +109,7 @@ function ImportFileButton(props) {
           handeFileImport(event.target.files[0]);
         }}
       />
-      <label htmlFor={inputId}>
+      <label htmlFor={inputId} {...containerProps}>
         <Button {...buttonProps} component="span">
           <Typography {...typographyProps}>{buttonText}</Typography>
         </Button>

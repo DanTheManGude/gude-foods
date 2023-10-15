@@ -14,6 +14,7 @@ import { offlineCookbookKey } from "../constants";
 
 import RecipeData from "./Utils/RecipeData";
 import OfflineCookbook from "./Utils/OfflineCookbook";
+import ImportFileButton from "./Utils/ImportFileButton";
 
 function OfflineMode(props) {
   const { disableUsingOffline } = props;
@@ -29,24 +30,10 @@ function OfflineMode(props) {
   }, []);
 
   const renderAlert = () => (
-    <Collapse in={showAlert}>
-      <Alert
-        severity="info"
-        action={
-          <IconButton
-            aria-label="close"
-            color="inherit"
-            size="small"
-            onClick={() => {
-              setShowAlert(false);
-            }}
-          >
-            <CloseIcon fontSize="inherit" />
-          </IconButton>
-        }
-      >
+    <Collapse in={showAlert} sx={{ width: { xs: "85%", md: "60%" } }}>
+      <Alert severity="info" onClose={() => setShowAlert(false)}>
         <AlertTitle>Offline Mode</AlertTitle>
-        Only viewing recipes that you saved is available.
+        Only viewing recipes is available.
       </Alert>
     </Collapse>
   );
@@ -57,7 +44,7 @@ function OfflineMode(props) {
       justifyContent="space-around"
       alignItems="stretch"
       spacing={2}
-      width={"100%"}
+      width={"95%"}
     >
       <Button
         variant="contained"
@@ -70,29 +57,36 @@ function OfflineMode(props) {
           <span>offline mode</span>
         </Typography>
       </Button>
-      {!recipe ? (
+      {recipe ? (
         <Button variant="outlined" sx={{ flexGrow: "1" }} onClick={clearRecipe}>
-          <Typography>
-            <span>View other recipe</span>
-            <br />
-            <span></span>
-          </Typography>
+          <Typography>View other recipes</Typography>
         </Button>
       ) : (
-        <Button variant="outlined" sx={{ flexGrow: "1" }}>
-          <Typography>
-            <span>Import recipe</span>
-            <br />
-            <span>from device</span>
-          </Typography>
-        </Button>
+        <ImportFileButton
+          customHandler={setRecipe}
+          shouldUseCustomHandler={true}
+          buttonProps={{
+            variant: "outlined",
+            sx: { height: "100%", width: "100%" },
+          }}
+          containerProps={{ style: { flexGrow: "1" } }}
+          buttonText={
+            <>
+              <span>Import recipe</span>
+              <br />
+              <span>from device</span>
+            </>
+          }
+          typographyProps={{ sx: { textAlign: "center" } }}
+          id="import-offline-recipe"
+        />
       )}
     </Stack>
   );
 
   const renderRecipeOrCookbook = () => {
     if (recipe) {
-      return <RecipeData recipe={recipe} />;
+      return <RecipeData recipe={recipe} setRecipe={setRecipe} />;
     }
 
     return <OfflineCookbook cookbook={cookbook} />;
