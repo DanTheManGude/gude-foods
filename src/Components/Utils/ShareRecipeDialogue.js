@@ -10,7 +10,6 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
-import { offlineRecipeKeyPrefix, offlineRecipeListKey } from "../../constants";
 import { shareRecipe, constructShareRecipeLink } from "../../utils/utility";
 import {
   downloadData,
@@ -44,10 +43,6 @@ function ShareRecipeDialogue(props) {
 
   const glossary = _glossary || {};
 
-  const hasLocalData = Boolean(
-    localStorage.getItem(`${offlineRecipeKeyPrefix}${recipeId}`)
-  );
-
   const handleStopSharing = () => {
     removeSharedRecipe(shareId, `${cookbookPath}/${recipeId}`, addAlert);
   };
@@ -80,74 +75,6 @@ function ShareRecipeDialogue(props) {
       });
 
     onClose();
-  };
-
-  const handleSaveForOffline = () => {
-    const recipeData = transformRecipeForExport(recipe, glossary);
-
-    try {
-      const offlineRecipeList =
-        JSON.parse(localStorage.getItem(offlineRecipeListKey)) || [];
-
-      if (!offlineRecipeList.includes(recipeId)) {
-        offlineRecipeList.push(recipeId);
-
-        localStorage.setItem(
-          offlineRecipeListKey,
-          JSON.stringify(offlineRecipeList)
-        );
-      }
-
-      const localStorageKey = `${offlineRecipeKeyPrefix}${recipeId}`;
-      localStorage.setItem(localStorageKey, JSON.stringify(recipeData));
-
-      onClose();
-      addAlert({
-        message: (
-          <Typography>This recipe has been saved to the browser.</Typography>
-        ),
-        alertProps: { severity: "success" },
-      });
-    } catch (error) {
-      console.error(error);
-      addAlert({
-        message: (
-          <Typography>There was an error trying to save the data.</Typography>
-        ),
-        alertProps: { severity: "error" },
-      });
-    }
-  };
-
-  const handleClearSavedData = () => {
-    try {
-      const localStorageKey = `${offlineRecipeKeyPrefix}${recipeId}`;
-
-      const offlineRecipeList =
-        JSON.parse(localStorage.getItem(offlineRecipeListKey)) || [];
-      const updatedList = offlineRecipeList.filter((id) => id !== recipeId);
-      localStorage.setItem(offlineRecipeListKey, JSON.stringify(updatedList));
-
-      localStorage.removeItem(localStorageKey);
-
-      onClose();
-      addAlert({
-        message: (
-          <Typography>
-            The recipe data has been removed for offline use.
-          </Typography>
-        ),
-        alertProps: { severity: "success" },
-      });
-    } catch (error) {
-      console.error(error);
-      addAlert({
-        message: (
-          <Typography>There was an error trying to remove the data.</Typography>
-        ),
-        alertProps: { severity: "error" },
-      });
-    }
   };
 
   const handleDownloadRecipe = () => {
@@ -185,37 +112,9 @@ function ShareRecipeDialogue(props) {
     );
   };
 
-  const renderLocalSaveButton = () => (
-    <Stack direction="row" spacing={1} key="offline" sx={{ width: "100%" }}>
-      <Button
-        key="save"
-        size="large"
-        color="primary"
-        variant="outlined"
-        sx={{ flexGrow: "1" }}
-        onClick={handleSaveForOffline}
-      >
-        <Typography>Save data for offline use</Typography>
-      </Button>
-      {hasLocalData && (
-        <Button
-          key="remove"
-          size="large"
-          color="secondary"
-          variant="outlined"
-          sx={{ flexGrow: "1" }}
-          onClick={handleClearSavedData}
-        >
-          <Typography>Clear data</Typography>
-        </Button>
-      )}
-    </Stack>
-  );
-
   const renderButtonStack = () => (
     <Stack spacing={2}>
       {renderLinkSharingButton()}
-      {renderLocalSaveButton()}
       <Button
         key="export"
         size="large"
