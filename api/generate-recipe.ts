@@ -3,6 +3,12 @@ export const config = {
 };
 
 export default async (request: Request) => {
+  const host = request.headers.get("host");
+
+  console.log("header host", host);
+  console.log("request url", new URL(request.url).host);
+  return;
+
   const openAIKey = process.env.OPENAI_KEY;
 
   const url = new URL(request.url);
