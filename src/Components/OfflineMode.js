@@ -87,7 +87,7 @@ function OfflineMode(props) {
   return (
     <>
       <NavBar isAuthorized={false} />
-      <Stack alignItems="center" spacing={2} width={"100%"}>
+      <Stack alignItems="center" spacing={2} width={"100%"} paddingTop={2}>
         {renderAlert()}
         {renderActionButtons()}
         {renderRecipe()}
