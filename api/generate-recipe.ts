@@ -3,10 +3,9 @@ export const config = {
 };
 
 export default async (request: Request) => {
-  const host = request.headers.get("host");
+  const secFetchSite = request.headers.get("Sec-Fetch-Site");
 
-  console.log("header host", host);
-  console.log("request url", new URL(request.url).host);
+  console.log("Sec-Fetch-Site", secFetchSite);
   return;
 
   const openAIKey = process.env.OPENAI_KEY;
