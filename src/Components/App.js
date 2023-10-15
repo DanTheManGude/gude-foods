@@ -108,7 +108,7 @@ function App(props) {
 
   useEffect(() => {
     const hasLoggedInBefore = getHasLoggedInBefore();
-    const delay = hasLoggedInBefore ? 0 : 5000;
+    const delay = !hasLoggedInBefore ? 0 : 5000;
 
     setTimeout(() => {
       stopInitialLoading();
