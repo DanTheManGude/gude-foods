@@ -102,7 +102,7 @@ function ShareRecipe(props) {
             navigate("/");
           }}
         >
-          Go to home page
+          <Typography>Go to home page</Typography>
         </Button>
       </Stack>
     );
@@ -210,7 +210,7 @@ function ShareRecipe(props) {
   };
 
   return (
-    <Stack spacing={2} alignItems="center">
+    <Stack spacing={2} alignItems="center" paddingTop={2}>
       {renderControls()}
       <RecipeData recipe={recipe} />
       {renderInfo()}
