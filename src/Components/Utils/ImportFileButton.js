@@ -91,8 +91,8 @@ function ImportFileButton(props) {
       }
 
       addAlert({
-        message: reader.error,
-        title: "Error with importing file",
+        message: <Typography>{reader.error}</Typography>,
+        title: <Typography>Error with importing file</Typography>,
         alertProps: { severity: "error" },
       });
     };

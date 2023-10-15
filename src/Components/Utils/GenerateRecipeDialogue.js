@@ -195,8 +195,8 @@ function GenerateRecipeDialogue(props) {
         stopLoading();
         addAlert(
           {
-            message: error.toString(),
-            title: "Error when generating recipe",
+            message: <Typography>{error.toString()}</Typography>,
+            title: <Typography>Error when generating recipe</Typography>,
             alertProps: { severity: "error" },
           },
           6000

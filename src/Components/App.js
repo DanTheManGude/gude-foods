@@ -169,8 +169,8 @@ function App(props) {
     });
 
     addAlertRef.current({
-      message: "Succesfully logged in with Google",
-      title: `Hello ${user.displayName}`,
+      message: <Typography>Succesfully logged in with Google</Typography>,
+      title: <Typography>{`Hello ${user.displayName}`}</Typography>,
       alertProps: { severity: "success" },
     });
   }, [user]);

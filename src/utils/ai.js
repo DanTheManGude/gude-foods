@@ -1,4 +1,5 @@
 import emailjs from "@emailjs/browser";
+import Typography from "@mui/material/Typography";
 
 import { emailConfig } from "../constants";
 
@@ -74,12 +75,12 @@ export const reportAiError = (addAlert, reportErrorValues) => {
     () => {
       addAlert(
         {
-          title: <span>Thanks for sharing</span>,
+          title: <Typography>Thanks for sharing</Typography>,
           message: (
-            <span>
+            <Typography>
               Succesfully reported the error. Thank you for helping make Gude
               Foods better.
-            </span>
+            </Typography>
           ),
           alertProps: { severity: "success" },
         },
@@ -88,7 +89,9 @@ export const reportAiError = (addAlert, reportErrorValues) => {
     },
     () => {
       addAlert({
-        message: <span>An error occured when reporting the error</span>,
+        message: (
+          <Typography>An error occured when reporting the error</Typography>
+        ),
         alertProps: { severity: "error" },
       });
     }

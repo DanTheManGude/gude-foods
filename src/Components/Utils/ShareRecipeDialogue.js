@@ -103,13 +103,17 @@ function ShareRecipeDialogue(props) {
 
       onClose();
       addAlert({
-        message: <span>This recipe has been saved to the browser.</span>,
+        message: (
+          <Typography>This recipe has been saved to the browser.</Typography>
+        ),
         alertProps: { severity: "success" },
       });
     } catch (error) {
       console.error(error);
       addAlert({
-        message: <span>There was an error trying to save the data.</span>,
+        message: (
+          <Typography>There was an error trying to save the data.</Typography>
+        ),
         alertProps: { severity: "error" },
       });
     }
@@ -128,13 +132,19 @@ function ShareRecipeDialogue(props) {
 
       onClose();
       addAlert({
-        message: <span>The recipe data has been removed for offline use.</span>,
+        message: (
+          <Typography>
+            The recipe data has been removed for offline use.
+          </Typography>
+        ),
         alertProps: { severity: "success" },
       });
     } catch (error) {
       console.error(error);
       addAlert({
-        message: <span>There was an error trying to remove the data.</span>,
+        message: (
+          <Typography>There was an error trying to remove the data.</Typography>
+        ),
         alertProps: { severity: "error" },
       });
     }
