@@ -10,7 +10,7 @@ export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
     .then(() => {
       onSuccess({
-        message: <span>Succesfully completed updates.</span>,
+        message: <Typography>Succesfully completed updates.</Typography>,
         alertProps: { severity: "success" },
       });
     })
@@ -18,8 +18,8 @@ export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
       const errorHandler = onFailure || onSuccess;
 
       errorHandler({
-        message: "The request did not go through.",
-        title: "Error",
+        message: <Typography>The request did not go through.</Typography>,
+        title: <Typography>Error</Typography>,
         alertProps: { severity: "error" },
       });
     });
@@ -206,7 +206,7 @@ export const saveRecipe = (
     )
   ) {
     addAlert({
-      message: <span>Please fill out the required fields.</span>,
+      message: <Typography>Please fill out the required fields.</Typography>,
       alertProps: { severity: "warning" },
     });
     return;
@@ -274,10 +274,10 @@ const sendAuthorizationEmail = (userInfo, addAlert) => {
       addAlert(
         {
           message: (
-            <span>
+            <Typography>
               Succesfully sent authorization request. You should recieve a
               confirmation email shortly (be sure to check your junk folder).
-            </span>
+            </Typography>
           ),
           alertProps: { severity: "success" },
         },
@@ -288,12 +288,12 @@ const sendAuthorizationEmail = (userInfo, addAlert) => {
       addAlert(
         {
           message: (
-            <span>
+            <Typography>
               An error occured when sending authorization request. You can reach
               out to&nbsp;
               <a href={getEmailLink(userInfo)}>dgude31@outlook.com</a>
               &nbsp;directly.
-            </span>
+            </Typography>
           ),
           alertProps: { severity: "error" },
         },
@@ -360,13 +360,13 @@ export const removeSharedRecipe = (shareId, recipePath, addAlert) => {
     [`shared/${shareId}`, `${recipePath}/shareId`],
     () => {
       addAlert({
-        message: <span>Succesfully stopped sharing from link</span>,
+        message: <Typography>Succesfully stopped sharing from link</Typography>,
         alertProps: { severity: "success" },
       });
     },
     () => {
       addAlert({
-        message: <span>Error when trying to stop sharing</span>,
+        message: <Typography>Error when trying to stop sharing</Typography>,
         alertProps: { severity: "error" },
       });
     }

@@ -19,8 +19,8 @@ export const signInGoogle = (addAlert) => {
     .catch((error) => {
       const { name, code } = error;
       addAlert({
-        message: code,
-        title: name,
+        message: <Typography>{code}</Typography>,
+        title: <Typography>{name}</Typography>,
         alertProps: { severity: "error" },
       });
     });
@@ -36,8 +36,8 @@ export const signOutGoogle = (addAlert) => {
     .catch((error) => {
       const { name, code } = error;
       addAlert({
-        message: code,
-        title: name,
+        message: <Typography>{code}</Typography>,
+        title: <Typography>{name}</Typography>,
         alertProps: { severity: "error" },
       });
     });
