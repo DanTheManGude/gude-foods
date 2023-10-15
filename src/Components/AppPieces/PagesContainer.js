@@ -63,39 +63,62 @@ function PagesContainer(props) {
 
   useEffect(() => {
     if (!user || !setColorKey) {
-      return;
+      return () => {};
     }
     const db = getDatabase();
 
     const createFullPath = getCreateFullPath(actingUser || user);
 
-    onValue(ref(db, createFullPath(databasePaths.colorKey)), (snapshot) => {
-      const snapshotValue = snapshot.val();
-      if (snapshotValue) {
-        setColorKey(snapshotValue);
-      } else {
-        setThemeIsNotSet(true);
+    const onValueListerRemovers = [];
+
+    const colorKeyListerRemover = onValue(
+      ref(db, createFullPath(databasePaths.colorKey)),
+      (snapshot) => {
+        const snapshotValue = snapshot.val();
+        if (snapshotValue) {
+          setColorKey(snapshotValue);
+        } else {
+          setThemeIsNotSet(true);
+        }
       }
-    });
+    );
+    onValueListerRemovers.push(colorKeyListerRemover);
 
     Object.keys(databasePaths).forEach((key) => {
       const pathName = databasePaths[key];
       const fullPath = createFullPath(pathName);
 
-      onValue(ref(db, fullPath), (snapshot) => {
-        setDatabase((_database) => ({
-          ..._database,
-          [key]: snapshot.val(),
-        }));
-      });
+      const individualDbListerRemover = onValue(
+        ref(db, fullPath),
+        (snapshot) => {
+          const value = snapshot.val();
+          setDatabase((_database) => ({
+            ..._database,
+            [key]: value,
+          }));
+
+          if (key === "cookbook") {
+            console.log("cookbook update", value);
+          }
+        }
+      );
+      onValueListerRemovers.push(individualDbListerRemover);
+
       setDataPaths((_dataPaths) => ({
         ..._dataPaths,
         [`${key}Path`]: fullPath,
       }));
     });
+
     if (!actingUser) {
       updateRequest({ [createFullPath("name")]: user.displayName });
     }
+
+    return () => {
+      onValueListerRemovers.forEach((listerRemover) => {
+        listerRemover();
+      });
+    };
   }, [user, actingUser, setColorKey]);
 
   useEffect(() => {
