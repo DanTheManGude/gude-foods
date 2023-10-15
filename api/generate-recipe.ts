@@ -3,6 +3,12 @@ export const config = {
 };
 
 export default async (request: Request) => {
+  const secFetchSite = request.headers.get("Sec-Fetch-Site");
+
+  if (secFetchSite !== "same-origin") {
+    return new Response(undefined, { status: 400 });
+  }
+
   const openAIKey = process.env.OPENAI_KEY;
 
   const url = new URL(request.url);
