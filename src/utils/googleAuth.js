@@ -6,6 +6,8 @@ import {
 } from "firebase/auth";
 import Typography from "@mui/material/Typography";
 
+import { setHasLoggedInBefore } from "./utility";
+
 export const signInGoogle = (addAlert) => {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -16,6 +18,7 @@ export const signInGoogle = (addAlert) => {
   signInWithPopup(auth, provider)
     .then((result) => {
       console.log(`login ${result.user.uid}`);
+      setHasLoggedInBefore();
     })
     .catch((error) => {
       const { name, code } = error;

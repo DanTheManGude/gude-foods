@@ -1,5 +1,9 @@
 import { createTheme } from "@mui/material/styles";
-import { fontFamilies, longestEntryPathDelimiter } from "../constants";
+import {
+  fontFamilies,
+  longestEntryPathDelimiter,
+  hasLoggedInBeforeKey,
+} from "../constants";
 import { transformRecipeForExport } from "./dataTransfer";
 import { createKey, createSharedRecipe } from "./requests";
 
@@ -155,4 +159,12 @@ export const shareRecipe = async (
     `${cookbookPath}/${recipeId}`,
     addAlert
   );
+};
+
+export const getHasLoggedInBefore = () => {
+  Boolean(localStorage.getItem(hasLoggedInBeforeKey));
+};
+
+export const setHasLoggedInBefore = () => {
+  localStorage.setItem(hasLoggedInBeforeKey, true);
 };
