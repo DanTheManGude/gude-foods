@@ -84,10 +84,10 @@ function OfflineMode(props) {
 
   const renderRecipeOrCookbook = () => {
     if (recipe) {
-      return <RecipeData recipe={recipe} setRecipe={setRecipe} />;
+      return <RecipeData recipe={recipe} />;
     }
 
-    return <OfflineCookbook cookbook={cookbook} />;
+    return <OfflineCookbook cookbook={cookbook} setRecipe={setRecipe} />;
   };
 
   return (
