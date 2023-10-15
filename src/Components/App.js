@@ -17,7 +17,7 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material";
+import Stack from "@mui/material/Stack";
 
 import { aboutText } from "../constants";
 import { getHasLoggedInBefore } from "../utils/utility";
