@@ -17,7 +17,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { removeRecipeFromMenuAndShoppingList } from "../../utils/requests";
 import {
   downloadData,
-  transformRecipeForExport,
+  transformCookbookForExport,
 } from "../../utils/dataTransfer";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
@@ -286,15 +286,10 @@ function Cookbook(props) {
         color="secondary"
         variant="contained"
         onClick={() => {
-          const cookbookData = Object.keys(cookbook).reduce((acc, recipeId) => {
-            const recipeEntry = cookbook[recipeId];
-            const recipeData = transformRecipeForExport(recipeEntry, glossary);
-
-            return {
-              ...acc,
-              [recipeEntry.name]: recipeData,
-            };
-          }, {});
+          const cookbookData = transformCookbookForExport({
+            cookbook,
+            glossary,
+          });
 
           downloadData(cookbookData, "cookbook");
         }}

@@ -29,7 +29,7 @@ import {
 } from "../Contexts";
 
 function Settings(props) {
-  const { actingUser, clearActingUser, isAdmin } = props;
+  const { actingUser, clearActingUser, isAdmin, enableUsingOffline } = props;
 
   let navigate = useNavigate();
 
@@ -97,6 +97,30 @@ function Settings(props) {
               {aboutText}
             </Typography>
           </CardContent>
+        </Card>
+      </Box>
+    );
+  };
+
+  const renderOfflineCard = () => {
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Offline
+            </Typography>
+            <Typography>View the recipes saved for offline.</Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="primary"
+              variant="outlined"
+              onClick={enableUsingOffline}
+            >
+              <Typography>Use offline mode</Typography>
+            </Button>
+          </CardActions>
         </Card>
       </Box>
     );
@@ -237,6 +261,7 @@ function Settings(props) {
         {renderAdminCard()}
         <ColorCard />
         {renderAboutCard()}
+        {renderOfflineCard()}
         {renderDownloadData()}
         {renderImportData()}
         {renderDeleteData()}

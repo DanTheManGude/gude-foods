@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Stack from "@mui/material/Stack";
 import NavBar from "./AppPieces/NavBar";
@@ -7,38 +7,31 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 
-import OfflineRecipeDialogue from "./Utils/OfflineRecipeDialogue";
+import { offlineCookbookKey } from "../constants";
+
 import RecipeData from "./Utils/RecipeData";
+import OfflineCookbook from "./Utils/OfflineCookbook";
+import ImportFileButton from "./Utils/ImportFileButton";
 
 function OfflineMode(props) {
   const { disableUsingOffline } = props;
 
   const [showAlert, setShowAlert] = useState(true);
-  const [openSelectionDialogue, setOpenSelectionDialogue] = useState(false);
+  const [cookbook, setCookbook] = useState({});
   const [recipe, setRecipe] = useState();
+  const clearRecipe = () => setRecipe();
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem(offlineCookbookKey)) || {};
+    setCookbook(data);
+  }, []);
 
   const renderAlert = () => (
-    <Collapse in={showAlert}>
-      <Alert
-        severity="info"
-        action={
-          <IconButton
-            aria-label="close"
-            color="inherit"
-            size="small"
-            onClick={() => {
-              setShowAlert(false);
-            }}
-          >
-            <CloseIcon fontSize="inherit" />
-          </IconButton>
-        }
-      >
+    <Collapse in={showAlert} sx={{ width: { xs: "85%", md: "60%" } }}>
+      <Alert severity="info" onClose={() => setShowAlert(false)}>
         <AlertTitle>Offline Mode</AlertTitle>
-        Only viewing recipes that you saved is available.
+        Only viewing recipes is available.
       </Alert>
     </Collapse>
   );
@@ -47,12 +40,12 @@ function OfflineMode(props) {
     <Stack
       direction="row"
       justifyContent="space-around"
-      alignItems="center"
+      alignItems="stretch"
       spacing={2}
-      width={"100%"}
+      width={"95%"}
     >
       <Button
-        variant="outlined"
+        variant="contained"
         sx={{ flexGrow: "1" }}
         onClick={disableUsingOffline}
       >
@@ -62,41 +55,49 @@ function OfflineMode(props) {
           <span>offline mode</span>
         </Typography>
       </Button>
-      <Button
-        variant="contained"
-        sx={{ flexGrow: "1" }}
-        onClick={() => setOpenSelectionDialogue(true)}
-      >
-        <Typography>
-          <span>Select recipe</span>
-          <br />
-          <span>to view</span>
-        </Typography>
-      </Button>
+      {recipe ? (
+        <Button variant="outlined" sx={{ flexGrow: "1" }} onClick={clearRecipe}>
+          <Typography>View other recipes</Typography>
+        </Button>
+      ) : (
+        <ImportFileButton
+          customHandler={setRecipe}
+          shouldUseCustomHandler={true}
+          buttonProps={{
+            variant: "outlined",
+            sx: { height: "100%", width: "100%" },
+          }}
+          containerProps={{ style: { flexGrow: "1" } }}
+          buttonText={
+            <>
+              <span>Import recipe</span>
+              <br />
+              <span>from device</span>
+            </>
+          }
+          typographyProps={{ sx: { textAlign: "center" } }}
+          id="import-offline-recipe"
+        />
+      )}
     </Stack>
   );
 
-  const renderRecipe = () => {
-    if (!recipe) {
-      return null;
+  const renderRecipeOrCookbook = () => {
+    if (recipe) {
+      return <RecipeData recipe={recipe} />;
     }
 
-    return <RecipeData recipe={recipe} />;
+    return <OfflineCookbook cookbook={cookbook} setRecipe={setRecipe} />;
   };
 
   return (
     <>
       <NavBar isAuthorized={false} />
-      <Stack alignItems="center" spacing={2} width={"100%"}>
+      <Stack alignItems="center" spacing={2} width={"100%"} paddingTop={2}>
         {renderAlert()}
         {renderActionButtons()}
-        {renderRecipe()}
+        {renderRecipeOrCookbook()}
       </Stack>
-      <OfflineRecipeDialogue
-        open={openSelectionDialogue}
-        onClose={() => setOpenSelectionDialogue(false)}
-        setRecipe={setRecipe}
-      />
     </>
   );
 }

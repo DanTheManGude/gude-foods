@@ -5,6 +5,8 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { updateRequest } from "../../utils/requests";
 import { databasePaths } from "../../constants";
 
+import OfflineCookbookUpdater from "../Utils/OfflineCookbookUpdater";
+
 import Home from "../Pages/Home";
 import Cookbook from "../Pages/Cookbook";
 import Recipe from "../Pages/Recipe";
@@ -29,7 +31,12 @@ const getCreateFullPath = (user) => (pathName) =>
   `accounts/${user.uid}/${pathName}`;
 
 function PagesContainer(props) {
-  const { isAdmin, requestedUsers, allowUnrestrictedUsers } = props;
+  const {
+    isAdmin,
+    requestedUsers,
+    allowUnrestrictedUsers,
+    enableUsingOffline,
+  } = props;
 
   const user = useContext(UserContext);
   const setColorKey = useContext(ColorKeyContext);
@@ -58,39 +65,58 @@ function PagesContainer(props) {
 
   useEffect(() => {
     if (!user || !setColorKey) {
-      return;
+      return () => {};
     }
     const db = getDatabase();
 
     const createFullPath = getCreateFullPath(actingUser || user);
 
-    onValue(ref(db, createFullPath(databasePaths.colorKey)), (snapshot) => {
-      const snapshotValue = snapshot.val();
-      if (snapshotValue) {
-        setColorKey(snapshotValue);
-      } else {
-        setThemeIsNotSet(true);
+    const onValueListerRemovers = [];
+
+    const colorKeyListerRemover = onValue(
+      ref(db, createFullPath(databasePaths.colorKey)),
+      (snapshot) => {
+        const snapshotValue = snapshot.val();
+        if (snapshotValue) {
+          setColorKey(snapshotValue);
+        } else {
+          setThemeIsNotSet(true);
+        }
       }
-    });
+    );
+    onValueListerRemovers.push(colorKeyListerRemover);
 
     Object.keys(databasePaths).forEach((key) => {
       const pathName = databasePaths[key];
       const fullPath = createFullPath(pathName);
 
-      onValue(ref(db, fullPath), (snapshot) => {
-        setDatabase((_database) => ({
-          ..._database,
-          [key]: snapshot.val(),
-        }));
-      });
+      const individualDbListerRemover = onValue(
+        ref(db, fullPath),
+        (snapshot) => {
+          const value = snapshot.val();
+          setDatabase((_database) => ({
+            ..._database,
+            [key]: value,
+          }));
+        }
+      );
+      onValueListerRemovers.push(individualDbListerRemover);
+
       setDataPaths((_dataPaths) => ({
         ..._dataPaths,
         [`${key}Path`]: fullPath,
       }));
     });
+
     if (!actingUser) {
       updateRequest({ [createFullPath("name")]: user.displayName });
     }
+
+    return () => {
+      onValueListerRemovers.forEach((listerRemover) => {
+        listerRemover();
+      });
+    };
   }, [user, actingUser, setColorKey]);
 
   useEffect(() => {
@@ -169,6 +195,7 @@ function PagesContainer(props) {
                 isAdmin={isAdmin}
                 actingUser={actingUser}
                 clearActingUser={clearActingUser}
+                enableUsingOffline={enableUsingOffline}
               />
             }
           />
@@ -223,6 +250,7 @@ function PagesContainer(props) {
           />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
+        <OfflineCookbookUpdater />
       </DataPathsContext.Provider>
     </DatabaseContext.Provider>
   );

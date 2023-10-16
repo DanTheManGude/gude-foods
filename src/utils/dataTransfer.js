@@ -1,3 +1,5 @@
+import Typography from "@mui/material/Typography";
+import { offlineCookbookKey } from "../constants";
 import { createKey } from "./requests";
 
 export const downloadData = (dataJSON, name = "download") => {
@@ -33,6 +35,17 @@ export const transformRecipeForExport = (recipeEntry, glossary) => {
 
   return recipeData;
 };
+
+export const transformCookbookForExport = ({ cookbook, glossary }) =>
+  Object.keys(cookbook).reduce((acc, recipeId) => {
+    const recipeEntry = cookbook[recipeId];
+    const recipeData = transformRecipeForExport(recipeEntry, glossary);
+
+    return {
+      ...acc,
+      [recipeEntry.name]: recipeData,
+    };
+  }, {});
 
 export const transformCookbookFromImport = (
   cookbookData,
@@ -99,4 +112,32 @@ export const transformCookbookFromImport = (
   );
 
   return { formattedCookbook, newFoods, newTags };
+};
+
+export const saveCookbookToLocalStorage = (
+  { cookbook, glossary },
+  addAlert
+) => {
+  const cookbookData = transformCookbookForExport({ cookbook, glossary });
+
+  try {
+    localStorage.setItem(offlineCookbookKey, JSON.stringify(cookbookData));
+
+    addAlert({
+      message: (
+        <Typography>Cookbook has been saved for offline use.</Typography>
+      ),
+      alertProps: { severity: "success" },
+    });
+  } catch (error) {
+    console.error(error);
+    addAlert({
+      message: (
+        <Typography>
+          There was an error trying to save the cookbook for offline use.
+        </Typography>
+      ),
+      alertProps: { severity: "error" },
+    });
+  }
 };
