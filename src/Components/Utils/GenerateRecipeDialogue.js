@@ -233,7 +233,7 @@ function GenerateRecipeDialogue(props) {
           <Box sx={{ width: "20%" }}>
             <Typography>Recipe name:</Typography>
           </Box>
-          <Box sx={{ width: "70%" }}>
+          <Box sx={{ width: "80%" }}>
             <TextField
               label="Recipe Name"
               fullWidth={true}
@@ -374,7 +374,7 @@ function GenerateRecipeDialogue(props) {
     <Dialog
       sx={{
         "& .MuiDialog-paper": {
-          width: "83%",
+          width: "85%",
         },
         "& .MuiDialog-container": {
           marginBottom: "100px",

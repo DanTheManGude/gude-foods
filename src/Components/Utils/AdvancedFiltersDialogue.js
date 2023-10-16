@@ -43,8 +43,8 @@ function AdvancedFiltersDialogue(props) {
   return (
     <Dialog
       open={open}
-      sx={{ "& .MuiDialog-paper": { width: "80%" } }}
-      maxWidth="xs"
+      sx={{ "& .MuiDialog-paper": { width: "85%" } }}
+      maxWidth="s"
     >
       <DialogTitle color="primary">Filter recipes</DialogTitle>
       <DialogContent dividers>
@@ -65,7 +65,7 @@ function AdvancedFiltersDialogue(props) {
             <Box sx={{ width: "20%" }}>
               <Typography>Name contains:</Typography>
             </Box>
-            <Box sx={{ width: "70%" }}>
+            <Box sx={{ width: "80%", display: "flex" }}>
               <RecipeSearchInput
                 searchTerm={searchTerm}
                 setSearchTerm={(_searchTerm) => {
@@ -102,7 +102,7 @@ function AdvancedFiltersDialogue(props) {
             <Box sx={{ width: "20%" }}>
               <Typography>Favorited:</Typography>
             </Box>
-            <Box sx={{ width: "70%" }} display="flex" justifyContent="center">
+            <Box sx={{ width: "80%" }} display="flex" justifyContent="center">
               <FavoriteSwitch
                 isChecked={isFavoriteFilter}
                 updateChecked={(_isFavorite) => {
