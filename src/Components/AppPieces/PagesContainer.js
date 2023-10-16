@@ -5,6 +5,8 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { updateRequest } from "../../utils/requests";
 import { databasePaths } from "../../constants";
 
+import OfflineCookbookUpdater from "../Utils/OfflineCookbookUpdater";
+
 import Home from "../Pages/Home";
 import Cookbook from "../Pages/Cookbook";
 import Recipe from "../Pages/Recipe";
@@ -96,10 +98,6 @@ function PagesContainer(props) {
             ..._database,
             [key]: value,
           }));
-
-          if (key === "cookbook") {
-            console.log("cookbook update", value);
-          }
         }
       );
       onValueListerRemovers.push(individualDbListerRemover);
@@ -252,6 +250,7 @@ function PagesContainer(props) {
           />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
+        <OfflineCookbookUpdater />
       </DataPathsContext.Provider>
     </DatabaseContext.Provider>
   );
