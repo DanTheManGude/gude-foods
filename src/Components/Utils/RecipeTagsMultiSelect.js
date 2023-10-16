@@ -26,7 +26,7 @@ function RecipeTagsMultiSelect(props) {
       <Box sx={{ width: "20%" }}>
         <Typography>Has tags:</Typography>
       </Box>
-      <Box sx={{ width: "70%" }}>
+      <Box sx={{ width: "80%" }}>
         <Autocomplete
           multiple={true}
           limitTags={3}
