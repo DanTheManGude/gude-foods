@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext, useRef } from "react";
 
-//import { saveCookbookToLocalStorage } from "../../utils/dataTransfer";
+import { saveCookbookToLocalStorage } from "../../utils/dataTransfer";
 import { DatabaseContext, AddAlertContext } from "../Contexts";
 
 function OfflineCookbookUpdater() {
@@ -32,10 +32,8 @@ function OfflineCookbookUpdater() {
       glossaryRef.current &&
       addAlertRef.current
     ) {
-      console.log(
-        "cookbook-glossary-addAlert",
-        cookbook,
-        glossaryRef.current,
+      saveCookbookToLocalStorage(
+        { cookbook, glossary: glossaryRef.current },
         addAlertRef.current
       );
     }
@@ -43,7 +41,7 @@ function OfflineCookbookUpdater() {
 
   useEffect(() => {
     if (!didInitialize && cookbook && glossary && addAlert) {
-      console.log("all true, initial");
+      saveCookbookToLocalStorage({ cookbook, glossary }, addAlert);
       setDidInitialize(true);
     }
   }, [cookbook, glossary, addAlert, didInitialize]);
