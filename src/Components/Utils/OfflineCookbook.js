@@ -8,6 +8,7 @@ import Chip from "@mui/material/Chip";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import FavoriteTag from "../Utils/FavoriteTag";
+import { downloadData } from "../../utils/dataTransfer";
 
 function OfflineCookbook(props) {
   const { cookbook, setRecipe } = props;
@@ -41,7 +42,9 @@ function OfflineCookbook(props) {
                     variant="outlined"
                     size="medium"
                     sx={{ flex: 1 }}
-                    onClick={() => {}}
+                    onClick={() => {
+                      downloadData(fullRecipe, name);
+                    }}
                   >
                     <Typography>Download</Typography>
                   </Button>
