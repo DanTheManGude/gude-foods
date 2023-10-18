@@ -2,8 +2,12 @@ export const config = {
   runtime: "edge",
 };
 
-async function verifyUid(uid: string | null, appCheckToken: string) {
-  const url = `https://gude-foods.firebaseio.com/users/${uid}.json`;
+async function verifyUid(
+  uid: string,
+  accessToken: string,
+  appCheckToken: string
+) {
+  const url = `https://gude-foods.firebaseio.com/users/${uid}.json?auth=${accessToken}`;
 
   try {
     const response = await fetch(url, {
@@ -23,11 +27,12 @@ async function verifyUid(uid: string | null, appCheckToken: string) {
 }
 
 export default async (request: Request) => {
-  const uid = request.headers.get("Authorization");
   const appCheckToken = request.headers.get("X-Firebase-AppCheck") || "";
 
-  const isValidUid = await verifyUid(uid, appCheckToken);
-  console.log("isValidUid", isValidUid);
+  const authorization = request.headers.get("Authorization") || "";
+  const [uid, accessToken] = atob(authorization).split(":");
+
+  const isValidUid = await verifyUid(uid, accessToken, appCheckToken);
   if (!isValidUid) {
     return new Response("Unauthorized", { status: 401 });
   }

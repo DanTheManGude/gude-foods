@@ -14,9 +14,11 @@ export const generateRecipe = async (params, user, onSuccess, onFailure) => {
       .getToken(false)
       .catch(onFailure);
 
+  const authorization = btoa(`${user.uid}:${user.accessToken}`);
+
   fetch(`/api/generate-recipe?${searchParamsText}`, {
     headers: {
-      Authorization: user.uid,
+      Authorization: authorization,
       "X-Firebase-AppCheck": appCheckTokenResponse.token,
     },
   })
