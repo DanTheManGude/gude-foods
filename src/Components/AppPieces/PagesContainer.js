@@ -36,6 +36,7 @@ function PagesContainer(props) {
     requestedUsers,
     allowUnrestrictedUsers,
     enableUsingOffline,
+    getAppCheckToken,
   } = props;
 
   const user = useContext(UserContext);
@@ -181,6 +182,7 @@ function PagesContainer(props) {
                 filteringOptions={filteringOptions}
                 setFilteringOptions={setFilteringOptions}
                 setExternalRecipe={setExternalRecipe}
+                getAppCheckToken={getAppCheckToken}
               />
             }
           />

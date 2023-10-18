@@ -28,7 +28,13 @@ const promptPrefix = (
 );
 
 function GenerateRecipeDialogue(props) {
-  const { open, onClose, setExternalRecipe, filteringOptions } = props;
+  const {
+    open,
+    onClose,
+    setExternalRecipe,
+    filteringOptions,
+    getAppCheckToken,
+  } = props;
 
   const [reportErrorValues, setReportErrorValues] = useState();
   const addAlert = useContext(AddAlertContext);
@@ -135,6 +141,7 @@ function GenerateRecipeDialogue(props) {
     generateRecipe(
       { promptText, length },
       user.uid,
+      getAppCheckToken,
       (_responseText) => {
         try {
           const generatedRecipe = parseResponse(_responseText);
