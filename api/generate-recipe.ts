@@ -2,7 +2,7 @@ export const config = {
   runtime: "edge",
 };
 
-async function verifyUid(
+async function verifyUser(
   uid: string,
   accessToken: string,
   appCheckToken: string
@@ -26,24 +26,11 @@ async function verifyUid(
   }
 }
 
-export default async (request: Request) => {
-  const appCheckToken = request.headers.get("X-Firebase-AppCheck") || "";
-
-  const authorization = request.headers.get("Authorization") || "";
-  const [uid, accessToken] = atob(authorization).split(":");
-
-  const isValidUid = await verifyUid(uid, accessToken, appCheckToken);
-  if (!isValidUid) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
+async function sendPrompt(searchParams: URLSearchParams) {
   const openAIKey = process.env.OPENAI_KEY;
 
-  const url = new URL(request.url);
-  const search = new URLSearchParams(url.search);
-
   const { promptText, length: maxTokens = "600" } = Object.fromEntries(
-    search.entries()
+    searchParams.entries()
   );
 
   const requestOptions = {
@@ -77,4 +64,21 @@ export default async (request: Request) => {
   } catch (error) {
     return new Response(error.toString(), { status: 500 });
   }
+}
+
+export default async (request: Request) => {
+  const appCheckToken = request.headers.get("X-Firebase-AppCheck") || "";
+
+  const authorization = request.headers.get("Authorization") || "";
+  const [uid, accessToken] = atob(authorization).split(":");
+
+  const isValidUid = await verifyUser(uid, accessToken, appCheckToken);
+  if (!isValidUid) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+
+  return await sendPrompt(searchParams);
 };
