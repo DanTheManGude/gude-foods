@@ -2,20 +2,35 @@ export const config = {
   runtime: "edge",
 };
 
-export default async (request: Request) => {
-  const secFetchSite = request.headers.get("Sec-Fetch-Site");
+async function verifyUser(
+  uid: string,
+  accessToken: string,
+  appCheckToken: string
+) {
+  const url = `https://gude-foods.firebaseio.com/users/${uid}.json?auth=${accessToken}`;
 
-  if (secFetchSite !== "same-origin") {
-    return new Response(undefined, { status: 400 });
+  try {
+    const response = await fetch(url, {
+      headers: { "X-Firebase-AppCheck": appCheckToken },
+    });
+
+    if (!response.ok) {
+      throw Error();
+    }
+
+    const value = await response.json();
+
+    return value;
+  } catch (error) {
+    return false;
   }
+}
 
+async function sendPrompt(searchParams: URLSearchParams) {
   const openAIKey = process.env.OPENAI_KEY;
 
-  const url = new URL(request.url);
-  const search = new URLSearchParams(url.search);
-
   const { promptText, length: maxTokens = "600" } = Object.fromEntries(
-    search.entries()
+    searchParams.entries()
   );
 
   const requestOptions = {
@@ -49,4 +64,21 @@ export default async (request: Request) => {
   } catch (error) {
     return new Response(error.toString(), { status: 500 });
   }
+}
+
+export default async (request: Request) => {
+  const appCheckToken = request.headers.get("X-Firebase-AppCheck") || "";
+
+  const authorization = request.headers.get("Authorization") || "";
+  const [uid, accessToken] = atob(authorization).split(":");
+
+  const isValidUid = await verifyUser(uid, accessToken, appCheckToken);
+  if (!isValidUid) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+
+  return await sendPrompt(searchParams);
 };
