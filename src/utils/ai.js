@@ -20,13 +20,11 @@ export const generateRecipe = async (
     headers: { Authorization: uid, "X-Firebase-AppCheck": appCheckToken },
   })
     .then((response) => {
-      const { ok, statusText, text } = response;
-
-      if (!ok) {
-        throw Error(statusText);
+      if (!response.ok) {
+        throw Error(response.statusText);
       }
 
-      return text();
+      return response.text();
     })
     .then(onSuccess)
     .catch(onFailure);
