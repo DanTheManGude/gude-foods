@@ -15,13 +15,7 @@ import ExternalRecipeImportDialogue from "../Utils/ExternalRecipeImportDialogue"
 import ImportFileButton from "../Utils/ImportFileButton";
 
 function NewRecipeDialogue(props) {
-  const {
-    open,
-    onClose,
-    filteringOptions = {},
-    setExternalRecipe,
-    getAppCheckToken,
-  } = props;
+  const { open, onClose, filteringOptions = {}, setExternalRecipe } = props;
 
   let navigate = useNavigate();
 
@@ -104,7 +98,6 @@ function NewRecipeDialogue(props) {
           setOpenGenerateRecipeDialogue(false);
         }}
         setExternalRecipe={setExternalRecipe}
-        getAppCheckToken={getAppCheckToken}
       />
       <ExternalRecipeImportDialogue
         open={openExternalRecipeImportDialogue}

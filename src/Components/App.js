@@ -35,7 +35,7 @@ import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
 
 function App(props) {
-  const { setSubscriber, getAppCheckToken } = props;
+  const { setSubscriber } = props;
 
   const setSubscriberRef = useRef(setSubscriber);
 
@@ -239,7 +239,6 @@ function App(props) {
               requestedUsers={requestedUsers}
               allowUnrestrictedUsers={allowUnrestrictedUsers}
               enableUsingOffline={enableUsingOffline}
-              getAppCheckToken={getAppCheckToken}
             />
           </UserContext.Provider>
         </AddAlertContext.Provider>

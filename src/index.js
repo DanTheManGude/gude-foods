@@ -3,11 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import { initializeApp } from "firebase/app";
-import {
-  initializeAppCheck,
-  getToken,
-  ReCaptchaV3Provider,
-} from "firebase/app-check";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
@@ -18,12 +14,10 @@ const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE);
 const firebaseApp = initializeApp(firebaseConfig);
 
 const captchaSiteKey = process.env.REACT_APP_CAPTCHA;
-const appCheck = initializeAppCheck(firebaseApp, {
+initializeAppCheck(firebaseApp, {
   provider: new ReCaptchaV3Provider(captchaSiteKey),
   isTokenAutoRefreshEnabled: true,
 });
-
-const getAppCheckToken = async () => (await getToken(appCheck, false)).token;
 
 let cacheSubscriber = () => {};
 const setSubscriber = (newSubscriber) => {
@@ -38,7 +32,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App setSubscriber={setSubscriber} getAppCheckToken={getAppCheckToken} />
+      <App setSubscriber={setSubscriber} />
     </BrowserRouter>
   </React.StrictMode>
 );

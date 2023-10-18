@@ -3,21 +3,22 @@ import Typography from "@mui/material/Typography";
 
 import { emailConfig } from "../constants";
 
-export const generateRecipe = async (
-  params,
-  uid,
-  getAppCheckToken,
-  onSuccess,
-  onFailure
-) => {
+export const generateRecipe = async (params, user, onSuccess, onFailure) => {
   const searchParamsText = Object.entries(params)
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join("&");
 
-  const appCheckToken = await getAppCheckToken().catch(onFailure);
+  const appCheckTokenResponse =
+    await user.auth.appCheckServiceProvider.instances
+      .get("[DEFAULT]")
+      .getToken(false)
+      .catch(onFailure);
 
   fetch(`/api/generate-recipe?${searchParamsText}`, {
-    headers: { Authorization: uid, "X-Firebase-AppCheck": appCheckToken },
+    headers: {
+      Authorization: user.uid,
+      "X-Firebase-AppCheck": appCheckTokenResponse.token,
+    },
   })
     .then((response) => {
       if (!response.ok) {
