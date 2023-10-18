@@ -2,11 +2,17 @@ export const config = {
   runtime: "edge",
 };
 
-export default async (request: Request) => {
-  const secFetchSite = request.headers.get("Sec-Fetch-Site");
+const isValidUid = (uid: string | null) => {
+  return Boolean(uid);
+};
 
-  if (secFetchSite !== "same-origin") {
-    return new Response(undefined, { status: 400 });
+export default async (request: Request) => {
+  const uid = request.headers.get("Authorization");
+
+  console.log(uid);
+
+  if (!isValidUid(uid)) {
+    return new Response(undefined, { status: 401 });
   }
 
   const openAIKey = process.env.OPENAI_KEY;
