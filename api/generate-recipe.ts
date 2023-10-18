@@ -2,17 +2,34 @@ export const config = {
   runtime: "edge",
 };
 
-const isValidUid = (uid: string | null) => {
-  return Boolean(uid);
-};
+async function verifyUid(uid: string | null, appCheckToken: string) {
+  const url = `https://gude-foods.firebaseio.com/users/${uid}.json`;
+
+  try {
+    const response = await fetch(url, {
+      headers: { "X-Firebase-AppCheck": appCheckToken },
+    });
+
+    if (!response.ok) {
+      throw Error();
+    }
+
+    const value = await response.json();
+
+    return value;
+  } catch (error) {
+    return false;
+  }
+}
 
 export default async (request: Request) => {
   const uid = request.headers.get("Authorization");
+  const appCheckToken = request.headers.get("X-Firebase-AppCheck") || "";
 
-  console.log(uid);
-
-  if (!isValidUid(uid)) {
-    return new Response(undefined, { status: 401 });
+  const isValidUid = await verifyUid(uid, appCheckToken);
+  console.log("isValidUid", isValidUid);
+  if (!isValidUid) {
+    return new Response("Unauthorized", { status: 401 });
   }
 
   const openAIKey = process.env.OPENAI_KEY;
