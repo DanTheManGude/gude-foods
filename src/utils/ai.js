@@ -3,12 +3,14 @@ import Typography from "@mui/material/Typography";
 
 import { emailConfig } from "../constants";
 
-export const generateRecipe = (params, onSuccess, onFailure) => {
+export const generateRecipe = (params, uid, onSuccess, onFailure) => {
   const searchParamsText = Object.entries(params)
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join("&");
 
-  fetch(`/api/generate-recipe?${searchParamsText}`)
+  fetch(`/api/generate-recipe?${searchParamsText}`, {
+    headers: { Authorization: uid },
+  })
     .then((response) => response.text())
     .then((responseText) => {
       onSuccess(responseText);
