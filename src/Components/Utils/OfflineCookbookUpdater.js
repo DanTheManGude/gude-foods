@@ -9,6 +9,7 @@ function OfflineCookbookUpdater() {
 
   const [didInitialize, setDidInitialize] = useState(false);
 
+  const cookbookRef = useRef(cookbook);
   const glossaryRef = useRef(glossary);
   const addAlertRef = useRef(addAlert);
   const didInitializeRef = useRef(didInitialize);
@@ -28,15 +29,17 @@ function OfflineCookbookUpdater() {
   useEffect(() => {
     if (
       didInitializeRef.current &&
-      cookbook &&
       glossaryRef.current &&
-      addAlertRef.current
+      addAlertRef.current &&
+      cookbook &&
+      JSON.stringify(cookbook) !== JSON.stringify(cookbookRef.current)
     ) {
       saveCookbookToLocalStorage(
         { cookbook, glossary: glossaryRef.current },
         addAlertRef.current
       );
     }
+    cookbookRef.current = cookbook;
   }, [cookbook]);
 
   useEffect(() => {
