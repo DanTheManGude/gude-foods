@@ -13,6 +13,7 @@ import {
   updateFromCookbookImport,
   updateLastViewedSharedRecipe,
 } from "../../utils/requests";
+import { constructShareRecipePath } from "../../utils/utility";
 
 import UnauthorizedUser from "../AppPieces/UnauthorizedUser";
 import Loading from "../Utils/Loading";
@@ -47,13 +48,21 @@ function ShareRecipe(props) {
 
   useEffect(() => {
     const recipeName = recipe && recipe.name;
+    const searchName = new URLSearchParams(window.location.search).get("name");
+
     if (recipeName) {
       window.document.title = `${recipeName} - Gude Foods`;
+
+      if (searchName && recipeName !== searchName) {
+        const newPath = constructShareRecipePath(shareId, recipeName);
+        navigate(newPath);
+      }
     }
+
     return () => {
       window.document.title = "Gude Foods";
     };
-  }, [recipe]);
+  }, [recipe, shareId, navigate]);
 
   useEffect(() => {
     if (!shareId) {
