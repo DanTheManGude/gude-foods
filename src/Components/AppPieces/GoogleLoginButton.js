@@ -1,19 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { useTheme } from "@mui/material/styles";
 
 import { signInGoogle } from "../../utils/googleAuth";
 
-const constructImageUrl = (type) => `/media/googleLogin/${type}.png`;
-const imageSources = {
-  NORMAL: constructImageUrl("normal"),
-  PRESSED: constructImageUrl("pressed"),
-};
+const constructImageUrl = (theme, type) =>
+  `/media/googleLogin/${theme.palette.mode}-${type}.png`;
 
 function GoogleLoginButton(props) {
   const { addAlert } = props;
+  const theme = useTheme();
 
   const [buttonImageSource, setButtonImageSource] = useState(
-    imageSources.NORMAL
+    constructImageUrl(theme, "normal")
   );
+  const updateButtonImageSource = (type) =>
+    setButtonImageSource(constructImageUrl(theme, type));
+
+  useEffect(() => {
+    setButtonImageSource(constructImageUrl(theme, "normal"));
+  }, [theme]);
 
   return (
     <button
@@ -22,10 +28,10 @@ function GoogleLoginButton(props) {
       }}
       className="googleLoginButton"
       onMouseDown={() => {
-        setButtonImageSource(imageSources.PRESSED);
+        updateButtonImageSource("pressed");
       }}
       onMouseUp={() => {
-        setButtonImageSource(imageSources.NORMAL);
+        updateButtonImageSource("normal");
       }}
     >
       <img width="180px" src={buttonImageSource} alt="Login with Google" />
