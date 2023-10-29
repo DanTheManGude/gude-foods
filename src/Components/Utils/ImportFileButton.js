@@ -74,28 +74,36 @@ function ImportFileButton(props) {
     );
   };
 
+  const handleFailure = (error) => {
+    if (onFailure) {
+      onFailure();
+      return;
+    }
+
+    addAlert({
+      message: <Typography>{error.toString()}</Typography>,
+      title: <Typography>Error with importing file</Typography>,
+      alertProps: { severity: "error" },
+    });
+  };
+
   const handeFileImport = (file) => {
     let reader = new FileReader();
 
     reader.readAsText(file);
 
     reader.onload = () => {
-      const data = JSON.parse(reader.result);
+      try {
+        const data = JSON.parse(reader.result);
 
-      handleImportedData(data);
+        handleImportedData(data);
+      } catch (error) {
+        handleFailure(error);
+      }
     };
 
     reader.onerror = () => {
-      if (onFailure) {
-        onFailure();
-        return;
-      }
-
-      addAlert({
-        message: <Typography>{reader.error}</Typography>,
-        title: <Typography>Error with importing file</Typography>,
-        alertProps: { severity: "error" },
-      });
+      handleFailure(reader.error);
     };
   };
   return (
