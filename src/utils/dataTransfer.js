@@ -59,7 +59,11 @@ export const transformCookbookFromImport = (
 
   const formattedCookbook = Object.values(cookbookData).reduce(
     (accumulator, recipeData) => {
-      const { ingredients, tags = [] } = recipeData;
+      const { ingredients, tags = [], name, instructions } = recipeData;
+
+      if (!name || !instructions || !ingredients) {
+        throw Error("Some required fields missing on recipe");
+      }
 
       const ingredientsAsKeys = Object.keys(ingredients).reduce(
         (acc, ingredientName) => {
