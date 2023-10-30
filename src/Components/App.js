@@ -193,7 +193,9 @@ function App(props) {
     >
       <TransitionGroup>
         {alertList.map((alert) => {
-          const { message, title, alertProps, dismissible, id } = alert;
+          const { message, title, alertProps, dismissible, undo, id } = alert;
+          const handleClose = () => removeAlert(id);
+
           return (
             <Collapse key={id}>
               <ListItem
@@ -204,7 +206,21 @@ function App(props) {
                 <Alert
                   sx={{ width: { xs: "85%", md: "60%" } }}
                   {...alertProps}
-                  onClose={dismissible ? () => removeAlert(id) : undefined}
+                  onClose={dismissible ? handleClose : undefined}
+                  action={
+                    undo ? (
+                      <Button
+                        sx={{ alignSelf: "center" }}
+                        color="inherit"
+                        onClick={() => {
+                          undo();
+                          handleClose();
+                        }}
+                      >
+                        UNDO
+                      </Button>
+                    ) : undefined
+                  }
                 >
                   {title && <AlertTitle>{title}</AlertTitle>}
                   {message}
