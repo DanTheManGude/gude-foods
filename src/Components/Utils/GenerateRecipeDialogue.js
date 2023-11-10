@@ -151,7 +151,7 @@ function GenerateRecipeDialogue(props) {
           }
 
           const saltIngredient = Object.keys(glossary.basicFoods).find(
-            (foodId) => glossary.basicFoods[foodId] === "salt"
+            (foodId) => ["salt", "Salt"].includes(glossary.basicFoods[foodId])
           );
 
           const ingredients = ingredientsList.reduce(

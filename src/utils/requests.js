@@ -49,6 +49,23 @@ export const shoppingListDeletesByRecipe = (
         .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
     : [];
 
+export const addBasicFoodWithTag = (
+  { glossaryPath, basicFoodTagAssociationPath },
+  name,
+  tagId
+) => {
+  const foodId = createKey(`${glossaryPath}/basicFoods`);
+  const updates = {};
+  updates[`${glossaryPath}/basicFoods/${foodId}`] = name;
+
+  if (tagId) {
+    updates[`${basicFoodTagAssociationPath}/${foodId}`] = tagId;
+  }
+
+  updateRequest(updates);
+  return foodId;
+};
+
 export const addRecipeToShoppingList = (
   recipeId,
   ingredients,
