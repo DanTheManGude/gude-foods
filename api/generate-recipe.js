@@ -2,11 +2,7 @@ export const config = {
   runtime: "edge",
 };
 
-async function verifyUser(
-  uid: string,
-  accessToken: string,
-  appCheckToken: string
-) {
+async function verifyUser(uid, accessToken, appCheckToken) {
   const url = `https://gude-foods.firebaseio.com/users/${uid}.json?auth=${accessToken}`;
 
   try {
@@ -26,7 +22,7 @@ async function verifyUser(
   }
 }
 
-async function sendPrompt(searchParams: URLSearchParams) {
+async function sendPrompt(searchParams) {
   const openAIKey = process.env.OPENAI_KEY;
 
   const { promptText, length: maxTokens = "600" } = Object.fromEntries(
@@ -54,7 +50,7 @@ async function sendPrompt(searchParams: URLSearchParams) {
     ).then((r) => r.json());
 
     if (resp.choices) {
-      const responseText: string = resp.choices[0].text;
+      const responseText = resp.choices[0].text;
       return new Response(responseText, { status: 200 });
     }
     if (resp.error) {
@@ -66,7 +62,7 @@ async function sendPrompt(searchParams: URLSearchParams) {
   }
 }
 
-export default async (request: Request) => {
+export default async (request) => {
   const appCheckToken = request.headers.get("X-Firebase-AppCheck") || "";
 
   const authorization = request.headers.get("Authorization") || "";
