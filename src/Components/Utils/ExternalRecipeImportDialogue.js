@@ -37,8 +37,8 @@ function ExternalRecipeImportDialogue(props) {
 
     fetchRecipeFromUrl(externalUrl)
       .then((externalRecipe) => {
-        const saltIngredient = Object.keys(glossary.basicFoods).find(
-          (foodId) => glossary.basicFoods[foodId] === "salt"
+        const saltIngredient = Object.keys(glossary.basicFoods).find((foodId) =>
+          ["salt", "Salt"].includes(glossary.basicFoods[foodId])
         );
         if (saltIngredient) {
           externalRecipe.ingredients[saltIngredient] = "a grain";
