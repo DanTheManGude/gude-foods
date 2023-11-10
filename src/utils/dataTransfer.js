@@ -131,7 +131,7 @@ export const saveCookbookToLocalStorage = (
       message: (
         <Typography>Cookbook has been saved for offline use.</Typography>
       ),
-      alertProps: { severity: "success" },
+      alertProps: { severity: "info" },
     });
   } catch (error) {
     console.error(error);
