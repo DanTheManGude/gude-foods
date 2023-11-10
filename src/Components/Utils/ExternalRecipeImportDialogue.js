@@ -12,13 +12,17 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { fetchRecipeFromUrl } from "../../utils/utility";
-import { DatabaseContext } from "../Contexts";
+import { addBasicFoodWithTag } from "../../utils/requests";
+import { DatabaseContext, DataPathsContext } from "../Contexts";
 
 function ExternalRecipeImportDialogue(props) {
   const { open, onClose, setExternalRecipe } = props;
 
   const { glossary = { basicFoods: {}, recipeTags: {} } } =
     useContext(DatabaseContext);
+
+  const { glossaryPath, basicFoodTagAssociationPath } =
+    useContext(DataPathsContext);
 
   let navigate = useNavigate();
 
@@ -37,12 +41,18 @@ function ExternalRecipeImportDialogue(props) {
 
     fetchRecipeFromUrl(externalUrl)
       .then((externalRecipe) => {
-        const saltIngredient = Object.keys(glossary.basicFoods).find((foodId) =>
+        let saltIngredient = Object.keys(glossary.basicFoods).find((foodId) =>
           ["salt", "Salt"].includes(glossary.basicFoods[foodId])
         );
-        if (saltIngredient) {
-          externalRecipe.ingredients[saltIngredient] = "a grain";
+
+        if (!saltIngredient) {
+          saltIngredient = addBasicFoodWithTag(
+            { glossaryPath, basicFoodTagAssociationPath },
+            "salt"
+          );
         }
+
+        externalRecipe.ingredients[saltIngredient] = "a grain";
 
         const importedTag =
           glossary.recipeTags &&
