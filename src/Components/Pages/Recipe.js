@@ -5,11 +5,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-import {
-  updateRequest,
-  shoppingListDeletesByRecipe,
-  saveRecipe,
-} from "../../utils/requests";
+import { deleteRecipe, saveRecipe } from "../../utils/requests";
 
 import DeleteDialog from "../Utils/DeleteDialog";
 import {
@@ -170,36 +166,23 @@ function Recipe() {
     saveRecipe(
       recipeEntry,
       recipeId,
-      { cookbookPath, recipeOrderPath },
-      { recipeOrder, glossary },
+      { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
+      { recipeOrder, glossary, shoppingList },
       addAlert,
       saveSuccessHandler,
-      navigate
+      navigate,
+      originalRecipe
     );
   };
 
   const handleDelete = () => {
-    const shoppingListDeletes = shoppingListDeletesByRecipe(
+    deleteRecipe(
       recipeId,
-      shoppingList,
-      shoppingListPath
-    );
-
-    updateRequest(
-      [
-        `${cookbookPath}/${recipeId}`,
-        `${menuPath}/${recipeId}`,
-        ...shoppingListDeletes,
-      ].reduce((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
-        [recipeOrderPath]: recipeOrder.filter(
-          (_recipeId) => recipeId !== _recipeId
-        ),
-      }),
-      (successAlert) => {
-        addAlert(successAlert);
-        navigate(`/cookbook`);
-      },
-      addAlert
+      { shoppingList, recipeOrder, glossary },
+      { shoppingListPath, cookbookPath, menuPath, recipeOrderPath },
+      addAlert,
+      navigate,
+      recipeEntry
     );
   };
 

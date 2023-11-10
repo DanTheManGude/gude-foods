@@ -203,14 +203,64 @@ export const setAllData = (fileData, dataPaths, addAlert) => {
   );
 };
 
+export const deleteRecipe = (
+  recipeId,
+  { shoppingList, recipeOrder, glossary },
+  { shoppingListPath, cookbookPath, menuPath, recipeOrderPath },
+  addAlert,
+  navigate,
+  recipe
+) => {
+  const shoppingListDeletes = shoppingListDeletesByRecipe(
+    recipeId,
+    shoppingList,
+    shoppingListPath
+  );
+
+  updateRequest(
+    [
+      `${cookbookPath}/${recipeId}`,
+      `${menuPath}/${recipeId}`,
+      ...shoppingListDeletes,
+    ].reduce((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
+      [recipeOrderPath]: recipeOrder.filter(
+        (_recipeId) => recipeId !== _recipeId
+      ),
+    }),
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: <Typography>Succesfully deleted recipe.</Typography>,
+          undo: () => {
+            saveRecipe(
+              recipe,
+              undefined,
+              { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
+              { recipeOrder, glossary, shoppingList },
+              addAlert,
+              () => {},
+              navigate
+            );
+          },
+        },
+        5000
+      );
+      navigate(`/cookbook`);
+    },
+    addAlert
+  );
+};
+
 export const saveRecipe = (
   recipe,
   _recipeId,
-  { cookbookPath, recipeOrderPath },
-  { recipeOrder, glossary },
+  { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
+  { recipeOrder, glossary, shoppingList },
   addAlert,
   successHandler,
-  navigate
+  navigate,
+  maybeOldRecipe
 ) => {
   const { name, instructions, ingredients = {}, shareId } = recipe;
   const isCreating = !_recipeId;
@@ -253,8 +303,41 @@ export const saveRecipe = (
     updates,
     (successAlert) => {
       successHandler();
-      addAlert(successAlert);
       navigate(`/recipe/${recipeId}`);
+      addAlert(
+        {
+          ...successAlert,
+          undo: () => {
+            if (isCreating) {
+              deleteRecipe(
+                recipeId,
+                { shoppingList, recipeOrder, glossary },
+                { shoppingListPath, cookbookPath, menuPath, recipeOrderPath },
+                addAlert,
+                navigate,
+                recipe
+              );
+            } else {
+              saveRecipe(
+                maybeOldRecipe,
+                recipeId,
+                { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
+                { recipeOrder, glossary, shoppingList },
+                addAlert,
+                successHandler,
+                navigate,
+                recipe
+              );
+            }
+          },
+          message: (
+            <Typography>
+              Succesfully {isCreating ? "created" : "updated"} recipe.
+            </Typography>
+          ),
+        },
+        5000
+      );
     },
     addAlert
   );

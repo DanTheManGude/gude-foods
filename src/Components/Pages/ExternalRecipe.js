@@ -27,9 +27,10 @@ function ExternalRecipe(props) {
   const { givenRecipe } = props;
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
-  const { cookbookPath, recipeOrderPath } = dataPaths;
+  const { cookbookPath, recipeOrderPath, shoppingListPath, menuPath } =
+    dataPaths;
   const database = useContext(DatabaseContext);
-  const { recipeOrder: _recipeOrder, glossary } = database;
+  const { recipeOrder: _recipeOrder, glossary, shoppingList } = database;
 
   const recipeOrder = _recipeOrder || [];
 
@@ -55,8 +56,8 @@ function ExternalRecipe(props) {
     saveRecipe(
       { name, ingredients, instructions, tags, isFavorite, notes, description },
       undefined,
-      { cookbookPath, recipeOrderPath },
-      { recipeOrder, glossary },
+      { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
+      { recipeOrder, glossary, shoppingList },
       addAlert,
       () => {},
       navigate
