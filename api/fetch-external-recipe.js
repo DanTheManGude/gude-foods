@@ -1,4 +1,3 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { JSDOM } from "jsdom";
 
 const parseSiteForRecipe = (siteText) => {
@@ -49,10 +48,7 @@ const parseSiteForRecipe = (siteText) => {
   return recipeData;
 };
 
-export default async function (
-  request: VercelRequest,
-  response: VercelResponse
-) {
+export default async function (request, response) {
   try {
     const externalUrlParam = request.query.externalUrl;
 
