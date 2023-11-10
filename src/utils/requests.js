@@ -68,7 +68,7 @@ export const addBasicFoodWithTag = (
 
 export const addRecipeToShoppingList = (
   recipeId,
-  ingredients,
+  ingredients = {},
   { recipeOrder, menu: _menu },
   { shoppingListPath, recipeOrderPath, menuPath },
   addAlert
@@ -212,7 +212,7 @@ export const saveRecipe = (
   successHandler,
   navigate
 ) => {
-  const { name, instructions, ingredients, shareId } = recipe;
+  const { name, instructions, ingredients = {}, shareId } = recipe;
   const isCreating = !_recipeId;
 
   if (
