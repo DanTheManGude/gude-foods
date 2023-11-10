@@ -213,8 +213,8 @@ function App(props) {
                         sx={{ alignSelf: "center" }}
                         color="inherit"
                         onClick={() => {
-                          undo();
                           handleClose();
+                          undo();
                         }}
                       >
                         UNDO
