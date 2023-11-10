@@ -174,15 +174,56 @@ export const updateFromCookbookImport = (
     {}
   );
 
-  updateRequest(
-    {
-      ...cookbookUpdates,
-      ...foodUpdates,
-      ...tagUpdates,
-      [recipeOrderPath]: [...Object.keys(formattedCookbook), ...recipeOrder],
-    },
-    addAlert
-  );
+  const allUpdates = {
+    ...cookbookUpdates,
+    ...foodUpdates,
+    ...tagUpdates,
+    [recipeOrderPath]: [...Object.keys(formattedCookbook), ...recipeOrder],
+  };
+
+  const undo = () => {
+    const undoRequests = {}; //TODO
+
+    updateRequest(
+      undoRequests,
+      (successAlert) => {
+        addAlert(
+          {
+            ...successAlert,
+            message: <Typography>Succesfully undid import.</Typography>,
+            undo: makeUpdates,
+          },
+          5000
+        );
+      },
+      addAlert
+    );
+  };
+
+  const makeUpdates = () => {
+    updateRequest(
+      allUpdates,
+      (successAlert) => {
+        addAlert(
+          {
+            ...successAlert,
+            message: (
+              <Typography>
+                {`Succesfully imported ${
+                  Object.keys(cookbookUpdates).length
+                } recipes and added its ingredients & tags.`}
+              </Typography>
+            ),
+            undo,
+          },
+          5000
+        );
+      },
+      addAlert
+    );
+  };
+
+  makeUpdates();
 };
 
 export const setAllData = (fileData, dataPaths, addAlert) => {
