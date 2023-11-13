@@ -357,7 +357,20 @@ function ShoppingList() {
       }, []);
     }
 
-    deleteRequest(deletePaths, addAlert);
+    deleteRequest(
+      deletePaths,
+      (successAlert) => {
+        addAlert({
+          ...successAlert,
+          message: (
+            <Typography>{`Succesfully removed all ${
+              deleteDialog === deleteKeys.CHECKED ? "checked " : ""
+            }food from shopping list.`}</Typography>
+          ),
+        });
+      },
+      addAlert
+    );
   };
 
   const renderDeleteButtons = () => {
