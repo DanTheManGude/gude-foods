@@ -17,13 +17,14 @@ import InputAdornment from "@mui/material/InputAdornment";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Link from "@mui/material/Link";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 import {
   updateRequest,
@@ -663,6 +664,29 @@ function ShoppingList() {
     );
   };
 
+  const renderShareButton = () => (
+    <Button
+      color="secondary"
+      variant="contained"
+      size="small"
+      sx={{ width: "352px" }}
+      endIcon={<ContentCopyRoundedIcon />}
+      onClick={() => {
+        //navigator.clipboard.writeText(responseText);
+        addAlert({
+          message: (
+            <Typography>
+              Copied shopping list as text to your clipboard.
+            </Typography>
+          ),
+          alertProps: { severity: "success" },
+        });
+      }}
+    >
+      <Typography>Copy shopping list </Typography>
+    </Button>
+  );
+
   return (
     <div>
       <Typography
@@ -719,6 +743,7 @@ function ShoppingList() {
         {renderDeleteButtons()}
         {renderMenu()}
         {renderMenuButtons()}
+        {renderShareButton()}
       </Stack>
       <DeleteDialog
         open={!!deleteDialog}
