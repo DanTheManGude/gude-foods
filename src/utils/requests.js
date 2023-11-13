@@ -35,7 +35,7 @@ export const deleteRequest = (deletePaths = [], onSuccess, onFailure) => {
 
 export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
 
-export const shoppingListDeletesByRecipe = (
+const shoppingListDeletesByRecipe = (
   recipeId,
   shoppingList,
   shoppingListPath
@@ -46,8 +46,29 @@ export const shoppingListDeletesByRecipe = (
           const foodEntry = shoppingList[foodId];
           return foodEntry.list && foodEntry.list.hasOwnProperty(recipeId);
         })
-        .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
-    : [];
+        .reduce(
+          (acc, foodId) => ({
+            ...acc,
+            [foodId]: `${shoppingListPath}/${foodId}/list/${recipeId}`,
+          }),
+          {}
+        )
+    : {};
+
+const shoppingListDeleteUndos = (
+  shoppingListDeleteFoodIds,
+  recipeId,
+  shoppingListPath,
+  shoppingList
+) =>
+  shoppingListDeleteFoodIds.reduce(
+    (acc, foodId) => ({
+      ...acc,
+      [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
+        shoppingList[foodId].list[recipeId],
+    }),
+    {}
+  );
 
 export const addBasicFoodWithTag = (
   { glossaryPath, basicFoodTagAssociationPath },
@@ -68,7 +89,7 @@ export const addBasicFoodWithTag = (
 
 export const addRecipeToShoppingList = (
   recipeId,
-  ingredients,
+  ingredients = {},
   { recipeOrder, menu: _menu },
   { shoppingListPath, recipeOrderPath, menuPath },
   addAlert
@@ -94,6 +115,46 @@ export const addRecipeToShoppingList = (
         [recipeId]: menu.hasOwnProperty(recipeId) ? menu[recipeId] + 1 : 1,
       },
     },
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: (
+            <Typography>
+              Succesfully added ingredients to Shopping List and recipe to Menu.
+            </Typography>
+          ),
+          undo: () => {
+            updateRequest(
+              {
+                ...Object.keys(ingredients).reduce(
+                  (updates, foodId) => ({
+                    ...updates,
+                    [`${shoppingListPath}/${foodId}/list/${recipeId}`]: null,
+                  }),
+                  {}
+                ),
+                [recipeOrderPath]: recipeOrder,
+                [menuPath]: menu,
+              },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      Succesfully undid adding ingredients to Shopping List and
+                      recipe to Menu.
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        },
+        5000
+      );
+    },
     addAlert
   );
 };
@@ -112,28 +173,126 @@ export const addRecipesToMenu = (recipeIdList, menu, menuPath, addAlert) => {
         ),
       },
     },
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: <Typography>Succesfully added recipes to Menu.</Typography>,
+          undo: () => {
+            updateRequest(
+              { [menuPath]: Boolean(menu) ? menu : null },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      Succesfully removed back recipes from Menu.
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        },
+        5000
+      );
+    },
     addAlert
   );
 };
 
-export const removeRecipesFromMenu = (recipeIdList, menuPath, addAlert) => {
+export const removeRecipesFromMenu = (
+  recipeIdList,
+  menuPath,
+  menu,
+  addAlert
+) => {
   deleteRequest(
     recipeIdList.map((recipeId) => `${menuPath}/${recipeId}`),
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: (
+            <Typography>Succesfully removed recipes from Menu.</Typography>
+          ),
+          undo: () => {
+            updateRequest(
+              { [menuPath]: Boolean(menu) ? menu : null },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      Succesfully added back recipes to Menu.
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        },
+        5000
+      );
+    },
     addAlert
   );
 };
 
 export const removeRecipeFromMenuAndShoppingList = (
   recipeId,
-  shoppingList,
+  { shoppingList, cookbook, menu },
   { menuPath, shoppingListPath },
   addAlert
 ) => {
+  const recipeName = cookbook[recipeId].name;
+  const shoppingListDeletes = shoppingListDeletesByRecipe(
+    recipeId,
+    shoppingList,
+    shoppingListPath
+  );
+
   deleteRequest(
-    [
-      ...shoppingListDeletesByRecipe(recipeId, shoppingList, shoppingListPath),
-      `${menuPath}/${recipeId}`,
-    ],
+    [...Object.values(shoppingListDeletes), `${menuPath}/${recipeId}`],
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: (
+            <Typography>
+              {`Succesfully removed recipe ${recipeName} from Menu and Shopping List.`}
+            </Typography>
+          ),
+          undo: () => {
+            updateRequest(
+              {
+                ...shoppingListDeleteUndos(
+                  Object.keys(shoppingListDeletes),
+                  recipeId,
+                  shoppingListPath,
+                  shoppingList
+                ),
+                [`${menuPath}/${recipeId}`]: menu[recipeId],
+              },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      {`Succesfully added back recipe ${recipeName} to Menu/ Shopping List.`}
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        },
+        5000
+      );
+    },
     addAlert
   );
 };
@@ -146,7 +305,8 @@ export const updateFromCookbookImport = (
   transformedData,
   { cookbookPath, glossaryPath, recipeOrderPath },
   recipeOrder,
-  addAlert
+  addAlert,
+  navigate
 ) => {
   const { formattedCookbook, newFoods, newTags } = transformedData;
 
@@ -174,15 +334,88 @@ export const updateFromCookbookImport = (
     {}
   );
 
-  updateRequest(
-    {
-      ...cookbookUpdates,
-      ...foodUpdates,
-      ...tagUpdates,
-      [recipeOrderPath]: [...Object.keys(formattedCookbook), ...recipeOrder],
-    },
-    addAlert
-  );
+  const allUpdates = {
+    ...cookbookUpdates,
+    ...foodUpdates,
+    ...tagUpdates,
+    [recipeOrderPath]: [...Object.keys(formattedCookbook), ...recipeOrder],
+  };
+
+  const undo = () => {
+    const undoCookbookUpdates = Object.keys(formattedCookbook).reduce(
+      (acc, recipeId) => ({ ...acc, [`${cookbookPath}/${recipeId}`]: null }),
+      {}
+    );
+
+    const undoFoodUpdates = Object.keys(newFoods).reduce(
+      (acc, foodName) => ({
+        ...acc,
+        [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: null,
+      }),
+      {}
+    );
+
+    const undoTagUpdates = Object.keys(newTags).reduce(
+      (acc, tagName) => ({
+        ...acc,
+        [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: null,
+      }),
+      {}
+    );
+
+    const undoRequests = {
+      ...undoCookbookUpdates,
+      ...undoFoodUpdates,
+      ...undoTagUpdates,
+      [recipeOrderPath]: recipeOrder,
+    };
+
+    updateRequest(
+      undoRequests,
+      (successAlert) => {
+        if (Object.keys(formattedCookbook).length === 1) {
+          navigate(`/cookbook`);
+        }
+        addAlert(
+          {
+            ...successAlert,
+            message: <Typography>Succesfully undid import.</Typography>,
+            undo: makeUpdates,
+          },
+          5000
+        );
+      },
+      addAlert
+    );
+  };
+
+  const makeUpdates = () => {
+    updateRequest(
+      allUpdates,
+      (successAlert) => {
+        addAlert(
+          {
+            ...successAlert,
+            message: (
+              <Typography>
+                {`Succesfully imported ${
+                  Object.keys(cookbookUpdates).length
+                } recipes and added its ingredients & tags.`}
+              </Typography>
+            ),
+            undo,
+          },
+          5000
+        );
+        if (Object.keys(formattedCookbook).length === 1) {
+          navigate(`/recipe/${Object.keys(formattedCookbook)[0]}`);
+        }
+      },
+      addAlert
+    );
+  };
+
+  makeUpdates();
 };
 
 export const setAllData = (fileData, dataPaths, addAlert) => {
@@ -203,16 +436,103 @@ export const setAllData = (fileData, dataPaths, addAlert) => {
   );
 };
 
+export const deleteRecipe = (
+  recipeId,
+  { shoppingList, recipeOrder, glossary },
+  { shoppingListPath, cookbookPath, menuPath, recipeOrderPath },
+  addAlert,
+  navigate,
+  recipe
+) => {
+  const shoppingListDeletes = shoppingListDeletesByRecipe(
+    recipeId,
+    shoppingList,
+    shoppingListPath
+  );
+
+  updateRequest(
+    [
+      `${cookbookPath}/${recipeId}`,
+      `${menuPath}/${recipeId}`,
+      ...Object.values(shoppingListDeletes),
+    ].reduce((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
+      [recipeOrderPath]: recipeOrder.filter(
+        (_recipeId) => recipeId !== _recipeId
+      ),
+    }),
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: <Typography>Succesfully deleted recipe.</Typography>,
+          undo: () => {
+            saveRecipe(
+              recipe,
+              undefined,
+              { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
+              { recipeOrder, glossary, shoppingList },
+              addAlert,
+              () => {},
+              navigate
+            );
+          },
+        },
+        5000
+      );
+      navigate(`/cookbook`);
+    },
+    addAlert
+  );
+};
+
+export const changeCheckFood = (
+  { shoppingListPath },
+  { glossary },
+  basicFoodId,
+  newChecked,
+  addAlert
+) => {
+  updateRequest(
+    {
+      [`${shoppingListPath}/${basicFoodId}/isChecked`]: newChecked,
+    },
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: (
+            <Typography>{`${newChecked ? "Checked" : "Unchecked"} food ${
+              glossary.basicFoods[basicFoodId]
+            }`}</Typography>
+          ),
+          undo: () => {
+            changeCheckFood(
+              { shoppingListPath },
+              { glossary },
+              basicFoodId,
+              !newChecked,
+              addAlert
+            );
+          },
+        },
+        1800
+      );
+    },
+    addAlert
+  );
+};
+
 export const saveRecipe = (
   recipe,
   _recipeId,
-  { cookbookPath, recipeOrderPath },
-  { recipeOrder, glossary },
+  { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
+  { recipeOrder, glossary, shoppingList },
   addAlert,
   successHandler,
-  navigate
+  navigate,
+  maybeOldRecipe
 ) => {
-  const { name, instructions, ingredients, shareId } = recipe;
+  const { name, instructions, ingredients = {}, shareId } = recipe;
   const isCreating = !_recipeId;
 
   if (
@@ -253,8 +573,41 @@ export const saveRecipe = (
     updates,
     (successAlert) => {
       successHandler();
-      addAlert(successAlert);
       navigate(`/recipe/${recipeId}`);
+      addAlert(
+        {
+          ...successAlert,
+          undo: () => {
+            if (isCreating) {
+              deleteRecipe(
+                recipeId,
+                { shoppingList, recipeOrder, glossary },
+                { shoppingListPath, cookbookPath, menuPath, recipeOrderPath },
+                addAlert,
+                navigate,
+                recipe
+              );
+            } else {
+              saveRecipe(
+                maybeOldRecipe,
+                recipeId,
+                { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
+                { recipeOrder, glossary, shoppingList },
+                addAlert,
+                successHandler,
+                navigate,
+                recipe
+              );
+            }
+          },
+          message: (
+            <Typography>
+              Succesfully {isCreating ? "created" : "updated"} recipe.
+            </Typography>
+          ),
+        },
+        5000
+      );
     },
     addAlert
   );
@@ -266,7 +619,7 @@ export const createRecipeTag = (glossaryPath, successHandler, tagName) => {
 
   updateRequest(
     { [`${pathRoot}/${newKey}`]: tagName },
-    (successAlert) => {
+    () => {
       successHandler(newKey);
     },
     console.error
@@ -274,13 +627,7 @@ export const createRecipeTag = (glossaryPath, successHandler, tagName) => {
 };
 
 export const uploadColors = (colorsPath, colorKey, addAlert) => {
-  updateRequest(
-    { [colorsPath]: colorKey },
-    (successAlert) => {
-      addAlert(successAlert);
-    },
-    addAlert
-  );
+  updateRequest({ [colorsPath]: colorKey }, addAlert, addAlert);
 };
 
 const sendAuthorizationEmail = (userInfo, addAlert) => {

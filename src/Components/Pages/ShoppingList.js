@@ -32,6 +32,7 @@ import {
   updateRecipeMenuCount,
   removeRecipesFromMenu,
   addRecipesToMenu,
+  changeCheckFood,
 } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
@@ -176,10 +177,13 @@ function ShoppingList() {
               sx={{ paddingLeft: "0" }}
               checked={!!shoppingList[basicFoodId].isChecked}
               onChange={(event) => {
-                updateRequest({
-                  [`${shoppingListPath}/${basicFoodId}/isChecked`]:
-                    event.target.checked,
-                });
+                changeCheckFood(
+                  { shoppingListPath },
+                  { glossary },
+                  basicFoodId,
+                  event.target.checked,
+                  addAlert
+                );
               }}
             />
             <Typography sx={{ fontWeight: "medium" }}>
@@ -287,6 +291,42 @@ function ShoppingList() {
                   onClick={() => {
                     deleteRequest(
                       [`${shoppingListPath}/${basicFoodId}`],
+                      (successAlert) => {
+                        addAlert(
+                          {
+                            ...successAlert,
+                            message: (
+                              <Typography>
+                                {`Succesfully removed food ${glossary.basicFoods[basicFoodId]} from shopping list.`}
+                              </Typography>
+                            ),
+                            undo: () => {
+                              updateRequest(
+                                {
+                                  [`${shoppingListPath}/${basicFoodId}`]:
+                                    shoppingList[basicFoodId],
+                                },
+                                (successAlert) => {
+                                  addAlert(
+                                    {
+                                      ...successAlert,
+                                      message: (
+                                        <Typography>
+                                          {`Succesfully added back food ${glossary.basicFoods[basicFoodId]} to shopping
+                                          list.`}
+                                        </Typography>
+                                      ),
+                                    },
+                                    5000
+                                  );
+                                },
+                                addAlert
+                              );
+                            },
+                          },
+                          5000
+                        );
+                      },
                       addAlert
                     );
                   }}
@@ -317,7 +357,36 @@ function ShoppingList() {
       }, []);
     }
 
-    deleteRequest(deletePaths, addAlert);
+    deleteRequest(
+      deletePaths,
+      (successAlert) => {
+        addAlert({
+          ...successAlert,
+          message: (
+            <Typography>{`Succesfully removed all ${
+              deleteDialog === deleteKeys.CHECKED ? "checked " : ""
+            }food from shopping list.`}</Typography>
+          ),
+          undo: () => {
+            updateRequest(
+              { [shoppingListPath]: shoppingList },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      Succesfully added back the shopping list.
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        });
+      },
+      addAlert
+    );
   };
 
   const renderDeleteButtons = () => {
@@ -383,7 +452,7 @@ function ShoppingList() {
               ],
               []
             );
-            removeRecipesFromMenu(recipeList, menuPath, addAlert);
+            removeRecipesFromMenu(recipeList, menuPath, menu, addAlert);
           }}
         >
           <Typography>Remove unchecked recipes from menu</Typography>
@@ -521,7 +590,7 @@ function ShoppingList() {
                 onClick={() =>
                   removeRecipeFromMenuAndShoppingList(
                     recipeId,
-                    shoppingList,
+                    { shoppingList, cookbook, menu },
                     { menuPath, shoppingListPath },
                     addAlert
                   )

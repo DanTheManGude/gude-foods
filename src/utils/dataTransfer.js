@@ -15,7 +15,7 @@ export const downloadData = (dataJSON, name = "download") => {
 
 export const transformRecipeForExport = (recipeEntry, glossary) => {
   const { basicFoods, recipeTags } = glossary;
-  const { ingredients = [], tags = [] } = recipeEntry;
+  const { ingredients = {}, tags = [] } = recipeEntry;
 
   const ingredientsAsNames = Object.keys(ingredients).reduce(
     (acc, ingredientKey) => ({
@@ -59,7 +59,7 @@ export const transformCookbookFromImport = (
 
   const formattedCookbook = Object.values(cookbookData).reduce(
     (accumulator, recipeData) => {
-      const { ingredients, tags = [], name, instructions } = recipeData;
+      const { ingredients = {}, tags = [], name, instructions } = recipeData;
 
       if (!name || !instructions || !ingredients) {
         throw Error("Some required fields missing on recipe");
@@ -131,7 +131,7 @@ export const saveCookbookToLocalStorage = (
       message: (
         <Typography>Cookbook has been saved for offline use.</Typography>
       ),
-      alertProps: { severity: "success" },
+      alertProps: { severity: "info" },
     });
   } catch (error) {
     console.error(error);

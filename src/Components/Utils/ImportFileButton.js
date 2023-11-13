@@ -56,21 +56,12 @@ function ImportFileButton(props) {
       cookbookPath
     );
 
-    const updateHandler = (alert) => {
-      if (isForRecipe) {
-        navigate(
-          `/recipe/${Object.keys(transformedData.formattedCookbook)[0]}`
-        );
-      }
-
-      addAlert(alert);
-    };
-
     updateFromCookbookImport(
       transformedData,
       dataPaths,
       recipeOrder,
-      updateHandler
+      addAlert,
+      navigate
     );
   };
 
