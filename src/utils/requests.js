@@ -35,7 +35,7 @@ export const deleteRequest = (deletePaths = [], onSuccess, onFailure) => {
 
 export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
 
-export const shoppingListDeletesByRecipe = (
+const shoppingListDeletesByRecipe = (
   recipeId,
   shoppingList,
   shoppingListPath
@@ -46,8 +46,29 @@ export const shoppingListDeletesByRecipe = (
           const foodEntry = shoppingList[foodId];
           return foodEntry.list && foodEntry.list.hasOwnProperty(recipeId);
         })
-        .map((foodId) => `${shoppingListPath}/${foodId}/list/${recipeId}`)
-    : [];
+        .reduce(
+          (acc, foodId) => ({
+            ...acc,
+            [foodId]: `${shoppingListPath}/${foodId}/list/${recipeId}`,
+          }),
+          {}
+        )
+    : {};
+
+const shoppingListDeleteUndos = (
+  shoppingListDeleteFoodIds,
+  recipeId,
+  shoppingListPath,
+  shoppingList
+) =>
+  shoppingListDeleteFoodIds.reduce(
+    (acc, foodId) => ({
+      ...acc,
+      [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
+        shoppingList[foodId].list[recipeId],
+    }),
+    {}
+  );
 
 export const addBasicFoodWithTag = (
   { glossaryPath, basicFoodTagAssociationPath },
@@ -125,15 +146,56 @@ export const removeRecipesFromMenu = (recipeIdList, menuPath, addAlert) => {
 
 export const removeRecipeFromMenuAndShoppingList = (
   recipeId,
-  shoppingList,
+  { shoppingList, cookbook, menu },
   { menuPath, shoppingListPath },
   addAlert
 ) => {
+  const recipeName = cookbook[recipeId].name;
+  const shoppingListDeletes = shoppingListDeletesByRecipe(
+    recipeId,
+    shoppingList,
+    shoppingListPath
+  );
+
   deleteRequest(
-    [
-      ...shoppingListDeletesByRecipe(recipeId, shoppingList, shoppingListPath),
-      `${menuPath}/${recipeId}`,
-    ],
+    [...Object.values(shoppingListDeletes), `${menuPath}/${recipeId}`],
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: (
+            <Typography>
+              {`Succesfully removed recipe ${recipeName} from Menu and Shopping List.`}
+            </Typography>
+          ),
+          undo: () => {
+            updateRequest(
+              {
+                ...shoppingListDeleteUndos(
+                  Object.keys(shoppingListDeletes),
+                  recipeId,
+                  shoppingListPath,
+                  shoppingList
+                ),
+                [`${menuPath}/${recipeId}`]: menu[recipeId],
+              },
+              (successAlert) => {
+                addAlert({
+                  ...successAlert,
+                  message: (
+                    <Typography>
+                      {`Succesfully added back recipe ${recipeName} to Menu/ Shopping List.`}
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        },
+        5000
+      );
+    },
     addAlert
   );
 };
@@ -295,7 +357,7 @@ export const deleteRecipe = (
     [
       `${cookbookPath}/${recipeId}`,
       `${menuPath}/${recipeId}`,
-      ...shoppingListDeletes,
+      ...Object.values(shoppingListDeletes),
     ].reduce((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
       [recipeOrderPath]: recipeOrder.filter(
         (_recipeId) => recipeId !== _recipeId

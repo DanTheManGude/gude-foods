@@ -207,7 +207,7 @@ function Cookbook(props) {
                 onClick={() => {
                   removeRecipeFromMenuAndShoppingList(
                     recipeId,
-                    shoppingList,
+                    { shoppingList, cookbook, menu },
                     { menuPath, shoppingListPath },
                     addAlert
                   );
