@@ -515,7 +515,7 @@ export const changeCheckFood = (
             );
           },
         },
-        4000
+        1800
       );
     },
     addAlert
