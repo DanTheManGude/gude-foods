@@ -78,6 +78,7 @@ function Glossary() {
             let updateEntryKey = entryKey;
 
             const updates = {};
+            const undoUpdates = {};
 
             if (isAddingValue) {
               updateEntryKey = createKey(`${glossaryPath}/${sectionKey}`);
@@ -85,18 +86,26 @@ function Glossary() {
               if (sectionKey === "basicFoodTags") {
                 updates[basicFoodTagOrderPath] =
                   basicFoodTagOrder.concat(updateEntryKey);
+                undoUpdates[basicFoodTagOrderPath] = basicFoodTagOrder;
               }
             }
 
             updates[`${glossaryPath}/${sectionKey}/${updateEntryKey}`] =
               isEmptyValue ? null : editingEntry.value;
+            undoUpdates[`${glossaryPath}/${sectionKey}/${updateEntryKey}`] =
+              isAddingValue ? null : glossary[sectionKey][updateEntryKey];
 
             if (isEmptyValue) {
               switch (sectionKey) {
                 case "basicFoods":
                   updates[`${basicFoodTagAssociationPath}/${entryKey}`] = null;
+                  undoUpdates[`${basicFoodTagAssociationPath}/${entryKey}`] =
+                    basicFoodTagAssociation[entryKey];
+
                   if (shoppingList) {
                     updates[`${shoppingListPath}/${entryKey}`] = null;
+                    undoUpdates[`${shoppingListPath}/${entryKey}`] =
+                      shoppingList[entryKey];
                   }
                   if (cookbook) {
                     Object.keys(cookbook).forEach((recipeId) => {
@@ -106,6 +115,9 @@ function Glossary() {
                         updates[
                           `${cookbookPath}/${recipeId}/ingredients/${entryKey}`
                         ] = null;
+                        undoUpdates[
+                          `${cookbookPath}/${recipeId}/ingredients/${entryKey}`
+                        ] = cookbook[recipeId].ingredients[entryKey];
                       }
                     });
                   }
@@ -118,6 +130,9 @@ function Glossary() {
                           updates[
                             `${basicFoodTagAssociationPath}/${basicFoodId}`
                           ] = null;
+                          undoUpdates[
+                            `${basicFoodTagAssociationPath}/${basicFoodId}`
+                          ] = basicFoodTagAssociation[basicFoodId];
                         }
                       }
                     );
@@ -125,6 +140,7 @@ function Glossary() {
                   updates[basicFoodTagOrderPath] = basicFoodTagOrder.filter(
                     (tagId) => tagId !== entryKey
                   );
+                  undoUpdates[basicFoodTagOrderPath] = basicFoodTagOrder;
                   break;
                 case "recipeTags":
                   if (cookbook) {
@@ -135,6 +151,8 @@ function Glossary() {
                             cookbook[recipeId].tags.filter(
                               (tag) => tag !== entryKey
                             );
+                          undoUpdates[`${cookbookPath}/${recipeId}/tags`] =
+                            cookbook[recipeId].tags;
                         }
                       }
                     });
@@ -145,7 +163,49 @@ function Glossary() {
               }
             }
 
-            updateRequest(updates, addAlert);
+            const undo = () => {
+              updateRequest(
+                undoUpdates,
+                (successAlert) => {
+                  addAlert(
+                    {
+                      ...successAlert,
+                      message: (
+                        <Typography>
+                          Succesfully undid glossary changes.
+                        </Typography>
+                      ),
+                      undo: makeUpdates,
+                    },
+                    5000
+                  );
+                },
+                addAlert
+              );
+            };
+
+            const makeUpdates = () => {
+              updateRequest(
+                updates,
+                (successAlert) => {
+                  addAlert(
+                    {
+                      ...successAlert,
+                      message: (
+                        <Typography>
+                          Succesfully made glossary changes.
+                        </Typography>
+                      ),
+                      undo,
+                    },
+                    5000
+                  );
+                },
+                addAlert
+              );
+            };
+
+            makeUpdates();
             clearEditingEntry();
           }}
         >
