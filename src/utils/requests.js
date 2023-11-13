@@ -115,6 +115,46 @@ export const addRecipeToShoppingList = (
         [recipeId]: menu.hasOwnProperty(recipeId) ? menu[recipeId] + 1 : 1,
       },
     },
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: (
+            <Typography>
+              Succesfully added ingredients to Shopping List and recipe to Menu.
+            </Typography>
+          ),
+          undo: () => {
+            updateRequest(
+              {
+                ...Object.keys(ingredients).reduce(
+                  (updates, foodId) => ({
+                    ...updates,
+                    [`${shoppingListPath}/${foodId}/list/${recipeId}`]: null,
+                  }),
+                  {}
+                ),
+                [recipeOrderPath]: recipeOrder,
+                [menuPath]: menu,
+              },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      Succesfully undid adding ingredients to Shopping List and
+                      recipe to Menu.
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        },
+        5000
+      );
+    },
     addAlert
   );
 };
