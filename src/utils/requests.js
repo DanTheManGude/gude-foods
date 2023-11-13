@@ -173,13 +173,70 @@ export const addRecipesToMenu = (recipeIdList, menu, menuPath, addAlert) => {
         ),
       },
     },
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: <Typography>Succesfully added recipes to Menu.</Typography>,
+          undo: () => {
+            updateRequest(
+              { [menuPath]: Boolean(menu) ? menu : null },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      Succesfully removed back recipes from Menu.
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        },
+        5000
+      );
+    },
     addAlert
   );
 };
 
-export const removeRecipesFromMenu = (recipeIdList, menuPath, addAlert) => {
+export const removeRecipesFromMenu = (
+  recipeIdList,
+  menuPath,
+  menu,
+  addAlert
+) => {
   deleteRequest(
     recipeIdList.map((recipeId) => `${menuPath}/${recipeId}`),
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: (
+            <Typography>Succesfully removed recipes from Menu.</Typography>
+          ),
+          undo: () => {
+            updateRequest(
+              { [menuPath]: Boolean(menu) ? menu : null },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      Succesfully added back recipes to Menu.
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
+        },
+        5000
+      );
+    },
     addAlert
   );
 };

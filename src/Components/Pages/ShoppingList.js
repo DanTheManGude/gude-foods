@@ -436,7 +436,7 @@ function ShoppingList() {
               ],
               []
             );
-            removeRecipesFromMenu(recipeList, menuPath, addAlert);
+            removeRecipesFromMenu(recipeList, menuPath, menu, addAlert);
           }}
         >
           <Typography>Remove unchecked recipes from menu</Typography>
