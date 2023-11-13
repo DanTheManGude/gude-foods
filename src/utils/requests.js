@@ -179,9 +179,9 @@ export const removeRecipeFromMenuAndShoppingList = (
                 ),
                 [`${menuPath}/${recipeId}`]: menu[recipeId],
               },
-              (successAlert) => {
+              (undoSuccessAlert) => {
                 addAlert({
-                  ...successAlert,
+                  ...undoSuccessAlert,
                   message: (
                     <Typography>
                       {`Succesfully added back recipe ${recipeName} to Menu/ Shopping List.`}
@@ -522,7 +522,7 @@ export const createRecipeTag = (glossaryPath, successHandler, tagName) => {
 
   updateRequest(
     { [`${pathRoot}/${newKey}`]: tagName },
-    (successAlert) => {
+    () => {
       successHandler(newKey);
     },
     console.error
@@ -530,13 +530,7 @@ export const createRecipeTag = (glossaryPath, successHandler, tagName) => {
 };
 
 export const uploadColors = (colorsPath, colorKey, addAlert) => {
-  updateRequest(
-    { [colorsPath]: colorKey },
-    (successAlert) => {
-      addAlert(successAlert);
-    },
-    addAlert
-  );
+  updateRequest({ [colorsPath]: colorKey }, addAlert, addAlert);
 };
 
 const sendAuthorizationEmail = (userInfo, addAlert) => {
