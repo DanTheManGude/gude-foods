@@ -291,6 +291,42 @@ function ShoppingList() {
                   onClick={() => {
                     deleteRequest(
                       [`${shoppingListPath}/${basicFoodId}`],
+                      (successAlert) => {
+                        addAlert(
+                          {
+                            ...successAlert,
+                            message: (
+                              <Typography>
+                                {`Succesfully removed food ${glossary.basicFoods[basicFoodId]} from shopping list.`}
+                              </Typography>
+                            ),
+                            undo: () => {
+                              updateRequest(
+                                {
+                                  [`${shoppingListPath}/${basicFoodId}`]:
+                                    shoppingList[basicFoodId],
+                                },
+                                (successAlert) => {
+                                  addAlert(
+                                    {
+                                      ...successAlert,
+                                      message: (
+                                        <Typography>
+                                          {`Succesfully added back food ${glossary.basicFoods[basicFoodId]} to shopping
+                                          list.`}
+                                        </Typography>
+                                      ),
+                                    },
+                                    5000
+                                  );
+                                },
+                                addAlert
+                              );
+                            },
+                          },
+                          5000
+                        );
+                      },
                       addAlert
                     );
                   }}
