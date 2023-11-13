@@ -146,7 +146,8 @@ export const updateFromCookbookImport = (
   transformedData,
   { cookbookPath, glossaryPath, recipeOrderPath },
   recipeOrder,
-  addAlert
+  addAlert,
+  navigate
 ) => {
   const { formattedCookbook, newFoods, newTags } = transformedData;
 
@@ -182,11 +183,40 @@ export const updateFromCookbookImport = (
   };
 
   const undo = () => {
-    const undoRequests = {}; //TODO
+    const undoCookbookUpdates = Object.keys(formattedCookbook).reduce(
+      (acc, recipeId) => ({ ...acc, [`${cookbookPath}/${recipeId}`]: null }),
+      {}
+    );
+
+    const undoFoodUpdates = Object.keys(newFoods).reduce(
+      (acc, foodName) => ({
+        ...acc,
+        [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: null,
+      }),
+      {}
+    );
+
+    const undoTagUpdates = Object.keys(newTags).reduce(
+      (acc, tagName) => ({
+        ...acc,
+        [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: null,
+      }),
+      {}
+    );
+
+    const undoRequests = {
+      ...undoCookbookUpdates,
+      ...undoFoodUpdates,
+      ...undoTagUpdates,
+      [recipeOrderPath]: recipeOrder,
+    };
 
     updateRequest(
       undoRequests,
       (successAlert) => {
+        if (Object.keys(formattedCookbook).length === 1) {
+          navigate(`/cookbook`);
+        }
         addAlert(
           {
             ...successAlert,
@@ -218,6 +248,9 @@ export const updateFromCookbookImport = (
           },
           5000
         );
+        if (Object.keys(formattedCookbook).length === 1) {
+          navigate(`/recipe/${Object.keys(formattedCookbook)[0]}`);
+        }
       },
       addAlert
     );

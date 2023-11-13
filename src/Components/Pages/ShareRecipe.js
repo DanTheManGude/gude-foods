@@ -125,16 +125,12 @@ function ShareRecipe(props) {
       cookbookPath
     );
 
-    const updateHandler = (alert) => {
-      navigate(`/recipe/${Object.keys(transformedData.formattedCookbook)[0]}`);
-      addAlert(alert);
-    };
-
     updateFromCookbookImport(
       transformedData,
       dataPaths,
       recipeOrder,
-      updateHandler
+      addAlert,
+      navigate
     );
   };
 
