@@ -326,6 +326,43 @@ export const deleteRecipe = (
   );
 };
 
+export const changeCheckFood = (
+  { shoppingListPath },
+  { glossary },
+  basicFoodId,
+  newChecked,
+  addAlert
+) => {
+  updateRequest(
+    {
+      [`${shoppingListPath}/${basicFoodId}/isChecked`]: newChecked,
+    },
+    (successAlert) => {
+      addAlert(
+        {
+          ...successAlert,
+          message: (
+            <Typography>{`${newChecked ? "Checked" : "Unchecked"} food ${
+              glossary.basicFoods[basicFoodId]
+            }`}</Typography>
+          ),
+          undo: () => {
+            changeCheckFood(
+              { shoppingListPath },
+              { glossary },
+              basicFoodId,
+              !newChecked,
+              addAlert
+            );
+          },
+        },
+        4000
+      );
+    },
+    addAlert
+  );
+};
+
 export const saveRecipe = (
   recipe,
   _recipeId,

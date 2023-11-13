@@ -32,6 +32,7 @@ import {
   updateRecipeMenuCount,
   removeRecipesFromMenu,
   addRecipesToMenu,
+  changeCheckFood,
 } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 
@@ -176,10 +177,13 @@ function ShoppingList() {
               sx={{ paddingLeft: "0" }}
               checked={!!shoppingList[basicFoodId].isChecked}
               onChange={(event) => {
-                updateRequest({
-                  [`${shoppingListPath}/${basicFoodId}/isChecked`]:
-                    event.target.checked,
-                });
+                changeCheckFood(
+                  { shoppingListPath },
+                  { glossary },
+                  basicFoodId,
+                  event.target.checked,
+                  addAlert
+                );
               }}
             />
             <Typography sx={{ fontWeight: "medium" }}>
