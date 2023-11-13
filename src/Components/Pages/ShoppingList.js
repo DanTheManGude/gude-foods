@@ -367,6 +367,22 @@ function ShoppingList() {
               deleteDialog === deleteKeys.CHECKED ? "checked " : ""
             }food from shopping list.`}</Typography>
           ),
+          undo: () => {
+            updateRequest(
+              { [shoppingListPath]: shoppingList },
+              (undoSuccessAlert) => {
+                addAlert({
+                  ...undoSuccessAlert,
+                  message: (
+                    <Typography>
+                      Succesfully added back the shopping list.
+                    </Typography>
+                  ),
+                });
+              },
+              addAlert
+            );
+          },
         });
       },
       addAlert
