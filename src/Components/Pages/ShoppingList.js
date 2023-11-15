@@ -26,6 +26,7 @@ import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
+import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import {
   updateRequest,
   deleteRequest,
@@ -35,7 +36,7 @@ import {
   addRecipesToMenu,
   changeCheckFood,
 } from "../../utils/requests";
-import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
+import { constructTextFromShoppingMap } from "../../utils/utility";
 
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
@@ -700,15 +701,32 @@ function ShoppingList() {
       sx={{ width: "352px" }}
       endIcon={<ContentCopyRoundedIcon />}
       onClick={() => {
-        //navigator.clipboard.writeText(responseText);
-        addAlert({
-          message: (
-            <Typography>
-              Copied shopping list as text to your clipboard.
-            </Typography>
-          ),
-          alertProps: { severity: "success" },
-        });
+        navigator.clipboard
+          .writeText(
+            constructTextFromShoppingMap(shoppingMap.unchecked, {
+              glossary,
+              cookbook,
+            })
+          )
+          .then(() => {
+            addAlert({
+              message: (
+                <Typography>
+                  Copied shopping list as text to your clipboard.
+                </Typography>
+              ),
+              alertProps: { severity: "success" },
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            addAlert({
+              message: (
+                <Typography>Error trying to copy. Try again please.</Typography>
+              ),
+              alertProps: { severity: "error" },
+            });
+          });
       }}
     >
       <Typography>Copy shopping list </Typography>
