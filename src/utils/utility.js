@@ -183,9 +183,9 @@ export const constructTextFromShoppingMap = (
   unchecked,
   { glossary, cookbook }
 ) =>
-  Object.values(unchecked).reduce(
-    (fromDepartment, foodMapByTag) =>
-      `${fromDepartment}${Object.entries(foodMapByTag).reduce(
+  Object.values(unchecked)
+    .map((foodMapByTag) =>
+      Object.entries(foodMapByTag).reduce(
         (fromFood, [foodId, { list = {}, collatedAmount }]) =>
           `${fromFood}${glossary.basicFoods[foodId]}- ${
             collatedAmount ||
@@ -197,6 +197,6 @@ export const constructTextFromShoppingMap = (
               .join(" & ")
           }\n`,
         ""
-      )}`,
-    ""
-  );
+      )
+    )
+    .join("");
