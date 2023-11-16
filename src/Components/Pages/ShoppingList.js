@@ -17,14 +17,16 @@ import InputAdornment from "@mui/material/InputAdornment";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import Checkbox from "@mui/material/Checkbox";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Link from "@mui/material/Link";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
+import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import {
   updateRequest,
   deleteRequest,
@@ -34,7 +36,7 @@ import {
   addRecipesToMenu,
   changeCheckFood,
 } from "../../utils/requests";
-import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
+import { constructTextFromShoppingMap } from "../../utils/utility";
 
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
@@ -395,12 +397,18 @@ function ShoppingList() {
     }
 
     return (
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        sx={{ width: "95%" }}
+        justifyContent="center"
+      >
         <Button
           color="primary"
           variant="outlined"
           size="small"
-          sx={{ width: "168px" }}
+          sx={{ minWidth: "168px", maxWidth: "336px", flex: "1 1 0" }}
           onClick={() => {
             setDeleteDialog(deleteKeys.ALL);
           }}
@@ -411,7 +419,7 @@ function ShoppingList() {
           color="primary"
           variant="contained"
           size="small"
-          sx={{ width: "168px" }}
+          sx={{ minWidth: "168px", maxWidth: "336px", flex: "1 1 0" }}
           disabled={!Object.keys(shoppingMap.checked).length}
           onClick={() => {
             setDeleteDialog(deleteKeys.CHECKED);
@@ -429,12 +437,18 @@ function ShoppingList() {
     }
 
     return (
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        sx={{ width: "95%" }}
+        justifyContent="center"
+      >
         <Button
           color="secondary"
           variant="outlined"
           size="small"
-          sx={{ width: "168px" }}
+          sx={{ minWidth: "168px", maxWidth: "336px", flex: "1 1 0" }}
           disabled={!Object.keys(shoppingMap.unchecked).length}
           onClick={() => {
             const recipeList = Object.keys(shoppingMap.unchecked).reduce(
@@ -455,13 +469,19 @@ function ShoppingList() {
             removeRecipesFromMenu(recipeList, menuPath, menu, addAlert);
           }}
         >
-          <Typography>Remove unchecked recipes from menu</Typography>
+          <Typography>
+            <>
+              <span>Remove unchecked</span>
+              <br />
+              <span>recipes from menu</span>
+            </>
+          </Typography>
         </Button>
         <Button
           color="secondary"
           variant="outlined"
           size="small"
-          sx={{ width: "168px" }}
+          sx={{ minWidth: "168px", maxWidth: "336px", flex: "1 1 0" }}
           disabled={!Object.keys(shoppingMap.checked).length}
           onClick={() => {
             const recipeList = Object.keys(shoppingMap.checked).reduce(
@@ -488,21 +508,31 @@ function ShoppingList() {
 
   const renderNewItemControls = () => {
     return (
-      <Stack direction="row" spacing={4}>
-        <Stack spacing={1}>
+      <Stack
+        direction="row"
+        spacing={4}
+        sx={{ width: "95%" }}
+        justifyContent="center"
+      >
+        <Stack
+          spacing={1}
+          sx={{ minWidth: "206px", maxWidth: "412px", flex: "1 1 0" }}
+        >
           <BasicFoodAutocomplete
             id="addSelect"
             foodMap={shoppingList}
             newFoodId={newFoodId}
             setNewFoodId={setNewFoodId}
-            extraProps={{ sx: { width: "206px" } }}
+            extraProps={{
+              sx: { minWidth: "206px", maxWidth: "412px", flex: "1 1 0" },
+            }}
           />
           <TextField
             variant="outlined"
             label="Set amount"
             size="small"
             value={newFoodAmount}
-            sx={{ width: "206px" }}
+            sx={{ minWidth: "206px", maxWidth: "412px", flex: "1 1 0" }}
             onChange={(event) => {
               setNewFoodAmount(event.target.value);
             }}
@@ -528,7 +558,7 @@ function ShoppingList() {
           color="primary"
           variant="contained"
           size="small"
-          sx={{ width: "90px" }}
+          sx={{ minWidth: "90px", maxWidth: "180px", flex: "1 1 0" }}
           disabled={!(newFoodId && newFoodAmount)}
           onClick={() => {
             updateRequest({
@@ -663,6 +693,54 @@ function ShoppingList() {
     );
   };
 
+  const renderShareButton = () => {
+    if (Object.entries(shoppingMap.unchecked).length === 0) {
+      return null;
+    }
+
+    return (
+      <Button
+        color="secondary"
+        variant="contained"
+        size="small"
+        sx={{ width: "352px" }}
+        endIcon={<ContentCopyRoundedIcon />}
+        onClick={() => {
+          navigator.clipboard
+            .writeText(
+              constructTextFromShoppingMap(shoppingMap.unchecked, {
+                glossary,
+                cookbook,
+              })
+            )
+            .then(() => {
+              addAlert({
+                message: (
+                  <Typography>
+                    Copied shopping list as text to your clipboard.
+                  </Typography>
+                ),
+                alertProps: { severity: "success" },
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+              addAlert({
+                message: (
+                  <Typography>
+                    Error trying to copy. Try again please.
+                  </Typography>
+                ),
+                alertProps: { severity: "error" },
+              });
+            });
+        }}
+      >
+        <Typography>Copy shopping list </Typography>
+      </Button>
+    );
+  };
+
   return (
     <div>
       <Typography
@@ -719,6 +797,7 @@ function ShoppingList() {
         {renderDeleteButtons()}
         {renderMenu()}
         {renderMenuButtons()}
+        {renderShareButton()}
       </Stack>
       <DeleteDialog
         open={!!deleteDialog}

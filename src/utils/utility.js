@@ -178,3 +178,25 @@ export const getHasLoggedInBefore = () => {
 export const setHasLoggedInBefore = () => {
   localStorage.setItem(hasLoggedInBeforeKey, true);
 };
+
+export const constructTextFromShoppingMap = (
+  unchecked,
+  { glossary, cookbook }
+) =>
+  Object.values(unchecked)
+    .map((foodMapByTag) =>
+      Object.entries(foodMapByTag).reduce(
+        (fromFood, [foodId, { list = {}, collatedAmount }]) =>
+          `${fromFood}${glossary.basicFoods[foodId]}- ${
+            collatedAmount ||
+            Object.entries(list)
+              .map(
+                ([recipeId, recipeAmount]) =>
+                  `[${recipeAmount}: ${cookbook[recipeId].name}]`
+              )
+              .join(" & ")
+          }\n`,
+        ""
+      )
+    )
+    .join("");
