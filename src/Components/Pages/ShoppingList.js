@@ -693,45 +693,53 @@ function ShoppingList() {
     );
   };
 
-  const renderShareButton = () => (
-    <Button
-      color="secondary"
-      variant="contained"
-      size="small"
-      sx={{ width: "352px" }}
-      endIcon={<ContentCopyRoundedIcon />}
-      onClick={() => {
-        navigator.clipboard
-          .writeText(
-            constructTextFromShoppingMap(shoppingMap.unchecked, {
-              glossary,
-              cookbook,
+  const renderShareButton = () => {
+    if (Object.entries(shoppingMap.unchecked).length === 0) {
+      return null;
+    }
+
+    return (
+      <Button
+        color="secondary"
+        variant="contained"
+        size="small"
+        sx={{ width: "352px" }}
+        endIcon={<ContentCopyRoundedIcon />}
+        onClick={() => {
+          navigator.clipboard
+            .writeText(
+              constructTextFromShoppingMap(shoppingMap.unchecked, {
+                glossary,
+                cookbook,
+              })
+            )
+            .then(() => {
+              addAlert({
+                message: (
+                  <Typography>
+                    Copied shopping list as text to your clipboard.
+                  </Typography>
+                ),
+                alertProps: { severity: "success" },
+              });
             })
-          )
-          .then(() => {
-            addAlert({
-              message: (
-                <Typography>
-                  Copied shopping list as text to your clipboard.
-                </Typography>
-              ),
-              alertProps: { severity: "success" },
+            .catch((error) => {
+              console.log(error);
+              addAlert({
+                message: (
+                  <Typography>
+                    Error trying to copy. Try again please.
+                  </Typography>
+                ),
+                alertProps: { severity: "error" },
+              });
             });
-          })
-          .catch((error) => {
-            console.log(error);
-            addAlert({
-              message: (
-                <Typography>Error trying to copy. Try again please.</Typography>
-              ),
-              alertProps: { severity: "error" },
-            });
-          });
-      }}
-    >
-      <Typography>Copy shopping list </Typography>
-    </Button>
-  );
+        }}
+      >
+        <Typography>Copy shopping list </Typography>
+      </Button>
+    );
+  };
 
   return (
     <div>
