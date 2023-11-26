@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useMemo } from "react";
 
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
@@ -37,7 +37,7 @@ function Glossary() {
   } = dataPaths;
   const database = useContext(DatabaseContext);
   const {
-    glossary,
+    glossary = {},
     shoppingList,
     cookbook,
     basicFoodTagAssociation,
@@ -328,7 +328,7 @@ function Glossary() {
 
   const renderBasicFoodTagsContents = () => (
     <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-      {(glossary && glossary.recipeTags ? Object.keys(glossary.recipeTags) : [])
+      {(glossary.recipeTags ? Object.keys(glossary.recipeTags) : [])
         .concat("recipeTags")
         .map(getRenderInputButtonStack("recipeTags"))}
     </Stack>
@@ -336,7 +336,6 @@ function Glossary() {
 
   const renderBasicFoodContents = () => {
     if (
-      !glossary ||
       !glossary.basicFoods ||
       !glossary.basicFoodTags ||
       !basicFoodTagAssociation ||
@@ -344,10 +343,7 @@ function Glossary() {
     ) {
       return (
         <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-          {(glossary && glossary.basicFoods
-            ? Object.keys(glossary.basicFoods)
-            : []
-          )
+          {(glossary.basicFoods ? Object.keys(glossary.basicFoods) : [])
             .concat("basicFoods")
             .map(getRenderInputButtonStack("basicFoods"))}
         </Stack>
@@ -414,7 +410,7 @@ function Glossary() {
 
   const renderRecipeTagsContents = () => (
     <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-      {(glossary && glossary.recipeTags ? Object.keys(glossary.recipeTags) : [])
+      {(glossary.recipeTags ? Object.keys(glossary.recipeTags) : [])
         .concat("recipeTags")
         .map(getRenderInputButtonStack("recipeTags"))}
     </Stack>
