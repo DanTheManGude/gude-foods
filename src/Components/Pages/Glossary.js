@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo } from "react";
+import { useState, useContext } from "react";
 
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
