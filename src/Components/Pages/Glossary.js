@@ -326,22 +326,12 @@ function Glossary() {
     );
   };
 
-  const renderBasicFoodTags = () => (
-    <Accordion key={"basicFoodTags"} sx={{ width: "95%" }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h6">Departments</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-          {(glossary && glossary.basicFoodTags && basicFoodTagOrder
-            ? basicFoodTagOrder
-            : []
-          )
-            .concat("basicFoodTags")
-            .map(getRenderInputButtonStack("basicFoodTags"))}
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
+  const renderBasicFoodTagsContents = () => (
+    <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+      {(glossary && glossary.recipeTags ? Object.keys(glossary.recipeTags) : [])
+        .concat("recipeTags")
+        .map(getRenderInputButtonStack("recipeTags"))}
+    </Stack>
   );
 
   const renderBasicFoodContents = () => {
@@ -422,35 +412,16 @@ function Glossary() {
     );
   };
 
-  const renderBasicFoods = () => (
-    <Accordion key={"basicFoods"} sx={{ width: "95%" }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h6">Basic Foods</Typography>
-      </AccordionSummary>
-      <AccordionDetails>{renderBasicFoodContents()}</AccordionDetails>
-    </Accordion>
-  );
-
-  const renderRecipeTags = () => (
-    <Accordion key={"recipeTags"} sx={{ width: "95%" }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h6">Recipe Tags</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-          {(glossary && glossary.recipeTags
-            ? Object.keys(glossary.recipeTags)
-            : []
-          )
-            .concat("recipeTags")
-            .map(getRenderInputButtonStack("recipeTags"))}
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
+  const renderRecipeTagsContents = () => (
+    <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
+      {(glossary && glossary.recipeTags ? Object.keys(glossary.recipeTags) : [])
+        .concat("recipeTags")
+        .map(getRenderInputButtonStack("recipeTags"))}
+    </Stack>
   );
 
   return (
-    <div>
+    <>
       <Typography
         variant="h4"
         sx={{
@@ -467,11 +438,26 @@ function Glossary() {
         spacing={3}
         alignItems="center"
       >
-        {renderBasicFoodTags()}
-        {renderBasicFoods()}
-        {renderRecipeTags()}
+        <Accordion key={"basicFoodTags"} sx={{ width: "95%" }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Departments</Typography>
+          </AccordionSummary>
+          <AccordionDetails>{renderBasicFoodTagsContents()}</AccordionDetails>
+        </Accordion>
+        <Accordion key={"basicFoods"} sx={{ width: "95%" }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Basic Foods</Typography>
+          </AccordionSummary>
+          <AccordionDetails>{renderBasicFoodContents()}</AccordionDetails>
+        </Accordion>
+        <Accordion key={"recipeTags"} sx={{ width: "95%" }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Recipe Tags</Typography>
+          </AccordionSummary>
+          <AccordionDetails>{renderRecipeTagsContents()}</AccordionDetails>
+        </Accordion>
       </Stack>
-    </div>
+    </>
   );
 }
 
