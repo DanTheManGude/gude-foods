@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
@@ -13,6 +14,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Box from "@mui/material/Box";
 
 import { updateRequest, createKey } from "../../utils/requests";
@@ -25,7 +27,11 @@ import {
   DatabaseContext,
 } from "../Contexts";
 
-function Glossary() {
+function Glossary(props) {
+  const { setFilteringOptions } = props;
+
+  let navigate = useNavigate();
+
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const {
@@ -276,6 +282,43 @@ function Glossary() {
     const value = isAddingValue ? "" : glossary[sectionKey][entryKey];
     const isActiveEntry = editingEntry.key === entryKey;
     const disabled = !!editingEntry.key && !isActiveEntry;
+
+    let inputEndAdornment = undefined;
+
+    if (["basicFoods", "recipeTags"].includes(sectionKey) && !isAddingValue) {
+      let onClickHandler = () => {};
+      let renderedIcon;
+
+      if (isActiveEntry) {
+        renderedIcon = <UndoOutlinedIcon />;
+        onClickHandler = () => {
+          setEditingEntry({ entryKey, value });
+        };
+      } else {
+        renderedIcon = <SearchRoundedIcon />;
+        const filteringKey =
+          sectionKey === "basicFoods" ? "ingredientsList" : "tagsList";
+
+        onClickHandler = () => {
+          setFilteringOptions({ [filteringKey]: [entryKey] });
+          navigate("/cookbook");
+        };
+      }
+
+      inputEndAdornment = (
+        <InputAdornment position="end">
+          <IconButton
+            sx={{ color: "alt.main" }}
+            onClick={onClickHandler}
+            edge="end"
+            disabled={disabled}
+          >
+            {renderedIcon}
+          </IconButton>
+        </InputAdornment>
+      );
+    }
+
     return (
       <Stack key={entryKey} direction="row" spacing={2}>
         <TextField
@@ -292,19 +335,7 @@ function Glossary() {
           }}
           onChange={getInputHandler(entryKey, value)}
           InputProps={{
-            endAdornment: isActiveEntry && (
-              <InputAdornment position="end">
-                <IconButton
-                  sx={{ color: "alt.main" }}
-                  onClick={() => {
-                    setEditingEntry({ entryKey, value });
-                  }}
-                  edge="end"
-                >
-                  <UndoOutlinedIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
+            endAdornment: inputEndAdornment,
             autoCapitalize: sectionKey === "basicFoodTags" ? "none" : "",
           }}
           inputProps={
