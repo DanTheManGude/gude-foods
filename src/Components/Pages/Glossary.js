@@ -359,9 +359,9 @@ function Glossary(props) {
 
   const renderBasicFoodTagsContents = () => (
     <Stack sx={{ width: "95%" }} spacing={2} alignItems="left">
-      {(glossary.recipeTags ? Object.keys(glossary.recipeTags) : [])
-        .concat("recipeTags")
-        .map(getRenderInputButtonStack("recipeTags"))}
+      {(glossary.basicFoodTags && basicFoodTagOrder ? basicFoodTagOrder : [])
+        .concat("basicFoodTags")
+        .map(getRenderInputButtonStack("basicFoodTags"))}
     </Stack>
   );
 
