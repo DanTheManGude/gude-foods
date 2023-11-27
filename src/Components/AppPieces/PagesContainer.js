@@ -187,7 +187,10 @@ function PagesContainer(props) {
           <Route path="recipe/:recipeId" element={<Recipe />} />
           <Route path="cooking/:recipeId" element={<Cooking />} />
           <Route path="shoppingList" element={<ShoppingList />} />
-          <Route path="glossary" element={<Glossary />} />
+          <Route
+            path="glossary"
+            element={<Glossary setFilteringOptions={setFilteringOptions} />}
+          />
           <Route
             path="settings"
             element={
