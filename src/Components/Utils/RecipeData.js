@@ -18,7 +18,7 @@ function RecipeData(props) {
       {}
     );
     return renderTagList({
-      isEditing: false,
+      editable: false,
       recipe: { tags, isFavorite },
       glossaryRecipeTags: imatatedGlossaryRecipeTags,
     });
