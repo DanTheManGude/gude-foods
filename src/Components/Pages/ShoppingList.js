@@ -209,7 +209,7 @@ function ShoppingList() {
                         justifyContent="space-between"
                       >
                         <Typography sx={{ minWidth: "fit-content" }}>
-                          {recipeList[recipeId] &&
+                          {recipeList.hasOwnProperty(recipeId) &&
                             menu[recipeId] &&
                             `[${menu[recipeId]}] `}
                           {amount}:
