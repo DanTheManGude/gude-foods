@@ -334,10 +334,10 @@ function Recipe() {
     return (
       <>
         {renderTagList({
-          isEditing,
+          editable: isEditing,
           recipe: { tags, isFavorite },
           updateIsFavorite,
-          getDeleteTag,
+          getDeleteTagHandler: getDeleteTag,
           glossaryRecipeTags,
         })}
 

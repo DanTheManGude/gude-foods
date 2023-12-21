@@ -139,7 +139,7 @@ function ExternalRecipe(props) {
         )}
 
         {renderTagList({
-          isEditing: false,
+          editable: false,
           recipe: { tags, isFavorite },
           glossaryRecipeTags,
         })}
