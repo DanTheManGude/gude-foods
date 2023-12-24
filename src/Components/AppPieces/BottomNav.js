@@ -41,6 +41,7 @@ function BottomNav() {
         alignItems: "flex-start",
         zIndex: 1100,
         display: { md: "none" },
+        "& .MuiButtonBase-root": { minWidth: "20vw" },
       }}
     >
       {pages.map((page) => (
@@ -49,7 +50,9 @@ function BottomNav() {
           value={page}
           label={presentationNames[page]}
           icon={pageIcons[page]}
-          sx={{ paddingX: "4px" }}
+          sx={{
+            paddingX: "1px",
+          }}
         />
       ))}
     </BottomNavigation>
