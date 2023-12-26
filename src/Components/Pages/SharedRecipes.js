@@ -137,7 +137,8 @@ function SharedRecipes(props) {
     return Object.entries(sharedRecipes)
       .sort(
         (entryA, entryB) =>
-          entryB[1].info.lastViewed - entryA[1].info.lastViewed
+          entryB[1].info.lastViewed - entryA[1].info.lastViewed ||
+          entryB[1].info.shareDate - entryA[1].info.shareDate
       )
       .map(renderSharedRecipe);
   };
