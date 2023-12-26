@@ -3,6 +3,7 @@ import {
   fontFamilies,
   longestEntryPathDelimiter,
   hasLoggedInBeforeKey,
+  UNKNOWN_TAG,
 } from "../constants";
 import { transformRecipeForExport } from "./dataTransfer";
 import { createKey, createSharedRecipe } from "./requests";
@@ -181,11 +182,13 @@ export const setHasLoggedInBefore = () => {
 
 export const constructTextFromShoppingMap = (
   unchecked,
-  { glossary, cookbook }
+  { glossary, cookbook, basicFoodTagOrder }
 ) =>
-  Object.values(unchecked)
-    .map((foodMapByTag) =>
-      Object.entries(foodMapByTag).reduce(
+  (basicFoodTagOrder || [])
+    .concat(UNKNOWN_TAG)
+    .filter((tagId) => unchecked.hasOwnProperty(tagId))
+    .map((tagId) =>
+      Object.entries(unchecked[tagId]).reduce(
         (fromFood, [foodId, { list = {}, collatedAmount }]) =>
           `${fromFood}${glossary.basicFoods[foodId]}- ${
             collatedAmount ||
