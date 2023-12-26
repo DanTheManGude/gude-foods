@@ -706,34 +706,34 @@ function ShoppingList() {
         sx={{ width: "352px" }}
         endIcon={<ContentCopyRoundedIcon />}
         onClick={() => {
-          navigator.clipboard
-            .writeText(
-              constructTextFromShoppingMap(shoppingMap.unchecked, {
-                glossary,
-                cookbook,
-              })
-            )
-            .then(() => {
-              addAlert({
-                message: (
-                  <Typography>
-                    Copied shopping list as text to your clipboard.
-                  </Typography>
-                ),
-                alertProps: { severity: "success" },
+          try {
+            navigator.clipboard
+              .writeText(
+                constructTextFromShoppingMap(shoppingMap.unchecked, {
+                  glossary,
+                  cookbook,
+                  basicFoodTagOrder,
+                })
+              )
+              .then(() => {
+                addAlert({
+                  message: (
+                    <Typography>
+                      Copied shopping list as text to your clipboard.
+                    </Typography>
+                  ),
+                  alertProps: { severity: "success" },
+                });
               });
-            })
-            .catch((error) => {
-              console.log(error);
-              addAlert({
-                message: (
-                  <Typography>
-                    Error trying to copy. Try again please.
-                  </Typography>
-                ),
-                alertProps: { severity: "error" },
-              });
+          } catch (error) {
+            console.log(error);
+            addAlert({
+              message: (
+                <Typography>Error trying to copy. Try again please.</Typography>
+              ),
+              alertProps: { severity: "error" },
             });
+          }
         }}
       >
         <Typography>Copy shopping list </Typography>
