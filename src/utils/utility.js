@@ -5,8 +5,6 @@ import {
   hasLoggedInBeforeKey,
   UNKNOWN_TAG,
 } from "../constants";
-import { transformRecipeForExport } from "./dataTransfer";
-import { createKey, createSharedRecipe } from "./requests";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -145,31 +143,6 @@ export const constructShareRecipeLink = (shareId, name) => {
 
   const link = `${urlBase}/${path}`;
   return link;
-};
-
-export const shareRecipe = async (
-  recipe,
-  glossary,
-  user,
-  recipeId,
-  cookbookPath,
-  addAlert
-) => {
-  const shareId = createKey("shared");
-
-  const recipeData = transformRecipeForExport(recipe, glossary);
-  const userId = user.uid;
-  const shareDate = Date.now();
-
-  createSharedRecipe(
-    shareId,
-    {
-      recipeData,
-      info: { userId, recipeId, shareDate, lastViewed: 0 },
-    },
-    `${cookbookPath}/${recipeId}`,
-    addAlert
-  );
 };
 
 export const getHasLoggedInBefore = () => {

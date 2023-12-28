@@ -745,3 +745,28 @@ export const updateLastViewedSharedRecipe = (shareId) => {
     () => {}
   );
 };
+
+export const shareRecipe = async (
+  recipe,
+  glossary,
+  user,
+  recipeId,
+  cookbookPath,
+  addAlert
+) => {
+  const shareId = createKey("shared");
+
+  const recipeData = transformRecipeForExport(recipe, glossary);
+  const userId = user.uid;
+  const shareDate = Date.now();
+
+  createSharedRecipe(
+    shareId,
+    {
+      recipeData,
+      info: { userId, recipeId, shareDate, lastViewed: 0 },
+    },
+    `${cookbookPath}/${recipeId}`,
+    addAlert
+  );
+};
