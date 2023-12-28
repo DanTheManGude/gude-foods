@@ -2,7 +2,7 @@ import emailjs from "@emailjs/browser";
 import Typography from "@mui/material/Typography";
 
 import { emailConfig } from "../constants";
-import { AddAlert, Recipe } from "../types";
+import { AddAlert, Recipe, ReportErrorValues } from "../types";
 
 export const generateRecipe = async (
   params: { [key: string]: string | number | boolean },
@@ -39,8 +39,9 @@ export const generateRecipe = async (
     .catch(onFailure);
 };
 
-type LookingFor = "name" | "instructions" | "ingredients";
 export const parseResponse = (textResponse: string) => {
+  type LookingFor = "name" | "instructions" | "ingredients";
+
   const recipe: Partial<Recipe> = {
     name: "",
     ingredientText: [],
@@ -98,12 +99,7 @@ export const parseResponse = (textResponse: string) => {
 
 export const reportAiError = (
   addAlert: AddAlert,
-  reportErrorValues: {
-    promptText: string;
-    response: string;
-    error: string;
-    who: string;
-  }
+  reportErrorValues: ReportErrorValues
 ) => {
   const { serviceId, reportAiTemplateId, userId } = emailConfig;
 

@@ -11,4 +11,11 @@ export type Alert = {
 };
 export type AddAlert = (alert: Alert, time?: number) => void;
 
+export type ReportErrorValues = {
+  promptText: string;
+  response: string;
+  error: string;
+  who: string;
+};
+
 export type Recipe = any;
