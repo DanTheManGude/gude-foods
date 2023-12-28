@@ -1,3 +1,5 @@
+import { ColorKey } from "./types";
+
 export const emailConfig: {
   serviceId: string;
   reportAiTemplateId: string;
@@ -18,8 +20,6 @@ export const fontFamilies = [
   "Helvetica Neue",
   "sans-serif",
 ];
-
-type ColorKey = "default" | "dark" | "light";
 
 const colorOptionNames: { [key in ColorKey]: string } = {
   default: "Default",
