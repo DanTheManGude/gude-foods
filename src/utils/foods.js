@@ -1,3 +1,5 @@
+import { UNKNOWN_TAG } from "../constants";
+
 export const getCalculateFoodSectionForOptions =
   (glossary, basicFoodTagAssociation, unknownSectionName) => (option) =>
     (glossary &&
@@ -37,3 +39,27 @@ export const constructBasicFoodOptions = (
     .concat(organizedFoods[unknownSectionName] || [])
     .map((foodId) => ({ foodId, title: glossary.basicFoods[foodId] }));
 };
+
+export const constructTextFromShoppingMap = (
+  unchecked,
+  { glossary, cookbook, basicFoodTagOrder }
+) =>
+  (basicFoodTagOrder || [])
+    .concat(UNKNOWN_TAG)
+    .filter((tagId) => unchecked.hasOwnProperty(tagId))
+    .map((tagId) =>
+      Object.entries(unchecked[tagId]).reduce(
+        (fromFood, [foodId, { list = {}, collatedAmount }]) =>
+          `${fromFood}${glossary.basicFoods[foodId]}- ${
+            collatedAmount ||
+            Object.entries(list)
+              .map(
+                ([recipeId, recipeAmount]) =>
+                  `[${recipeAmount}: ${cookbook[recipeId].name}]`
+              )
+              .join(" & ")
+          }\n`,
+        ""
+      )
+    )
+    .join("");

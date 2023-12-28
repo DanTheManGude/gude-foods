@@ -36,7 +36,7 @@ import {
   addRecipesToMenu,
   changeCheckFood,
 } from "../../utils/requests";
-import { constructTextFromShoppingMap } from "../../utils/utility";
+import { constructTextFromShoppingMap } from "../../utils/foods";
 
 import DeleteDialog from "../Utils/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
