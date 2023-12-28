@@ -1,4 +1,5 @@
-import { ColorKey } from "./types";
+import { ThemeOptions } from "@mui/material/styles";
+import { AllColors, ColorKey } from "./types";
 
 export const emailConfig: {
   serviceId: string;
@@ -31,7 +32,7 @@ export const localStorageColorKey = "gude-foods-color";
 export const defaultColorKey: ColorKey =
   (localStorage.getItem(localStorageColorKey) as ColorKey) || "default";
 
-export const standardComponentOverridesForTheme = {
+export const standardComponentOverridesForTheme: ThemeOptions["components"] = {
   MuiAccordion: {
     defaultProps: {
       disableGutters: true,
@@ -46,9 +47,9 @@ export const standardComponentOverridesForTheme = {
       },
     },
   },
-} as const;
+};
 
-export const allColors = {
+export const allColors: AllColors = {
   default: {
     palette: {
       mode: "dark",

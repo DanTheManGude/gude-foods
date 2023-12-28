@@ -1,8 +1,20 @@
+import { ThemeOptions } from "@mui/material";
 import { AlertProps } from "@mui/material/Alert";
 
 export type Noop = () => void;
 
 export type ColorKey = "default" | "dark" | "light";
+
+export type AllColors = {
+  [key in ColorKey]: {
+    palette: ThemeOptions["palette"] & {
+      tertiary: ThemeOptions["palette"]["secondary"];
+      alt: ThemeOptions["palette"]["secondary"];
+    };
+    background: { percent: number; color: `#${string}` }[];
+    components?: ThemeOptions["components"];
+  };
+};
 
 export type Alert = {
   message: JSX.Element;
