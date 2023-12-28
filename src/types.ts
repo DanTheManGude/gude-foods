@@ -10,3 +10,5 @@ export type Alert = {
   alertProps: Partial<AlertProps>;
 };
 export type AddAlert = (alert: Alert, time?: number) => void;
+
+export type Recipe = any;

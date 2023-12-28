@@ -2,8 +2,14 @@ import emailjs from "@emailjs/browser";
 import Typography from "@mui/material/Typography";
 
 import { emailConfig } from "../constants";
+import { AddAlert, Recipe } from "../types";
 
-export const generateRecipe = async (params, user, onSuccess, onFailure) => {
+export const generateRecipe = async (
+  params: { [key: string]: string | number | boolean },
+  user: any,
+  onSuccess: (responseText: string) => void,
+  onFailure: (error: Error) => void
+) => {
   const searchParamsText = Object.entries(params)
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join("&");
@@ -33,9 +39,14 @@ export const generateRecipe = async (params, user, onSuccess, onFailure) => {
     .catch(onFailure);
 };
 
-export const parseResponse = (textResponse) => {
-  const recipe = { name: "", ingredientText: [], instructions: [] };
-  let lookingFor = "name";
+type LookingFor = "name" | "instructions" | "ingredients";
+export const parseResponse = (textResponse: string) => {
+  const recipe: Partial<Recipe> = {
+    name: "",
+    ingredientText: [],
+    instructions: [],
+  };
+  let lookingFor: LookingFor = "name";
 
   const textResponseLines = textResponse.split("\n");
   textResponseLines.forEach((line) => {
@@ -85,7 +96,15 @@ export const parseResponse = (textResponse) => {
   return recipe;
 };
 
-export const reportAiError = (addAlert, reportErrorValues) => {
+export const reportAiError = (
+  addAlert: AddAlert,
+  reportErrorValues: {
+    promptText: string;
+    response: string;
+    error: string;
+    who: string;
+  }
+) => {
   const { serviceId, reportAiTemplateId, userId } = emailConfig;
 
   emailjs.send(serviceId, reportAiTemplateId, reportErrorValues, userId).then(
