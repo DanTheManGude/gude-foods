@@ -19,3 +19,6 @@ export type ReportErrorValues = {
 };
 
 export type Recipe = any;
+
+export type Database = any;
+export type DataPaths = any;
