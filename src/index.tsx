@@ -5,9 +5,10 @@ import { BrowserRouter } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-
 import "./styles/index.css";
+
+import { Noop } from "./types";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import App from "./Components/App";
 
 const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE || "");
@@ -19,12 +20,12 @@ initializeAppCheck(firebaseApp, {
   isTokenAutoRefreshEnabled: true,
 });
 
-let cacheSubscriber = () => {};
-const setSubscriber = (newSubscriber) => {
+let cacheSubscriber: Noop = () => {};
+const setSubscriber = (newSubscriber: Noop) => {
   cacheSubscriber = newSubscriber;
 };
 
-const notifySubscriber = () => {
+const notifySubscriber: Noop = () => {
   cacheSubscriber();
 };
 

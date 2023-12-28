@@ -1,5 +1,7 @@
 import { AlertProps } from "@mui/material/Alert";
 
+export type Noop = () => void;
+
 export type ColorKey = "default" | "dark" | "light";
 
 export type Alert = {
