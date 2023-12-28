@@ -1,0 +1,25 @@
+// *.gudefoods.com/share/*
+
+class Handler {
+	constructor(title) {
+		this.title = title;
+	}
+
+  element(element) {
+	element.prepend(`${this.title} - `);
+  }
+}
+
+export default {
+	async fetch(request) {
+		let res = await fetch(request);
+
+		const title = new URL(request.url).searchParams.get("name");
+		  
+		console.log("handleRequest");
+
+  		return new HTMLRewriter()
+			.on('title', new Handler(title))
+			.transform(res);
+	}
+}
