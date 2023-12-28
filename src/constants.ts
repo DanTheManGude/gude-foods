@@ -1,5 +1,8 @@
-export const emailConfig =
-  process.env.REACT_APP_EMAIL && JSON.parse(process.env.REACT_APP_EMAIL);
+export const emailConfig: {
+  serviceId: string;
+  reportAiTemplateId: string;
+  userId: string;
+} = process.env.REACT_APP_EMAIL ? JSON.parse(process.env.REACT_APP_EMAIL) : {};
 
 export const fontFamilies = [
   "Dosis",
@@ -16,9 +19,17 @@ export const fontFamilies = [
   "sans-serif",
 ];
 
+type ColorKey = "default" | "dark" | "light";
+
+const colorOptionNames: { [key in ColorKey]: string } = {
+  default: "Default",
+  dark: "Dark",
+  light: "Light",
+};
+
 export const localStorageColorKey = "gude-foods-color";
-export const defaultColorKey =
-  localStorage.getItem(localStorageColorKey) || "default";
+export const defaultColorKey: ColorKey =
+  (localStorage.getItem(localStorageColorKey) as ColorKey) || "default";
 
 export const standardComponentOverridesForTheme = {
   MuiAccordion: {
@@ -35,7 +46,7 @@ export const standardComponentOverridesForTheme = {
       },
     },
   },
-};
+} as const;
 
 export const allColors = {
   default: {
@@ -92,9 +103,6 @@ export const allColors = {
         },
       },
       MuiPaper: {
-        ...(standardComponentOverridesForTheme.hasOwnProperty("MuiPaper")
-          ? standardComponentOverridesForTheme.MuiPaper
-          : {}),
         styleOverrides: {
           root: {
             backgroundColor: "#f0eced",
@@ -104,8 +112,6 @@ export const allColors = {
     },
   },
 };
-
-const colorOptionNames = { default: "Default", dark: "Dark", light: "Light" };
 
 export const colorOptions = Object.keys(allColors).map((colorKey) => ({
   key: colorKey,
