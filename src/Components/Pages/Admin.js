@@ -77,21 +77,26 @@ function Settings(props) {
           <Typography>
             Current version: <strong>{process.env.REACT_APP_VERSION}</strong>
           </Typography>
-          <Typography>
-            The source code for this website is hosted&nbsp;
+        </CardContent>
+        <CardActions sx={{ justifyContent: "flex-end" }}>
+          <Button color="secondary" variant="contained">
             <Link
               underline="none"
               href="https://github.com/DanTheManGude/gude-foods"
               target="_blank"
               rel="noopener"
-              color="secondary"
+              color="secondary.contrastText"
             >
-              {"here "}
-              <OpenInNewIcon fontSize="inherit" sx={{ verticalAlign: "sub" }} />
+              <Typography>
+                View source&nbsp;
+                <OpenInNewIcon
+                  fontSize="inherit"
+                  sx={{ verticalAlign: "sub" }}
+                />
+              </Typography>
             </Link>
-            .
-          </Typography>
-        </CardContent>
+          </Button>
+        </CardActions>
       </Card>
     </Box>
   );
