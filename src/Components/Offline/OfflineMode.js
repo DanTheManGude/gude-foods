@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 
 import Stack from "@mui/material/Stack";
-import NavBar from "./AppPieces/NavBar";
+import NavBar from "../AppPieces/NavBar";
 import Collapse from "@mui/material/Collapse";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-import { offlineCookbookKey } from "../constants";
+import { offlineCookbookKey } from "../../constants";
 
-import RecipeData from "./Utils/RecipeData";
-import OfflineCookbook from "./Utils/OfflineCookbook";
-import ImportFileButton from "./Utils/ImportFileButton";
+import RecipeData from "../Utils/RecipeData";
+import OfflineCookbook from "./OfflineCookbook";
+import ImportFileButton from "../Utils/ImportFileButton";
 
 function OfflineMode(props) {
   const { disableUsingOffline } = props;
