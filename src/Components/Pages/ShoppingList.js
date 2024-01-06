@@ -590,7 +590,14 @@ function ShoppingList() {
               key={recipeId}
             >
               <Typography noWrap sx={{ width: "fill-available" }}>
-                {cookbook[recipeId].name}
+                <Link
+                  onClick={() => {
+                    navigate(`/recipe/${recipeId}`);
+                  }}
+                  color={"text.primary"}
+                >
+                  {cookbook[recipeId].name}
+                </Link>
               </Typography>
               <ButtonGroup variant="outlined" size="small" color="secondary">
                 <Button
