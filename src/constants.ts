@@ -47,6 +47,13 @@ export const standardComponentOverridesForTheme: ThemeOptions["components"] = {
       },
     },
   },
+  MuiLink: {
+    styleOverrides: {
+      root: {
+        cursor: "pointer",
+      },
+    },
+  },
 };
 
 export const allColors: AllColors = {
