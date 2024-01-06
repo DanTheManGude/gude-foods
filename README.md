@@ -26,3 +26,7 @@ Vercel is used to host the app. Vercel Serverless Functions is used to fetch ext
 - run `npm run start-dev`
 - Visit `localhost:3000` in browser
 - _Note that unless you are an authorized user on firebase, the app has basically no functionality_
+
+## Deploy
+- Publishes to `gudefoods.com` and `foods.dangude.com` by Vercel with commits to `master`.
+- Publishes to `qa.gudefoods.com` by Vercel with commits to `qa`
