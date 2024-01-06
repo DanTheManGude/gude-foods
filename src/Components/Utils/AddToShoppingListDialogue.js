@@ -63,6 +63,7 @@ function AddToShoppingListDialogue(props) {
   const handleAdd = () => {
     addRecipeToShoppingList(
       recipeId,
+      count,
       ingredients,
       { recipeOrder, menu },
       dataPaths,
@@ -90,7 +91,6 @@ function AddToShoppingListDialogue(props) {
           contentsOnly={true}
         />
       </DialogContent>
-
       <DialogActions>
         <Stack direction="row" spacing={1}>
           <ButtonGroup variant="outlined" size="small" color="primary">

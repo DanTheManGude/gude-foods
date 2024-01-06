@@ -89,6 +89,7 @@ export const addBasicFoodWithTag = (
 
 export const addRecipeToShoppingList = (
   recipeId,
+  count,
   ingredients = {},
   { recipeOrder, menu: _menu },
   { shoppingListPath, recipeOrderPath, menuPath },
@@ -112,7 +113,9 @@ export const addRecipeToShoppingList = (
       ],
       [menuPath]: {
         ...menu,
-        [recipeId]: menu.hasOwnProperty(recipeId) ? menu[recipeId] + 1 : 1,
+        [recipeId]: menu.hasOwnProperty(recipeId)
+          ? menu[recipeId] + count
+          : count,
       },
     },
     (successAlert) => {
