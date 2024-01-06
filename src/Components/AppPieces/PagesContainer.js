@@ -5,7 +5,7 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { updateRequest } from "../../utils/requests";
 import { databasePaths } from "../../constants";
 
-import OfflineCookbookUpdater from "../Utils/OfflineCookbookUpdater";
+import OfflineCookbookUpdater from "../Offline/OfflineCookbookUpdater";
 
 import Home from "../Pages/Home";
 import Cookbook from "../Pages/Cookbook";

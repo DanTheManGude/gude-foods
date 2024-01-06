@@ -9,7 +9,7 @@ import {
 } from "../../utils/foods";
 import { unknownSectionName } from "../../constants";
 import { DatabaseContext } from "../Contexts";
-import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
+import CreateBasicFoodDialog from "./Dialogs/CreateBasicFoodDialog";
 
 function BasicFoodAutocomplete(props) {
   const { id, foodMap, newFoodId, setNewFoodId, extraProps } = props;

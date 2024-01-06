@@ -9,14 +9,14 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Box from "@mui/material/Box";
 
-import { DatabaseContext } from "../Contexts";
+import { DatabaseContext } from "../../Contexts";
 
-import RecipeSearchInput from "./RecipeSearchInput";
-import FavoriteSwitch from "./FavoriteSwitch";
-import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
-import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
+import RecipeSearchInput from "../RecipeSearchInput";
+import FavoriteSwitch from "../FavoriteSwitch";
+import BasicFoodMultiSelect from "../BasicFoodMultiSelect";
+import RecipeTagsMultiSelect from "../RecipeTagsMultiSelect";
 
-function AdvancedFiltersDialogue(props) {
+function AdvancedFiltersDialog(props) {
   const { open, onClose, filteringOptions, setFilteringOptions } = props;
 
   const {
@@ -129,4 +129,4 @@ function AdvancedFiltersDialogue(props) {
   );
 }
 
-export default AdvancedFiltersDialogue;
+export default AdvancedFiltersDialog;

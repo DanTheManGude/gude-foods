@@ -17,17 +17,21 @@ import TextField from "@mui/material/TextField";
 import Slider from "@mui/material/Slider";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
-import { generateRecipe, parseResponse, reportAiError } from "../../utils/ai";
-import { DatabaseContext, AddAlertContext, UserContext } from "../Contexts";
-import BasicFoodMultiSelect from "./BasicFoodMultiSelect";
-import RecipeTagsMultiSelect from "./RecipeTagsMultiSelect";
+import {
+  generateRecipe,
+  parseResponse,
+  reportAiError,
+} from "../../../utils/ai";
+import { DatabaseContext, AddAlertContext, UserContext } from "../../Contexts";
+import BasicFoodMultiSelect from "../BasicFoodMultiSelect";
+import RecipeTagsMultiSelect from "../RecipeTagsMultiSelect";
 
 const PromptTypography = (props) => <Typography component="span" {...props} />;
 const promptPrefix = (
   <PromptTypography key="prefix">Generate a recipe</PromptTypography>
 );
 
-function GenerateRecipeDialogue(props) {
+function GenerateRecipeDialog(props) {
   const { open, onClose, setExternalRecipe, filteringOptions } = props;
 
   const [reportErrorValues, setReportErrorValues] = useState();
@@ -390,4 +394,4 @@ function GenerateRecipeDialogue(props) {
   );
 }
 
-export default GenerateRecipeDialogue;
+export default GenerateRecipeDialog;

@@ -10,26 +10,26 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
-import { constructShareRecipeLink } from "../../utils/utility";
+import { constructShareRecipeLink } from "../../../utils/utility";
 import {
   downloadData,
   transformRecipeForExport,
-} from "../../utils/dataTransfer";
-import { removeSharedRecipe, shareRecipe } from "../../utils/requests";
+} from "../../../utils/dataTransfer";
+import { removeSharedRecipe, shareRecipe } from "../../../utils/requests";
 
 import {
   DatabaseContext,
   AddAlertContext,
   UserContext,
   DataPathsContext,
-} from "../Contexts";
+} from "../../Contexts";
 
 const errorCopyAlert = {
   message: <Typography>Error trying to copy. Try again please.</Typography>,
   alertProps: { severity: "error" },
 };
 
-function ShareRecipeDialogue(props) {
+function ShareRecipeDialog(props) {
   const { open, onClose, recipe, recipeId } = props;
   const { shareId, name } = recipe;
 
@@ -180,4 +180,4 @@ function ShareRecipeDialogue(props) {
   );
 }
 
-export default ShareRecipeDialogue;
+export default ShareRecipeDialog;

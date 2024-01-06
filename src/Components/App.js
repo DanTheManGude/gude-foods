@@ -30,7 +30,7 @@ import ShareRecipe from "./Pages/ShareRecipe";
 
 import Loading from "./Utils/Loading";
 
-import OfflineMode from "./OfflineMode";
+import OfflineMode from "./Offline/OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
 

@@ -38,7 +38,7 @@ import {
 } from "../../utils/requests";
 import { constructTextFromShoppingMap } from "../../utils/foods";
 
-import DeleteDialog from "../Utils/DeleteDialog";
+import DeleteDialog from "../Utils/Dialogs/DeleteDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
 import {
