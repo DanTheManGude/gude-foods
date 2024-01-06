@@ -11,7 +11,7 @@ import {
 } from "../../utils/foods";
 import { unknownSectionName } from "../../constants";
 
-import CreateBasicFoodDialog from "./CreateBasicFoodDialog";
+import CreateBasicFoodDialog from "./Dialogs/CreateBasicFoodDialog";
 
 function BasicFoodMultiSelect(props) {
   const {

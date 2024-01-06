@@ -12,10 +12,13 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-import { offlineRecipeKeyPrefix, offlineRecipeListKey } from "../../constants";
-import ImportFileButton from "../Utils/ImportFileButton";
+import {
+  offlineRecipeKeyPrefix,
+  offlineRecipeListKey,
+} from "../../../constants";
+import ImportFileButton from "../ImportFileButton";
 
-function OfflineRecipeDialogue(props) {
+function OfflineRecipeDialog(props) {
   const { open, onClose, setRecipe } = props;
 
   const [localOptions, setLocalOptions] = useState([]);
@@ -129,4 +132,4 @@ function OfflineRecipeDialogue(props) {
   );
 }
 
-export default OfflineRecipeDialogue;
+export default OfflineRecipeDialog;

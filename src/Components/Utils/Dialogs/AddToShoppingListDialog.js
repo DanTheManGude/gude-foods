@@ -12,15 +12,15 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-import { addRecipeToShoppingList } from "../../utils/requests";
+import { addRecipeToShoppingList } from "../../../utils/requests";
 
-import IngredientList from "../Utils/IngredientList";
+import IngredientList from "../IngredientList";
 
 import {
   DatabaseContext,
   DataPathsContext,
   AddAlertContext,
-} from "../Contexts";
+} from "../../Contexts";
 
 const MenuCount = styled(Button)(
   ({ theme }) => `
@@ -33,7 +33,7 @@ const MenuCount = styled(Button)(
 `
 );
 
-function AddToShoppingListDialogue(props) {
+function AddToShoppingListDialog(props) {
   const { open, onClose, recipeId } = props;
 
   const dataPaths = useContext(DataPathsContext);
@@ -125,4 +125,4 @@ function AddToShoppingListDialogue(props) {
   );
 }
 
-export default AddToShoppingListDialogue;
+export default AddToShoppingListDialog;

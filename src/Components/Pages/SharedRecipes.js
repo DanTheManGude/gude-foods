@@ -14,7 +14,7 @@ import { removeSharedRecipe } from "../../utils/requests";
 
 import { UserContext, AddAlertContext, DataPathsContext } from "../Contexts";
 
-import DeleteDialog from "../Utils/DeleteDialog";
+import DeleteDialog from "../Utils/Dialogs/DeleteDialog";
 
 function SharedRecipes(props) {
   const { sharedRecipes, accounts, setActingUserByUid } = props;

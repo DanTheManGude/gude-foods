@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 
 import { deleteRecipe, saveRecipe } from "../../utils/requests";
 
-import DeleteDialog from "../Utils/DeleteDialog";
+import DeleteDialog from "../Utils/Dialogs/DeleteDialog";
 import {
   renderEditingButtons,
   renderNameInput,
@@ -19,8 +19,8 @@ import {
 } from "../Utils/RecipeParts";
 import InstructionList from "../Utils/InstructionList";
 import IngredientList from "../Utils/IngredientList";
-import AddToShoppingListDialogue from "../Utils/AddToShoppingListDialogue";
-import ShareRecipeDialogue from "../Utils/ShareRecipeDialogue";
+import AddToShoppingListDialog from "../Utils/Dialogs/AddToShoppingListDialog";
+import ShareRecipeDialog from "../Utils/Dialogs/ShareRecipeDialog";
 
 import {
   DatabaseContext,
@@ -65,9 +65,9 @@ function Recipe() {
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [addToShoppingListDialogueOpen, setAddToShoppingListDialogueOpen] =
+  const [addToShoppingListDialogOpen, setAddToShoppingListDialogOpen] =
     useState(false);
-  const [openShareDialogue, setOpenShareDialogue] = useState(false);
+  const [openShareDialog, setOpenShareDialog] = useState(false);
 
   useEffect(() => {
     const cookbook = _cookbook || {};
@@ -222,7 +222,7 @@ function Recipe() {
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
-              setOpenShareDialogue(true);
+              setOpenShareDialog(true);
             }}
           >
             <Typography>Share</Typography>
@@ -234,7 +234,7 @@ function Recipe() {
             size="small"
             sx={{ height: "50px", flexGrow: "1" }}
             onClick={() => {
-              setAddToShoppingListDialogueOpen(true);
+              setAddToShoppingListDialogOpen(true);
             }}
           >
             <Typography>
@@ -383,17 +383,17 @@ function Recipe() {
         comfirmationMessageDO={`"${recipeEntry.name}"`}
         handleDelete={handleDelete}
       />
-      <AddToShoppingListDialogue
-        open={addToShoppingListDialogueOpen}
+      <AddToShoppingListDialog
+        open={addToShoppingListDialogOpen}
         onClose={() => {
-          setAddToShoppingListDialogueOpen(false);
+          setAddToShoppingListDialogOpen(false);
         }}
         recipeId={recipeId}
       />
-      <ShareRecipeDialogue
-        open={openShareDialogue}
+      <ShareRecipeDialog
+        open={openShareDialog}
         onClose={() => {
-          setOpenShareDialogue(false);
+          setOpenShareDialog(false);
         }}
         recipe={recipeEntry}
         recipeId={recipeId}

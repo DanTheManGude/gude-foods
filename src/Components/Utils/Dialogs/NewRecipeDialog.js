@@ -10,21 +10,19 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 
-import GenerateRecipeDialogue from "../Utils/GenerateRecipeDialogue";
-import ExternalRecipeImportDialogue from "../Utils/ExternalRecipeImportDialogue";
-import ImportFileButton from "../Utils/ImportFileButton";
+import GenerateRecipeDialog from "./GenerateRecipeDialog";
+import ExternalRecipeImportDialog from "./ExternalRecipeImportDialog";
+import ImportFileButton from "../ImportFileButton";
 
-function NewRecipeDialogue(props) {
+function NewRecipeDialog(props) {
   const { open, onClose, filteringOptions = {}, setExternalRecipe } = props;
 
   let navigate = useNavigate();
 
-  const [openGenerateRecipeDialogue, setOpenGenerateRecipeDialogue] =
+  const [openGenerateRecipeDialog, setOpenGenerateRecipeDialog] =
     useState(false);
-  const [
-    openExternalRecipeImportDialogue,
-    setOpenExternalRecipeImportDialogue,
-  ] = useState(false);
+  const [openExternalRecipeImportDialog, setOpenExternalRecipeImportDialog] =
+    useState(false);
 
   const renderButtonStack = () => (
     <Stack spacing={2}>
@@ -42,7 +40,7 @@ function NewRecipeDialogue(props) {
         color="primary"
         variant="outlined"
         onClick={() => {
-          setOpenGenerateRecipeDialogue(true);
+          setOpenGenerateRecipeDialog(true);
           onClose();
         }}
       >
@@ -62,7 +60,7 @@ function NewRecipeDialogue(props) {
         color="primary"
         variant="outlined"
         onClick={() => {
-          setOpenExternalRecipeImportDialogue(true);
+          setOpenExternalRecipeImportDialog(true);
           onClose();
         }}
       >
@@ -91,18 +89,18 @@ function NewRecipeDialogue(props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <GenerateRecipeDialogue
+      <GenerateRecipeDialog
         filteringOptions={filteringOptions}
-        open={openGenerateRecipeDialogue}
+        open={openGenerateRecipeDialog}
         onClose={() => {
-          setOpenGenerateRecipeDialogue(false);
+          setOpenGenerateRecipeDialog(false);
         }}
         setExternalRecipe={setExternalRecipe}
       />
-      <ExternalRecipeImportDialogue
-        open={openExternalRecipeImportDialogue}
+      <ExternalRecipeImportDialog
+        open={openExternalRecipeImportDialog}
         onClose={() => {
-          setOpenExternalRecipeImportDialogue(false);
+          setOpenExternalRecipeImportDialog(false);
         }}
         setExternalRecipe={setExternalRecipe}
       />
@@ -110,4 +108,4 @@ function NewRecipeDialogue(props) {
   );
 }
 
-export default NewRecipeDialogue;
+export default NewRecipeDialog;

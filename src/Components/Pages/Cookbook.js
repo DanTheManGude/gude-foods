@@ -21,11 +21,11 @@ import {
 } from "../../utils/dataTransfer";
 
 import RecipeSearchInput from "../Utils/RecipeSearchInput";
-import AdvancedFiltersDialogue from "../Utils/AdvancedFiltersDialogue";
+import AdvancedFiltersDialog from "../Utils/Dialogs/AdvancedFiltersDialog";
 import ImportFileButton from "../Utils/ImportFileButton";
-import NewRecipeDialogue from "../Utils/NewRecipeDialogue";
+import NewRecipeDialog from "../Utils/Dialogs/NewRecipeDialog";
 import FavoriteTag from "../Utils/FavoriteTag";
-import AddToShoppingListDialogue from "../Utils/AddToShoppingListDialogue";
+import AddToShoppingListDialog from "../Utils/Dialogs/AddToShoppingListDialog";
 
 import {
   DatabaseContext,
@@ -61,8 +61,8 @@ function Cookbook(props) {
 
   const [addToShoppingListRecipeId, setAddToShoppingListRecipeId] =
     useState(null);
-  const [openNewRecipeDialogue, setOpenNewRecipeDialogue] = useState(false);
-  const [advancedFiltersDialogueOpen, setAdvancedFiltersDialogueOpen] =
+  const [openNewRecipeDialog, setOpenNewRecipeDialog] = useState(false);
+  const [advancedFiltersDialogOpen, setAdvancedFiltersDialogOpen] =
     useState(false);
   const {
     searchTerm = "",
@@ -136,7 +136,7 @@ function Cookbook(props) {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              setAdvancedFiltersDialogueOpen(true);
+              setAdvancedFiltersDialogOpen(true);
             }}
           >
             <Typography>
@@ -314,7 +314,7 @@ function Cookbook(props) {
         right: "35px",
       }}
       onClick={() => {
-        setOpenNewRecipeDialogue(true);
+        setOpenNewRecipeDialog(true);
       }}
     >
       <AddIcon />
@@ -339,23 +339,23 @@ function Cookbook(props) {
         {renderImportExportCookbookButtons()}
       </Stack>
       {renderCreateRecipeButton()}
-      <AdvancedFiltersDialogue
-        open={advancedFiltersDialogueOpen}
+      <AdvancedFiltersDialog
+        open={advancedFiltersDialogOpen}
         onClose={() => {
-          setAdvancedFiltersDialogueOpen(false);
+          setAdvancedFiltersDialogOpen(false);
         }}
         filteringOptions={filteringOptions}
         setFilteringOptions={setFilteringOptions}
       />
-      <NewRecipeDialogue
-        open={openNewRecipeDialogue}
+      <NewRecipeDialog
+        open={openNewRecipeDialog}
         onClose={() => {
-          setOpenNewRecipeDialogue(false);
+          setOpenNewRecipeDialog(false);
         }}
         filteringOptions={filteringOptions}
         setExternalRecipe={setExternalRecipe}
       />
-      <AddToShoppingListDialogue
+      <AddToShoppingListDialog
         open={!!addToShoppingListRecipeId}
         onClose={() => {
           setAddToShoppingListRecipeId(null);

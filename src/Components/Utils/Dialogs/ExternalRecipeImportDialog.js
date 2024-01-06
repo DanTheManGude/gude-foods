@@ -11,11 +11,11 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { fetchRecipeFromUrl } from "../../utils/utility";
-import { addBasicFoodWithTag } from "../../utils/requests";
-import { DatabaseContext, DataPathsContext } from "../Contexts";
+import { fetchRecipeFromUrl } from "../../../utils/utility";
+import { addBasicFoodWithTag } from "../../../utils/requests";
+import { DatabaseContext, DataPathsContext } from "../../Contexts";
 
-function ExternalRecipeImportDialogue(props) {
+function ExternalRecipeImportDialog(props) {
   const { open, onClose, setExternalRecipe } = props;
 
   const { glossary = { basicFoods: {}, recipeTags: {} } } =
@@ -151,4 +151,4 @@ function ExternalRecipeImportDialogue(props) {
   );
 }
 
-export default ExternalRecipeImportDialogue;
+export default ExternalRecipeImportDialog;
