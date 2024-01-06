@@ -10,12 +10,12 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
-import { shareRecipe, constructShareRecipeLink } from "../../utils/utility";
+import { constructShareRecipeLink } from "../../utils/utility";
 import {
   downloadData,
   transformRecipeForExport,
 } from "../../utils/dataTransfer";
-import { removeSharedRecipe } from "../../utils/requests";
+import { removeSharedRecipe, shareRecipe } from "../../utils/requests";
 
 import {
   DatabaseContext,

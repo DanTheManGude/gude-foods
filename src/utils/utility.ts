@@ -3,23 +3,21 @@ import {
   fontFamilies,
   longestEntryPathDelimiter,
   hasLoggedInBeforeKey,
-  UNKNOWN_TAG,
 } from "../constants";
-import { transformRecipeForExport } from "./dataTransfer";
-import { createKey, createSharedRecipe } from "./requests";
+import { Recipe, Theme } from "../types";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
-export const waitForElm = (selector) => {
+export const waitForElm = (selector: string): Promise<HTMLElement> => {
   return new Promise((resolve) => {
     if (document.querySelector(selector)) {
-      return resolve(document.querySelector(selector));
+      return resolve(document.querySelector<HTMLElement>(selector));
     }
 
     const observer = new MutationObserver(() => {
       if (document.querySelector(selector)) {
-        resolve(document.querySelector(selector));
+        resolve(document.querySelector<HTMLElement>(selector));
         observer.disconnect();
       }
     });
@@ -31,7 +29,10 @@ export const waitForElm = (selector) => {
   });
 };
 
-export const constructTheme = (palette, components) =>
+export const constructTheme = (
+  palette: Theme["palette"],
+  components: Theme["components"]
+) =>
   createTheme({
     palette,
     typography: {
@@ -40,15 +41,26 @@ export const constructTheme = (palette, components) =>
     components,
   });
 
-export const constructBackgroundStyleText = (backgroundList) =>
+export const constructBackgroundStyleText = (
+  backgroundList: Theme["background"]
+) =>
   `linear-gradient(180deg, ${backgroundList
     .map((entry) => `${entry.color} ${entry.percent}%`)
     .join(", ")}) fixed ${backgroundList[0].color}`;
 
-export const getEmailLink = ({ displayName, email }) =>
+export const getEmailLink = ({
+  displayName,
+  email,
+}: {
+  displayName: string;
+  email: string;
+}) =>
   `mailto:dgude31@outlook.com?subject=Gude%20Foods%20Authirization&body=Hello%2C%0D%0A%0D%0AI%20would%20like%20to%20have%20access%20to%20the%20Gude%20Foods%20website%20functionality%2C%20but%20the%20request%20button%20did%20not%20work.%20My%20name%20is%2C%20${displayName}%2C%20and%20my%20email%20is%2C%20${email}.%0D%0A%0D%0AThhank%20you!`;
 
-export const findLongestEntry = (item) => {
+type Item = { [key: string]: Item } | string;
+export const findLongestEntry = (
+  item: Item
+): { length: number; path: string } => {
   switch (typeof item) {
     case "object":
       const obj = { ...item };
@@ -74,13 +86,13 @@ export const findLongestEntry = (item) => {
   }
 };
 
-export const parseRecipeData = (recipeData, sourceUrl) => {
+export const parseRecipeData = (recipeData: any, sourceUrl: string) => {
   const {
     name = "",
     description: givenDescription = "",
     recipeYield: yieldText = "",
     recipeIngredient: ingredientText = "",
-    recipeInstructions: instructionsData = [],
+    recipeInstructions: instructionsData = ["Step 1"],
   } = recipeData;
   const notes = `${sourceUrl}\n\n${ingredientText.join(`\n`)}`;
   const description = `${givenDescription}${yieldText && `- ${yieldText}`}`;
@@ -89,7 +101,7 @@ export const parseRecipeData = (recipeData, sourceUrl) => {
 
   if (typeof instructionsData === "string") {
     instructions = instructionsData.split(". ");
-  } else {
+  } else if (Array.isArray(instructionsData)) {
     const parseSteps = (step) => {
       const type = step["@type"];
       if (type === "HowToStep") {
@@ -115,7 +127,7 @@ export const parseRecipeData = (recipeData, sourceUrl) => {
   return recipe;
 };
 
-export async function fetchRecipeFromUrl(externalUrl) {
+export async function fetchRecipeFromUrl(externalUrl: string): Promise<Recipe> {
   const response = await fetch(
     `/api/fetch-external-recipe?externalUrl=${encodeURIComponent(externalUrl)}`
   );
@@ -131,14 +143,14 @@ export async function fetchRecipeFromUrl(externalUrl) {
   return recipe;
 }
 
-export const constructShareRecipePath = (shareId, name) => {
+export const constructShareRecipePath = (shareId: string, name: string) => {
   const encodedName = encodeURIComponent(name);
 
   const path = `share/${shareId}?name=${encodedName}`;
   return path;
 };
 
-export const constructShareRecipeLink = (shareId, name) => {
+export const constructShareRecipeLink = (shareId: string, name: string) => {
   const urlBase = window.location.origin;
 
   const path = constructShareRecipePath(shareId, name);
@@ -147,59 +159,10 @@ export const constructShareRecipeLink = (shareId, name) => {
   return link;
 };
 
-export const shareRecipe = async (
-  recipe,
-  glossary,
-  user,
-  recipeId,
-  cookbookPath,
-  addAlert
-) => {
-  const shareId = createKey("shared");
-
-  const recipeData = transformRecipeForExport(recipe, glossary);
-  const userId = user.uid;
-  const shareDate = Date.now();
-
-  createSharedRecipe(
-    shareId,
-    {
-      recipeData,
-      info: { userId, recipeId, shareDate, lastViewed: 0 },
-    },
-    `${cookbookPath}/${recipeId}`,
-    addAlert
-  );
-};
-
 export const getHasLoggedInBefore = () => {
   Boolean(localStorage.getItem(hasLoggedInBeforeKey));
 };
 
 export const setHasLoggedInBefore = () => {
-  localStorage.setItem(hasLoggedInBeforeKey, true);
+  localStorage.setItem(hasLoggedInBeforeKey, "true");
 };
-
-export const constructTextFromShoppingMap = (
-  unchecked,
-  { glossary, cookbook, basicFoodTagOrder }
-) =>
-  (basicFoodTagOrder || [])
-    .concat(UNKNOWN_TAG)
-    .filter((tagId) => unchecked.hasOwnProperty(tagId))
-    .map((tagId) =>
-      Object.entries(unchecked[tagId]).reduce(
-        (fromFood, [foodId, { list = {}, collatedAmount }]) =>
-          `${fromFood}${glossary.basicFoods[foodId]}- ${
-            collatedAmount ||
-            Object.entries(list)
-              .map(
-                ([recipeId, recipeAmount]) =>
-                  `[${recipeAmount}: ${cookbook[recipeId].name}]`
-              )
-              .join(" & ")
-          }\n`,
-        ""
-      )
-    )
-    .join("");

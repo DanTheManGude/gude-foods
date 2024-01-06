@@ -1,3 +1,4 @@
+import React from "react";
 import {
   getAuth,
   signInWithPopup,
@@ -6,9 +7,10 @@ import {
 } from "firebase/auth";
 import Typography from "@mui/material/Typography";
 
+import { AddAlert } from "../types";
 import { setHasLoggedInBefore } from "./utility";
 
-export const signInGoogle = (addAlert) => {
+export const signInGoogle = (addAlert: AddAlert) => {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({
@@ -30,17 +32,24 @@ export const signInGoogle = (addAlert) => {
     });
 };
 
-export const signOutGoogle = (addAlert) => {
+export const signOutGoogle = (addAlert: AddAlert) => {
   const auth = getAuth();
-  const userId = auth.currentUser.uid;
+
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    console.log("no user currently logged in");
+    return;
+  }
+
   signOut(auth)
     .then(() => {
-      console.log(`logout ${userId}`);
+      console.log(`logout ${currentUser.uid}`);
     })
-    .catch((error) => {
-      const { name, code } = error;
+    .catch((error: Error) => {
+      const { name, message } = error;
       addAlert({
-        message: <Typography>{code}</Typography>,
+        message: <Typography>{message}</Typography>,
         title: <Typography>{name}</Typography>,
         alertProps: { severity: "error" },
       });
