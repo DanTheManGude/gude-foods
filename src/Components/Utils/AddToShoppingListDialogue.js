@@ -60,6 +60,12 @@ function AddToShoppingListDialogue(props) {
     }
   }, [cookbook, recipeId]);
 
+  const handleClose = () => {
+    setCount(1);
+
+    onClose();
+  };
+
   const handleAdd = () => {
     addRecipeToShoppingList(
       recipeId,
@@ -69,7 +75,7 @@ function AddToShoppingListDialogue(props) {
       dataPaths,
       addAlert
     );
-    onClose();
+    handleClose();
   };
 
   return (
@@ -107,7 +113,7 @@ function AddToShoppingListDialogue(props) {
               <AddIcon />
             </Button>
           </ButtonGroup>
-          <Button color="secondary" onClick={onClose} variant="contained">
+          <Button color="secondary" onClick={handleClose} variant="contained">
             <Typography>Cancel</Typography>
           </Button>
           <Button color="primary" onClick={handleAdd} variant="contained">
