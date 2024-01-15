@@ -248,7 +248,8 @@ function Settings(props) {
   };
 
   const renderNotificationCard = () => {
-    const notificationGranted = Notification.permission === "granted";
+    const notificationGranted =
+      Notification && Notification.permission === "granted";
     return (
       <Box sx={{ width: "95%" }}>
         <Card variant="outlined">
