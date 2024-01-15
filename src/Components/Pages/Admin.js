@@ -53,12 +53,14 @@ function Settings(props) {
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         addAlert({
-          message: "Notification permission granted.",
+          message: <Typography>Notification permission granted.</Typography>,
           alertProps: { severity: "success" },
         });
       } else {
         addAlert({
-          message: "Notification permission not granted.",
+          message: (
+            <Typography>Notification permission not granted.</Typography>
+          ),
           alertProps: { severity: "error" },
         });
       }
@@ -72,8 +74,11 @@ function Settings(props) {
 
     if (!token) {
       addAlert({
-        message:
-          "No registration token available. Request permission to generate one.",
+        message: (
+          <Typography>
+            No registration token available. Request permission to generate one.
+          </Typography>
+        ),
         alertProps: { severity: "error" },
       });
       return;
