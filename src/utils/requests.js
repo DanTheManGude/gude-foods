@@ -636,27 +636,29 @@ export const sendAuthorizationRequest = (user, addAlert) => {
   const { displayName, uid } = user;
 
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
-  const ref = db.ref(`fcmToken`);
-
   try {
-    ref.once("value", (data) => {
-      if (data.exists()) {
-        fcmToken = data.val();
-        sendAuthorizationNotification(user, fcmToken, () => {
-          addAlert(
-            {
-              message: (
-                <Typography>Succesfully sent authorization request.</Typography>
-              ),
-              alertProps: { severity: "success" },
-            },
-            5000
-          );
-        });
-      } else {
-        throw Error("No FCM Token");
-      }
-    });
+    getDatabase()
+      .ref(`fcmToken`)
+      .once("value", (data) => {
+        if (data.exists()) {
+          const fcmToken = data.val();
+          sendAuthorizationNotification(user, fcmToken, () => {
+            addAlert(
+              {
+                message: (
+                  <Typography>
+                    Succesfully sent authorization request.
+                  </Typography>
+                ),
+                alertProps: { severity: "success" },
+              },
+              5000
+            );
+          });
+        } else {
+          throw Error("No FCM Token");
+        }
+      });
   } catch (error) {
     console.error(error);
     addAlert({

@@ -4,8 +4,7 @@ import {
   longestEntryPathDelimiter,
   hasLoggedInBeforeKey,
 } from "../constants";
-import { AddAlert, Recipe, Theme } from "../types";
-import { User } from "firebase/auth";
+import { Recipe, Theme } from "../types";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
