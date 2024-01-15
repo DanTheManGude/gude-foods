@@ -1,4 +1,4 @@
-import { getDatabase, ref, child, get, push, update } from "firebase/database";
+import { getDatabase, ref, child, push, update } from "firebase/database";
 
 import Typography from "@mui/material/Typography";
 
