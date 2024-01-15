@@ -5,6 +5,7 @@ import {
   hasLoggedInBeforeKey,
 } from "../constants";
 import { Recipe, Theme } from "../types";
+import { Notification } from "firebase-admin/lib/messaging/messaging-api";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -158,19 +159,14 @@ export const setHasLoggedInBefore = () => {
   localStorage.setItem(hasLoggedInBeforeKey, "true");
 };
 
-export const sendAuthorizationNotification = async (
-  displayName: any,
+export const sendNotification = async (
+  notification: Notification,
   onSuccess: Function
 ) => {
   try {
-    fetch(`/api/new-user-request`, {
+    fetch(`/api/send-notification`, {
       method: "POST",
-      body: JSON.stringify({
-        notification: {
-          body: `${displayName} requested access.`,
-          title: "New user!",
-        },
-      }),
+      body: JSON.stringify({ notification }),
     }).then((response) => {
       if (response.ok) {
         onSuccess();
