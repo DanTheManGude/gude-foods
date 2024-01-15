@@ -1,15 +1,6 @@
 import admin from "firebase-admin";
 
-export default async function (request, response) {
-  const { fcmToken, displayName } = JSON.parse(request.body);
-
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN)),
-      databaseURL: "https://gude-foods.firebaseio.com",
-    });
-  }
-
+async function calculateBadgeCount() {
   let badgeCount = 1;
 
   await admin
@@ -20,6 +11,21 @@ export default async function (request, response) {
         badgeCount = Object.keys(data.val()).length.toString();
       }
     });
+
+  return badgeCount;
+}
+
+export default async function (request, response) {
+  const { fcmToken, displayName } = JSON.parse(request.body);
+
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN)),
+      databaseURL: "https://gude-foods.firebaseio.com",
+    });
+  }
+
+  const badgeCount = await calculateBadgeCount();
 
   try {
     const messageResult = await admin.messaging().send({
