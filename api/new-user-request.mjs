@@ -17,7 +17,7 @@ export default async function (request, response) {
     .ref(`requestedUsers`)
     .once("value", (data) => {
       if (data.exists()) {
-        badgeCount = Object.keys(data.val()).length;
+        badgeCount = Object.keys(data.val()).length.toString();
       }
     });
 
