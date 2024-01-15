@@ -1,16 +1,7 @@
 import admin from "firebase-admin";
 
-export default async function (request, response) {
-  const { fcmToken, displayName } = JSON.parse(request.body);
-
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN)),
-      databaseURL: "https://gude-foods.firebaseio.com",
-    });
-  }
-
-  let badgeCount = 1;
+async function calculateBadgeCount() {
+  let badgeCount = "1";
 
   await admin
     .database()
@@ -21,13 +12,42 @@ export default async function (request, response) {
       }
     });
 
+  return badgeCount;
+}
+
+export default async function (request, response) {
+  const { notification } = JSON.parse(request.body);
+
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN)),
+      databaseURL: "https://gude-foods.firebaseio.com",
+    });
+  }
+
+  const badgeCount = await calculateBadgeCount();
+
+  let fcmToken;
+
+  await admin
+    .database()
+    .ref(`fcmToken`)
+    .once("value", (data) => {
+      if (data.exists()) {
+        fcmToken = data.val();
+      }
+    });
+
+  if (!fcmToken) {
+    console.log("No fcmToken");
+    response.status(500).send();
+    return;
+  }
+
   try {
     const messageResult = await admin.messaging().send({
       token: fcmToken,
-      notification: {
-        body: `${displayName} requested access.`,
-        title: "New user!",
-      },
+      notification,
       data: { badgeCount },
     });
 

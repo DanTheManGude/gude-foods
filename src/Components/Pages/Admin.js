@@ -275,7 +275,11 @@ function Settings(props) {
               variant="contained"
               onClick={handleGetAndUpdateFcmToken}
             >
-              <Typography>Get & update FCM Token</Typography>
+              <Typography>
+                <span>Get & update</span>
+                <br />
+                <span>FCM Token</span>
+              </Typography>
             </Button>
           </CardActions>
         </Card>

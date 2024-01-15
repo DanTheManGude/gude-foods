@@ -184,7 +184,12 @@ function PagesContainer(props) {
               />
             }
           />
-          <Route path="recipe/:recipeId" element={<Recipe />} />
+          <Route
+            path="recipe/:recipeId"
+            element={
+              <Recipe isAdmin={isAdmin} userDisplayName={user.displayName} />
+            }
+          />
           <Route path="cooking/:recipeId" element={<Cooking />} />
           <Route path="shoppingList" element={<ShoppingList />} />
           <Route
@@ -237,7 +242,13 @@ function PagesContainer(props) {
           {externalRecipe && (
             <Route
               path="externalRecipe"
-              element={<ExternalRecipe givenRecipe={externalRecipe} />}
+              element={
+                <ExternalRecipe
+                  givenRecipe={externalRecipe}
+                  isAdmin={isAdmin}
+                  userDisplayName={user.displayName}
+                />
+              }
             />
           )}
           <Route

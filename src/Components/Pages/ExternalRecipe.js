@@ -24,7 +24,7 @@ import {
 } from "../Contexts";
 
 function ExternalRecipe(props) {
-  const { givenRecipe } = props;
+  const { givenRecipe, isAdmin, userDisplayName } = props;
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const { cookbookPath, recipeOrderPath, shoppingListPath, menuPath } =
@@ -60,7 +60,9 @@ function ExternalRecipe(props) {
       { recipeOrder, glossary, shoppingList },
       addAlert,
       () => {},
-      navigate
+      navigate,
+      undefined,
+      { isAdmin, displayName: userDisplayName }
     );
   };
 

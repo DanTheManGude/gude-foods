@@ -1,10 +1,10 @@
-import { getDatabase, ref, child, get, push, update } from "firebase/database";
+import { getDatabase, ref, child, push, update } from "firebase/database";
 
 import Typography from "@mui/material/Typography";
 
 import { databasePaths } from "../constants";
 import { transformRecipeForExport } from "./dataTransfer";
-import { sendAuthorizationNotification } from "./utility";
+import { sendNotification } from "./utility";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
@@ -533,7 +533,8 @@ export const saveRecipe = (
   addAlert,
   successHandler,
   navigate,
-  maybeOldRecipe
+  maybeOldRecipe,
+  maybeNotificationInfo
 ) => {
   const { name, instructions, ingredients = {}, shareId } = recipe;
   const isCreating = !_recipeId;
@@ -611,6 +612,20 @@ export const saveRecipe = (
         },
         5000
       );
+
+      if (
+        maybeNotificationInfo &&
+        !maybeNotificationInfo.isAdmin &&
+        isCreating
+      ) {
+        sendNotification(
+          {
+            title: "New recipe!",
+            body: `${maybeNotificationInfo.displayName} created ${name}.`,
+          },
+          () => {}
+        );
+      }
     },
     addAlert
   );
@@ -639,22 +654,23 @@ export const sendAuthorizationRequest = (user, addAlert) => {
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
 
   try {
-    get(child(ref(getDatabase()), `fcmToken`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fcmToken = snapshot.val();
-        sendAuthorizationNotification(user, fcmToken, () => {
-          addAlert(
-            {
-              message: (
-                <Typography>Succesfully sent authorization request.</Typography>
-              ),
-              alertProps: { severity: "success" },
-            },
-            5000
-          );
-        });
+    sendNotification(
+      {
+        title: "New user!",
+        body: `${displayName} requested access.`,
+      },
+      () => {
+        addAlert(
+          {
+            message: (
+              <Typography>Succesfully sent authorization request.</Typography>
+            ),
+            alertProps: { severity: "success" },
+          },
+          5000
+        );
       }
-    });
+    );
   } catch (error) {
     console.error(error);
   }
