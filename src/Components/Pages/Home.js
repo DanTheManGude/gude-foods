@@ -69,13 +69,13 @@ function Home(props) {
 
   const renderRequestedUsersCard = () => {
     if (!requestedUsers) {
-      navigator.clearAppBadge();
+      if (navigator.clearAppBadge) navigator.clearAppBadge();
       return null;
     }
 
     const requestedUsersUids = Object.keys(requestedUsers);
 
-    navigator.setAppBadge(requestedUsersUids.length);
+    if (navigator.setAppBadge) navigator.setAppBadge(requestedUsersUids.length);
 
     return (
       <Box sx={{ width: "95%" }}>
