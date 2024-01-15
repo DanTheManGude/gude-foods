@@ -4,7 +4,8 @@ import {
   longestEntryPathDelimiter,
   hasLoggedInBeforeKey,
 } from "../constants";
-import { Recipe, Theme } from "../types";
+import { AddAlert, Recipe, Theme } from "../types";
+import { User } from "firebase/auth";
 
 export const isDevelopment = () =>
   !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -47,15 +48,6 @@ export const constructBackgroundStyleText = (
   `linear-gradient(180deg, ${backgroundList
     .map((entry) => `${entry.color} ${entry.percent}%`)
     .join(", ")}) fixed ${backgroundList[0].color}`;
-
-export const getEmailLink = ({
-  displayName,
-  email,
-}: {
-  displayName: string;
-  email: string;
-}) =>
-  `mailto:dgude31@outlook.com?subject=Gude%20Foods%20Authirization&body=Hello%2C%0D%0A%0D%0AI%20would%20like%20to%20have%20access%20to%20the%20Gude%20Foods%20website%20functionality%2C%20but%20the%20request%20button%20did%20not%20work.%20My%20name%20is%2C%20${displayName}%2C%20and%20my%20email%20is%2C%20${email}.%0D%0A%0D%0AThhank%20you!`;
 
 type Item = { [key: string]: Item } | string;
 export const findLongestEntry = (
@@ -165,4 +157,41 @@ export const getHasLoggedInBefore = () => {
 
 export const setHasLoggedInBefore = () => {
   localStorage.setItem(hasLoggedInBeforeKey, "true");
+};
+
+export const makeHeaders = async (user: any) => {
+  const appCheckTokenResponse =
+    await user.auth.appCheckServiceProvider.instances
+      .get("[DEFAULT]")
+      .getToken(false)
+      .catch((error) => {
+        throw new Error(error.toString());
+      });
+
+  const authorization = btoa(`${user.uid}:${user.accessToken}`);
+
+  return {
+    Authorization: authorization,
+    "X-Firebase-AppCheck": appCheckTokenResponse.token,
+  };
+};
+
+export const sendAuthorizationNotification = async (
+  user: any,
+  fcmToken: string,
+  onSuccess: Function
+) => {
+  const headers = await makeHeaders(user);
+
+  fetch(`/api/new-user-request`, {
+    headers,
+    method: "POST",
+    body: JSON.stringify({ fcmToken, displayName: user.displayName }),
+  }).then((response) => {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+
+    onSuccess();
+  });
 };

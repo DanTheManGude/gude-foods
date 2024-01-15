@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 
 import { emailConfig } from "../constants";
 import { AddAlert, Recipe, ReportErrorValues } from "../types";
+import { makeHeaders } from "./utility";
 
 export const generateRecipe = async (
   params: { [key: string]: string | number | boolean },
@@ -14,29 +15,21 @@ export const generateRecipe = async (
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join("&");
 
-  const appCheckTokenResponse =
-    await user.auth.appCheckServiceProvider.instances
-      .get("[DEFAULT]")
-      .getToken(false)
-      .catch(onFailure);
+  try {
+    const headers = await makeHeaders(user);
 
-  const authorization = btoa(`${user.uid}:${user.accessToken}`);
+    fetch(`/api/generate-recipe?${searchParamsText}`, { headers })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
 
-  fetch(`/api/generate-recipe?${searchParamsText}`, {
-    headers: {
-      Authorization: authorization,
-      "X-Firebase-AppCheck": appCheckTokenResponse.token,
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-
-      return response.text();
-    })
-    .then(onSuccess)
-    .catch(onFailure);
+        return response.text();
+      })
+      .then(onSuccess);
+  } catch (error) {
+    onFailure(error);
+  }
 };
 
 export const parseResponse = (textResponse: string) => {
