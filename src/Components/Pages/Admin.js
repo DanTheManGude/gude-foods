@@ -262,7 +262,7 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
-              color="secondary"
+              color="primary"
               variant="outlined"
               onClick={handleAskNotificationPermission}
               disabled={notificationGranted}
@@ -271,7 +271,7 @@ function Settings(props) {
             </Button>
             <Button
               color="secondary"
-              variant="outlined"
+              variant="contained"
               onClick={handleGetAndUpdateFcmToken}
             >
               <Typography>Get & update FCM Token</Typography>
