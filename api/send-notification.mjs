@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 
 async function calculateBadgeCount() {
-  let badgeCount = 1;
+  let badgeCount = "1";
 
   await admin
     .database()
