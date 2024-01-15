@@ -158,33 +158,13 @@ export const setHasLoggedInBefore = () => {
   localStorage.setItem(hasLoggedInBeforeKey, "true");
 };
 
-export const makeHeaders = async (user: any) => {
-  const appCheckTokenResponse =
-    await user.auth.appCheckServiceProvider.instances
-      .get("[DEFAULT]")
-      .getToken(false)
-      .catch((error) => {
-        throw new Error(error.toString());
-      });
-
-  const authorization = btoa(`${user.uid}:${user.accessToken}`);
-
-  return {
-    Authorization: authorization,
-    "X-Firebase-AppCheck": appCheckTokenResponse.token,
-  };
-};
-
 export const sendAuthorizationNotification = async (
   user: any,
   fcmToken: string,
   onSuccess: Function
 ) => {
-  const headers = await makeHeaders(user);
-
   try {
     fetch(`/api/new-user-request`, {
-      headers,
       method: "POST",
       body: JSON.stringify({ fcmToken, displayName: user.displayName }),
     }).then((response) => {
