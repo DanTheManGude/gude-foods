@@ -28,7 +28,9 @@ import {
   DataPathsContext,
 } from "../Contexts";
 
-function Recipe() {
+function Recipe(props) {
+  const { isAdmin, userDisplayName } = props;
+
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const {
@@ -171,7 +173,8 @@ function Recipe() {
       addAlert,
       saveSuccessHandler,
       navigate,
-      originalRecipe
+      originalRecipe,
+      { isAdmin, displayName: userDisplayName }
     );
   };
 

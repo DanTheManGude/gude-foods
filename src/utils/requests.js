@@ -534,7 +534,7 @@ export const saveRecipe = (
   successHandler,
   navigate,
   maybeOldRecipe,
-  { isAdmin, displayName }
+  maybeNotificationInfo
 ) => {
   const { name, instructions, ingredients = {}, shareId } = recipe;
   const isCreating = !_recipeId;
@@ -612,11 +612,16 @@ export const saveRecipe = (
         },
         5000
       );
-      if (!isAdmin && isCreating) {
+
+      if (
+        maybeNotificationInfo &&
+        !maybeNotificationInfo.isAdmin &&
+        isCreating
+      ) {
         sendNotification(
           {
             title: "New recipe!",
-            body: `${displayName} created ${name}.`,
+            body: `${maybeNotificationInfo.displayName} created ${name}.`,
           },
           () => {}
         );
