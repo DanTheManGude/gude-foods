@@ -182,15 +182,17 @@ export const sendAuthorizationNotification = async (
 ) => {
   const headers = await makeHeaders(user);
 
-  fetch(`/api/new-user-request`, {
-    headers,
-    method: "POST",
-    body: JSON.stringify({ fcmToken, displayName: user.displayName }),
-  }).then((response) => {
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
-
-    onSuccess();
-  });
+  try {
+    fetch(`/api/new-user-request`, {
+      headers,
+      method: "POST",
+      body: JSON.stringify({ fcmToken, displayName: user.displayName }),
+    }).then((response) => {
+      if (response.ok) {
+        onSuccess();
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };

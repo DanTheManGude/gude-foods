@@ -1,4 +1,5 @@
-import { getDatabase, ref, child, push, update } from "firebase/database";
+import { getDatabase, ref, child, get, push, update } from "firebase/database";
+
 import Typography from "@mui/material/Typography";
 
 import { databasePaths } from "../constants";
@@ -636,39 +637,26 @@ export const sendAuthorizationRequest = (user, addAlert) => {
   const { displayName, uid } = user;
 
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
+
   try {
-    getDatabase()
-      .ref(`fcmToken`)
-      .once("value", (data) => {
-        if (data.exists()) {
-          const fcmToken = data.val();
-          sendAuthorizationNotification(user, fcmToken, () => {
-            addAlert(
-              {
-                message: (
-                  <Typography>
-                    Succesfully sent authorization request.
-                  </Typography>
-                ),
-                alertProps: { severity: "success" },
-              },
-              5000
-            );
-          });
-        } else {
-          throw Error("No FCM Token");
-        }
-      });
+    get(child(ref(getDatabase()), `fcmToken`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fcmToken = snapshot.val();
+        sendAuthorizationNotification(user, fcmToken, () => {
+          addAlert(
+            {
+              message: (
+                <Typography>Succesfully sent authorization request.</Typography>
+              ),
+              alertProps: { severity: "success" },
+            },
+            5000
+          );
+        });
+      }
+    });
   } catch (error) {
     console.error(error);
-    addAlert({
-      message: (
-        <Typography>
-          Thank you! Check back shortly for the request to be approved.
-        </Typography>
-      ),
-      alertProps: { severity: "info" },
-    });
   }
 };
 

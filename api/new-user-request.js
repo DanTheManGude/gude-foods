@@ -16,7 +16,7 @@ async function verifyUser(uid, accessToken, appCheckToken) {
 
     const value = await response.json();
 
-    return value;
+    return value !== undefined;
   } catch (error) {
     return false;
   }
