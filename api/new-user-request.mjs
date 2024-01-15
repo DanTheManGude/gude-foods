@@ -1,17 +1,15 @@
 import admin from "firebase-admin";
 
 async function sendNotification(fcmToken, displayName) {
-  const serviceAccount = process.env.FIREBASE_ADMIN || "{}";
-
   if (!admin.apps.length) {
     admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(serviceAccount)),
+      credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN)),
       databaseURL: "https://gude-foods.firebaseio.com",
     });
   }
 
   try {
-    const messageResult = await admin.messaging.send({
+    const messageResult = await admin.messaging().send({
       token: fcmToken,
       notification: {
         body: `${displayName} requested access.`,
@@ -28,7 +26,7 @@ async function sendNotification(fcmToken, displayName) {
 }
 
 export default async function (request, response) {
-  const { fcmToken, displayName } = await request.body;
+  const { fcmToken, displayName } = JSON.parse(request.body);
 
   const success = await sendNotification(fcmToken, displayName);
 
