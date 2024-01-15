@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { getApp } from "firebase/app";
+import { getMessaging, getToken } from "firebase/messaging";
 
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
@@ -15,10 +18,14 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { longestEntryPathDelimiter } from "../../constants";
 import { findLongestEntry } from "../../utils/utility";
+import { updateFcmToken } from "../../utils/requests";
+
+import { AddAlertContext } from "../Contexts";
 
 function Settings(props) {
   const { accounts, userList } = props;
 
+  const addAlert = useContext(AddAlertContext);
   let navigate = useNavigate();
   const theme = useTheme();
 
@@ -40,6 +47,45 @@ function Settings(props) {
       path: parts.join("/"),
       value,
     });
+  };
+
+  const handleAskNotificationPermission = () => {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        addAlert({
+          message: <Typography>Notification permission granted.</Typography>,
+          alertProps: { severity: "success" },
+        });
+      } else {
+        addAlert({
+          message: (
+            <Typography>Notification permission not granted.</Typography>
+          ),
+          alertProps: { severity: "error" },
+        });
+      }
+    });
+  };
+
+  const handleGetAndUpdateFcmToken = async () => {
+    const token = await getToken(getMessaging(getApp()), {
+      vapidKey: process.env.REACT_APP_VAPID_KEY,
+    });
+
+    if (!token) {
+      addAlert({
+        message: (
+          <Typography>
+            No registration token available. Request permission to generate one.
+          </Typography>
+        ),
+        alertProps: { severity: "error" },
+      });
+      return;
+    }
+    console.log("fcm token", token);
+
+    updateFcmToken(token, addAlert);
   };
 
   const renderUserManagmentCard = () => (
@@ -201,6 +247,42 @@ function Settings(props) {
     );
   };
 
+  const renderNotificationCard = () => {
+    const notificationGranted =
+      Notification && Notification.permission === "granted";
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Notifications
+            </Typography>
+            {notificationGranted && (
+              <Typography>Notification already granted</Typography>
+            )}
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="primary"
+              variant="outlined"
+              onClick={handleAskNotificationPermission}
+              disabled={notificationGranted}
+            >
+              <Typography>Ask notification permission</Typography>
+            </Button>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={handleGetAndUpdateFcmToken}
+            >
+              <Typography>Get & update FCM Token</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
+
   return (
     <div>
       <Typography
@@ -217,6 +299,7 @@ function Settings(props) {
         {renderUserManagmentCard()}
         {renderShareRecipeCard()}
         {renderLongestEntryCard()}
+        {renderNotificationCard()}
         {renderAppCard()}
       </Stack>
     </div>

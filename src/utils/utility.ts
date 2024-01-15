@@ -48,15 +48,6 @@ export const constructBackgroundStyleText = (
     .map((entry) => `${entry.color} ${entry.percent}%`)
     .join(", ")}) fixed ${backgroundList[0].color}`;
 
-export const getEmailLink = ({
-  displayName,
-  email,
-}: {
-  displayName: string;
-  email: string;
-}) =>
-  `mailto:dgude31@outlook.com?subject=Gude%20Foods%20Authirization&body=Hello%2C%0D%0A%0D%0AI%20would%20like%20to%20have%20access%20to%20the%20Gude%20Foods%20website%20functionality%2C%20but%20the%20request%20button%20did%20not%20work.%20My%20name%20is%2C%20${displayName}%2C%20and%20my%20email%20is%2C%20${email}.%0D%0A%0D%0AThhank%20you!`;
-
 type Item = { [key: string]: Item } | string;
 export const findLongestEntry = (
   item: Item
@@ -165,4 +156,23 @@ export const getHasLoggedInBefore = () => {
 
 export const setHasLoggedInBefore = () => {
   localStorage.setItem(hasLoggedInBeforeKey, "true");
+};
+
+export const sendAuthorizationNotification = async (
+  user: any,
+  fcmToken: string,
+  onSuccess: Function
+) => {
+  try {
+    fetch(`/api/new-user-request`, {
+      method: "POST",
+      body: JSON.stringify({ fcmToken, displayName: user.displayName }),
+    }).then((response) => {
+      if (response.ok) {
+        onSuccess();
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };

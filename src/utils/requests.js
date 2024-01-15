@@ -1,10 +1,10 @@
-import { getDatabase, ref, child, push, update } from "firebase/database";
-import emailjs from "@emailjs/browser";
+import { getDatabase, ref, child, get, push, update } from "firebase/database";
+
 import Typography from "@mui/material/Typography";
 
-import { databasePaths, emailConfig } from "../constants";
-import { getEmailLink } from "./utility";
+import { databasePaths } from "../constants";
 import { transformRecipeForExport } from "./dataTransfer";
+import { sendAuthorizationNotification } from "./utility";
 
 export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
   update(ref(getDatabase()), updates)
@@ -633,50 +633,31 @@ export const uploadColors = (colorsPath, colorKey, addAlert) => {
   updateRequest({ [colorsPath]: colorKey }, addAlert, addAlert);
 };
 
-const sendAuthorizationEmail = (userInfo, addAlert) => {
-  const { serviceId, authorizationEmailTemplateId, userId } = emailConfig;
-
-  emailjs.send(serviceId, authorizationEmailTemplateId, userInfo, userId).then(
-    (response) => {
-      addAlert(
-        {
-          message: (
-            <Typography>
-              Succesfully sent authorization request. You should recieve a
-              confirmation email shortly (be sure to check your junk folder).
-            </Typography>
-          ),
-          alertProps: { severity: "success" },
-        },
-        5000
-      );
-    },
-    (error) => {
-      addAlert(
-        {
-          message: (
-            <Typography>
-              An error occured when sending authorization request. You can reach
-              out to&nbsp;
-              <a href={getEmailLink(userInfo)}>dgude31@outlook.com</a>
-              &nbsp;directly.
-            </Typography>
-          ),
-          alertProps: { severity: "error" },
-        },
-        7000
-      );
-    }
-  );
-};
-
 export const sendAuthorizationRequest = (user, addAlert) => {
-  const { displayName, email, uid } = user;
-  const userInfo = { displayName, email };
+  const { displayName, uid } = user;
 
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
 
-  sendAuthorizationEmail(userInfo, addAlert);
+  try {
+    get(child(ref(getDatabase()), `fcmToken`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fcmToken = snapshot.val();
+        sendAuthorizationNotification(user, fcmToken, () => {
+          addAlert(
+            {
+              message: (
+                <Typography>Succesfully sent authorization request.</Typography>
+              ),
+              alertProps: { severity: "success" },
+            },
+            5000
+          );
+        });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const removeUserFromRequestedUsers = (uid) => {
@@ -771,5 +752,23 @@ export const shareRecipe = async (
     },
     `${cookbookPath}/${recipeId}`,
     addAlert
+  );
+};
+
+export const updateFcmToken = (fcmToken, addAlert) => {
+  updateRequest(
+    { fcmToken },
+    () => {
+      addAlert({
+        message: <Typography>Saved FCM token</Typography>,
+        alertProps: { severity: "success" },
+      });
+    },
+    () => {
+      addAlert({
+        message: <Typography>Error trying to save FCM token</Typography>,
+        alertProps: { severity: "error" },
+      });
+    }
   );
 };

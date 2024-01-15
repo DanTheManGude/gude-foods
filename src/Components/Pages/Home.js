@@ -69,8 +69,13 @@ function Home(props) {
 
   const renderRequestedUsersCard = () => {
     if (!requestedUsers) {
+      if (navigator.clearAppBadge) navigator.clearAppBadge();
       return null;
     }
+
+    const requestedUsersUids = Object.keys(requestedUsers);
+
+    if (navigator.setAppBadge) navigator.setAppBadge(requestedUsersUids.length);
 
     return (
       <Box sx={{ width: "95%" }}>
@@ -81,7 +86,7 @@ function Home(props) {
             </Typography>
             <Typography>There are users who requested access.</Typography>
             <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="left">
-              {Object.keys(requestedUsers).map((uid) => (
+              {requestedUsersUids.map((uid) => (
                 <Stack
                   direction="row"
                   alignItems="flex-end"
