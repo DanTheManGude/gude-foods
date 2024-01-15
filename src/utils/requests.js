@@ -773,3 +773,21 @@ export const shareRecipe = async (
     addAlert
   );
 };
+
+export const updateFcmToken = (fcmToken, addAlert) => {
+  updateRequest(
+    { fcmToken },
+    () => {
+      addAlert({
+        message: <Typography>Saved FCM token</Typography>,
+        alertProps: { severity: "success" },
+      });
+    },
+    () => {
+      addAlert({
+        message: <Typography>Error trying to save FCM token</Typography>,
+        alertProps: { severity: "error" },
+      });
+    }
+  );
+};

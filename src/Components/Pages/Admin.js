@@ -1,6 +1,9 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { getApp } from "firebase/app";
+import { getMessaging, getToken } from "firebase/messaging";
+
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -15,6 +18,8 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { longestEntryPathDelimiter } from "../../constants";
 import { findLongestEntry } from "../../utils/utility";
+import { updateFcmToken } from "../../utils/requests";
+
 import { AddAlertContext } from "../Contexts";
 
 function Settings(props) {
@@ -58,6 +63,24 @@ function Settings(props) {
         });
       }
     });
+  };
+
+  const handleGetAndUpdateFcmToken = async () => {
+    const token = await getToken(getMessaging(getApp()), {
+      vapidKey: process.env.REACT_APP_VAPID_KEY,
+    });
+
+    if (!token) {
+      addAlert({
+        message:
+          "No registration token available. Request permission to generate one.",
+        alertProps: { severity: "error" },
+      });
+      return;
+    }
+    console.log("fcm token", token);
+
+    updateFcmToken(token, addAlert);
   };
 
   const renderUserManagmentCard = () => (
@@ -244,7 +267,7 @@ function Settings(props) {
             <Button
               color="secondary"
               variant="outlined"
-              onClick={() => navigate("/sharedRecipes")}
+              onClick={handleGetAndUpdateFcmToken}
             >
               <Typography>Get & update FCM Token</Typography>
             </Button>
