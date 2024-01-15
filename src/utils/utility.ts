@@ -159,14 +159,18 @@ export const setHasLoggedInBefore = () => {
 };
 
 export const sendAuthorizationNotification = async (
-  user: any,
-  fcmToken: string,
+  displayName: any,
   onSuccess: Function
 ) => {
   try {
     fetch(`/api/new-user-request`, {
       method: "POST",
-      body: JSON.stringify({ fcmToken, displayName: user.displayName }),
+      body: JSON.stringify({
+        notification: {
+          body: `${displayName} requested access.`,
+          title: "New user!",
+        },
+      }),
     }).then((response) => {
       if (response.ok) {
         onSuccess();

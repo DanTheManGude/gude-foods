@@ -639,21 +639,16 @@ export const sendAuthorizationRequest = (user, addAlert) => {
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
 
   try {
-    get(child(ref(getDatabase()), `fcmToken`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fcmToken = snapshot.val();
-        sendAuthorizationNotification(user, fcmToken, () => {
-          addAlert(
-            {
-              message: (
-                <Typography>Succesfully sent authorization request.</Typography>
-              ),
-              alertProps: { severity: "success" },
-            },
-            5000
-          );
-        });
-      }
+    sendAuthorizationNotification(user.displayName, () => {
+      addAlert(
+        {
+          message: (
+            <Typography>Succesfully sent authorization request.</Typography>
+          ),
+          alertProps: { severity: "success" },
+        },
+        5000
+      );
     });
   } catch (error) {
     console.error(error);
