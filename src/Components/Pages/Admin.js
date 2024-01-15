@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useTheme } from "@mui/material/styles";
@@ -15,10 +15,12 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { longestEntryPathDelimiter } from "../../constants";
 import { findLongestEntry } from "../../utils/utility";
+import { AddAlertContext } from "../Contexts";
 
 function Settings(props) {
   const { accounts, userList } = props;
 
+  const addAlert = useContext(AddAlertContext);
   let navigate = useNavigate();
   const theme = useTheme();
 
@@ -39,6 +41,22 @@ function Settings(props) {
       displayName,
       path: parts.join("/"),
       value,
+    });
+  };
+
+  const handleAskNotificationPermission = () => {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        addAlert({
+          message: "Notification permission granted.",
+          alertProps: { severity: "success" },
+        });
+      } else {
+        addAlert({
+          message: "Notification permission not granted.",
+          alertProps: { severity: "error" },
+        });
+      }
     });
   };
 
@@ -201,6 +219,41 @@ function Settings(props) {
     );
   };
 
+  const renderNotificationCard = () => {
+    const notificationGranted = Notification.permission === "granted";
+    return (
+      <Box sx={{ width: "95%" }}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Notifications
+            </Typography>
+            {notificationGranted && (
+              <Typography>Notification already granted</Typography>
+            )}
+          </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={handleAskNotificationPermission}
+              disabled={notificationGranted}
+            >
+              <Typography>Ask notification permission</Typography>
+            </Button>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={() => navigate("/sharedRecipes")}
+            >
+              <Typography>Get & update FCM Token</Typography>
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    );
+  };
+
   return (
     <div>
       <Typography
@@ -217,6 +270,7 @@ function Settings(props) {
         {renderUserManagmentCard()}
         {renderShareRecipeCard()}
         {renderLongestEntryCard()}
+        {renderNotificationCard()}
         {renderAppCard()}
       </Stack>
     </div>
