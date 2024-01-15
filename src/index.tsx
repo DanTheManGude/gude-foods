@@ -11,8 +11,15 @@ import { Noop } from "./types";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import App from "./Components/App";
 
-const firebaseConfig = JSON.parse(process.env.REACT_APP_FIREBASE || "");
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp({
+  apiKey: "AIzaSyAPVomtOQIEG2Gb0YuaSu6gcnv7fK3sPFU",
+  authDomain: "gude-foods.firebaseapp.com",
+  databaseURL: "https://gude-foods.firebaseio.com",
+  projectId: "gude-foods",
+  storageBucket: "gude-foods.appspot.com",
+  messagingSenderId: "274231175123",
+  appId: "1:274231175123:web:229727ace473d98c24b126",
+});
 
 const captchaSiteKey = process.env.REACT_APP_CAPTCHA || "";
 initializeAppCheck(firebaseApp, {
