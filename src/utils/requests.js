@@ -533,7 +533,8 @@ export const saveRecipe = (
   addAlert,
   successHandler,
   navigate,
-  maybeOldRecipe
+  maybeOldRecipe,
+  { isAdmin, displayName }
 ) => {
   const { name, instructions, ingredients = {}, shareId } = recipe;
   const isCreating = !_recipeId;
@@ -611,6 +612,15 @@ export const saveRecipe = (
         },
         5000
       );
+      if (!isAdmin && isCreating) {
+        sendNotification(
+          {
+            title: "New recipe!",
+            body: `${displayName} created ${name}.`,
+          },
+          () => {}
+        );
+      }
     },
     addAlert
   );
