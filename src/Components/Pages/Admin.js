@@ -263,6 +263,7 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
+              sx={{ flex: 1 }}
               color="primary"
               variant="outlined"
               onClick={handleAskNotificationPermission}
@@ -271,6 +272,7 @@ function Settings(props) {
               <Typography>Ask notification permission</Typography>
             </Button>
             <Button
+              sx={{ flex: 1 }}
               color="secondary"
               variant="contained"
               onClick={handleGetAndUpdateFcmToken}
