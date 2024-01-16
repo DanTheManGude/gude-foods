@@ -103,7 +103,7 @@ function Settings(props) {
         <CardActions sx={{ justifyContent: "flex-end" }}>
           <Button
             color="secondary"
-            variant="contained"
+            variant="outlined"
             onClick={() => navigate("/users")}
           >
             <Typography>View all users</Typography>
@@ -161,7 +161,7 @@ function Settings(props) {
         <CardActions sx={{ justifyContent: "flex-end" }}>
           <Button
             color="secondary"
-            variant="contained"
+            variant="outlined"
             onClick={() => navigate("/sharedRecipes")}
           >
             <Typography>View shared recipes</Typography>
@@ -236,7 +236,7 @@ function Settings(props) {
             )}
             <Button
               color="secondary"
-              variant="contained"
+              variant="outlined"
               onClick={handleLongestEntry}
             >
               <Typography>Find longest entry</Typography>
@@ -274,7 +274,7 @@ function Settings(props) {
             <Button
               sx={{ flex: 1 }}
               color="secondary"
-              variant="contained"
+              variant="outlined"
               onClick={handleGetAndUpdateFcmToken}
             >
               <Typography>
