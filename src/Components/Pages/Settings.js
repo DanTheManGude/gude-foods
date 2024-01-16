@@ -114,7 +114,7 @@ function Settings(props) {
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
-              color="primary"
+              color="secondary"
               variant="outlined"
               onClick={enableUsingOffline}
             >
