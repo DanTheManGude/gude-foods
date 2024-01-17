@@ -68,23 +68,23 @@ export type Recipe = {
   shareId?: string;
 };
 
-type ShoppingListEntry = {
+export type ShoppingListEntry = {
   isChecked?: boolean;
   collatedAmount?: string;
   list?: RecipeTagId[];
 };
 
-type Menu = { [key in RecipeId]: number };
-type Glossary = {
+export type Menu = { [key in RecipeId]: number };
+export type Glossary = {
   basicFoodTags: { [key in BasicFoodTagId]: string };
   basicFoods: { [key in BasicFoodId]: string };
   recipeTags: { [key in RecipeTagId]: string };
 };
-type BasicFoodTagOrder = BasicFoodTagId[];
-type ShoppingList = { [key in BasicFoodId]: ShoppingListEntry };
-type Cookbook = { [key in RecipeId]: Recipe };
-type RecipeOrder = RecipeId[];
-type BasicFoodTagAssociation = { [key in BasicFoodId]: BasicFoodTagId };
+export type BasicFoodTagOrder = BasicFoodTagId[];
+export type ShoppingList = { [key in BasicFoodId]: ShoppingListEntry };
+export type Cookbook = { [key in RecipeId]: Recipe };
+export type RecipeOrder = RecipeId[];
+export type BasicFoodTagAssociation = { [key in BasicFoodId]: BasicFoodTagId };
 
 export type Database = {
   menu?: Menu;
