@@ -42,4 +42,16 @@ export type Page =
 export type Recipe = any;
 
 export type Database = any;
-export type DataPaths = any;
+
+export type DatabasePathKey =
+  | "menu"
+  | "glossary"
+  | "basicFoodTagOrder"
+  | "shoppingList"
+  | "cookbook"
+  | "recipeOrder"
+  | "colorKey"
+  | "basicFoodTagAssociation";
+
+export type DataPathKey = `${DatabasePathKey}Path`;
+export type DataPaths = { [key in DataPathKey]: string };

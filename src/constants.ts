@@ -1,5 +1,5 @@
 import { ThemeOptions } from "@mui/material/styles";
-import { AllColors, ColorKey, Page } from "./types";
+import { AllColors, ColorKey, Page, DatabasePathKey } from "./types";
 
 export const emailConfig: {
   serviceId: string;
@@ -126,7 +126,7 @@ export const colorOptions = Object.keys(allColors).map((colorKey) => ({
   name: colorOptionNames[colorKey],
 }));
 
-export const databasePaths = {
+export const databasePaths: { [key in DatabasePathKey]: string } = {
   glossary: "glossary",
   basicFoodTagAssociation: "basicFood-basicFoodTag",
   basicFoodTagOrder: "basicFoodTagOrder",
