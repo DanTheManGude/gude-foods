@@ -3,7 +3,6 @@ import {
   Glossary,
   BasicFoodTagAssociation,
   BasicFoodTagOrder,
-  Database,
   ShoppingMapUnchecked,
   Cookbook,
 } from "../types";

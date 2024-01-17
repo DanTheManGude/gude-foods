@@ -7,7 +7,6 @@ import {
   getCalculateFoodSectionForOptions,
   constructBasicFoodOptions,
 } from "../../utils/foods";
-import { unknownSectionName } from "../../constants";
 import { DatabaseContext } from "../Contexts";
 import CreateBasicFoodDialog from "./Dialogs/CreateBasicFoodDialog";
 
