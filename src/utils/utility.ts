@@ -155,7 +155,7 @@ export const constructShareRecipeLink = (shareId: string, name: string) => {
 };
 
 export const getHasLoggedInBefore = () => {
-  Boolean(localStorage.getItem(hasLoggedInBeforeKey));
+  return Boolean(localStorage.getItem(hasLoggedInBeforeKey));
 };
 
 export const setHasLoggedInBefore = () => {

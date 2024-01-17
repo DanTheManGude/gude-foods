@@ -12,7 +12,7 @@ import { ColorKeyContext } from "./Contexts";
 import { ColorKey } from "../types";
 
 const withTheme =
-  (Component: keyof JSX.IntrinsicElements) =>
+  (Component: (...args: any[]) => JSX.Element) =>
   (props: { [key: string]: any }) => {
     const [colorKey, setColorKey] = useState<ColorKey>(defaultColorKey);
 

@@ -65,12 +65,12 @@ function Home(props) {
   };
 
   const renderRequestedUsersCard = () => {
-    if (!requestedUsers) {
+    const requestedUsersUids = Object.keys(requestedUsers);
+
+    if (!requestedUsersUids.length) {
       if (navigator.clearAppBadge) navigator.clearAppBadge();
       return null;
     }
-
-    const requestedUsersUids = Object.keys(requestedUsers);
 
     if (navigator.setAppBadge) navigator.setAppBadge(requestedUsersUids.length);
 

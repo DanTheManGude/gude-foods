@@ -169,7 +169,7 @@ function PagesContainer(props) {
             path="/home"
             element={
               <Home
-                requestedUsers={isAdmin ? requestedUsers : undefined}
+                requestedUsers={isAdmin ? requestedUsers : {}}
                 themeIsNotSet={themeIsNotSet}
               />
             }

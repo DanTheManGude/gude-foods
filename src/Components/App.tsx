@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 
 import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
 
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, child, get, onValue } from "firebase/database";
 
 import { TransitionGroup } from "react-transition-group";
@@ -16,7 +16,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
 import { aboutText } from "../constants";
@@ -33,41 +33,45 @@ import Loading from "./Utils/Loading";
 import OfflineMode from "./Offline/OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
+import { Alert as GFAlert, Noop, RequestedUsers, SetSubsriber } from "../types";
 
-function App(props) {
+type AlertWithId = GFAlert & { id: number };
+
+function App(props: { setSubscriber: SetSubsriber }) {
   const { setSubscriber } = props;
 
   const setSubscriberRef = useRef(setSubscriber);
 
-  const [alertList, setAlertList] = useState([]);
-  const [user, setUser] = useState();
-  const [isAuthorizedUser, setIsAuthorizedUser] = useState(false);
+  const [alertList, setAlertList] = useState<AlertWithId[]>([]);
+  const [user, setUser] = useState<User>();
+  const [isAuthorizedUser, setIsAuthorizedUser] = useState<boolean>(false);
 
-  const [initialLoading, setInitialLoading] = useState(true);
-  const stopInitialLoading = () => setInitialLoading(false);
-  const [authorizedLoading, setAuthorizedLoading] = useState(false);
-  const isLoading = initialLoading || authorizedLoading;
+  const [initialLoading, setInitialLoading] = useState<boolean>(true);
+  const stopInitialLoading: Noop = () => setInitialLoading(false);
+  const [authorizedLoading, setAuthorizedLoading] = useState<boolean>(false);
+  const isLoading: boolean = initialLoading || authorizedLoading;
 
   const [usingOffline, setUsingOffline] = useState(false);
   const disableUsingOffline = () => setUsingOffline(false);
   const enableUsingOffline = () => setUsingOffline(true);
 
   const [isAdmin, setIsAdmin] = useState(false);
-  const [requestedUsers, setIsRequestedUsers] = useState();
-  const [allowUnrestrictedUsers, setAllowUnrestrictedUsers] = useState(false);
+  const [requestedUsers, setIsRequestedUsers] = useState<RequestedUsers>({});
+  const [allowUnrestrictedUsers, setAllowUnrestrictedUsers] =
+    useState<boolean>(false);
 
-  const prevUserRef = useRef();
+  const prevUserRef = useRef<User>();
 
   let navigate = useNavigate();
   let location = useLocation();
 
-  const removeAlert = (alertId) =>
+  const removeAlert = (alertId: number) =>
     setAlertList((prevList) =>
       prevList.filter((alert) => alert.id !== alertId)
     );
 
-  const addAlertRef = useRef((alert, removalTime = 3001) => {
-    const alertId = setTimeout(() => {
+  const addAlertRef = useRef((alert: GFAlert, removalTime = 3001) => {
+    const alertId = window.setTimeout(() => {
       removeAlert(alertId);
     }, removalTime);
 
@@ -78,7 +82,7 @@ function App(props) {
     setSubscriberRef.current(() => {
       addAlertRef.current(
         {
-          title: "The current website is out of date.",
+          title: <>The current website is out of date.</>,
           message: (
             <Stack direction="row" alignItems="baseline">
               <Typography>Please </Typography>
@@ -86,7 +90,7 @@ function App(props) {
                 color="error"
                 variant="text"
                 onClick={() => {
-                  window.location.reload(true);
+                  window.location.reload();
                 }}
                 size="small"
               >
@@ -156,7 +160,7 @@ function App(props) {
       if (snapshot.exists()) {
         setIsRequestedUsers(snapshot.val());
       } else {
-        setIsRequestedUsers();
+        setIsRequestedUsers({});
       }
     });
 
@@ -181,7 +185,7 @@ function App(props) {
     });
   }, [user]);
 
-  const renderMessages = () => (
+  const renderMessages = (): JSX.Element => (
     <List
       sx={{
         width: "100%",
@@ -189,12 +193,11 @@ function App(props) {
         top: "60px",
         position: "fixed",
       }}
-      spacing={8}
     >
       <TransitionGroup>
         {alertList.map((alert) => {
           const { message, title, alertProps, dismissible, undo, id } = alert;
-          const handleClose = () => removeAlert(id);
+          const handleClose: Noop = () => removeAlert(id);
 
           return (
             <Collapse key={id}>
@@ -233,7 +236,9 @@ function App(props) {
     </List>
   );
 
-  const renderUseOfflineButton = (buttonProps) => (
+  const renderUseOfflineButton = (
+    buttonProps: Partial<ButtonProps>
+  ): JSX.Element => (
     <Button variant="outlined" onClick={enableUsingOffline} {...buttonProps}>
       <Typography>Use offline mode</Typography>
     </Button>

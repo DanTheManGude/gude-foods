@@ -3,6 +3,8 @@ import { AlertProps } from "@mui/material/Alert";
 
 export type Noop = () => void;
 
+export type SetSubsriber = (newSubscriber: Noop) => void;
+
 export type ColorKey = "default" | "dark" | "light";
 
 export type Theme = {
@@ -22,6 +24,8 @@ export type Alert = {
   message: JSX.Element;
   title?: JSX.Element;
   alertProps: Partial<AlertProps>;
+  dismissible?: boolean;
+  undo?: Noop;
 };
 export type AddAlert = (alert: Alert, time?: number) => void;
 
@@ -119,3 +123,5 @@ export type ShoppingMap = {
   checked: ShoppingMapChecked;
   unchecked: ShoppingMapUnchecked;
 };
+
+export type RequestedUsers = { [uid in string]: string };
