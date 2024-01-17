@@ -9,7 +9,6 @@ import {
   constructBasicFoodOptions,
   getCalculateFoodSectionForOptions,
 } from "../../utils/foods";
-import { unknownSectionName } from "../../constants";
 
 import CreateBasicFoodDialog from "./Dialogs/CreateBasicFoodDialog";
 
@@ -37,8 +36,7 @@ function BasicFoodMultiSelect(props) {
 
   const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
     glossary,
-    basicFoodTagAssociation,
-    unknownSectionName
+    basicFoodTagAssociation
   );
 
   return (
@@ -62,7 +60,6 @@ function BasicFoodMultiSelect(props) {
             options={constructBasicFoodOptions(
               glossary,
               basicFoodTagOrder || [],
-              unknownSectionName,
               calculateFoodSectionForOptions
             )}
             getOptionLabel={(option) => option.title}

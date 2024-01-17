@@ -98,3 +98,15 @@ export type Database = {
 };
 
 export type ExternalRecipe = Recipe & { ingredientText: string[] };
+
+export type ShoppingMapChecked = any;
+export type ShoppingMapUnchecked = {
+  [basicFoodTagId in BasicFoodTagId]: {
+    [key in BasicFoodId]: ShoppingListEntry;
+  };
+};
+
+export type ShoppingMap = {
+  checked: ShoppingMapChecked;
+  unchecked: ShoppingMapUnchecked;
+};
