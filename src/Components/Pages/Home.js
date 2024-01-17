@@ -46,14 +46,11 @@ function Home(props) {
   );
 
   const recipeOrder = _recipeOrder || [];
-  const { glossaryPath, cookbookPath } = dataPaths;
 
   const handleAddStarterCookbook = () => {
     const transformedData = transformCookbookFromImport(
       newUserCookbook,
-      glossary,
-      glossaryPath,
-      cookbookPath
+      glossary
     );
 
     updateFromCookbookImport(transformedData, dataPaths, recipeOrder, addAlert);

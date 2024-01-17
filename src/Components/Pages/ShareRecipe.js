@@ -39,7 +39,6 @@ function ShareRecipe(props) {
   const recipeOrder = _recipeOrder || [];
 
   const dataPaths = useContext(DataPathsContext);
-  const { glossaryPath, cookbookPath } = dataPaths;
 
   const { shareId } = useParams();
   const [recipe, setRecipe] = useState();
@@ -118,12 +117,7 @@ function ShareRecipe(props) {
   }
 
   const handleSave = () => {
-    const transformedData = transformCookbookFromImport(
-      { recipe },
-      glossary,
-      glossaryPath,
-      cookbookPath
-    );
+    const transformedData = transformCookbookFromImport({ recipe }, glossary);
 
     updateFromCookbookImport(
       transformedData,

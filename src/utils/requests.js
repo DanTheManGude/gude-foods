@@ -33,7 +33,7 @@ export const deleteRequest = (deletePaths = [], onSuccess, onFailure) => {
   updateRequest(updates, onSuccess, onFailure);
 };
 
-export const createKey = (path) => push(child(ref(getDatabase()), path)).key;
+export const createKey = () => push(ref(getDatabase())).key;
 
 const shoppingListDeletesByRecipe = (
   recipeId,
