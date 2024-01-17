@@ -26,11 +26,13 @@ import {
   DatabaseContext,
   AddAlertContext,
   DataPathsContext,
+  UserContext,
 } from "../Contexts";
 
 function Recipe(props) {
-  const { isAdmin, userDisplayName } = props;
+  const { isAdmin } = props;
 
+  const user = useContext(UserContext);
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const {
@@ -50,6 +52,7 @@ function Recipe(props) {
 
   const recipeOrder = _recipeOrder || [];
   const glossary = _glossary || {};
+  const userDisplayName = user ? user.displayName : "";
 
   let navigate = useNavigate();
   const { recipeId: pathParam } = useParams();
