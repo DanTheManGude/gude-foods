@@ -1,5 +1,5 @@
 import { ThemeOptions } from "@mui/material/styles";
-import { AllColors, ColorKey } from "./types";
+import { AllColors, ColorKey, Page } from "./types";
 
 export const emailConfig: {
   serviceId: string;
@@ -140,21 +140,21 @@ export const databasePaths = {
 export const UNKNOWN_TAG = "UNKNOWN_TAG";
 export const unknownSectionName = "Unknown Section";
 
-export const presentationNames = {
-  glossary: "Glossary",
-  shoppingList: "Shopping List",
-  cookbook: "Cookbook",
-  home: "Home",
-  settings: "Settings",
-};
-
-export const pages = [
+export const pages: Page[] = [
   "home",
   "shoppingList",
   "cookbook",
   "glossary",
   "settings",
 ];
+
+export const presentationNames: { [key in Page]: string } = {
+  glossary: "Glossary",
+  shoppingList: "Shopping List",
+  cookbook: "Cookbook",
+  home: "Home",
+  settings: "Settings",
+};
 
 export const longestEntryPathDelimiter = "___/___";
 

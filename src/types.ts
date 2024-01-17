@@ -32,6 +32,13 @@ export type ReportErrorValues = {
   who: string;
 };
 
+export type Page =
+  | "glossary"
+  | "shoppingList"
+  | "cookbook"
+  | "home"
+  | "settings";
+
 export type Recipe = any;
 
 export type Database = any;
