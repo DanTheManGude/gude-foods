@@ -52,21 +52,26 @@ export type DatabasePathKey =
 export type DataPathKey = `${DatabasePathKey}Path`;
 export type DataPaths = { [key in DataPathKey]: string };
 
-type RecipeId = string;
-type BasicFoodId = string;
-type BasicFoodTagId = string;
-type RecipeTagId = string;
+export type RecipeId = string;
+export type BasicFoodId = string;
+export type BasicFoodTagId = string;
+export type RecipeTagId = string;
+
+export type Ingredients = { [key in BasicFoodId]: string };
+export type RecipeTagList = RecipeTagId[];
 
 export type Recipe = {
   name: string;
   description?: string;
-  ingredients: { [key in BasicFoodId]: string };
+  ingredients: Ingredients;
   instructions: string[];
   notes?: string;
-  tags?: RecipeTagId[];
+  tags?: RecipeTagList;
   isFavorite?: boolean;
   shareId?: string;
 };
+export type RecipeData = Recipe;
+export type CookbookData = { [name in string]: RecipeData };
 
 export type ShoppingListEntry = {
   isChecked?: boolean;
@@ -74,11 +79,15 @@ export type ShoppingListEntry = {
   list?: RecipeTagId[];
 };
 
+export type BasicFoodTags = { [key in BasicFoodTagId]: string };
+export type BasicFoods = { [key in BasicFoodId]: string };
+export type RecipeTags = { [key in RecipeTagId]: string };
+
 export type Menu = { [key in RecipeId]: number };
 export type Glossary = {
-  basicFoodTags: { [key in BasicFoodTagId]: string };
-  basicFoods: { [key in BasicFoodId]: string };
-  recipeTags: { [key in RecipeTagId]: string };
+  basicFoodTags: BasicFoodTags;
+  basicFoods: BasicFoods;
+  recipeTags: RecipeTags;
 };
 export type BasicFoodTagOrder = BasicFoodTagId[];
 export type ShoppingList = { [key in BasicFoodId]: ShoppingListEntry };
