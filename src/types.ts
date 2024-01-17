@@ -39,10 +39,6 @@ export type Page =
   | "home"
   | "settings";
 
-export type Recipe = any;
-
-export type Database = any;
-
 export type DatabasePathKey =
   | "menu"
   | "glossary"
@@ -55,3 +51,50 @@ export type DatabasePathKey =
 
 export type DataPathKey = `${DatabasePathKey}Path`;
 export type DataPaths = { [key in DataPathKey]: string };
+
+type RecipeId = string;
+type BasicFoodId = string;
+type BasicFoodTagId = string;
+type RecipeTagId = string;
+
+export type Recipe = {
+  name: string;
+  description?: string;
+  ingredients: { [key in BasicFoodId]: string };
+  instructions: string[];
+  notes?: string;
+  tags?: RecipeTagId[];
+  isFavorite?: boolean;
+  shareId?: string;
+};
+
+type ShoppingListEntry = {
+  isChecked?: boolean;
+  collatedAmount?: string;
+  list?: RecipeTagId[];
+};
+
+type Menu = { [key in RecipeId]: number };
+type Glossary = {
+  basicFoodTags: { [key in BasicFoodTagId]: string };
+  basicFoods: { [key in BasicFoodId]: string };
+  recipeTags: { [key in RecipeTagId]: string };
+};
+type BasicFoodTagOrder = BasicFoodTagId[];
+type ShoppingList = { [key in BasicFoodId]: ShoppingListEntry };
+type Cookbook = { [key in RecipeId]: Recipe };
+type RecipeOrder = RecipeId[];
+type BasicFoodTagAssociation = { [key in BasicFoodId]: BasicFoodTagId };
+
+export type Database = {
+  menu?: Menu;
+  glossary?: Glossary;
+  basicFoodTagOrder?: BasicFoodTagOrder;
+  shoppingList?: ShoppingList;
+  cookbook?: Cookbook;
+  recipeOrder?: RecipeOrder;
+  colorKey?: ColorKey;
+  basicFoodTagAssociation?: BasicFoodTagAssociation;
+};
+
+export type ExternalRecipe = Recipe & { ingredientText: string[] };
