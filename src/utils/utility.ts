@@ -4,7 +4,7 @@ import {
   longestEntryPathDelimiter,
   hasLoggedInBeforeKey,
 } from "../constants";
-import { Recipe, Theme } from "../types";
+import { ExternalRecipe, Recipe, Theme } from "../types";
 import { Notification } from "firebase-admin/lib/messaging/messaging-api";
 
 export const isDevelopment = () =>
@@ -78,12 +78,15 @@ export const findLongestEntry = (
   }
 };
 
-export const parseRecipeData = (recipeData: any, sourceUrl: string) => {
+export const parseRecipeData = (
+  recipeData: any,
+  sourceUrl: string
+): ExternalRecipe => {
   const {
     name = "",
     description: givenDescription = "",
     recipeYield: yieldText = "",
-    recipeIngredient: ingredientText = "",
+    recipeIngredient: ingredientText = [],
     recipeInstructions: instructionsData = ["Step 1"],
   } = recipeData;
   const notes = `${sourceUrl}\n\n${ingredientText.join(`\n`)}`;
