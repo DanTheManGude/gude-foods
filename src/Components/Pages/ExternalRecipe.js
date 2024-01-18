@@ -21,10 +21,13 @@ import {
   AddAlertContext,
   DataPathsContext,
   DatabaseContext,
+  UserContext,
 } from "../Contexts";
 
 function ExternalRecipe(props) {
-  const { givenRecipe, isAdmin, userDisplayName } = props;
+  const { givenRecipe, isAdmin } = props;
+
+  const user = useContext(UserContext);
   const addAlert = useContext(AddAlertContext);
   const dataPaths = useContext(DataPathsContext);
   const { cookbookPath, recipeOrderPath, shoppingListPath, menuPath } =
@@ -33,6 +36,7 @@ function ExternalRecipe(props) {
   const { recipeOrder: _recipeOrder, glossary, shoppingList } = database;
 
   const recipeOrder = _recipeOrder || [];
+  const userDisplayName = user ? user.displayName : "";
 
   const {
     name,

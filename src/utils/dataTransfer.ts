@@ -1,8 +1,19 @@
-import Typography from "@mui/material/Typography";
 import { offlineCookbookKey } from "../constants";
+import {
+  BasicFoodId,
+  BasicFoodTags,
+  BasicFoods,
+  Cookbook,
+  CookbookData,
+  Glossary,
+  Ingredients,
+  Recipe,
+  RecipeData,
+  RecipeTagList,
+} from "../types";
 import { createKey } from "./requests";
 
-export const downloadData = (dataJSON, name = "download") => {
+export const downloadData = (dataJSON: any, name: string = "download") => {
   const dataString = JSON.stringify(dataJSON, null, 2);
 
   const element = document.createElement("a");
@@ -13,11 +24,16 @@ export const downloadData = (dataJSON, name = "download") => {
   element.click();
 };
 
-export const transformRecipeForExport = (recipeEntry, glossary) => {
+export const transformRecipeForExport = (
+  recipe: Recipe,
+  glossary: Glossary
+): RecipeData => {
   const { basicFoods, recipeTags } = glossary;
-  const { ingredients = {}, tags = [] } = recipeEntry;
+  const { ingredients = {}, tags = [] } = recipe;
 
-  const ingredientsAsNames = Object.keys(ingredients).reduce(
+  const ingredientsAsNames = Object.keys(ingredients).reduce<{
+    [key in BasicFoodId]: string;
+  }>(
     (acc, ingredientKey) => ({
       ...acc,
       [basicFoods[ingredientKey]]: ingredients[ingredientKey],
@@ -25,10 +41,11 @@ export const transformRecipeForExport = (recipeEntry, glossary) => {
     {}
   );
 
-  const tagsAsNames = tags.map((tagKey) => recipeTags[tagKey], {});
+  const tagsAsNames = tags.map((tagKey) => recipeTags[tagKey]);
 
-  const recipeData = {
-    ...recipeEntry,
+  // TODO Substitute ingredient needs to be transformed
+  const recipeData: RecipeData = {
+    ...recipe,
     ingredients: ingredientsAsNames,
     tags: tagsAsNames,
   };
@@ -36,28 +53,36 @@ export const transformRecipeForExport = (recipeEntry, glossary) => {
   return recipeData;
 };
 
-export const transformCookbookForExport = ({ cookbook, glossary }) =>
-  Object.keys(cookbook).reduce((acc, recipeId) => {
-    const recipeEntry = cookbook[recipeId];
-    const recipeData = transformRecipeForExport(recipeEntry, glossary);
+export const transformCookbookForExport = ({
+  cookbook,
+  glossary,
+}: {
+  cookbook: Cookbook;
+  glossary: Glossary;
+}) =>
+  Object.keys(cookbook).reduce<CookbookData>((acc, recipeId) => {
+    const recipe = cookbook[recipeId];
+    const recipeData = transformRecipeForExport(recipe, glossary);
 
     return {
       ...acc,
-      [recipeEntry.name]: recipeData,
+      [recipe.name]: recipeData,
     };
   }, {});
 
 export const transformCookbookFromImport = (
-  cookbookData,
-  glossary,
-  glossaryPath,
-  cookbookPath
-) => {
+  cookbookData: CookbookData,
+  glossary: Glossary
+): {
+  formattedCookbook: Cookbook;
+  newFoods: BasicFoods;
+  newTags: BasicFoodTags;
+} => {
   const { basicFoods, recipeTags } = glossary;
-  const newFoods = {};
-  const newTags = {};
+  const newFoods: BasicFoods = {};
+  const newTags: BasicFoodTags = {};
 
-  const formattedCookbook = Object.values(cookbookData).reduce(
+  const formattedCookbook = Object.values(cookbookData).reduce<Cookbook>(
     (accumulator, recipeData) => {
       const { ingredients = {}, tags = [], name, instructions } = recipeData;
 
@@ -65,8 +90,9 @@ export const transformCookbookFromImport = (
         throw Error("Some required fields missing on recipe");
       }
 
-      const ingredientsAsKeys = Object.keys(ingredients).reduce(
+      const ingredientsAsKeys = Object.keys(ingredients).reduce<Ingredients>(
         (acc, ingredientName) => {
+          // TODO optimimize this
           const basicFoodList = Object.keys(basicFoods);
           const foundFoodId =
             basicFoodList.find(
@@ -75,7 +101,7 @@ export const transformCookbookFromImport = (
 
           let ingredientId = foundFoodId;
           if (!foundFoodId) {
-            ingredientId = createKey(`${glossaryPath}/basicFoods`);
+            ingredientId = createKey();
             newFoods[ingredientName] = ingredientId;
           }
 
@@ -87,7 +113,8 @@ export const transformCookbookFromImport = (
         {}
       );
 
-      const tagsAsKeys = tags.map((tagName) => {
+      const tagsAsKeys: RecipeTagList = tags.map((tagName) => {
+        // TODO Optimize this
         const recipeTagsList = Object.keys(recipeTags);
         const foundTagId =
           recipeTagsList.find((tagId) => recipeTags[tagId] === tagName) ||
@@ -95,22 +122,22 @@ export const transformCookbookFromImport = (
 
         let tagId = foundTagId;
         if (!foundTagId) {
-          tagId = createKey(`${glossaryPath}/recipeTags`);
+          tagId = createKey();
           newTags[tagName] = tagId;
         }
 
         return tagId;
       });
 
-      const recipeEntry = {
+      const recipe: Recipe = {
         ...recipeData,
         ingredients: ingredientsAsKeys,
         tags: tagsAsKeys,
       };
 
-      const recipeId = createKey(cookbookPath);
+      const recipeId = createKey();
 
-      return { ...accumulator, [recipeId]: recipeEntry };
+      return { ...accumulator, [recipeId]: recipe };
     },
     {}
   );
@@ -119,29 +146,24 @@ export const transformCookbookFromImport = (
 };
 
 export const saveCookbookToLocalStorage = (
-  { cookbook, glossary },
-  addAlert
+  {
+    cookbook,
+    glossary,
+  }: {
+    cookbook: Cookbook;
+    glossary: Glossary;
+  },
+  onSuccess: () => void,
+  onFailure: (error: any) => void
 ) => {
   const cookbookData = transformCookbookForExport({ cookbook, glossary });
 
   try {
     localStorage.setItem(offlineCookbookKey, JSON.stringify(cookbookData));
 
-    addAlert({
-      message: (
-        <Typography>Cookbook has been saved for offline use.</Typography>
-      ),
-      alertProps: { severity: "info" },
-    });
+    onSuccess();
   } catch (error) {
+    onFailure(error);
     console.error(error);
-    addAlert({
-      message: (
-        <Typography>
-          There was an error trying to save the cookbook for offline use.
-        </Typography>
-      ),
-      alertProps: { severity: "error" },
-    });
   }
 };

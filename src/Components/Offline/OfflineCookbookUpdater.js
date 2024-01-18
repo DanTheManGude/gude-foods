@@ -1,5 +1,7 @@
 import { useEffect, useState, useContext, useRef } from "react";
 
+import Typography from "@mui/material/Typography";
+
 import { saveCookbookToLocalStorage } from "../../utils/dataTransfer";
 import { DatabaseContext, AddAlertContext } from "../Contexts";
 
@@ -44,7 +46,27 @@ function OfflineCookbookUpdater() {
 
   useEffect(() => {
     if (!didInitialize && cookbook && glossary && addAlert) {
-      saveCookbookToLocalStorage({ cookbook, glossary }, addAlert);
+      saveCookbookToLocalStorage(
+        { cookbook, glossary },
+        () => {
+          addAlert({
+            message: (
+              <Typography>Cookbook has been saved for offline use.</Typography>
+            ),
+            alertProps: { severity: "info" },
+          });
+        },
+        () => {
+          addAlert({
+            message: (
+              <Typography>
+                There was an error trying to save the cookbook for offline use.
+              </Typography>
+            ),
+            alertProps: { severity: "error" },
+          });
+        }
+      );
       setDidInitialize(true);
     }
   }, [cookbook, glossary, addAlert, didInitialize]);

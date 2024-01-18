@@ -1,5 +1,5 @@
 import { ThemeOptions } from "@mui/material/styles";
-import { AllColors, ColorKey } from "./types";
+import { AllColors, ColorKey, Page, DatabasePathKey, DataPaths } from "./types";
 
 export const emailConfig: {
   serviceId: string;
@@ -126,7 +126,7 @@ export const colorOptions = Object.keys(allColors).map((colorKey) => ({
   name: colorOptionNames[colorKey],
 }));
 
-export const databasePaths = {
+export const databasePaths: { [key in DatabasePathKey]: string } = {
   glossary: "glossary",
   basicFoodTagAssociation: "basicFood-basicFoodTag",
   basicFoodTagOrder: "basicFoodTagOrder",
@@ -137,24 +137,35 @@ export const databasePaths = {
   colorKey: "colorKey",
 };
 
+export const defaultDataPaths: DataPaths = {
+  menuPath: "",
+  glossaryPath: "",
+  basicFoodTagOrderPath: "",
+  shoppingListPath: "",
+  cookbookPath: "",
+  recipeOrderPath: "",
+  colorKeyPath: "",
+  basicFoodTagAssociationPath: "",
+};
+
 export const UNKNOWN_TAG = "UNKNOWN_TAG";
 export const unknownSectionName = "Unknown Section";
 
-export const presentationNames = {
-  glossary: "Glossary",
-  shoppingList: "Shopping List",
-  cookbook: "Cookbook",
-  home: "Home",
-  settings: "Settings",
-};
-
-export const pages = [
+export const pages: Page[] = [
   "home",
   "shoppingList",
   "cookbook",
   "glossary",
   "settings",
 ];
+
+export const presentationNames: { [key in Page]: string } = {
+  glossary: "Glossary",
+  shoppingList: "Shopping List",
+  cookbook: "Cookbook",
+  home: "Home",
+  settings: "Settings",
+};
 
 export const longestEntryPathDelimiter = "___/___";
 

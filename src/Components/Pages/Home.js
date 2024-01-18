@@ -46,14 +46,11 @@ function Home(props) {
   );
 
   const recipeOrder = _recipeOrder || [];
-  const { glossaryPath, cookbookPath } = dataPaths;
 
   const handleAddStarterCookbook = () => {
     const transformedData = transformCookbookFromImport(
       newUserCookbook,
-      glossary,
-      glossaryPath,
-      cookbookPath
+      glossary
     );
 
     updateFromCookbookImport(transformedData, dataPaths, recipeOrder, addAlert);
@@ -68,12 +65,12 @@ function Home(props) {
   };
 
   const renderRequestedUsersCard = () => {
-    if (!requestedUsers) {
+    const requestedUsersUids = Object.keys(requestedUsers);
+
+    if (!requestedUsersUids.length) {
       if (navigator.clearAppBadge) navigator.clearAppBadge();
       return null;
     }
-
-    const requestedUsersUids = Object.keys(requestedUsers);
 
     if (navigator.setAppBadge) navigator.setAppBadge(requestedUsersUids.length);
 

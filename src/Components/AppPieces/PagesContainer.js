@@ -169,7 +169,7 @@ function PagesContainer(props) {
             path="/home"
             element={
               <Home
-                requestedUsers={isAdmin ? requestedUsers : undefined}
+                requestedUsers={isAdmin ? requestedUsers : {}}
                 themeIsNotSet={themeIsNotSet}
               />
             }
@@ -186,9 +186,7 @@ function PagesContainer(props) {
           />
           <Route
             path="recipe/:recipeId"
-            element={
-              <Recipe isAdmin={isAdmin} userDisplayName={user.displayName} />
-            }
+            element={<Recipe isAdmin={isAdmin} />}
           />
           <Route path="cooking/:recipeId" element={<Cooking />} />
           <Route path="shoppingList" element={<ShoppingList />} />
@@ -246,7 +244,6 @@ function PagesContainer(props) {
                 <ExternalRecipe
                   givenRecipe={externalRecipe}
                   isAdmin={isAdmin}
-                  userDisplayName={user.displayName}
                 />
               }
             />

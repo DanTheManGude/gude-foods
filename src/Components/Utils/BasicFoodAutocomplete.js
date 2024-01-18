@@ -7,7 +7,6 @@ import {
   getCalculateFoodSectionForOptions,
   constructBasicFoodOptions,
 } from "../../utils/foods";
-import { unknownSectionName } from "../../constants";
 import { DatabaseContext } from "../Contexts";
 import CreateBasicFoodDialog from "./Dialogs/CreateBasicFoodDialog";
 
@@ -27,8 +26,7 @@ function BasicFoodAutocomplete(props) {
 
   const calculateFoodSectionForOptions = getCalculateFoodSectionForOptions(
     glossary,
-    basicFoodTagAssociation,
-    unknownSectionName
+    basicFoodTagAssociation
   );
 
   return (
@@ -38,7 +36,6 @@ function BasicFoodAutocomplete(props) {
         options={constructBasicFoodOptions(
           glossary,
           basicFoodTagOrder || [],
-          unknownSectionName,
           calculateFoodSectionForOptions
         )}
         getOptionLabel={(option) => option.title}

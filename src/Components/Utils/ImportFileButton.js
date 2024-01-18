@@ -37,7 +37,6 @@ function ImportFileButton(props) {
   const recipeOrder = _recipeOrder || [];
 
   const dataPaths = useContext(DataPathsContext);
-  const { glossaryPath, cookbookPath } = dataPaths;
 
   const handleImportedData = (importedData) => {
     if (shouldUseCustomHandler) {
@@ -51,9 +50,7 @@ function ImportFileButton(props) {
 
     const transformedData = transformCookbookFromImport(
       importedCookbook,
-      glossary,
-      glossaryPath,
-      cookbookPath
+      glossary
     );
 
     updateFromCookbookImport(
