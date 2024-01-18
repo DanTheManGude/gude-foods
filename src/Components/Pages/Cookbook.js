@@ -215,17 +215,20 @@ function Cookbook(props) {
               ? "Looks like no recipes match that search."
               : "There are no recipes in the cookbook."}
           </Typography>
-          <Typography color={"text.primary"}>
-            Need an idea for a recipe?
-          </Typography>
-          <Link
-            component="button"
-            onClick={() => {
-              setOpenNewRecipeDialog("GenerateRecipe");
-            }}
-          >
-            <Typography>Try generating one with AI.</Typography>
-          </Link>
+          <Stack direction="row">
+            <Typography color={"text.primary"}>
+              Need an idea for a recipe?
+            </Typography>
+            &nbsp;&nbsp;
+            <Link
+              component="button"
+              onClick={() => {
+                setOpenNewRecipeDialog("GenerateRecipe");
+              }}
+            >
+              <Typography>Try generating one with AI.</Typography>
+            </Link>
+          </Stack>
         </Stack>
       );
     }
