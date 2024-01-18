@@ -63,10 +63,11 @@ function AddToShoppingListDialog(props) {
   }, [cookbook, recipeId]);
 
   useEffect(() => {
-    if (recipeId) {
+    if (open && recipeId) {
+      console.log("addRecipeToMenu");
       addRecipeToMenu(recipeId, dataPaths.menuPath);
     }
-  }, [recipeId]);
+  }, [open, recipeId]);
 
   const handleClose = () => {
     setCount(1);
