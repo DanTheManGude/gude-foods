@@ -11,8 +11,10 @@ import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
+import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 import { removeRecipeFromMenuAndShoppingList } from "../../utils/requests";
 import {
@@ -70,6 +72,19 @@ function Cookbook(props) {
     tagsList = [],
     isFavoriteFilter = false,
   } = filteringOptions;
+
+  const handleBookmarkClick = (recipeId) => {
+    if (menu.hasOwnProperty(recipeId)) {
+      removeRecipeFromMenuAndShoppingList(
+        recipeId,
+        { shoppingList, cookbook, menu },
+        { menuPath, shoppingListPath },
+        addAlert
+      );
+    } else {
+      setAddToShoppingListRecipeId(recipeId);
+    }
+  };
 
   const calculateRecipeList = () => {
     const recipeList = recipeOrder.filter((recipeId) => {
@@ -149,93 +164,35 @@ function Cookbook(props) {
       </Stack>
     );
 
-  const renderRecipe = (recipeId) => {
-    const {
-      name = "Unknown name",
-      description = "",
-      tags = [],
-      isFavorite = false,
-    } = cookbook[recipeId];
-
+  const renderRecipe = (recipeId, forMenu = false) => {
     return (
-      <Accordion key={recipeId}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">{name}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={2}>
-            {description && (
-              <Typography key="description" fontWeight="fontWeightMedium">
-                {description}
-              </Typography>
-            )}
-            <Stack
-              spacing={2}
-              direction="row"
-              justifyContent="space-around"
-              alignItems="center"
-            >
-              <Button
-                color="secondary"
-                variant="contained"
-                size="large"
-                sx={{ flex: 1 }}
-                onClick={() => {
-                  setAddToShoppingListRecipeId(recipeId);
-                }}
-              >
-                <Typography>Add to shopping list</Typography>
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                size="large"
-                sx={{ flex: 1 }}
-                onClick={() => {
-                  navigate(`/recipe/${recipeId}`);
-                }}
-              >
-                <Typography color="primary.contrastText">
-                  View full recipe
-                </Typography>
-              </Button>
-            </Stack>
-            {menu.hasOwnProperty(recipeId) && (
-              <Button
-                color="secondary"
-                variant="outlined"
-                onClick={() => {
-                  removeRecipeFromMenuAndShoppingList(
-                    recipeId,
-                    { shoppingList, cookbook, menu },
-                    { menuPath, shoppingListPath },
-                    addAlert
-                  );
-                }}
-              >
-                <Typography>Remove recipe from Menu</Typography>
-              </Button>
-            )}
-            <Stack
-              direction="row"
-              spacing={1}
-              flexWrap="wrap"
-              useFlexGap={true}
-            >
-              {isFavorite && <FavoriteTag />}
-              {tags.map((tagId) => (
-                <Chip
-                  key={tagId}
-                  label={<Typography>{glossary.recipeTags[tagId]}</Typography>}
-                  size="small"
-                  variant="contained"
-                  color="tertiary"
-                />
-              ))}
-            </Stack>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
+      <Paper
+        key={recipeId}
+        elevation={2}
+        onClick={() => {
+          navigate(`/recipe/${recipeId}`);
+        }}
+      >
+        <Stack
+          direction={"row"}
+          sx={{ margin: 1.5 }}
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Typography variant="h6" sx={{ cursor: "pointer" }}>
+            {cookbook[recipeId].name || "Unknown name"}
+          </Typography>
+          <IconButton
+            color="secondary"
+            onClick={(event) => {
+              handleBookmarkClick(recipeId);
+              event.stopPropagation();
+            }}
+          >
+            {forMenu ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+          </IconButton>
+        </Stack>
+      </Paper>
     );
   };
 
@@ -244,7 +201,7 @@ function Cookbook(props) {
       {recipeList
         .filter((recipeId) => Object.keys(menu).includes(recipeId) === forMenu)
         .map((recipeId) => {
-          return renderRecipe(recipeId);
+          return renderRecipe(recipeId, forMenu);
         })}
     </Stack>
   );
