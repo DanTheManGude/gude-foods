@@ -91,12 +91,10 @@ export const addRecipeToShoppingList = (
   recipeId,
   count,
   ingredients = {},
-  { recipeOrder, menu: _menu },
+  { recipeOrder },
   { shoppingListPath, recipeOrderPath, menuPath },
   addAlert
 ) => {
-  const menu = _menu || {};
-
   updateRequest(
     {
       ...Object.keys(ingredients).reduce(
@@ -111,12 +109,7 @@ export const addRecipeToShoppingList = (
         recipeId,
         ...recipeOrder.filter((_recipeId) => recipeId !== _recipeId),
       ],
-      [menuPath]: {
-        ...menu,
-        [recipeId]: menu.hasOwnProperty(recipeId)
-          ? menu[recipeId] + count
-          : count,
-      },
+      [`${menuPath}/${recipeId}`]: count,
     },
     (successAlert) => {
       addAlert(
@@ -124,7 +117,7 @@ export const addRecipeToShoppingList = (
           ...successAlert,
           message: (
             <Typography>
-              Succesfully added ingredients to Shopping List and recipe to Menu.
+              Succesfully added ingredients to Shopping List.
             </Typography>
           ),
           undo: () => {
@@ -138,7 +131,6 @@ export const addRecipeToShoppingList = (
                   {}
                 ),
                 [recipeOrderPath]: recipeOrder,
-                [menuPath]: menu,
               },
               (undoSuccessAlert) => {
                 addAlert({
@@ -160,6 +152,12 @@ export const addRecipeToShoppingList = (
     },
     addAlert
   );
+};
+
+export const addRecipeToMenu = (recipeId, menuPath) => {
+  updateRequest({
+    [`${menuPath}/${recipeId}`]: 1,
+  });
 };
 
 export const addRecipesToMenu = (recipeIdList, menu, menuPath, addAlert) => {
@@ -265,7 +263,7 @@ export const removeRecipeFromMenuAndShoppingList = (
           ...successAlert,
           message: (
             <Typography>
-              {`Succesfully removed recipe ${recipeName} from Menu and Shopping List.`}
+              {`Removed recipe ${recipeName} from Shopping List and Menu.`}
             </Typography>
           ),
           undo: () => {
