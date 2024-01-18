@@ -64,7 +64,6 @@ function AddToShoppingListDialog(props) {
 
   useEffect(() => {
     if (open && recipeId) {
-      console.log("addRecipeToMenu");
       addRecipeToMenu(recipeId, dataPaths.menuPath);
     }
   }, [open, recipeId, dataPaths.menuPath]);
