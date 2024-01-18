@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
@@ -58,7 +59,7 @@ function Cookbook(props) {
 
   const [addToShoppingListRecipeId, setAddToShoppingListRecipeId] =
     useState(null);
-  const [openNewRecipeDialog, setOpenNewRecipeDialog] = useState(false);
+  const [openNewRecipeDialog, setOpenNewRecipeDialog] = useState("");
   const [advancedFiltersDialogOpen, setAdvancedFiltersDialogOpen] =
     useState(false);
   const {
@@ -215,8 +216,16 @@ function Cookbook(props) {
               : "There are no recipes in the cookbook."}
           </Typography>
           <Typography color={"text.primary"}>
-            Need an idea for a recipe? Try generating one with AI.
+            Need an idea for a recipe?
           </Typography>
+          <Link
+            component="button"
+            onClick={() => {
+              setOpenNewRecipeDialog("GenerateRecipe");
+            }}
+          >
+            <Typography>Try generating one with AI.</Typography>
+          </Link>
         </Stack>
       );
     }
@@ -266,7 +275,7 @@ function Cookbook(props) {
         right: "35px",
       }}
       onClick={() => {
-        setOpenNewRecipeDialog(true);
+        setOpenNewRecipeDialog("OPEN");
       }}
     >
       <AddIcon />
@@ -302,7 +311,7 @@ function Cookbook(props) {
       <NewRecipeDialog
         open={openNewRecipeDialog}
         onClose={() => {
-          setOpenNewRecipeDialog(false);
+          setOpenNewRecipeDialog("");
         }}
         filteringOptions={filteringOptions}
         setExternalRecipe={setExternalRecipe}

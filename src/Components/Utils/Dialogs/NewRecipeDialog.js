@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -23,6 +23,21 @@ function NewRecipeDialog(props) {
     useState(false);
   const [openExternalRecipeImportDialog, setOpenExternalRecipeImportDialog] =
     useState(false);
+
+  useEffect(() => {
+    switch (open) {
+      case "GenerateRecipe":
+        setOpenGenerateRecipeDialog(true);
+        onClose();
+        break;
+      case "ExternalRecipeImport":
+        setOpenExternalRecipeImportDialog(true);
+        onClose();
+        break;
+      default:
+        break;
+    }
+  }, [open]);
 
   const renderButtonStack = () => (
     <Stack spacing={2}>
@@ -78,7 +93,7 @@ function NewRecipeDialog(props) {
           },
         }}
         maxWidth="xs"
-        open={open}
+        open={open === "OPEN"}
       >
         <DialogTitle>New recipe</DialogTitle>
         <DialogContent dividers={true}>{renderButtonStack()}</DialogContent>
