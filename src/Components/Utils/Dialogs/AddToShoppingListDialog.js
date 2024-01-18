@@ -43,7 +43,7 @@ function AddToShoppingListDialog(props) {
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
 
-  const { cookbook, recipeOrder: _recipeOrder, menu: _menu } = database;
+  const { cookbook, recipeOrder: _recipeOrder } = database;
   const recipeOrder = _recipeOrder || [];
 
   const [ingredients, setIngredients] = useState({});
@@ -67,7 +67,7 @@ function AddToShoppingListDialog(props) {
       console.log("addRecipeToMenu");
       addRecipeToMenu(recipeId, dataPaths.menuPath);
     }
-  }, [open, recipeId]);
+  }, [open, recipeId, dataPaths.menuPath]);
 
   const handleClose = () => {
     setCount(1);
