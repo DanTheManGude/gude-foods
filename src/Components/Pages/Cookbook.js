@@ -4,10 +4,6 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
@@ -26,7 +22,6 @@ import RecipeSearchInput from "../Utils/RecipeSearchInput";
 import AdvancedFiltersDialog from "../Utils/Dialogs/AdvancedFiltersDialog";
 import ImportFileButton from "../Utils/ImportFileButton";
 import NewRecipeDialog from "../Utils/Dialogs/NewRecipeDialog";
-import FavoriteTag from "../Utils/FavoriteTag";
 import AddToShoppingListDialog from "../Utils/Dialogs/AddToShoppingListDialog";
 
 import {
