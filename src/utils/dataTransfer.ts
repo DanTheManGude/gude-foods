@@ -5,6 +5,7 @@ import {
   BasicFoods,
   Cookbook,
   CookbookData,
+  FormattedDataFromCookBookImport,
   Glossary,
   Ingredients,
   Recipe,
@@ -73,11 +74,7 @@ export const transformCookbookForExport = ({
 export const transformCookbookFromImport = (
   cookbookData: CookbookData,
   glossary: Glossary
-): {
-  formattedCookbook: Cookbook;
-  newFoods: BasicFoods;
-  newTags: BasicFoodTags;
-} => {
+): FormattedDataFromCookBookImport => {
   const { basicFoods, recipeTags } = glossary;
   const newFoods: BasicFoods = {};
   const newTags: BasicFoodTags = {};

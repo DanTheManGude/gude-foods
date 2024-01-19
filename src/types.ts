@@ -125,4 +125,12 @@ export type ShoppingMap = {
   unchecked: ShoppingMapUnchecked;
 };
 
+export type FormattedDataFromCookBookImport = {
+  formattedCookbook: Cookbook;
+  newFoods: BasicFoods;
+  newTags: BasicFoodTags;
+};
+
 export type RequestedUsers = { [uid in string]: string };
+
+export type SharedRecipe = any;
