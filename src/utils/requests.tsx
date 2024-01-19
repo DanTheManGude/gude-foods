@@ -17,7 +17,6 @@ import {
   Menu,
   Noop,
   Recipe,
-  RecipeId,
   RecipeOrder,
   SharedRecipe,
   ShoppingList,
@@ -64,7 +63,7 @@ export const deleteRequest = (
 export const createKey = () => push(ref(getDatabase())).key;
 
 const shoppingListDeletesByRecipe = (
-  recipeId: RecipeId,
+  recipeId: string,
   shoppingList: ShoppingList,
   shoppingListPath: string
 ): { [key in string]: string } =>
