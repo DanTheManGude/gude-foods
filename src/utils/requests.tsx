@@ -1,12 +1,35 @@
 import { getDatabase, ref, push, update } from "firebase/database";
+import { User } from "firebase/auth";
 
 import Typography from "@mui/material/Typography";
 
 import { databasePaths } from "../constants";
 import { transformRecipeForExport } from "./dataTransfer";
 import { sendNotification } from "./utility";
+import {
+  AddAlert,
+  ColorKey,
+  Cookbook,
+  DataPaths,
+  FormattedDataFromCookBookImport,
+  Glossary,
+  Ingredients,
+  Menu,
+  Noop,
+  Recipe,
+  RecipeOrder,
+  SharedRecipe,
+  ShoppingList,
+} from "../types";
+import { NavigateFunction } from "react-router-dom";
 
-export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
+type Updates = { [key in string]: any };
+
+export const updateRequest = (
+  updates: Updates,
+  onSuccess: AddAlert = () => {},
+  onFailure?: AddAlert
+) => {
   update(ref(getDatabase()), updates)
     .then(() => {
       onSuccess({
@@ -25,8 +48,12 @@ export const updateRequest = (updates, onSuccess = () => {}, onFailure) => {
     });
 };
 
-export const deleteRequest = (deletePaths = [], onSuccess, onFailure) => {
-  const updates = deletePaths.reduce(
+export const deleteRequest = (
+  deletePaths: string[] = [],
+  onSuccess?: AddAlert,
+  onFailure?: AddAlert
+) => {
+  const updates = deletePaths.reduce<Updates>(
     (acc, path) => ({ ...acc, [path]: null }),
     {}
   );
@@ -36,10 +63,10 @@ export const deleteRequest = (deletePaths = [], onSuccess, onFailure) => {
 export const createKey = () => push(ref(getDatabase())).key;
 
 const shoppingListDeletesByRecipe = (
-  recipeId,
-  shoppingList,
-  shoppingListPath
-) =>
+  recipeId: string,
+  shoppingList: ShoppingList,
+  shoppingListPath: string
+): { [key in string]: string } =>
   shoppingList
     ? Object.keys(shoppingList)
         .filter((foodId) => {
@@ -56,11 +83,11 @@ const shoppingListDeletesByRecipe = (
     : {};
 
 const shoppingListDeleteUndos = (
-  shoppingListDeleteFoodIds,
-  recipeId,
-  shoppingListPath,
-  shoppingList
-) =>
+  shoppingListDeleteFoodIds: string[],
+  recipeId: string,
+  shoppingListPath: string,
+  shoppingList: ShoppingList
+): { [key in string]: string } =>
   shoppingListDeleteFoodIds.reduce(
     (acc, foodId) => ({
       ...acc,
@@ -71,12 +98,15 @@ const shoppingListDeleteUndos = (
   );
 
 export const addBasicFoodWithTag = (
-  { glossaryPath, basicFoodTagAssociationPath },
-  name,
-  tagId
+  {
+    glossaryPath,
+    basicFoodTagAssociationPath,
+  }: Pick<DataPaths, "glossaryPath" | "basicFoodTagAssociationPath">,
+  name: string,
+  tagId: string
 ) => {
-  const foodId = createKey(`${glossaryPath}/basicFoods`);
-  const updates = {};
+  const foodId = createKey();
+  const updates: Updates = {};
   updates[`${glossaryPath}/basicFoods/${foodId}`] = name;
 
   if (tagId) {
@@ -88,16 +118,20 @@ export const addBasicFoodWithTag = (
 };
 
 export const addRecipeToShoppingList = (
-  recipeId,
-  count,
-  ingredients = {},
-  { recipeOrder },
-  { shoppingListPath, recipeOrderPath, menuPath },
-  addAlert
+  recipeId: string,
+  count: number,
+  ingredients: Ingredients = {},
+  { recipeOrder }: { recipeOrder: RecipeOrder },
+  {
+    shoppingListPath,
+    recipeOrderPath,
+    menuPath,
+  }: Pick<DataPaths, "shoppingListPath" | "recipeOrderPath" | "menuPath">,
+  addAlert: AddAlert
 ) => {
   updateRequest(
     {
-      ...Object.keys(ingredients).reduce(
+      ...Object.keys(ingredients).reduce<Updates>(
         (updates, foodId) => ({
           ...updates,
           [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
@@ -123,7 +157,7 @@ export const addRecipeToShoppingList = (
           undo: () => {
             updateRequest(
               {
-                ...Object.keys(ingredients).reduce(
+                ...Object.keys(ingredients).reduce<Updates>(
                   (updates, foodId) => ({
                     ...updates,
                     [`${shoppingListPath}/${foodId}/list/${recipeId}`]: null,
@@ -154,18 +188,23 @@ export const addRecipeToShoppingList = (
   );
 };
 
-export const addRecipeToMenu = (recipeId, menuPath) => {
+export const addRecipeToMenu = (recipeId: string, menuPath: string) => {
   updateRequest({
     [`${menuPath}/${recipeId}`]: 1,
   });
 };
 
-export const addRecipesToMenu = (recipeIdList, menu, menuPath, addAlert) => {
+export const addRecipesToMenu = (
+  recipeIdList: string[],
+  menu: Menu,
+  menuPath: string,
+  addAlert: AddAlert
+) => {
   updateRequest(
     {
       [menuPath]: {
         ...menu,
-        ...recipeIdList.reduce(
+        ...recipeIdList.reduce<Updates>(
           (updates, recipeId) => ({
             ...updates,
             [recipeId]: menu.hasOwnProperty(recipeId) ? menu[recipeId] : 1,
@@ -204,10 +243,10 @@ export const addRecipesToMenu = (recipeIdList, menu, menuPath, addAlert) => {
 };
 
 export const removeRecipesFromMenu = (
-  recipeIdList,
-  menuPath,
-  menu,
-  addAlert
+  recipeIdList: string[],
+  menuPath: string,
+  menu: Menu,
+  addAlert: AddAlert
 ) => {
   deleteRequest(
     recipeIdList.map((recipeId) => `${menuPath}/${recipeId}`),
@@ -243,10 +282,17 @@ export const removeRecipesFromMenu = (
 };
 
 export const removeRecipeFromMenuAndShoppingList = (
-  recipeId,
-  { shoppingList, cookbook, menu },
-  { menuPath, shoppingListPath },
-  addAlert
+  recipeId: string,
+  {
+    shoppingList,
+    cookbook,
+    menu,
+  }: { shoppingList: ShoppingList; cookbook: Cookbook; menu: Menu },
+  {
+    menuPath,
+    shoppingListPath,
+  }: Pick<DataPaths, "menuPath" | "shoppingListPath">,
+  addAlert: AddAlert
 ) => {
   const recipeName = cookbook[recipeId].name;
   const shoppingListDeletes = shoppingListDeletesByRecipe(
@@ -298,20 +344,28 @@ export const removeRecipeFromMenuAndShoppingList = (
   );
 };
 
-export const updateRecipeMenuCount = (recipeId, count, menuPath) => {
+export const updateRecipeMenuCount = (
+  recipeId: string,
+  count: number,
+  menuPath: string
+) => {
   updateRequest({ [`${menuPath}/${recipeId}`]: count });
 };
 
 export const updateFromCookbookImport = (
-  transformedData,
-  { cookbookPath, glossaryPath, recipeOrderPath },
-  recipeOrder,
-  addAlert,
-  navigate
+  transformedData: FormattedDataFromCookBookImport,
+  {
+    cookbookPath,
+    glossaryPath,
+    recipeOrderPath,
+  }: Pick<DataPaths, "cookbookPath" | "glossaryPath" | "recipeOrderPath">,
+  recipeOrder: RecipeOrder,
+  addAlert: AddAlert,
+  navigate: NavigateFunction
 ) => {
   const { formattedCookbook, newFoods, newTags } = transformedData;
 
-  const cookbookUpdates = Object.keys(formattedCookbook).reduce(
+  const cookbookUpdates: Updates = Object.keys(formattedCookbook).reduce(
     (acc, recipeId) => ({
       ...acc,
       [`${cookbookPath}/${recipeId}`]: formattedCookbook[recipeId],
@@ -319,7 +373,7 @@ export const updateFromCookbookImport = (
     {}
   );
 
-  const foodUpdates = Object.keys(newFoods).reduce(
+  const foodUpdates: Updates = Object.keys(newFoods).reduce(
     (acc, foodName) => ({
       ...acc,
       [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: foodName,
@@ -327,7 +381,7 @@ export const updateFromCookbookImport = (
     {}
   );
 
-  const tagUpdates = Object.keys(newTags).reduce(
+  const tagUpdates: Updates = Object.keys(newTags).reduce(
     (acc, tagName) => ({
       ...acc,
       [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: tagName,
@@ -335,7 +389,7 @@ export const updateFromCookbookImport = (
     {}
   );
 
-  const allUpdates = {
+  const allUpdates: Updates = {
     ...cookbookUpdates,
     ...foodUpdates,
     ...tagUpdates,
@@ -343,12 +397,14 @@ export const updateFromCookbookImport = (
   };
 
   const undo = () => {
-    const undoCookbookUpdates = Object.keys(formattedCookbook).reduce(
+    const undoCookbookUpdates: Updates = Object.keys(
+      formattedCookbook
+    ).reduce<Updates>(
       (acc, recipeId) => ({ ...acc, [`${cookbookPath}/${recipeId}`]: null }),
       {}
     );
 
-    const undoFoodUpdates = Object.keys(newFoods).reduce(
+    const undoFoodUpdates: Updates = Object.keys(newFoods).reduce<Updates>(
       (acc, foodName) => ({
         ...acc,
         [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: null,
@@ -356,7 +412,7 @@ export const updateFromCookbookImport = (
       {}
     );
 
-    const undoTagUpdates = Object.keys(newTags).reduce(
+    const undoTagUpdates: Updates = Object.keys(newTags).reduce<Updates>(
       (acc, tagName) => ({
         ...acc,
         [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: null,
@@ -364,7 +420,7 @@ export const updateFromCookbookImport = (
       {}
     );
 
-    const undoRequests = {
+    const undoRequests: Updates = {
       ...undoCookbookUpdates,
       ...undoFoodUpdates,
       ...undoTagUpdates,
@@ -419,9 +475,13 @@ export const updateFromCookbookImport = (
   makeUpdates();
 };
 
-export const setAllData = (fileData, dataPaths, addAlert) => {
+export const setAllData = (
+  fileData: object,
+  dataPaths: DataPaths,
+  addAlert: AddAlert
+) => {
   updateRequest(
-    Object.keys(databasePaths).reduce(
+    Object.keys(databasePaths).reduce<Updates>(
       (acc, databaseEntryName) => ({
         ...acc,
         ...(fileData.hasOwnProperty(databaseEntryName)
@@ -438,12 +498,28 @@ export const setAllData = (fileData, dataPaths, addAlert) => {
 };
 
 export const deleteRecipe = (
-  recipeId,
-  { shoppingList, recipeOrder, glossary },
-  { shoppingListPath, cookbookPath, menuPath, recipeOrderPath },
-  addAlert,
-  navigate,
-  recipe
+  recipeId: string,
+  {
+    shoppingList,
+    recipeOrder,
+    glossary,
+  }: {
+    shoppingList: ShoppingList;
+    recipeOrder: RecipeOrder;
+    glossary: Glossary;
+  },
+  {
+    shoppingListPath,
+    cookbookPath,
+    menuPath,
+    recipeOrderPath,
+  }: Pick<
+    DataPaths,
+    "shoppingListPath" | "cookbookPath" | "menuPath" | "recipeOrderPath"
+  >,
+  addAlert: AddAlert,
+  navigate: NavigateFunction,
+  recipe: Recipe
 ) => {
   const shoppingListDeletes = shoppingListDeletesByRecipe(
     recipeId,
@@ -456,7 +532,7 @@ export const deleteRecipe = (
       `${cookbookPath}/${recipeId}`,
       `${menuPath}/${recipeId}`,
       ...Object.values(shoppingListDeletes),
-    ].reduce((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
+    ].reduce<Updates>((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
       [recipeOrderPath]: recipeOrder.filter(
         (_recipeId) => recipeId !== _recipeId
       ),
@@ -487,11 +563,11 @@ export const deleteRecipe = (
 };
 
 export const changeCheckFood = (
-  { shoppingListPath },
-  { glossary },
-  basicFoodId,
-  newChecked,
-  addAlert
+  { shoppingListPath }: Pick<DataPaths, "shoppingListPath">,
+  { glossary }: { glossary: Glossary },
+  basicFoodId: string,
+  newChecked: boolean,
+  addAlert: AddAlert
 ) => {
   updateRequest(
     {
@@ -524,18 +600,34 @@ export const changeCheckFood = (
 };
 
 export const saveRecipe = (
-  recipe,
-  _recipeId,
-  { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
-  { recipeOrder, glossary, shoppingList },
-  addAlert,
-  successHandler,
-  navigate,
-  maybeOldRecipe,
-  maybeNotificationInfo
+  recipe: Recipe,
+  _recipeId: string,
+  {
+    cookbookPath,
+    recipeOrderPath,
+    shoppingListPath,
+    menuPath,
+  }: Pick<
+    DataPaths,
+    "shoppingListPath" | "cookbookPath" | "menuPath" | "recipeOrderPath"
+  >,
+  {
+    recipeOrder,
+    glossary,
+    shoppingList,
+  }: {
+    recipeOrder: RecipeOrder;
+    glossary: Glossary;
+    shoppingList: ShoppingList;
+  },
+  addAlert: AddAlert,
+  successHandler: Noop,
+  navigate: NavigateFunction,
+  maybeOldRecipe?: Recipe,
+  maybeNotificationInfo?: { isAdmin: boolean; displayName: string }
 ) => {
   const { name, instructions, ingredients = {}, shareId } = recipe;
-  const isCreating = !_recipeId;
+  const isCreating: boolean = !_recipeId;
 
   if (
     !(
@@ -553,10 +645,10 @@ export const saveRecipe = (
 
   let recipeId = _recipeId;
   if (isCreating) {
-    recipeId = createKey(cookbookPath);
+    recipeId = createKey();
   }
 
-  const updates = {
+  const updates: Updates = {
     [`${cookbookPath}/${recipeId}`]: recipe,
   };
 
@@ -631,7 +723,7 @@ export const saveRecipe = (
 
 export const createRecipeTag = (glossaryPath, successHandler, tagName) => {
   const pathRoot = `${glossaryPath}/recipeTags`;
-  const newKey = createKey(pathRoot);
+  const newKey = createKey();
 
   updateRequest(
     { [`${pathRoot}/${newKey}`]: tagName },
@@ -642,11 +734,15 @@ export const createRecipeTag = (glossaryPath, successHandler, tagName) => {
   );
 };
 
-export const uploadColors = (colorsPath, colorKey, addAlert) => {
+export const uploadColors = (
+  colorsPath: string,
+  colorKey: ColorKey,
+  addAlert: AddAlert
+) => {
   updateRequest({ [colorsPath]: colorKey }, addAlert, addAlert);
 };
 
-export const sendAuthorizationRequest = (user, addAlert) => {
+export const sendAuthorizationRequest = (user: User, addAlert: AddAlert) => {
   const { displayName, uid } = user;
 
   updateRequest({ [`requestedUsers/${uid}`]: displayName });
@@ -674,28 +770,28 @@ export const sendAuthorizationRequest = (user, addAlert) => {
   }
 };
 
-export const removeUserFromRequestedUsers = (uid) => {
+export const removeUserFromRequestedUsers = (uid: string) => {
   deleteRequest([`requestedUsers/${uid}`]);
 };
 
-export const approveRequestedUser = (uid) => {
+export const approveRequestedUser = (uid: string) => {
   removeUserFromRequestedUsers(uid);
   updateRequest({ [`users/${uid}`]: true });
 };
 
-export const updateAllowUnrestrictedUsers = (newValue) => {
+export const updateAllowUnrestrictedUsers = (newValue: boolean) => {
   updateRequest({ [`allowUnrestrictedUsers`]: newValue });
 };
 
-export const setAuthorizationForUser = (uid, newValue) => {
+export const setAuthorizationForUser = (uid: string, newValue: boolean) => {
   updateRequest({ [`users/${uid}`]: newValue });
 };
 
 export const createSharedRecipe = (
-  shareId,
-  sharedRecipe,
-  recipePath,
-  addAlert
+  shareId: string,
+  sharedRecipe: SharedRecipe,
+  recipePath: string,
+  addAlert: AddAlert
 ) => {
   updateRequest(
     {
@@ -717,7 +813,11 @@ export const createSharedRecipe = (
   );
 };
 
-export const removeSharedRecipe = (shareId, recipePath, addAlert) => {
+export const removeSharedRecipe = (
+  shareId: string,
+  recipePath: string,
+  addAlert: AddAlert
+) => {
   deleteRequest(
     [`shared/${shareId}`, `${recipePath}/shareId`],
     () => {
@@ -735,7 +835,7 @@ export const removeSharedRecipe = (shareId, recipePath, addAlert) => {
   );
 };
 
-export const updateLastViewedSharedRecipe = (shareId) => {
+export const updateLastViewedSharedRecipe = (shareId: string) => {
   updateRequest(
     {
       [`shared/${shareId}/info/lastViewed`]: Date.now(),
@@ -745,14 +845,14 @@ export const updateLastViewedSharedRecipe = (shareId) => {
 };
 
 export const shareRecipe = async (
-  recipe,
-  glossary,
-  user,
-  recipeId,
-  cookbookPath,
-  addAlert
+  recipe: Recipe,
+  glossary: Glossary,
+  user: User,
+  recipeId: string,
+  cookbookPath: string,
+  addAlert: AddAlert
 ) => {
-  const shareId = createKey("shared");
+  const shareId = createKey();
 
   const recipeData = transformRecipeForExport(recipe, glossary);
   const userId = user.uid;
@@ -769,7 +869,7 @@ export const shareRecipe = async (
   );
 };
 
-export const updateFcmToken = (fcmToken, addAlert) => {
+export const updateFcmToken = (fcmToken: string, addAlert: AddAlert) => {
   updateRequest(
     { fcmToken },
     () => {

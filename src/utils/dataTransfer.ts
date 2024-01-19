@@ -1,14 +1,12 @@
 import { offlineCookbookKey } from "../constants";
 import {
-  BasicFoodId,
   BasicFoodTags,
   BasicFoods,
   Cookbook,
-  CookbookData,
+  FormattedDataFromCookBookImport,
   Glossary,
   Ingredients,
   Recipe,
-  RecipeData,
   RecipeTagList,
 } from "../types";
 import { createKey } from "./requests";
@@ -27,12 +25,12 @@ export const downloadData = (dataJSON: any, name: string = "download") => {
 export const transformRecipeForExport = (
   recipe: Recipe,
   glossary: Glossary
-): RecipeData => {
+): Recipe => {
   const { basicFoods, recipeTags } = glossary;
   const { ingredients = {}, tags = [] } = recipe;
 
   const ingredientsAsNames = Object.keys(ingredients).reduce<{
-    [key in BasicFoodId]: string;
+    [key in string]: string;
   }>(
     (acc, ingredientKey) => ({
       ...acc,
@@ -44,7 +42,7 @@ export const transformRecipeForExport = (
   const tagsAsNames = tags.map((tagKey) => recipeTags[tagKey]);
 
   // TODO Substitute ingredient needs to be transformed
-  const recipeData: RecipeData = {
+  const recipeData: Recipe = {
     ...recipe,
     ingredients: ingredientsAsNames,
     tags: tagsAsNames,
@@ -60,7 +58,7 @@ export const transformCookbookForExport = ({
   cookbook: Cookbook;
   glossary: Glossary;
 }) =>
-  Object.keys(cookbook).reduce<CookbookData>((acc, recipeId) => {
+  Object.keys(cookbook).reduce<Cookbook>((acc, recipeId) => {
     const recipe = cookbook[recipeId];
     const recipeData = transformRecipeForExport(recipe, glossary);
 
@@ -71,13 +69,9 @@ export const transformCookbookForExport = ({
   }, {});
 
 export const transformCookbookFromImport = (
-  cookbookData: CookbookData,
+  cookbookData: Cookbook,
   glossary: Glossary
-): {
-  formattedCookbook: Cookbook;
-  newFoods: BasicFoods;
-  newTags: BasicFoodTags;
-} => {
+): FormattedDataFromCookBookImport => {
   const { basicFoods, recipeTags } = glossary;
   const newFoods: BasicFoods = {};
   const newTags: BasicFoodTags = {};

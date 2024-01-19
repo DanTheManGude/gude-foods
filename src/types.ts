@@ -53,16 +53,12 @@ export type DatabasePathKey =
   | "colorKey"
   | "basicFoodTagAssociation";
 
-export type DataPathKey = `${DatabasePathKey}Path`;
+export type SpecificPathKey<Key extends DatabasePathKey> = `${Key}Path`;
+export type DataPathKey = SpecificPathKey<DatabasePathKey>;
 export type DataPaths = { [key in DataPathKey]: string };
 
-export type RecipeId = string;
-export type BasicFoodId = string;
-export type BasicFoodTagId = string;
-export type RecipeTagId = string;
-
-export type Ingredients = { [key in BasicFoodId]: string };
-export type RecipeTagList = RecipeTagId[];
+export type Ingredients = { [key in string]: string };
+export type RecipeTagList = string[];
 
 export type Recipe = {
   name: string;
@@ -74,30 +70,27 @@ export type Recipe = {
   isFavorite?: boolean;
   shareId?: string;
 };
-export type RecipeData = Recipe;
-export type CookbookData = { [name in string]: RecipeData };
-
 export type ShoppingListEntry = {
   isChecked?: boolean;
   collatedAmount?: string;
-  list?: RecipeTagId[];
+  list?: string[];
 };
 
-export type BasicFoodTags = { [key in BasicFoodTagId]: string };
-export type BasicFoods = { [key in BasicFoodId]: string };
-export type RecipeTags = { [key in RecipeTagId]: string };
+export type BasicFoodTags = { [key in string]: string };
+export type BasicFoods = { [key in string]: string };
+export type RecipeTags = { [key in string]: string };
 
-export type Menu = { [key in RecipeId]: number };
+export type Menu = { [key in string]: string };
 export type Glossary = {
   basicFoodTags: BasicFoodTags;
   basicFoods: BasicFoods;
   recipeTags: RecipeTags;
 };
-export type BasicFoodTagOrder = BasicFoodTagId[];
-export type ShoppingList = { [key in BasicFoodId]: ShoppingListEntry };
-export type Cookbook = { [key in RecipeId]: Recipe };
-export type RecipeOrder = RecipeId[];
-export type BasicFoodTagAssociation = { [key in BasicFoodId]: BasicFoodTagId };
+export type BasicFoodTagOrder = string[];
+export type ShoppingList = { [key in string]: ShoppingListEntry };
+export type Cookbook = { [key in string]: Recipe };
+export type RecipeOrder = string[];
+export type BasicFoodTagAssociation = { [key in string]: string };
 
 export type Database = {
   menu?: Menu;
@@ -114,9 +107,7 @@ export type ExternalRecipe = Recipe & { ingredientText: string[] };
 
 export type ShoppingMapChecked = any;
 export type ShoppingMapUnchecked = {
-  [basicFoodTagId in BasicFoodTagId]: {
-    [key in BasicFoodId]: ShoppingListEntry;
-  };
+  [key in string]: { [key in string]: ShoppingListEntry };
 };
 
 export type ShoppingMap = {
@@ -124,4 +115,18 @@ export type ShoppingMap = {
   unchecked: ShoppingMapUnchecked;
 };
 
+export type FormattedDataFromCookBookImport = {
+  formattedCookbook: Cookbook;
+  newFoods: BasicFoods;
+  newTags: BasicFoodTags;
+};
+
 export type RequestedUsers = { [uid in string]: string };
+
+export type SharedRecipeInfo = {
+  lastViewed: number;
+  recipeId: string;
+  shareDate: number;
+  userId: string;
+};
+export type SharedRecipe = { info: SharedRecipeInfo; recipeData: Recipe };
