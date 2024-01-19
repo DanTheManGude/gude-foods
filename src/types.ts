@@ -123,4 +123,10 @@ export type FormattedDataFromCookBookImport = {
 
 export type RequestedUsers = { [uid in string]: string };
 
-export type SharedRecipe = any;
+export type SharedRecipeInfo = {
+  lastViewed: number;
+  recipeId: string;
+  shareDate: number;
+  userId: string;
+};
+export type SharedRecipe = { info: SharedRecipeInfo; recipeData: Recipe };
