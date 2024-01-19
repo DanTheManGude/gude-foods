@@ -53,7 +53,8 @@ export type DatabasePathKey =
   | "colorKey"
   | "basicFoodTagAssociation";
 
-export type DataPathKey = `${DatabasePathKey}Path`;
+export type SpecificPathKey<Key extends DatabasePathKey> = `${Key}Path`;
+export type DataPathKey = SpecificPathKey<DatabasePathKey>;
 export type DataPaths = { [key in DataPathKey]: string };
 
 export type RecipeId = string;
