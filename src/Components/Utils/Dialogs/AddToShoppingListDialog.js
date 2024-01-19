@@ -12,10 +12,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-import {
-  addRecipeToShoppingList,
-  addRecipeToMenu,
-} from "../../../utils/requests";
+import { addRecipeToShoppingList } from "../../../utils/requests";
 
 import IngredientList from "../IngredientList";
 
@@ -43,7 +40,8 @@ function AddToShoppingListDialog(props) {
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
 
-  const { cookbook, recipeOrder: _recipeOrder } = database;
+  const { cookbook, recipeOrder: _recipeOrder, menu: _menu } = database;
+  const menu = _menu || {};
   const recipeOrder = _recipeOrder || [];
 
   const [ingredients, setIngredients] = useState({});
@@ -62,12 +60,6 @@ function AddToShoppingListDialog(props) {
     }
   }, [cookbook, recipeId]);
 
-  useEffect(() => {
-    if (open && recipeId) {
-      addRecipeToMenu(recipeId, dataPaths.menuPath);
-    }
-  }, [open, recipeId, dataPaths.menuPath]);
-
   const handleClose = () => {
     setCount(1);
 
@@ -79,7 +71,7 @@ function AddToShoppingListDialog(props) {
       recipeId,
       count,
       ingredients,
-      { recipeOrder },
+      { recipeOrder, menu },
       dataPaths,
       addAlert
     );
@@ -122,7 +114,7 @@ function AddToShoppingListDialog(props) {
             </Button>
           </ButtonGroup>
           <Button color="secondary" onClick={handleClose} variant="contained">
-            <Typography>Close</Typography>
+            <Typography>Cancel</Typography>
           </Button>
           <Button color="primary" onClick={handleAdd} variant="contained">
             <Typography>Add</Typography>

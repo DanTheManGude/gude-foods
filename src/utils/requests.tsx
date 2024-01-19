@@ -121,7 +121,7 @@ export const addRecipeToShoppingList = (
   recipeId: string,
   count: number,
   ingredients: Ingredients = {},
-  { recipeOrder }: { recipeOrder: RecipeOrder },
+  { recipeOrder, menu: _menu }: { recipeOrder: RecipeOrder; menu: Menu },
   {
     shoppingListPath,
     recipeOrderPath,
@@ -129,6 +129,8 @@ export const addRecipeToShoppingList = (
   }: Pick<DataPaths, "shoppingListPath" | "recipeOrderPath" | "menuPath">,
   addAlert: AddAlert
 ) => {
+  const menu = _menu || {};
+
   updateRequest(
     {
       ...Object.keys(ingredients).reduce<Updates>(
@@ -143,7 +145,12 @@ export const addRecipeToShoppingList = (
         recipeId,
         ...recipeOrder.filter((_recipeId) => recipeId !== _recipeId),
       ],
-      [`${menuPath}/${recipeId}`]: count,
+      [menuPath]: {
+        ...menu,
+        [recipeId]: menu.hasOwnProperty(recipeId)
+          ? menu[recipeId] + count
+          : count,
+      },
     },
     (successAlert) => {
       addAlert(
@@ -151,7 +158,7 @@ export const addRecipeToShoppingList = (
           ...successAlert,
           message: (
             <Typography>
-              Succesfully added ingredients to Shopping List.
+              Succesfully added ingredients to Shopping List and recipe to Menu.
             </Typography>
           ),
           undo: () => {
@@ -165,6 +172,7 @@ export const addRecipeToShoppingList = (
                   {}
                 ),
                 [recipeOrderPath]: recipeOrder,
+                [menuPath]: menu,
               },
               (undoSuccessAlert) => {
                 addAlert({
@@ -186,12 +194,6 @@ export const addRecipeToShoppingList = (
     },
     addAlert
   );
-};
-
-export const addRecipeToMenu = (recipeId: string, menuPath: string) => {
-  updateRequest({
-    [`${menuPath}/${recipeId}`]: 1,
-  });
 };
 
 export const addRecipesToMenu = (
@@ -309,7 +311,7 @@ export const removeRecipeFromMenuAndShoppingList = (
           ...successAlert,
           message: (
             <Typography>
-              {`Removed recipe ${recipeName} from Shopping List and Menu.`}
+              {`Succesfully removed recipe ${recipeName} from Menu and Shopping List.`}
             </Typography>
           ),
           undo: () => {
