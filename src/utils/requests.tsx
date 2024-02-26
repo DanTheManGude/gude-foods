@@ -529,15 +529,17 @@ export const deleteRecipe = (
     shoppingListPath
   );
 
+  const newRecipeOrder = recipeOrder.filter(
+    (_recipeId) => recipeId !== _recipeId
+  );
+
   updateRequest(
     [
       `${cookbookPath}/${recipeId}`,
       `${menuPath}/${recipeId}`,
       ...Object.values(shoppingListDeletes),
     ].reduce<Updates>((acc, deletePath) => ({ ...acc, [deletePath]: null }), {
-      [recipeOrderPath]: recipeOrder.filter(
-        (_recipeId) => recipeId !== _recipeId
-      ),
+      [recipeOrderPath]: newRecipeOrder,
     }),
     (successAlert) => {
       addAlert(
@@ -549,7 +551,7 @@ export const deleteRecipe = (
               recipe,
               undefined,
               { cookbookPath, recipeOrderPath, shoppingListPath, menuPath },
-              { recipeOrder, glossary, shoppingList },
+              { recipeOrder: newRecipeOrder, glossary, shoppingList },
               addAlert,
               () => {},
               navigate
