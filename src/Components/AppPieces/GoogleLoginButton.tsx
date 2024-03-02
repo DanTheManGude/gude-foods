@@ -1,20 +1,23 @@
 import { useState, useEffect } from "react";
 
-import { useTheme } from "@mui/material/styles";
+import { Theme, useTheme } from "@mui/material/styles";
 
 import { signInGoogle } from "../../utils/googleAuth";
+import { AddAlert } from "../../types";
 
-const constructImageUrl = (theme, type) =>
+type ButtonType = "normal" | "pressed";
+
+const constructImageUrl = (theme: Theme, type: ButtonType) =>
   `/media/googleLogin/${theme.palette.mode}-${type}.png`;
 
-function GoogleLoginButton(props) {
+function GoogleLoginButton(props: { addAlert: AddAlert }) {
   const { addAlert } = props;
   const theme = useTheme();
 
   const [buttonImageSource, setButtonImageSource] = useState(
     constructImageUrl(theme, "normal")
   );
-  const updateButtonImageSource = (type) =>
+  const updateButtonImageSource = (type: ButtonType) =>
     setButtonImageSource(constructImageUrl(theme, type));
 
   useEffect(() => {
