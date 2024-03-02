@@ -70,6 +70,8 @@ function OfflineCookbookUpdater() {
       setDidInitialize(true);
     }
   }, [cookbook, glossary, addAlert, didInitialize]);
+
+  return <></>;
 }
 
 export default OfflineCookbookUpdater;

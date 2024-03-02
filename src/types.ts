@@ -130,3 +130,34 @@ export type SharedRecipeInfo = {
   userId: string;
 };
 export type SharedRecipe = { info: SharedRecipeInfo; recipeData: Recipe };
+
+export type SharedRecipes = { [id in string]: SharedRecipe };
+
+export type FilteringOptions = Partial<{
+  searchTerm: string;
+  ingredientsList: string[];
+  tagsList: string[];
+  isFavoriteFilter: boolean;
+}>;
+
+export type ActingUser = {
+  uid: string;
+  displayName: string;
+  isAuthorized: boolean;
+  basicFoodsCount: number;
+  recipeCount: number;
+};
+
+export type Accounts = {
+  [uid in string]: {
+    ["basicFood-basicFoodTag"]?: BasicFoodTagAssociation;
+    basicFoodTagOrder?: BasicFoodTagOrder;
+    colorKey?: ColorKey;
+    cookbook?: Cookbook;
+    glossary?: Glossary;
+    menu?: Menu;
+    name: string;
+    recipeOrder?: RecipeOrder;
+    shoppingList?: ShoppingList;
+  };
+};
