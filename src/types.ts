@@ -1,9 +1,7 @@
 import { ThemeOptions } from "@mui/material";
 import { AlertProps } from "@mui/material/Alert";
 
-export type Noop = () => void;
-
-export type SetSubsriber = (newSubscriber: Noop) => void;
+export type SetSubsriber = (newSubscriber: () => void) => void;
 
 export type ColorKey = "default" | "dark" | "light";
 
@@ -25,7 +23,7 @@ export type Alert = {
   title?: JSX.Element;
   alertProps: Partial<AlertProps>;
   dismissible?: boolean;
-  undo?: Noop;
+  undo?: () => void;
 };
 export type AddAlert = (alert: Alert, time?: number) => void;
 
@@ -130,3 +128,34 @@ export type SharedRecipeInfo = {
   userId: string;
 };
 export type SharedRecipe = { info: SharedRecipeInfo; recipeData: Recipe };
+
+export type SharedRecipes = { [id in string]: SharedRecipe };
+
+export type FilteringOptions = Partial<{
+  searchTerm: string;
+  ingredientsList: string[];
+  tagsList: string[];
+  isFavoriteFilter: boolean;
+}>;
+
+export type ActingUser = {
+  uid: string;
+  displayName: string;
+  isAuthorized: boolean;
+  basicFoodsCount: number;
+  recipeCount: number;
+};
+
+export type Accounts = {
+  [uid in string]: {
+    ["basicFood-basicFoodTag"]?: BasicFoodTagAssociation;
+    basicFoodTagOrder?: BasicFoodTagOrder;
+    colorKey?: ColorKey;
+    cookbook?: Cookbook;
+    glossary?: Glossary;
+    menu?: Menu;
+    name: string;
+    recipeOrder?: RecipeOrder;
+    shoppingList?: ShoppingList;
+  };
+};

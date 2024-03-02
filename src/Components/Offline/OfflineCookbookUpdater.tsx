@@ -38,7 +38,8 @@ function OfflineCookbookUpdater() {
     ) {
       saveCookbookToLocalStorage(
         { cookbook, glossary: glossaryRef.current },
-        () => {}
+        console.log,
+        console.warn
       );
     }
     cookbookRef.current = cookbook;
@@ -70,6 +71,8 @@ function OfflineCookbookUpdater() {
       setDidInitialize(true);
     }
   }, [cookbook, glossary, addAlert, didInitialize]);
+
+  return <></>;
 }
 
 export default OfflineCookbookUpdater;

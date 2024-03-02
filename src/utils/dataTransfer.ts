@@ -57,7 +57,7 @@ export const transformCookbookForExport = ({
 }: {
   cookbook: Cookbook;
   glossary: Glossary;
-}) =>
+}): Cookbook =>
   Object.keys(cookbook).reduce<Cookbook>((acc, recipeId) => {
     const recipe = cookbook[recipeId];
     const recipeData = transformRecipeForExport(recipe, glossary);

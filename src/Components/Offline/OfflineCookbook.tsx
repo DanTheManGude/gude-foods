@@ -9,8 +9,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import FavoriteTag from "../Utils/FavoriteTag";
 import { downloadData } from "../../utils/dataTransfer";
+import { Cookbook, Recipe } from "../../types";
 
-function OfflineCookbook(props) {
+function OfflineCookbook(props: {
+  cookbook: Cookbook;
+  setRecipe: (r: Recipe) => void;
+}) {
   const { cookbook, setRecipe } = props;
 
   return (
@@ -74,8 +78,7 @@ function OfflineCookbook(props) {
                       key={`tag-${index}`}
                       label={<Typography>{tagName}</Typography>}
                       size="small"
-                      variant="contained"
-                      color="tertiary"
+                      color={"tertiary" as any}
                     />
                   ))}
                 </Stack>

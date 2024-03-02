@@ -1,9 +1,19 @@
 import { useEffect, useState, useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { getDatabase, ref, onValue } from "firebase/database";
+import { User } from "firebase/auth";
 
-import { updateRequest } from "../../utils/requests";
+import {
+  DataPaths,
+  Database,
+  FilteringOptions,
+  ExternalRecipe as ExternalRecipeType,
+  ActingUser,
+  SharedRecipes as SharedRecipesType,
+  Accounts,
+} from "../../types";
 import { databasePaths } from "../../constants";
+import { updateRequest } from "../../utils/requests";
 
 import OfflineCookbookUpdater from "../Offline/OfflineCookbookUpdater";
 
@@ -27,10 +37,15 @@ import {
   UserContext,
 } from "../Contexts";
 
-const getCreateFullPath = (user) => (pathName) =>
-  `accounts/${user.uid}/${pathName}`;
+const getCreateFullPath = (uid: string) => (pathName: string) =>
+  `accounts/${uid}/${pathName}`;
 
-function PagesContainer(props) {
+function PagesContainer(props: {
+  isAdmin: boolean;
+  requestedUsers: any;
+  allowUnrestrictedUsers: boolean;
+  enableUsingOffline: () => void;
+}) {
   const {
     isAdmin,
     requestedUsers,
@@ -41,27 +56,25 @@ function PagesContainer(props) {
   const user = useContext(UserContext);
   const setColorKey = useContext(ColorKeyContext);
 
-  const [database, setDatabase] = useState({});
-  const [dataPaths, setDataPaths] = useState({});
-  const [filteringOptions, setFilteringOptions] = useState();
-  const [externalRecipe, setExternalRecipe] = useState();
-  const [actingUser, setActingUser] = useState();
-  const [userList, setUserList] = useState([]);
-  const [accounts, setAccounts] = useState();
-  const [sharedRecipes, setSharedRecipes] = useState();
+  const [database, setDatabase] = useState<Database>({});
+  const [dataPaths, setDataPaths] = useState<Partial<DataPaths>>({});
+  const [filteringOptions, setFilteringOptions] = useState<FilteringOptions>();
+  const [externalRecipe, setExternalRecipe] = useState<ExternalRecipeType>();
+  const [actingUser, setActingUser] = useState<ActingUser>();
+  const [userList, setUserList] = useState<ActingUser[]>([]);
+  const [accounts, setAccounts] = useState<Accounts>();
+  const [sharedRecipes, setSharedRecipes] = useState<SharedRecipesType>();
 
-  const [themeIsNotSet, setThemeIsNotSet] = useState(false);
+  const [themeIsNotSet, setThemeIsNotSet] = useState<boolean>(false);
 
-  const setActingUserByUid = (uid) => {
+  const setActingUserByUid = (uid: string) => {
     const newUser = userList.find((userEntry) => userEntry.uid === uid);
     if (newUser) {
       setActingUser(newUser);
     }
   };
 
-  const clearActingUser = () => {
-    setActingUser();
-  };
+  const clearActingUser = () => setActingUser(undefined);
 
   useEffect(() => {
     if (!user || !setColorKey) {
@@ -69,7 +82,9 @@ function PagesContainer(props) {
     }
     const db = getDatabase();
 
-    const createFullPath = getCreateFullPath(actingUser || user);
+    const createFullPath = getCreateFullPath(
+      actingUser ? actingUser.uid : user.uid
+    );
 
     const onValueListerRemovers = [];
 
@@ -128,7 +143,7 @@ function PagesContainer(props) {
     onValue(ref(db, "users"), (snapshot) => {
       const users = snapshot.val();
       onValue(ref(db, "accounts"), (snapshot) => {
-        const accountsSnapshot = snapshot.val();
+        const accountsSnapshot: Accounts = snapshot.val();
         setAccounts(accountsSnapshot);
         setUserList(
           Object.keys(accountsSnapshot).map((userUid) => ({
@@ -163,7 +178,7 @@ function PagesContainer(props) {
 
   return (
     <DatabaseContext.Provider value={database}>
-      <DataPathsContext.Provider value={dataPaths}>
+      <DataPathsContext.Provider value={dataPaths as DataPaths}>
         <Routes>
           <Route
             path="/home"

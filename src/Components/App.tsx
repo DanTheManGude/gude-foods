@@ -33,7 +33,7 @@ import Loading from "./Utils/Loading";
 import OfflineMode from "./Offline/OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
-import { Alert as GFAlert, Noop, RequestedUsers, SetSubsriber } from "../types";
+import { Alert as GFAlert, RequestedUsers, SetSubsriber } from "../types";
 
 type AlertWithId = GFAlert & { id: number };
 
@@ -47,7 +47,7 @@ function App(props: { setSubscriber: SetSubsriber }) {
   const [isAuthorizedUser, setIsAuthorizedUser] = useState<boolean>(false);
 
   const [initialLoading, setInitialLoading] = useState<boolean>(true);
-  const stopInitialLoading: Noop = () => setInitialLoading(false);
+  const stopInitialLoading: () => void = () => setInitialLoading(false);
   const [authorizedLoading, setAuthorizedLoading] = useState<boolean>(false);
   const isLoading: boolean = initialLoading || authorizedLoading;
 
@@ -197,7 +197,7 @@ function App(props: { setSubscriber: SetSubsriber }) {
       <TransitionGroup>
         {alertList.map((alert) => {
           const { message, title, alertProps, dismissible, undo, id } = alert;
-          const handleClose: Noop = () => removeAlert(id);
+          const handleClose: () => void = () => removeAlert(id);
 
           return (
             <Collapse key={id}>

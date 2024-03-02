@@ -13,7 +13,7 @@ import { isDevelopment } from "../../utils/utility";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
-const NavBar = ({ isAuthorized }) => {
+const NavBar = ({ isAuthorized }: { isAuthorized: boolean }) => {
   let navigate = useNavigate();
   const theme = useTheme();
 
@@ -21,7 +21,7 @@ const NavBar = ({ isAuthorized }) => {
 
   const otherStripe = `${theme.palette.background.paper
     .split("")
-    .map((item, index, array) =>
+    .map((item, _index, array) =>
       item === "#" || array.length === 7 ? item : item + item
     )
     .join("")}aa`;
@@ -32,8 +32,7 @@ const NavBar = ({ isAuthorized }) => {
       <AppBar
         position="fixed"
         sx={{
-          left: "2%",
-          width: "96%",
+          width: "100%",
         }}
       >
         <Container
@@ -55,9 +54,8 @@ const NavBar = ({ isAuthorized }) => {
           >
             <Typography
               variant="h4"
-              noWrap
+              noWrap={true}
               component="span"
-              href="/"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -77,7 +75,6 @@ const NavBar = ({ isAuthorized }) => {
               variant="h4"
               noWrap
               component="span"
-              href=""
               sx={{
                 display: { xs: "flex", md: "none" },
                 fontFamily: "DancingScript",
