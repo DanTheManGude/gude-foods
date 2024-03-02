@@ -21,7 +21,7 @@ const NavBar = ({ isAuthorized }) => {
 
   const otherStripe = `${theme.palette.background.paper
     .split("")
-    .map((item, index, array) =>
+    .map((item, _index, array) =>
       item === "#" || array.length === 7 ? item : item + item
     )
     .join("")}aa`;
@@ -54,9 +54,8 @@ const NavBar = ({ isAuthorized }) => {
           >
             <Typography
               variant="h4"
-              noWrap
+              noWrap={true}
               component="span"
-              href="/"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -76,7 +75,6 @@ const NavBar = ({ isAuthorized }) => {
               variant="h4"
               noWrap
               component="span"
-              href=""
               sx={{
                 display: { xs: "flex", md: "none" },
                 fontFamily: "DancingScript",
