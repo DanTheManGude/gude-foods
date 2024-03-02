@@ -15,7 +15,7 @@ import OfflineCookbook from "./OfflineCookbook";
 import ImportFileButton from "../Utils/ImportFileButton";
 import { Cookbook, Recipe } from "../../types";
 
-function OfflineMode(props) {
+function OfflineMode(props: { disableUsingOffline: () => void }) {
   const { disableUsingOffline } = props;
 
   const [showAlert, setShowAlert] = useState<boolean>(true);
