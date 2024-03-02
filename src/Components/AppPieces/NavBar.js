@@ -32,8 +32,7 @@ const NavBar = ({ isAuthorized }) => {
       <AppBar
         position="fixed"
         sx={{
-          left: "2%",
-          width: "96%",
+          width: "100%",
         }}
       >
         <Container
