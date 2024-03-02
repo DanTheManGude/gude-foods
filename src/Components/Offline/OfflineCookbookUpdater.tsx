@@ -38,7 +38,8 @@ function OfflineCookbookUpdater() {
     ) {
       saveCookbookToLocalStorage(
         { cookbook, glossary: glossaryRef.current },
-        () => {}
+        console.log,
+        console.warn
       );
     }
     cookbookRef.current = cookbook;
