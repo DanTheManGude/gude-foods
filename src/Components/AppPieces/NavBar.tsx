@@ -13,7 +13,7 @@ import { isDevelopment } from "../../utils/utility";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
-const NavBar = ({ isAuthorized }) => {
+const NavBar = ({ isAuthorized }: { isAuthorized: boolean }) => {
   let navigate = useNavigate();
   const theme = useTheme();
 

@@ -13,18 +13,21 @@ import { offlineCookbookKey } from "../../constants";
 import RecipeData from "../Utils/RecipeData";
 import OfflineCookbook from "./OfflineCookbook";
 import ImportFileButton from "../Utils/ImportFileButton";
+import { Cookbook, Recipe } from "../../types";
 
 function OfflineMode(props) {
   const { disableUsingOffline } = props;
 
-  const [showAlert, setShowAlert] = useState(true);
-  const [cookbook, setCookbook] = useState({});
-  const [recipe, setRecipe] = useState();
-  const clearRecipe = () => setRecipe();
+  const [showAlert, setShowAlert] = useState<boolean>(true);
+  const [cookbook, setCookbook] = useState<Cookbook>({});
+  const [recipe, setRecipe] = useState<Recipe>();
+
+  const clearRecipe = () => setRecipe(undefined);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem(offlineCookbookKey)) || {};
-    setCookbook(data);
+    const cookbookData =
+      JSON.parse(localStorage.getItem(offlineCookbookKey)) || {};
+    setCookbook(cookbookData);
   }, []);
 
   const renderAlert = () => (
