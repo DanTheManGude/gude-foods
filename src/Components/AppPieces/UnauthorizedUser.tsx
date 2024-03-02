@@ -1,7 +1,8 @@
 import { getDatabase, ref, onValue } from "firebase/database";
+import { User } from "firebase/auth";
 
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
+import Typography, { TypographyProps } from "@mui/material/Typography";
+import Stack, { StackProps } from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
 import { sendAuthorizationRequest } from "../../utils/requests";
@@ -9,13 +10,14 @@ import { sendAuthorizationRequest } from "../../utils/requests";
 import GoogleLoginButton from "./GoogleLoginButton";
 import { useEffect, useState } from "react";
 import UserCard from "../Utils/UserCard";
+import { AddAlert } from "../../types";
 
-const textStyles = {
+const textStyles: TypographyProps["sx"] = {
   color: "primary.main",
   textAlign: "center",
 };
 
-const MainStack = (props) => (
+const MainStack = (props: Partial<StackProps>) => (
   <Stack
     {...props}
     sx={{ paddingTop: 1.5 }}
@@ -24,7 +26,7 @@ const MainStack = (props) => (
   />
 );
 
-function UnauthorizedUser(props) {
+function UnauthorizedUser(props: { user: User; addAlert: AddAlert }) {
   const { user, addAlert } = props;
 
   const [didRequest, setDidRequest] = useState(false);
