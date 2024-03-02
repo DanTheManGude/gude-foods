@@ -1,9 +1,7 @@
 import { ThemeOptions } from "@mui/material";
 import { AlertProps } from "@mui/material/Alert";
 
-export type Noop = () => void;
-
-export type SetSubsriber = (newSubscriber: Noop) => void;
+export type SetSubsriber = (newSubscriber: () => void) => void;
 
 export type ColorKey = "default" | "dark" | "light";
 
@@ -25,7 +23,7 @@ export type Alert = {
   title?: JSX.Element;
   alertProps: Partial<AlertProps>;
   dismissible?: boolean;
-  undo?: Noop;
+  undo?: () => void;
 };
 export type AddAlert = (alert: Alert, time?: number) => void;
 

@@ -7,7 +7,7 @@ import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
 import "./styles/index.css";
 
-import { Noop, SetSubsriber } from "./types";
+import { SetSubsriber } from "./types";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import App from "./Components/App";
 
@@ -27,12 +27,12 @@ initializeAppCheck(firebaseApp, {
   isTokenAutoRefreshEnabled: true,
 });
 
-let cacheSubscriber: Noop = () => {};
+let cacheSubscriber: () => void = () => {};
 const setSubscriber: SetSubsriber = (newSubscriber) => {
   cacheSubscriber = newSubscriber;
 };
 
-const notifySubscriber: Noop = () => {
+const notifySubscriber: () => void = () => {
   cacheSubscriber();
 };
 

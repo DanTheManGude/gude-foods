@@ -15,7 +15,6 @@ import {
   Glossary,
   Ingredients,
   Menu,
-  Noop,
   Recipe,
   RecipeOrder,
   SharedRecipe,
@@ -625,7 +624,7 @@ export const saveRecipe = (
     shoppingList: ShoppingList;
   },
   addAlert: AddAlert,
-  successHandler: Noop,
+  successHandler: () => void,
   navigate: NavigateFunction,
   maybeOldRecipe?: Recipe,
   maybeNotificationInfo?: { isAdmin: boolean; displayName: string }
