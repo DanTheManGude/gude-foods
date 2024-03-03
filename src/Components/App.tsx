@@ -172,11 +172,15 @@ function App(props: { setSubscriber: SetSubsriber }) {
       }
     });
 
-    onValue(ref(getDatabase(), `admin`), (snapshot) => {
-      if (snapshot.exists()) {
-        setIsAdmin(true);
-      }
-    });
+    get(child(ref(getDatabase()), `admin`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setIsAdmin(true);
+        }
+      })
+      .catch(() => {
+        console.log("not-admin-login");
+      });
 
     addAlertRef.current({
       message: <Typography>Succesfully logged in with Google</Typography>,
