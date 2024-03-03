@@ -161,7 +161,13 @@ function InstructionList(props) {
 
   return (
     <Accordion key={"instructions"} sx={{ width: "100%" }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <AccordionSummary
+        expandIcon={
+          <IconButton>
+            <ExpandMoreIcon />
+          </IconButton>
+        }
+      >
         <Typography variant="h6">Instructions</Typography>
       </AccordionSummary>
       <AccordionDetails>

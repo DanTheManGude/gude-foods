@@ -407,7 +407,13 @@ function Glossary(props) {
                 disabled={true}
                 expanded={false}
               >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary
+                  expandIcon={
+                    <IconButton>
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  }
+                >
                   <Typography variant="h6">
                     {glossary.basicFoodTags[tagId] || unknownSectionName}
                   </Typography>
@@ -417,7 +423,13 @@ function Glossary(props) {
           }
           return (
             <Accordion key={`basicFoods-${tagId}`} variant="outlined">
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary
+                expandIcon={
+                  <IconButton>
+                    <ExpandMoreIcon />
+                  </IconButton>
+                }
+              >
                 <Typography variant="h6">
                   {glossary.basicFoodTags[tagId] || unknownSectionName}
                 </Typography>
@@ -466,19 +478,37 @@ function Glossary(props) {
         alignItems="center"
       >
         <Accordion key={"basicFoodTags"} sx={{ width: "95%" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            expandIcon={
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+          >
             <Typography variant="h6">Departments</Typography>
           </AccordionSummary>
           <AccordionDetails>{renderBasicFoodTagsContents()}</AccordionDetails>
         </Accordion>
         <Accordion key={"basicFoods"} sx={{ width: "95%" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            expandIcon={
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+          >
             <Typography variant="h6">Basic Foods</Typography>
           </AccordionSummary>
           <AccordionDetails>{renderBasicFoodContents()}</AccordionDetails>
         </Accordion>
         <Accordion key={"recipeTags"} sx={{ width: "95%" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            expandIcon={
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+          >
             <Typography variant="h6">Recipe Tags</Typography>
           </AccordionSummary>
           <AccordionDetails>{renderRecipeTagsContents()}</AccordionDetails>

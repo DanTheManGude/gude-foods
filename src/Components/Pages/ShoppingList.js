@@ -172,7 +172,13 @@ function ShoppingList() {
 
     return (
       <Accordion key={basicFoodId} variant="outlined">
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary
+          expandIcon={
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          }
+        >
           <Stack direction="row" alignItems="center">
             <Checkbox
               color="primary"
@@ -654,7 +660,13 @@ function ShoppingList() {
           disabled={true}
           expanded={false}
         >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            expandIcon={
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+          >
             <Typography variant="h6" component={"em"}>
               Checked
             </Typography>
@@ -680,7 +692,13 @@ function ShoppingList() {
         ) : null}
 
         <Accordion key={"checked"} sx={{ width: "100%" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            expandIcon={
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+          >
             <Typography variant="h6" component={"em"}>
               Checked
             </Typography>
@@ -771,7 +789,13 @@ function ShoppingList() {
             .filter((tagId) => shoppingMap.unchecked.hasOwnProperty(tagId))
             .map((tagId) => (
               <Accordion key={tagId} sx={{ width: "100%" }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary
+                  expandIcon={
+                    <IconButton>
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  }
+                >
                   {tagId === UNKNOWN_TAG ? (
                     <Typography variant="h6">{unknownSectionName}</Typography>
                   ) : (

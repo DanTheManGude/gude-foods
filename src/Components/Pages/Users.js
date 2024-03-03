@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Switch from "@mui/material/Switch";
-
+import IconButton from "@mui/material/IconButton/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
@@ -103,7 +103,13 @@ function Users(props) {
 
     return (
       <Accordion key={uid} sx={{ width: "100%" }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary
+          expandIcon={
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          }
+        >
           <Stack direction="row" spacing={2} alignItems={"flex-end"}>
             <Typography variant="h6">{displayName}</Typography>
             <Typography>

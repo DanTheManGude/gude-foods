@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
 
@@ -171,7 +173,13 @@ function IngredientList(props) {
   return (
     <>
       <Accordion key={"ingredients"} sx={{ width: "100%" }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary
+          expandIcon={
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          }
+        >
           <Typography variant="h6">Ingredients</Typography>
         </AccordionSummary>
         <AccordionDetails>{renderContents()}</AccordionDetails>
