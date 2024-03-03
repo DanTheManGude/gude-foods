@@ -17,6 +17,7 @@ import {
   BasicFoodTagAssociation,
   BasicFoodTagOrder,
   Ingredients,
+  SupplementalIngredientInfo,
 } from "../../types";
 import { waitForElm } from "../../utils/utility";
 import { DatabaseContext } from "../Contexts";
@@ -52,6 +53,7 @@ const getIngredientSorting =
 
 function IngredientList(props: {
   ingredients: Ingredients;
+  supplementalIngredientInfo?: SupplementalIngredientInfo;
   editable: boolean;
   updateIngredients: (
     setter: (newIngredients: Ingredients) => Ingredients

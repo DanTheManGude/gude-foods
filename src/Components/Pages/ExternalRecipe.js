@@ -46,6 +46,7 @@ function ExternalRecipe(props) {
     tags,
     notes,
     ingredientText,
+    supplementalIngredientInfo,
   } = givenRecipe;
 
   let navigate = useNavigate();
@@ -138,7 +139,11 @@ function ExternalRecipe(props) {
           </Typography>
         )}
         {renderGivenInstructions()}
-        <IngredientList ingredients={ingredients} editable={false} />
+        <IngredientList
+          ingredients={ingredients}
+          editable={false}
+          supplementalIngredientInfo={supplementalIngredientInfo}
+        />
         <InstructionList instructions={instructions} editable={false} />
         {renderNotesContainer(
           <Typography style={{ whiteSpace: "pre-line" }}>{notes}</Typography>

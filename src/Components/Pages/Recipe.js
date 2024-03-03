@@ -66,6 +66,7 @@ function Recipe(props) {
     isFavorite: false,
     notes: "",
     shareId: "",
+    supplementalIngredientInfo: {},
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -367,6 +368,7 @@ function Recipe(props) {
           {renderDescription()}
           <IngredientList
             ingredients={recipeEntry.ingredients}
+            supplementalIngredientInfo={recipeEntry.supplementalIngredientInfo}
             editable={isEditing}
             updateIngredients={updateIngredients}
           />

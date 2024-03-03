@@ -92,6 +92,9 @@ function AddToShoppingListDialog(props) {
       <DialogContent dividers={true}>
         <IngredientList
           ingredients={ingredients}
+          supplementalIngredientInfo={
+            cookbook[recipeId].supplementalIngredientInfo
+          }
           editable={true}
           updateIngredients={setIngredients}
           isForShoppingList={true}
