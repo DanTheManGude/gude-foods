@@ -19,6 +19,7 @@ import {
   RecipeOrder,
   SharedRecipe,
   ShoppingList,
+  SupplementalIngredientInfo,
 } from "../types";
 import { NavigateFunction } from "react-router-dom";
 
@@ -120,6 +121,7 @@ export const addRecipeToShoppingList = (
   recipeId: string,
   count: number,
   ingredients: Ingredients = {},
+  supplementalIngredientInfo: SupplementalIngredientInfo = {},
   { recipeOrder, menu: _menu }: { recipeOrder: RecipeOrder; menu: Menu },
   {
     shoppingListPath,
@@ -128,6 +130,8 @@ export const addRecipeToShoppingList = (
   }: Pick<DataPaths, "shoppingListPath" | "recipeOrderPath" | "menuPath">,
   addAlert: AddAlert
 ) => {
+  console.log(supplementalIngredientInfo); //TODO update request
+
   const menu = _menu || {};
 
   updateRequest(

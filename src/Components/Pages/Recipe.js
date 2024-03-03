@@ -118,6 +118,13 @@ function Recipe(props) {
       ingredients: setter(_recipeEntry.ingredients),
     }));
   };
+  const updateSupplementalIngredientInfo = (setter) => {
+    updateRecipe((_recipeEntry) => ({
+      supplementalIngredientInfo: setter(
+        _recipeEntry.supplementalIngredientInfo
+      ),
+    }));
+  };
   const updateInstructions = (setter) => {
     updateRecipe((_recipeEntry) => ({
       instructions: setter(_recipeEntry.instructions),
@@ -371,6 +378,7 @@ function Recipe(props) {
             supplementalIngredientInfo={recipeEntry.supplementalIngredientInfo}
             editable={isEditing}
             updateIngredients={updateIngredients}
+            updateSupplementalIngredientInfo={updateSupplementalIngredientInfo}
           />
           <InstructionList
             instructions={recipeEntry.instructions || []}

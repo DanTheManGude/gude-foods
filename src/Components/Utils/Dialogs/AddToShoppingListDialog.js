@@ -45,6 +45,9 @@ function AddToShoppingListDialog(props) {
   const recipeOrder = _recipeOrder || [];
 
   const [ingredients, setIngredients] = useState({});
+  const [supplementalIngredientInfo, setSupplementalIngredientInfo] = useState(
+    {}
+  );
 
   const [count, setCount] = useState(1);
   const incrementCount = () => {
@@ -57,6 +60,11 @@ function AddToShoppingListDialog(props) {
   useEffect(() => {
     if (cookbook && cookbook[recipeId]) {
       setIngredients(cookbook[recipeId].ingredients);
+      if (cookbook[recipeId].supplementalIngredientInfo) {
+        setSupplementalIngredientInfo(
+          cookbook[recipeId].supplementalIngredientInfo
+        );
+      }
     }
   }, [cookbook, recipeId]);
 
@@ -71,6 +79,7 @@ function AddToShoppingListDialog(props) {
       recipeId,
       count,
       ingredients,
+      supplementalIngredientInfo,
       { recipeOrder, menu },
       dataPaths,
       addAlert
@@ -92,11 +101,10 @@ function AddToShoppingListDialog(props) {
       <DialogContent dividers={true}>
         <IngredientList
           ingredients={ingredients}
-          supplementalIngredientInfo={
-            cookbook[recipeId].supplementalIngredientInfo
-          }
+          supplementalIngredientInfo={supplementalIngredientInfo}
           editable={true}
           updateIngredients={setIngredients}
+          updateSupplementalIngredientInfo={setSupplementalIngredientInfo}
           isForShoppingList={true}
         />
       </DialogContent>
