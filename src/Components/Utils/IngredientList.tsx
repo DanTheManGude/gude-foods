@@ -13,6 +13,8 @@ import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import SubdirectoryArrowRightOutlinedIcon from "@mui/icons-material/SubdirectoryArrowRightOutlined";
 
 import {
   BasicFoodTagAssociation,
@@ -81,12 +83,12 @@ function IngredientList(props: {
   const database = useContext(DatabaseContext);
   const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
 
-  const [newIngredientId, setNewIngredientId] = useState<null | string>(null);
-  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
-  const [menuIngredientId, setMenuIngredientId] = useState<null | string>(null);
-  const [addingSubstitution, setAddingSubstitution] = useState<null | string>(
-    null
-  );
+  const [newIngredientId, setNewIngredientId] = useState<string>(null);
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement>(null);
+  const [menuIngredientId, setMenuIngredientId] = useState<string>(null);
+  const [addingSubstitution, setAddingSubstitution] = useState<string>(null);
+  const [newSubstitutionFoodId, setNewSubstitutionFoodId] =
+    useState<string>(null);
 
   const handleCloseMenu = () => {
     setMenuAnchorEl(null);
@@ -189,7 +191,7 @@ function IngredientList(props: {
     setAddingSubstitution(ingredientId);
   };
 
-  const addSubstitution = (ingredientId: string) => {
+  const getAddSubstitution = (ingredientId: string) => (foodId: string) => {
     updateSupplementalIngredientInfo(
       (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
         const existingInfo = _supplementalIngredientInfo[ingredientId] || {};
@@ -198,12 +200,29 @@ function IngredientList(props: {
           ..._supplementalIngredientInfo,
           [ingredientId]: {
             ...existingInfo,
-            substitution: { foodId: ingredientId, amount: "" },
+            substitution: { foodId, amount: "" },
           },
         };
       }
     );
     setAddingSubstitution(null);
+  };
+
+  const updateSubstitutionAmount = (ingredientId: string, amount: string) => {
+    updateSupplementalIngredientInfo(
+      (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
+        const { substitution, ...existingInfo } =
+          _supplementalIngredientInfo[ingredientId] || {};
+
+        return {
+          ..._supplementalIngredientInfo,
+          [ingredientId]: {
+            ...existingInfo,
+            substitution: { ...substitution, amount },
+          },
+        };
+      }
+    );
   };
 
   const renderIngredientText = (foodId: string) => (
@@ -212,6 +231,36 @@ function IngredientList(props: {
         {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
       </Typography>
       <Typography>{ingredients[foodId]}</Typography>
+    </>
+  );
+
+  const renderSubstitutionControl = (
+    ingredientId: string,
+    { foodId, amount }: SupplementalIngredientInfo[string]["substitution"]
+  ) => (
+    <>
+      <SubdirectoryArrowRightOutlinedIcon />
+      <Typography sx={{ fontWeight: "bold", minWidth: "130px" }}>
+        {glossary.basicFoods[foodId]}:
+      </Typography>
+      <TextField
+        id={`${foodId}-amount-input-substitution`}
+        placeholder="Edit amount"
+        value={amount}
+        onChange={(event) =>
+          updateSubstitutionAmount(ingredientId, event.target.value)
+        }
+        size="small"
+        fullWidth={true}
+        variant="outlined"
+        inputProps={{ autoCapitalize: "none" }}
+      />
+      <IconButton
+        onClick={() => removeSubstitution(ingredientId)}
+        color="secondary"
+      >
+        <CloseOutlinedIcon />
+      </IconButton>
     </>
   );
 
@@ -260,7 +309,13 @@ function IngredientList(props: {
           </IconButton>
         </>
         {addingSubstitution === ingredientId &&
-          renderAddItemControl(addSubstitution)}
+          renderAddItemControl(
+            ingredientId,
+            getAddSubstitution(ingredientId),
+            setNewSubstitutionFoodId,
+            newSubstitutionFoodId
+          )}
+        {substitution && renderSubstitutionControl(ingredientId, substitution)}
       </>
     );
   };
@@ -282,7 +337,10 @@ function IngredientList(props: {
       ));
 
   const renderAddItemControl = (
-    addItemHandler: (ingredientId: string) => void
+    key: string,
+    addItemHandler: (foodId: string) => void,
+    setNewFoodId: (foodId: string) => void,
+    newFoodId: string
   ) => (
     <Stack
       key={"addIngredient"}
@@ -291,19 +349,19 @@ function IngredientList(props: {
       alignItems="center"
     >
       <BasicFoodAutocomplete
-        id="addIngredientSelect"
+        id={`addIngredientSelect-${key}`}
         foodMap={ingredients}
-        newFoodId={newIngredientId}
-        setNewFoodId={setNewIngredientId}
+        newFoodId={newFoodId}
+        setNewFoodId={setNewFoodId}
         extraProps={{ fullWidth: true }}
       />
       <Button
-        id={`add-ingredient-button`}
+        id={`add-ingredient-button-${key}`}
         color="primary"
         variant="contained"
         size="small"
-        onClick={() => addItemHandler(newIngredientId)}
-        disabled={!newIngredientId}
+        onClick={() => addItemHandler(newFoodId)}
+        disabled={!newFoodId}
         sx={{ minWidth: "fit-content" }}
       >
         <Typography>Add item</Typography>
@@ -362,7 +420,15 @@ function IngredientList(props: {
   const renderContents = () => (
     <>
       <Stack spacing={editable ? 2 : 1}>
-        {renderItems().concat(editable && renderAddItemControl(addIngredient))}
+        {renderItems().concat(
+          editable &&
+            renderAddItemControl(
+              "newIngredient",
+              addIngredient,
+              setNewIngredientId,
+              newIngredientId
+            )
+        )}
       </Stack>
       {renderMenu()}
     </>
