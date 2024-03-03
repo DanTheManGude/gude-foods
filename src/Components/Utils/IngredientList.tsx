@@ -84,6 +84,9 @@ function IngredientList(props: {
   const [newIngredientId, setNewIngredientId] = useState<null | string>(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [menuIngredientId, setMenuIngredientId] = useState<null | string>(null);
+  const [addingSubstitution, setAddingSubstitution] = useState<null | string>(
+    null
+  );
 
   const handleCloseMenu = () => {
     setMenuAnchorEl(null);
@@ -181,7 +184,27 @@ function IngredientList(props: {
     );
   };
 
-  const addSubstitution = (ingredientId: string) => {};
+  const addSubstitutionControls = (ingredientId: string) => {
+    setNewIngredientId(null);
+    setAddingSubstitution(ingredientId);
+  };
+
+  const addSubstitution = (ingredientId: string) => {
+    updateSupplementalIngredientInfo(
+      (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
+        const existingInfo = _supplementalIngredientInfo[ingredientId] || {};
+
+        return {
+          ..._supplementalIngredientInfo,
+          [ingredientId]: {
+            ...existingInfo,
+            substitution: { foodId: ingredientId, amount: "" },
+          },
+        };
+      }
+    );
+    setAddingSubstitution(null);
+  };
 
   const renderIngredientText = (foodId: string) => (
     <>
@@ -196,38 +219,48 @@ function IngredientList(props: {
     const shouldUseMenu =
       !isForShoppingList || supplementalIngredientInfo[ingredientId];
 
+    const substitution =
+      supplementalIngredientInfo[ingredientId] &&
+      supplementalIngredientInfo[ingredientId].substitution;
+
     return (
       <>
-        <Typography sx={{ fontWeight: "bold", minWidth: "130px" }}>
-          {glossary.basicFoods[ingredientId]}:
-        </Typography>
-        <TextField
-          id={`${ingredientId}-amount-input`}
-          placeholder="Edit amount"
-          value={ingredients[ingredientId]}
-          onChange={(event) => setIngredient(ingredientId, event.target.value)}
-          size="small"
-          fullWidth={true}
-          variant="outlined"
-          inputProps={{ autoCapitalize: "none" }}
-        />
-        <IconButton
-          onClick={
-            shouldUseMenu
-              ? (event: React.MouseEvent<HTMLButtonElement>) => {
-                  setMenuIngredientId(ingredientId);
-                  setMenuAnchorEl(event.currentTarget);
-                }
-              : getRemoveIngredient(ingredientId)
-          }
-          color="secondary"
-        >
-          {shouldUseMenu ? (
-            <ArrowDropDownCircleOutlinedIcon />
-          ) : (
-            <HighlightOffIcon />
-          )}
-        </IconButton>
+        <>
+          <Typography sx={{ fontWeight: "bold", minWidth: "130px" }}>
+            {glossary.basicFoods[ingredientId]}:
+          </Typography>
+          <TextField
+            id={`${ingredientId}-amount-input`}
+            placeholder="Edit amount"
+            value={ingredients[ingredientId]}
+            onChange={(event) =>
+              setIngredient(ingredientId, event.target.value)
+            }
+            size="small"
+            fullWidth={true}
+            variant="outlined"
+            inputProps={{ autoCapitalize: "none" }}
+          />
+          <IconButton
+            onClick={
+              shouldUseMenu
+                ? (event: React.MouseEvent<HTMLButtonElement>) => {
+                    setMenuIngredientId(ingredientId);
+                    setMenuAnchorEl(event.currentTarget);
+                  }
+                : getRemoveIngredient(ingredientId)
+            }
+            color="secondary"
+          >
+            {shouldUseMenu ? (
+              <ArrowDropDownCircleOutlinedIcon />
+            ) : (
+              <HighlightOffIcon />
+            )}
+          </IconButton>
+        </>
+        {addingSubstitution === ingredientId &&
+          renderAddItemControl(addSubstitution)}
       </>
     );
   };
@@ -248,7 +281,9 @@ function IngredientList(props: {
         </Stack>
       ));
 
-  const renderAddItemControl = () => (
+  const renderAddItemControl = (
+    addItemHandler: (ingredientId: string) => void
+  ) => (
     <Stack
       key={"addIngredient"}
       direction="row"
@@ -267,7 +302,7 @@ function IngredientList(props: {
         color="primary"
         variant="contained"
         size="small"
-        onClick={() => addIngredient(newIngredientId)}
+        onClick={() => addItemHandler(newIngredientId)}
         disabled={!newIngredientId}
         sx={{ minWidth: "fit-content" }}
       >
@@ -316,7 +351,7 @@ function IngredientList(props: {
           </>
         ) : (
           !isForShoppingList && (
-            <MenuItem onClick={withCloseMenu(addSubstitution)}>
+            <MenuItem onClick={withCloseMenu(addSubstitutionControls)}>
               Add substitution
             </MenuItem>
           )
@@ -327,7 +362,7 @@ function IngredientList(props: {
   const renderContents = () => (
     <>
       <Stack spacing={editable ? 2 : 1}>
-        {renderItems().concat(editable && renderAddItemControl())}
+        {renderItems().concat(editable && renderAddItemControl(addIngredient))}
       </Stack>
       {renderMenu()}
     </>
