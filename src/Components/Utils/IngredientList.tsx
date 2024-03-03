@@ -13,13 +13,21 @@ import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
 
+import {
+  BasicFoodTagAssociation,
+  BasicFoodTagOrder,
+  Ingredients,
+} from "../../types";
 import { waitForElm } from "../../utils/utility";
 import { DatabaseContext } from "../Contexts";
 import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
 
 const getIngredientSorting =
-  (basicFoodTagAssociation, basicFoodTagOrder) =>
-  (ingredientIdA, ingredientIdB) => {
+  (
+    basicFoodTagAssociation: BasicFoodTagAssociation,
+    basicFoodTagOrder: BasicFoodTagOrder
+  ) =>
+  (ingredientIdA: string, ingredientIdB: string): number => {
     if (!basicFoodTagAssociation || !basicFoodTagOrder) {
       return 0;
     }
@@ -42,7 +50,15 @@ const getIngredientSorting =
     return indexA - indexB;
   };
 
-function IngredientList(props) {
+function IngredientList(props: {
+  ingredients: Ingredients;
+  editable: boolean;
+  updateIngredients: (
+    setter: (newIngredients: Ingredients) => Ingredients
+  ) => void;
+  isForShoppingList: boolean;
+  idsAsNames: boolean;
+}) {
   const {
     ingredients = {},
     editable,
@@ -54,18 +70,19 @@ function IngredientList(props) {
   const database = useContext(DatabaseContext);
   const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
 
-  const [newIngredientId, setNewIngredientId] = useState(null);
-  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [newIngredientId, setNewIngredientId] = useState<null | string>(null);
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleCloseMenu = () => setMenuAnchorEl(null);
 
-  const setIngredient = (ingredientId, value) => {
-    updateIngredients((_ingredients) => ({
+  const setIngredient = (ingredientId: string, value: string) => {
+    updateIngredients((_ingredients: Ingredients) => ({
       ..._ingredients,
       [ingredientId]: value,
     }));
   };
-  const addIngredient = (ingredientId) => {
+
+  const addIngredient = (ingredientId: string) => {
     updateIngredients((_ingredients) => {
       return { ..._ingredients, [ingredientId]: "" };
     });
@@ -75,7 +92,8 @@ function IngredientList(props) {
     });
     setNewIngredientId(null);
   };
-  const getRemoveIngredient = (ingredientId) => () => {
+
+  const getRemoveIngredient = (ingredientId: string) => () => {
     updateIngredients((_ingredients) => {
       const { [ingredientId]: removedIngredient, ...restIngredients } =
         _ingredients;
@@ -83,16 +101,16 @@ function IngredientList(props) {
     });
   };
 
-  const renderIngredientText = (ingredientId) => (
+  const renderIngredientText = (foodId: string) => (
     <>
       <Typography sx={{ fontWeight: "bold" }}>
-        {idsAsNames ? ingredientId : glossary.basicFoods[ingredientId]}:
+        {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
       </Typography>
-      <Typography>{ingredients[ingredientId]}</Typography>
+      <Typography>{ingredients[foodId]}</Typography>
     </>
   );
 
-  const renderIngredientControl = (ingredientId) => (
+  const renderIngredientControl = (ingredientId: string) => (
     <>
       <Typography sx={{ fontWeight: "bold", minWidth: "130px" }}>
         {glossary.basicFoods[ingredientId]}:
@@ -101,17 +119,17 @@ function IngredientList(props) {
         id={`${ingredientId}-amount-input`}
         placeholder="Edit amount"
         value={ingredients[ingredientId]}
-        onChange={(event) => {
-          setIngredient(ingredientId, event.target.value);
-        }}
+        onChange={(event) => setIngredient(ingredientId, event.target.value)}
         size="small"
         fullWidth={true}
         variant="outlined"
-        inputProps={{
-          autoCapitalize: "none",
-        }}
+        inputProps={{ autoCapitalize: "none" }}
       />
-      <IconButton onClick={(event) => setMenuAnchorEl(event.currentTarget)}>
+      <IconButton
+        onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
+          setMenuAnchorEl(event.currentTarget)
+        }
+      >
         <ArrowDropDownCircleOutlinedIcon color="secondary" />
       </IconButton>
     </>
