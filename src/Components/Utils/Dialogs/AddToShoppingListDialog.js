@@ -94,7 +94,7 @@ function AddToShoppingListDialog(props) {
           ingredients={ingredients}
           editable={true}
           updateIngredients={setIngredients}
-          contentsOnly={true}
+          isForShoppingList={true}
         />
       </DialogContent>
       <DialogActions>

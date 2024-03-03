@@ -8,14 +8,13 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
 
 import { waitForElm } from "../../utils/utility";
-
 import { DatabaseContext } from "../Contexts";
-
 import BasicFoodAutocomplete from "./BasicFoodAutocomplete";
 
 const getIngredientSorting =
@@ -48,7 +47,7 @@ function IngredientList(props) {
     ingredients = {},
     editable,
     updateIngredients,
-    contentsOnly = false,
+    isForShoppingList = false,
     idsAsNames = false,
   } = props;
 
@@ -56,6 +55,9 @@ function IngredientList(props) {
   const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
 
   const [newIngredientId, setNewIngredientId] = useState(null);
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+
+  const handleCloseMenu = () => setMenuAnchorEl(null);
 
   const setIngredient = (ingredientId, value) => {
     updateIngredients((_ingredients) => ({
@@ -109,10 +111,9 @@ function IngredientList(props) {
           autoCapitalize: "none",
         }}
       />
-      <ArrowDropDownCircleOutlinedIcon
-        color="secondary"
-        onClick={getRemoveIngredient(ingredientId)}
-      />
+      <IconButton onClick={(event) => setMenuAnchorEl(event.currentTarget)}>
+        <ArrowDropDownCircleOutlinedIcon color="secondary" />
+      </IconButton>
     </>
   );
 
@@ -160,13 +161,28 @@ function IngredientList(props) {
     </Stack>
   );
 
+  const renderMenu = () => (
+    <Menu
+      id="ingredient-menu"
+      anchorEl={menuAnchorEl}
+      open={!!menuAnchorEl}
+      onClose={handleCloseMenu}
+    >
+      <MenuItem onClick={handleCloseMenu}>Remove</MenuItem>
+      <MenuItem onClick={handleCloseMenu}>Make optional</MenuItem>
+      <MenuItem onClick={handleCloseMenu}>Add substitution</MenuItem>
+    </Menu>
+  );
   const renderContents = () => (
-    <Stack spacing={editable ? 2 : 1}>
-      {renderItems().concat(editable && renderAddItemControl())}
-    </Stack>
+    <>
+      <Stack spacing={editable ? 2 : 1}>
+        {renderItems().concat(editable && renderAddItemControl())}
+      </Stack>
+      {renderMenu()}
+    </>
   );
 
-  if (contentsOnly) {
+  if (isForShoppingList) {
     return renderContents();
   }
 
