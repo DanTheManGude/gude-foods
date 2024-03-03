@@ -12,6 +12,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 import {
   BasicFoodTagAssociation,
@@ -63,6 +64,7 @@ function IngredientList(props: {
 }) {
   const {
     ingredients = {},
+    supplementalIngredientInfo,
     editable,
     updateIngredients,
     isForShoppingList = false,
@@ -116,31 +118,46 @@ function IngredientList(props: {
     </>
   );
 
-  const renderIngredientControl = (ingredientId: string) => (
-    <>
-      <Typography sx={{ fontWeight: "bold", minWidth: "130px" }}>
-        {glossary.basicFoods[ingredientId]}:
-      </Typography>
-      <TextField
-        id={`${ingredientId}-amount-input`}
-        placeholder="Edit amount"
-        value={ingredients[ingredientId]}
-        onChange={(event) => setIngredient(ingredientId, event.target.value)}
-        size="small"
-        fullWidth={true}
-        variant="outlined"
-        inputProps={{ autoCapitalize: "none" }}
-      />
-      <IconButton
-        onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-          setMenuIngredientId(ingredientId);
-          setMenuAnchorEl(event.currentTarget);
-        }}
-      >
-        <ArrowDropDownCircleOutlinedIcon color="secondary" />
-      </IconButton>
-    </>
-  );
+  const renderIngredientControl = (ingredientId: string) => {
+    const shouldUseMenu =
+      !isForShoppingList ||
+      (supplementalIngredientInfo && supplementalIngredientInfo[ingredientId]);
+
+    return (
+      <>
+        <Typography sx={{ fontWeight: "bold", minWidth: "130px" }}>
+          {glossary.basicFoods[ingredientId]}:
+        </Typography>
+        <TextField
+          id={`${ingredientId}-amount-input`}
+          placeholder="Edit amount"
+          value={ingredients[ingredientId]}
+          onChange={(event) => setIngredient(ingredientId, event.target.value)}
+          size="small"
+          fullWidth={true}
+          variant="outlined"
+          inputProps={{ autoCapitalize: "none" }}
+        />
+        <IconButton
+          onClick={
+            shouldUseMenu
+              ? (event: React.MouseEvent<HTMLButtonElement>) => {
+                  setMenuIngredientId(ingredientId);
+                  setMenuAnchorEl(event.currentTarget);
+                }
+              : getRemoveIngredient(ingredientId)
+          }
+          color="secondary"
+        >
+          {shouldUseMenu ? (
+            <ArrowDropDownCircleOutlinedIcon />
+          ) : (
+            <HighlightOffIcon />
+          )}
+        </IconButton>
+      </>
+    );
+  };
 
   const renderItems = () =>
     Object.keys(ingredients)
