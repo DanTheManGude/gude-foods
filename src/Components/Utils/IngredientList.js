@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
 
 import { waitForElm } from "../../utils/utility";
 
@@ -107,7 +107,7 @@ function IngredientList(props) {
           autoCapitalize: "none",
         }}
       />
-      <HighlightOffIcon
+      <ArrowDropDownCircleOutlinedIcon
         color="secondary"
         onClick={getRemoveIngredient(ingredientId)}
       />
