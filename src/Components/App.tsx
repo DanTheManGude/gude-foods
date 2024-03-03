@@ -20,7 +20,7 @@ import Button, { ButtonProps } from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
 import { aboutText } from "../constants";
-import { getHasLoggedInBefore } from "../utils/utility";
+import { getHasLoggedInBefore, sendNotification } from "../utils/utility";
 
 import PagesContainer from "./AppPieces/PagesContainer";
 import NavBar from "./AppPieces/NavBar";
@@ -179,7 +179,10 @@ function App(props: { setSubscriber: SetSubsriber }) {
         }
       })
       .catch(() => {
-        console.log("not-admin-login");
+        sendNotification(
+          { title: "User login", body: `${user.displayName} just logged in.` },
+          () => {}
+        );
       });
 
     addAlertRef.current({
