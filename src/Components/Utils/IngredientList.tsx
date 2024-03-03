@@ -74,8 +74,12 @@ function IngredientList(props: {
 
   const [newIngredientId, setNewIngredientId] = useState<null | string>(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [menuIngredientId, setMenuIngredientId] = useState<null | string>(null);
 
-  const handleCloseMenu = () => setMenuAnchorEl(null);
+  const handleCloseMenu = () => {
+    setMenuAnchorEl(null);
+    setMenuIngredientId(null);
+  };
 
   const setIngredient = (ingredientId: string, value: string) => {
     updateIngredients((_ingredients: Ingredients) => ({
@@ -128,9 +132,10 @@ function IngredientList(props: {
         inputProps={{ autoCapitalize: "none" }}
       />
       <IconButton
-        onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
-          setMenuAnchorEl(event.currentTarget)
-        }
+        onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+          setMenuIngredientId(ingredientId);
+          setMenuAnchorEl(event.currentTarget);
+        }}
       >
         <ArrowDropDownCircleOutlinedIcon color="secondary" />
       </IconButton>
@@ -185,7 +190,7 @@ function IngredientList(props: {
     <Menu
       id="ingredient-menu"
       anchorEl={menuAnchorEl}
-      open={!!menuAnchorEl}
+      open={!!menuAnchorEl && !!setMenuIngredientId}
       onClose={handleCloseMenu}
     >
       <MenuItem onClick={handleCloseMenu}>Remove</MenuItem>
