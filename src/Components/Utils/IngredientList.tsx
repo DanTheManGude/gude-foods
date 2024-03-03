@@ -108,59 +108,68 @@ function IngredientList(props: {
     setNewIngredientId(null);
   };
 
-  const getRemoveIngredient = (ingredientId: string) => () => {
+  const removeIngredient = (ingredientId: string) => {
     updateIngredients((_ingredients) => {
       const { [ingredientId]: removedIngredient, ...restIngredients } =
         _ingredients;
       return restIngredients;
     });
-  };
-
-  const getSetOptional = (newOptional: boolean) => () => {
     updateSupplementalIngredientInfo(
       (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
-        const existingInfo =
-          _supplementalIngredientInfo[menuIngredientId] || {};
+        const { [ingredientId]: removedInfo, ...restInfo } =
+          _supplementalIngredientInfo;
+        return restInfo;
+      }
+    );
+  };
+
+  const getRemoveIngredient = (ingredientId: string) => () =>
+    removeIngredient(ingredientId);
+
+  const getSetOptional = (newOptional: boolean) => (ingredientId: string) => {
+    updateSupplementalIngredientInfo(
+      (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
+        const existingInfo = _supplementalIngredientInfo[ingredientId] || {};
 
         return {
           ..._supplementalIngredientInfo,
-          [menuIngredientId]: { ...existingInfo, isOptional: newOptional },
+          [ingredientId]: { ...existingInfo, isOptional: newOptional },
         };
       }
     );
   };
 
-  const removeSubstitution = () => {
+  const removeSubstitution = (ingredientId: string) => {
     updateSupplementalIngredientInfo(
       (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
         const { substitution, ...existingInfo } =
-          _supplementalIngredientInfo[menuIngredientId] || {};
+          _supplementalIngredientInfo[ingredientId] || {};
 
         return {
           ..._supplementalIngredientInfo,
-          [menuIngredientId]: existingInfo,
+          [ingredientId]: existingInfo,
         };
       }
     );
   };
 
-  const swapSubstitution = () => {
+  const swapSubstitution = (ingredientId: string) => {
     updateSupplementalIngredientInfo(
       (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
         const {
           substitution: { foodId, amount },
           ...existingInfo
-        } = _supplementalIngredientInfo[menuIngredientId] || {};
+        } = _supplementalIngredientInfo[ingredientId] || {};
 
         updateIngredients((_ingredients) => {
-          const { [menuIngredientId]: removedIngredient, ...restIngredients } =
+          const { [ingredientId]: removedIngredient, ...restIngredients } =
             _ingredients;
           return { ...restIngredients, [foodId]: amount };
         });
 
         return {
           ..._supplementalIngredientInfo,
-          [menuIngredientId]: {
+          [ingredientId]: {
             ...existingInfo,
             substitution: {
               foodId: menuIngredientId,
@@ -172,7 +181,7 @@ function IngredientList(props: {
     );
   };
 
-  const addSubstitution = () => {};
+  const addSubstitution = (ingredientId: string) => {};
 
   const renderIngredientText = (foodId: string) => (
     <>
@@ -267,8 +276,8 @@ function IngredientList(props: {
     </Stack>
   );
 
-  const withCloseMenu = (handler: () => void) => () => {
-    handler();
+  const withCloseMenu = (handler: (inredientId: string) => void) => () => {
+    handler(menuIngredientId);
     handleCloseMenu();
   };
   const renderMenu = () => {
@@ -282,11 +291,7 @@ function IngredientList(props: {
         open={!!menuAnchorEl && !!menuIngredientId}
         onClose={handleCloseMenu}
       >
-        <MenuItem
-          onClick={withCloseMenu(getRemoveIngredient(menuIngredientId))}
-        >
-          Remove
-        </MenuItem>
+        <MenuItem onClick={withCloseMenu(getRemoveIngredient)}>Remove</MenuItem>
 
         {isOptional ? (
           <MenuItem onClick={withCloseMenu(getSetOptional(false))}>
