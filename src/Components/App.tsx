@@ -20,7 +20,7 @@ import Button, { ButtonProps } from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
 import { aboutText } from "../constants";
-import { getHasLoggedInBefore } from "../utils/utility";
+import { getHasLoggedInBefore, sendNotification } from "../utils/utility";
 
 import PagesContainer from "./AppPieces/PagesContainer";
 import NavBar from "./AppPieces/NavBar";
@@ -172,11 +172,18 @@ function App(props: { setSubscriber: SetSubsriber }) {
       }
     });
 
-    onValue(ref(getDatabase(), `admin`), (snapshot) => {
-      if (snapshot.exists()) {
-        setIsAdmin(true);
-      }
-    });
+    get(child(ref(getDatabase()), `admin`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setIsAdmin(true);
+        }
+      })
+      .catch(() => {
+        sendNotification(
+          { title: "User login", body: `${user.displayName} just logged in.` },
+          () => {}
+        );
+      });
 
     addAlertRef.current({
       message: <Typography>Succesfully logged in with Google</Typography>,
