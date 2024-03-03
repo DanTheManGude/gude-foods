@@ -225,14 +225,29 @@ function IngredientList(props: {
     );
   };
 
-  const renderIngredientText = (foodId: string) => (
-    <>
-      <Typography sx={{ fontWeight: "bold" }}>
-        {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
-      </Typography>
-      <Typography>{ingredients[foodId]}</Typography>
-    </>
-  );
+  const renderIngredientText = (foodId: string, forSubstitution?: boolean) => {
+    const { isOptional = false, substitution = { foodId: "" } } =
+      forSubstitution ? {} : supplementalIngredientInfo[foodId] || {};
+
+    return (
+      <>
+        <>
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              fontStyle: isOptional ? "italic" : "inherit",
+            }}
+          >
+            {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
+          </Typography>
+          <Typography>{ingredients[foodId]}</Typography>
+        </>
+        {substitution &&
+          substitution.foodId &&
+          renderIngredientText(substitution.foodId, true)}
+      </>
+    );
+  };
 
   const renderSubstitutionControl = (
     ingredientId: string,
@@ -268,14 +283,19 @@ function IngredientList(props: {
     const shouldUseMenu =
       !isForShoppingList || supplementalIngredientInfo[ingredientId];
 
-    const substitution =
-      supplementalIngredientInfo[ingredientId] &&
-      supplementalIngredientInfo[ingredientId].substitution;
+    const { isOptional, substitution } =
+      supplementalIngredientInfo[ingredientId] || {};
 
     return (
       <>
         <>
-          <Typography sx={{ fontWeight: "bold", minWidth: "130px" }}>
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              minWidth: "130px",
+              fontStyle: isOptional ? "italic" : "inherit",
+            }}
+          >
             {glossary.basicFoods[ingredientId]}:
           </Typography>
           <TextField
