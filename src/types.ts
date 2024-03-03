@@ -58,9 +58,9 @@ export type DataPaths = { [key in DataPathKey]: string };
 export type Ingredients = { [key in string]: string };
 export type RecipeTagList = string[];
 export type SupplementalIngredientInfo = {
-  [key in string]: {
-    isOptional: boolean;
-    substitution: { foodId: string; amount: string };
+  [key in string]?: {
+    isOptional?: boolean;
+    substitution?: { foodId: string; amount: string };
   };
 };
 

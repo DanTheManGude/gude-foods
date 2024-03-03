@@ -59,17 +59,24 @@ function IngredientList(props: {
   updateIngredients: (
     setter: (newIngredients: Ingredients) => Ingredients
   ) => void;
+  updateSupplementalIngredientInfo: (
+    setter: (
+      newSupplementalIngredientInfo: SupplementalIngredientInfo
+    ) => SupplementalIngredientInfo
+  ) => void;
   isForShoppingList: boolean;
   idsAsNames: boolean;
 }) {
   const {
     ingredients = {},
-    supplementalIngredientInfo,
+    supplementalIngredientInfo: _supplementalIngredientInfo,
     editable,
     updateIngredients,
+    updateSupplementalIngredientInfo,
     isForShoppingList = false,
     idsAsNames = false,
   } = props;
+  const supplementalIngredientInfo = _supplementalIngredientInfo || {};
 
   const database = useContext(DatabaseContext);
   const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
@@ -109,6 +116,64 @@ function IngredientList(props: {
     });
   };
 
+  const getSetOptional = (newOptional: boolean) => () => {
+    updateSupplementalIngredientInfo(
+      (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
+        const existingInfo =
+          _supplementalIngredientInfo[menuIngredientId] || {};
+
+        return {
+          ..._supplementalIngredientInfo,
+          [menuIngredientId]: { ...existingInfo, isOptional: newOptional },
+        };
+      }
+    );
+  };
+
+  const removeSubstitution = () => {
+    updateSupplementalIngredientInfo(
+      (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
+        const { substitution, ...existingInfo } =
+          _supplementalIngredientInfo[menuIngredientId] || {};
+
+        return {
+          ..._supplementalIngredientInfo,
+          [menuIngredientId]: existingInfo,
+        };
+      }
+    );
+  };
+
+  const swapSubstitution = () => {
+    updateSupplementalIngredientInfo(
+      (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
+        const {
+          substitution: { foodId, amount },
+          ...existingInfo
+        } = _supplementalIngredientInfo[menuIngredientId] || {};
+
+        updateIngredients((_ingredients) => {
+          const { [menuIngredientId]: removedIngredient, ...restIngredients } =
+            _ingredients;
+          return { ...restIngredients, [foodId]: amount };
+        });
+
+        return {
+          ..._supplementalIngredientInfo,
+          [menuIngredientId]: {
+            ...existingInfo,
+            substitution: {
+              foodId: menuIngredientId,
+              amount: ingredients[menuIngredientId],
+            },
+          },
+        };
+      }
+    );
+  };
+
+  const addSubstitution = () => {};
+
   const renderIngredientText = (foodId: string) => (
     <>
       <Typography sx={{ fontWeight: "bold" }}>
@@ -120,8 +185,7 @@ function IngredientList(props: {
 
   const renderIngredientControl = (ingredientId: string) => {
     const shouldUseMenu =
-      !isForShoppingList ||
-      (supplementalIngredientInfo && supplementalIngredientInfo[ingredientId]);
+      !isForShoppingList || supplementalIngredientInfo[ingredientId];
 
     return (
       <>
@@ -203,18 +267,58 @@ function IngredientList(props: {
     </Stack>
   );
 
-  const renderMenu = () => (
-    <Menu
-      id="ingredient-menu"
-      anchorEl={menuAnchorEl}
-      open={!!menuAnchorEl && !!setMenuIngredientId}
-      onClose={handleCloseMenu}
-    >
-      <MenuItem onClick={handleCloseMenu}>Remove</MenuItem>
-      <MenuItem onClick={handleCloseMenu}>Make optional</MenuItem>
-      <MenuItem onClick={handleCloseMenu}>Add substitution</MenuItem>
-    </Menu>
-  );
+  const withCloseMenu = (handler: () => void) => () => {
+    handler();
+    handleCloseMenu();
+  };
+  const renderMenu = () => {
+    const { isOptional, substitution } =
+      supplementalIngredientInfo[menuIngredientId] || {};
+
+    return (
+      <Menu
+        id="ingredient-menu"
+        anchorEl={menuAnchorEl}
+        open={!!menuAnchorEl && !!menuIngredientId}
+        onClose={handleCloseMenu}
+      >
+        <MenuItem
+          onClick={withCloseMenu(getRemoveIngredient(menuIngredientId))}
+        >
+          Remove
+        </MenuItem>
+
+        {isOptional ? (
+          <MenuItem onClick={withCloseMenu(getSetOptional(false))}>
+            Make not optional
+          </MenuItem>
+        ) : (
+          !isForShoppingList && (
+            <MenuItem onClick={withCloseMenu(getSetOptional(true))}>
+              Make optional
+            </MenuItem>
+          )
+        )}
+
+        {substitution ? (
+          <>
+            <MenuItem onClick={withCloseMenu(removeSubstitution)}>
+              Remove substitution
+            </MenuItem>
+            <MenuItem onClick={withCloseMenu(swapSubstitution)}>
+              Swap substitution
+            </MenuItem>
+          </>
+        ) : (
+          !isForShoppingList && (
+            <MenuItem onClick={withCloseMenu(addSubstitution)}>
+              Add substitution
+            </MenuItem>
+          )
+        )}
+      </Menu>
+    );
+  };
   const renderContents = () => (
     <>
       <Stack spacing={editable ? 2 : 1}>
