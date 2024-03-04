@@ -71,14 +71,14 @@ function IngredientList(props: {
 }) {
   const {
     ingredients = {},
-    supplementalIngredientInfo: _supplementalIngredientInfo,
+    supplementalIngredientInfo: __supplementalIngredientInfo,
     editable,
     updateIngredients,
     updateSupplementalIngredientInfo,
     isForShoppingList = false,
     idsAsNames = false,
   } = props;
-  const supplementalIngredientInfo = _supplementalIngredientInfo || {};
+  const supplementalIngredientInfo = __supplementalIngredientInfo || {};
 
   const database = useContext(DatabaseContext);
   const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
@@ -159,26 +159,32 @@ function IngredientList(props: {
   };
 
   const swapSubstitution = (ingredientId: string) => {
+    const originalIngredinetAmount = ingredients[ingredientId];
+    const originalSubstitution =
+      supplementalIngredientInfo[ingredientId].substitution;
+
+    updateIngredients((_ingredients) => {
+      const { [ingredientId]: removedIngredient, ...restIngredients } =
+        _ingredients;
+
+      return {
+        ...restIngredients,
+        [originalSubstitution.foodId]: originalSubstitution.amount,
+      };
+    });
+
     updateSupplementalIngredientInfo(
       (_supplementalIngredientInfo: SupplementalIngredientInfo) => {
-        const {
-          substitution: { foodId, amount },
-          ...existingInfo
-        } = _supplementalIngredientInfo[ingredientId] || {};
-
-        updateIngredients((_ingredients) => {
-          const { [ingredientId]: removedIngredient, ...restIngredients } =
-            _ingredients;
-          return { ...restIngredients, [foodId]: amount };
-        });
+        const { substitution, ...existingInfo } =
+          _supplementalIngredientInfo[ingredientId] || {};
 
         return {
           ..._supplementalIngredientInfo,
-          [ingredientId]: {
+          [originalSubstitution.foodId]: {
             ...existingInfo,
             substitution: {
-              foodId: menuIngredientId,
-              amount: ingredients[menuIngredientId],
+              foodId: ingredientId,
+              amount: originalIngredinetAmount,
             },
           },
         };
@@ -206,6 +212,7 @@ function IngredientList(props: {
       }
     );
     setAddingSubstitution(null);
+    setNewSubstitutionFoodId(null);
   };
 
   const updateSubstitutionAmount = (ingredientId: string, amount: string) => {
@@ -225,28 +232,33 @@ function IngredientList(props: {
     );
   };
 
-  const renderIngredientText = (foodId: string, forSubstitution?: boolean) => {
-    const { isOptional = false, substitution = { foodId: "" } } =
-      forSubstitution ? {} : supplementalIngredientInfo[foodId] || {};
+  const renderIngredientText = (
+    ingredientId: string,
+    givenSubstitution?: SupplementalIngredientInfo[string]["substitution"]
+  ) => {
+    const { isOptional = false, substitution } =
+      (!givenSubstitution && supplementalIngredientInfo[ingredientId]) || {};
 
-    return (
+    const foodId = givenSubstitution ? givenSubstitution.foodId : ingredientId;
+
+    return [
       <>
-        <>
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              fontStyle: isOptional ? "italic" : "inherit",
-            }}
-          >
-            {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
-          </Typography>
-          <Typography>{ingredients[foodId]}</Typography>
-        </>
-        {substitution &&
-          substitution.foodId &&
-          renderIngredientText(substitution.foodId, true)}
-      </>
-    );
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            fontStyle: isOptional ? "italic" : "inherit",
+          }}
+        >
+          {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
+        </Typography>
+        <Typography>
+          {givenSubstitution
+            ? givenSubstitution.amount
+            : ingredients[ingredientId]}
+        </Typography>
+      </>,
+      substitution && renderIngredientText(ingredientId, substitution),
+    ];
   };
 
   const renderSubstitutionControl = (
@@ -286,58 +298,54 @@ function IngredientList(props: {
     const { isOptional, substitution } =
       supplementalIngredientInfo[ingredientId] || {};
 
-    return (
+    return [
       <>
-        <>
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              minWidth: "130px",
-              fontStyle: isOptional ? "italic" : "inherit",
-            }}
-          >
-            {glossary.basicFoods[ingredientId]}:
-          </Typography>
-          <TextField
-            id={`${ingredientId}-amount-input`}
-            placeholder="Edit amount"
-            value={ingredients[ingredientId]}
-            onChange={(event) =>
-              setIngredient(ingredientId, event.target.value)
-            }
-            size="small"
-            fullWidth={true}
-            variant="outlined"
-            inputProps={{ autoCapitalize: "none" }}
-          />
-          <IconButton
-            onClick={
-              shouldUseMenu
-                ? (event: React.MouseEvent<HTMLButtonElement>) => {
-                    setMenuIngredientId(ingredientId);
-                    setMenuAnchorEl(event.currentTarget);
-                  }
-                : getRemoveIngredient(ingredientId)
-            }
-            color="secondary"
-          >
-            {shouldUseMenu ? (
-              <ArrowDropDownCircleOutlinedIcon />
-            ) : (
-              <HighlightOffIcon />
-            )}
-          </IconButton>
-        </>
-        {addingSubstitution === ingredientId &&
-          renderAddItemControl(
-            ingredientId,
-            getAddSubstitution(ingredientId),
-            setNewSubstitutionFoodId,
-            newSubstitutionFoodId
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            minWidth: "130px",
+            fontStyle: isOptional ? "italic" : "inherit",
+          }}
+        >
+          {glossary.basicFoods[ingredientId]}:
+        </Typography>
+        <TextField
+          id={`${ingredientId}-amount-input`}
+          placeholder="Edit amount"
+          value={ingredients[ingredientId]}
+          onChange={(event) => setIngredient(ingredientId, event.target.value)}
+          size="small"
+          fullWidth={true}
+          variant="outlined"
+          inputProps={{ autoCapitalize: "none" }}
+        />
+        <IconButton
+          onClick={
+            shouldUseMenu
+              ? (event: React.MouseEvent<HTMLButtonElement>) => {
+                  setMenuIngredientId(ingredientId);
+                  setMenuAnchorEl(event.currentTarget);
+                }
+              : getRemoveIngredient(ingredientId)
+          }
+          color="secondary"
+        >
+          {shouldUseMenu ? (
+            <ArrowDropDownCircleOutlinedIcon />
+          ) : (
+            <HighlightOffIcon />
           )}
-        {substitution && renderSubstitutionControl(ingredientId, substitution)}
-      </>
-    );
+        </IconButton>
+      </>,
+      addingSubstitution === ingredientId &&
+        renderAddItemControl(
+          ingredientId,
+          getAddSubstitution(ingredientId),
+          setNewSubstitutionFoodId,
+          newSubstitutionFoodId
+        ),
+      substitution && renderSubstitutionControl(ingredientId, substitution),
+    ];
   };
 
   const renderItems = () =>
@@ -363,7 +371,7 @@ function IngredientList(props: {
     newFoodId: string
   ) => (
     <Stack
-      key={"addIngredient"}
+      key={`addIngredient-${key}`}
       direction="row"
       spacing={2}
       alignItems="center"
@@ -418,22 +426,20 @@ function IngredientList(props: {
           )
         )}
 
-        {substitution ? (
-          <>
-            <MenuItem onClick={withCloseMenu(removeSubstitution)}>
-              Remove substitution
-            </MenuItem>
-            <MenuItem onClick={withCloseMenu(swapSubstitution)}>
-              Swap substitution
-            </MenuItem>
-          </>
-        ) : (
-          !isForShoppingList && (
-            <MenuItem onClick={withCloseMenu(addSubstitutionControls)}>
-              Add substitution
-            </MenuItem>
-          )
-        )}
+        {substitution
+          ? [
+              <MenuItem onClick={withCloseMenu(removeSubstitution)}>
+                Remove substitution
+              </MenuItem>,
+              <MenuItem onClick={withCloseMenu(swapSubstitution)}>
+                Swap substitution
+              </MenuItem>,
+            ]
+          : !isForShoppingList && (
+              <MenuItem onClick={withCloseMenu(addSubstitutionControls)}>
+                Add substitution
+              </MenuItem>
+            )}
       </Menu>
     );
   };

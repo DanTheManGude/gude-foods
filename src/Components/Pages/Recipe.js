@@ -121,7 +121,7 @@ function Recipe(props) {
   const updateSupplementalIngredientInfo = (setter) => {
     updateRecipe((_recipeEntry) => ({
       supplementalIngredientInfo: setter(
-        _recipeEntry.supplementalIngredientInfo
+        _recipeEntry.supplementalIngredientInfo || {}
       ),
     }));
   };
