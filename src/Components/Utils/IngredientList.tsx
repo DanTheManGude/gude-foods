@@ -235,9 +235,11 @@ function IngredientList(props: {
   const renderIngredientText = (
     foodId: string,
     isOptional: boolean,
-    amount: string
+    amount: string,
+    withIndentArrow?: boolean
   ) => (
     <>
+      {withIndentArrow && <SubdirectoryArrowRightOutlinedIcon />}
       <Typography
         sx={{
           fontWeight: "bold",
@@ -260,7 +262,7 @@ function IngredientList(props: {
 
     if (substitution && substitution.foodId) {
       const { foodId, amount } = substitution;
-      ingredientTexts.push(renderIngredientText(foodId, false, amount));
+      ingredientTexts.push(renderIngredientText(foodId, false, amount, true));
     }
 
     return ingredientTexts;
@@ -303,7 +305,7 @@ function IngredientList(props: {
     const { isOptional, substitution } =
       supplementalIngredientInfo[ingredientId] || {};
 
-    return [
+    const controls = [
       <>
         <Typography
           sx={{
@@ -342,15 +344,24 @@ function IngredientList(props: {
           )}
         </IconButton>
       </>,
-      addingSubstitution === ingredientId &&
+    ];
+
+    if (addingSubstitution === ingredientId) {
+      controls.push(
         renderAddItemControl(
           ingredientId,
           getAddSubstitution(ingredientId),
           setNewSubstitutionFoodId,
           newSubstitutionFoodId
-        ),
-      substitution && renderSubstitutionControl(ingredientId, substitution),
-    ];
+        )
+      );
+    }
+
+    if (substitution) {
+      controls.push(renderSubstitutionControl(ingredientId, substitution));
+    }
+
+    return controls;
   };
 
   const renderItems = () =>
