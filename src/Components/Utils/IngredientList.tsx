@@ -274,7 +274,7 @@ function IngredientList(props: {
   ) => (
     <>
       <SubdirectoryArrowRightOutlinedIcon />
-      <Typography sx={{ fontWeight: "bold", minWidth: "130px" }}>
+      <Typography sx={{ fontWeight: "bold", flexGrow: 1 }}>
         {glossary.basicFoods[foodId]}:
       </Typography>
       <TextField
@@ -288,10 +288,12 @@ function IngredientList(props: {
         fullWidth={true}
         variant="outlined"
         inputProps={{ autoCapitalize: "none" }}
+        sx={{ flexGrow: 1, minWidth: "130px", maxWidth: "50%" }}
       />
       <IconButton
         onClick={() => removeSubstitution(ingredientId)}
         color="secondary"
+        sx={{ padding: 0 }}
       >
         <CloseOutlinedIcon />
       </IconButton>
@@ -310,7 +312,7 @@ function IngredientList(props: {
         <Typography
           sx={{
             fontWeight: "bold",
-            minWidth: "130px",
+            flexGrow: 1,
             fontStyle: isOptional ? "italic" : "inherit",
           }}
         >
@@ -325,6 +327,7 @@ function IngredientList(props: {
           fullWidth={true}
           variant="outlined"
           inputProps={{ autoCapitalize: "none" }}
+          sx={{ flexGrow: 1, minWidth: "130px", maxWidth: "50%" }}
         />
         <IconButton
           onClick={
@@ -336,6 +339,7 @@ function IngredientList(props: {
               : getRemoveIngredient(ingredientId)
           }
           color="secondary"
+          sx={{ padding: 0 }}
         >
           {shouldUseMenu ? (
             <ArrowDropDownCircleOutlinedIcon />
