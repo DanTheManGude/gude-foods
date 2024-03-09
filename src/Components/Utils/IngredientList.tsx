@@ -402,6 +402,7 @@ function IngredientList(props: {
       direction="row"
       spacing={2}
       alignItems="center"
+      sx={{ flexGrow: 1 }}
     >
       <BasicFoodAutocomplete
         id={`addIngredientSelect-${key}`}
