@@ -233,32 +233,37 @@ function IngredientList(props: {
   };
 
   const renderIngredientText = (
-    ingredientId: string,
-    givenSubstitution?: SupplementalIngredientInfo[string]["substitution"]
-  ) => {
+    foodId: string,
+    isOptional: boolean,
+    amount: string
+  ) => (
+    <>
+      <Typography
+        sx={{
+          fontWeight: "bold",
+          fontStyle: isOptional ? "italic" : "inherit",
+        }}
+      >
+        {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
+      </Typography>
+      <Typography>{amount}</Typography>
+    </>
+  );
+
+  const renderIngredientTexts = (ingredientId: string) => {
     const { isOptional = false, substitution } =
-      (!givenSubstitution && supplementalIngredientInfo[ingredientId]) || {};
+      supplementalIngredientInfo[ingredientId] || {};
 
-    const foodId = givenSubstitution ? givenSubstitution.foodId : ingredientId;
-
-    return [
-      <>
-        <Typography
-          sx={{
-            fontWeight: "bold",
-            fontStyle: isOptional ? "italic" : "inherit",
-          }}
-        >
-          {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
-        </Typography>
-        <Typography>
-          {givenSubstitution
-            ? givenSubstitution.amount
-            : ingredients[ingredientId]}
-        </Typography>
-      </>,
-      substitution && renderIngredientText(ingredientId, substitution),
+    const ingredientTexts: React.JSX.Element[] = [
+      renderIngredientText(ingredientId, isOptional, ingredients[ingredientId]),
     ];
+
+    if (substitution && substitution.foodId) {
+      const { foodId, amount } = substitution;
+      ingredientTexts.push(renderIngredientText(foodId, false, amount));
+    }
+
+    return ingredientTexts;
   };
 
   const renderSubstitutionControl = (
@@ -291,7 +296,7 @@ function IngredientList(props: {
     </>
   );
 
-  const renderIngredientControl = (ingredientId: string) => {
+  const renderIngredientControls = (ingredientId: string) => {
     const shouldUseMenu =
       !isForShoppingList || supplementalIngredientInfo[ingredientId];
 
@@ -351,16 +356,23 @@ function IngredientList(props: {
   const renderItems = () =>
     Object.keys(ingredients)
       .sort(getIngredientSorting(basicFoodTagAssociation, basicFoodTagOrder))
-      .map((ingredientId) => (
+      .reduce(
+        (acc: React.JSX.Element[], ingredientId) =>
+          acc.concat(
+            editable
+              ? renderIngredientControls(ingredientId)
+              : renderIngredientTexts(ingredientId)
+          ),
+        []
+      )
+      .map((element, index) => (
         <Stack
-          key={ingredientId}
+          key={`item-${editable}-${index}`}
           direction="row"
           spacing={1}
           alignItems="center"
         >
-          {editable
-            ? renderIngredientControl(ingredientId)
-            : renderIngredientText(ingredientId)}
+          {element}
         </Stack>
       ));
 
