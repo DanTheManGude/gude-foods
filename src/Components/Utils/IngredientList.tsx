@@ -213,6 +213,10 @@ function IngredientList(props: {
     );
     setAddingSubstitution(null);
     setNewSubstitutionFoodId(null);
+
+    waitForElm(`#${foodId}-amount-input-substitution`).then((elm) => {
+      elm.focus();
+    });
   };
 
   const updateSubstitutionAmount = (ingredientId: string, amount: string) => {
