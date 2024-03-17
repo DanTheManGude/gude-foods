@@ -49,15 +49,15 @@ export const transformRecipeForExport = (
   const supplementalIngredientInfoAsNames = Object.entries(
     supplementalIngredientInfo
   ).reduce<SupplementalIngredientInfo>(
-    (acc, [ingredientKey, supplementalInfo]) => {
-      let supplementalInfoAsNames = supplementalInfo;
-      if (supplementalInfo.substitution) {
-        supplementalInfoAsNames.substitution = {
-          amount: supplementalInfo.substitution.amount,
-          foodId: basicFoods[supplementalInfo.substitution.foodId],
+    (acc, [ingredientKey, individualInfo]) => {
+      let individualInfoAsNames = individualInfo;
+      if (individualInfo.substitution) {
+        individualInfoAsNames.substitution = {
+          amount: individualInfo.substitution.amount,
+          foodId: basicFoods[individualInfo.substitution.foodId],
         };
       }
-      return { ...acc, [basicFoods[ingredientKey]]: supplementalInfoAsNames };
+      return { ...acc, [basicFoods[ingredientKey]]: individualInfoAsNames };
     },
     {}
   );
@@ -99,9 +99,32 @@ export const transformCookbookFromImport = (
   const newFoods: BasicFoods = {};
   const newTags: BasicFoodTags = {};
 
+  const basicFoodList = Object.keys(basicFoods);
+  const recipeTagsList = Object.keys(recipeTags);
+
+  const findAndMaybeCreateFood = (foodName: string): string => {
+    const foundFoodId =
+      basicFoodList.find((foodId) => basicFoods[foodId] === foodName) ||
+      newFoods[foodName];
+
+    let foodId = foundFoodId;
+    if (!foundFoodId) {
+      foodId = createKey();
+      newFoods[foodName] = foodId;
+    }
+
+    return foodId;
+  };
+
   const formattedCookbook = Object.values(cookbookData).reduce<Cookbook>(
     (accumulator, recipeData) => {
-      const { ingredients = {}, tags = [], name, instructions } = recipeData;
+      const {
+        ingredients = {},
+        tags = [],
+        name,
+        instructions,
+        supplementalIngredientInfo,
+      } = recipeData;
 
       if (!name || !instructions || !ingredients) {
         throw Error("Some required fields missing on recipe");
@@ -109,18 +132,7 @@ export const transformCookbookFromImport = (
 
       const ingredientsAsKeys = Object.keys(ingredients).reduce<Ingredients>(
         (acc, ingredientName) => {
-          // TODO optimimize this
-          const basicFoodList = Object.keys(basicFoods);
-          const foundFoodId =
-            basicFoodList.find(
-              (foodId) => basicFoods[foodId] === ingredientName
-            ) || newFoods[ingredientName];
-
-          let ingredientId = foundFoodId;
-          if (!foundFoodId) {
-            ingredientId = createKey();
-            newFoods[ingredientName] = ingredientId;
-          }
+          let ingredientId = findAndMaybeCreateFood(ingredientName);
 
           return {
             ...acc,
@@ -132,7 +144,6 @@ export const transformCookbookFromImport = (
 
       const tagsAsKeys: RecipeTagList = tags.map((tagName) => {
         // TODO Optimize this
-        const recipeTagsList = Object.keys(recipeTags);
         const foundTagId =
           recipeTagsList.find((tagId) => recipeTags[tagId] === tagName) ||
           newTags[tagName];
