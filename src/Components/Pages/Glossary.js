@@ -124,6 +124,42 @@ function Glossary(props) {
                         undoUpdates[
                           `${cookbookPath}/${recipeId}/ingredients/${entryKey}`
                         ] = cookbook[recipeId].ingredients[entryKey];
+                        if (
+                          cookbook[recipeId].supplementalIngredientInfo &&
+                          cookbook[
+                            recipeId
+                          ].supplementalIngredientInfo.hasOwnProperty(entryKey)
+                        ) {
+                          updates[
+                            `${cookbookPath}/${recipeId}/supplementalIngredientInfo/${entryKey}`
+                          ] = null;
+                          undoUpdates[
+                            `${cookbookPath}/${recipeId}/supplementalIngredientInfo/${entryKey}`
+                          ] =
+                            cookbook[recipeId].supplementalIngredientInfo[
+                              entryKey
+                            ];
+                        }
+                      }
+                      if (cookbook[recipeId].supplementalIngredientInfo) {
+                        Object.entries(
+                          cookbook[recipeId].supplementalIngredientInfo
+                        ).forEach(([ingredientId, individualInfo]) => {
+                          if (
+                            individualInfo.substitution &&
+                            individualInfo.substitution.foodId === entryKey
+                          ) {
+                            updates[
+                              `${cookbookPath}/${recipeId}/supplementalIngredientInfo/${ingredientId}/substitution`
+                            ] = null;
+                            undoUpdates[
+                              `${cookbookPath}/${recipeId}/supplementalIngredientInfo/${ingredientId}/substitution`
+                            ] =
+                              cookbook[recipeId].supplementalIngredientInfo[
+                                ingredientId
+                              ].substitution;
+                          }
+                        });
                       }
                     });
                   }
