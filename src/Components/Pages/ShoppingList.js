@@ -204,7 +204,7 @@ function ShoppingList() {
           <Stack spacing={2} alignItems="left">
             <TransitionGroup>
               {Object.entries(recipeList).map(
-                ([recipeId, amount], index) =>
+                ([recipeId, { amount, isOptional, substitution }], index) =>
                   cookbook[recipeId] && (
                     <Collapse key={index}>
                       <Stack
@@ -214,13 +214,24 @@ function ShoppingList() {
                         alignItems="center"
                         justifyContent="space-between"
                       >
-                        <Typography sx={{ minWidth: "fit-content" }}>
+                        <Typography
+                          sx={{
+                            minWidth: "fit-content",
+                            fontStyle: isOptional ? "italic" : "inherit",
+                          }}
+                        >
                           {recipeList.hasOwnProperty(recipeId) &&
                             menu[recipeId] &&
                             `[${menu[recipeId]}] `}
                           {amount}:
                         </Typography>
-                        <Typography noWrap sx={{ width: "fill-available" }}>
+                        <Typography
+                          noWrap
+                          sx={{
+                            width: "fill-available",
+                            fontStyle: isOptional ? "italic" : "inherit",
+                          }}
+                        >
                           <Link
                             onClick={() => {
                               navigate(`/recipe/${recipeId}`);
