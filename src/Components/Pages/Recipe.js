@@ -404,7 +404,7 @@ function Recipe(props) {
         onClose={() => {
           setAddToShoppingListDialogOpen(false);
         }}
-        recipeId={recipeId}
+        recipeId={addToShoppingListDialogOpen && recipeId}
       />
       <ShareRecipeDialog
         open={openShareDialog}
