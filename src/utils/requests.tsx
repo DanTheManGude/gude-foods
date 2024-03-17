@@ -633,7 +633,13 @@ export const saveRecipe = (
   maybeOldRecipe?: Recipe,
   maybeNotificationInfo?: { isAdmin: boolean; displayName: string }
 ) => {
-  const { name, instructions, ingredients = {}, shareId } = recipe;
+  const {
+    name,
+    instructions,
+    ingredients = {},
+    shareId,
+    supplementalIngredientInfo,
+  } = recipe;
   const isCreating: boolean = !_recipeId;
 
   if (
@@ -654,6 +660,21 @@ export const saveRecipe = (
   if (isCreating) {
     recipeId = createKey();
   }
+
+  const refinedSupplementalIngredientInfo: SupplementalIngredientInfo =
+    Object.keys(ingredients).reduce((acc, ingredientId) => {
+      let value = null;
+      if (
+        supplementalIngredientInfo.hasOwnProperty(ingredientId) &&
+        supplementalIngredientInfo[ingredientId].substitution &&
+        supplementalIngredientInfo[ingredientId].isOptional
+      ) {
+        value = supplementalIngredientInfo[ingredientId];
+      }
+      return { ...acc, [ingredientId]: value };
+    }, {});
+
+  recipe.supplementalIngredientInfo = refinedSupplementalIngredientInfo;
 
   const updates: Updates = {
     [`${cookbookPath}/${recipeId}`]: recipe,
