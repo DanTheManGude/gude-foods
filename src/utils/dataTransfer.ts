@@ -8,6 +8,7 @@ import {
   Ingredients,
   Recipe,
   RecipeTagList,
+  SupplementalIngredientInfo,
 } from "../types";
 import { createKey } from "./requests";
 
@@ -27,7 +28,11 @@ export const transformRecipeForExport = (
   glossary: Glossary
 ): Recipe => {
   const { basicFoods, recipeTags } = glossary;
-  const { ingredients = {}, tags = [] } = recipe;
+  const {
+    ingredients = {},
+    tags = [],
+    supplementalIngredientInfo = {},
+  } = recipe;
 
   const ingredientsAsNames = Object.keys(ingredients).reduce<{
     [key in string]: string;
@@ -41,11 +46,29 @@ export const transformRecipeForExport = (
 
   const tagsAsNames = tags.map((tagKey) => recipeTags[tagKey]);
 
-  // TODO Substitute ingredient needs to be transformed
+  const supplementalIngredientInfoAsNames = Object.entries(
+    supplementalIngredientInfo
+  ).reduce<SupplementalIngredientInfo>(
+    (acc, [ingredientKey, supplementalInfo]) => {
+      let supplementalInfoAsNames = supplementalInfo;
+      if (supplementalInfo.substitution) {
+        supplementalInfoAsNames.substitution = {
+          amount: supplementalInfo.substitution.amount,
+          foodId: basicFoods[supplementalInfo.substitution.foodId],
+        };
+      }
+      return { ...acc, [basicFoods[ingredientKey]]: supplementalInfoAsNames };
+    },
+    {}
+  );
+
   const recipeData: Recipe = {
     ...recipe,
     ingredients: ingredientsAsNames,
     tags: tagsAsNames,
+    ...(Object.entries(supplementalIngredientInfoAsNames).length
+      ? { supplementalIngredientInfo: supplementalIngredientInfoAsNames }
+      : {}),
   };
 
   return recipeData;
