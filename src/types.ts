@@ -76,13 +76,16 @@ export type Recipe = {
   shareId?: string;
   supplementalIngredientInfo?: SupplementalIngredientInfo;
 };
+
+export type IndividualShoppingListFoodInfo = {
+  amount: string;
+} & IndividualSupplementalIngredientInfo;
+
 export type ShoppingListEntry = {
   isChecked?: boolean;
   collatedAmount?: string;
   list?: {
-    [key in string]: {
-      amount: string;
-    } & IndividualSupplementalIngredientInfo;
+    [key in string]: IndividualShoppingListFoodInfo;
   };
 };
 

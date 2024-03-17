@@ -13,13 +13,13 @@ import {
   DataPaths,
   FormattedDataFromCookBookImport,
   Glossary,
+  IndividualShoppingListFoodInfo,
   Ingredients,
   Menu,
   Recipe,
   RecipeOrder,
   SharedRecipe,
   ShoppingList,
-  ShoppingListEntry,
   SupplementalIngredientInfo,
 } from "../types";
 import { NavigateFunction } from "react-router-dom";
@@ -136,7 +136,7 @@ export const addRecipeToShoppingList = (
   updateRequest(
     {
       ...Object.keys(ingredients).reduce<
-        Updates<ShoppingListEntry["list"][string]>
+        Updates<IndividualShoppingListFoodInfo>
       >(
         (updates, foodId) => ({
           ...updates,
@@ -919,5 +919,29 @@ export const updateFcmToken = (fcmToken: string, addAlert: AddAlert) => {
         alertProps: { severity: "error" },
       });
     }
+  );
+};
+
+export const swapSubstitutionInShoppingList = (
+  shoppingListPath: string,
+  basicFoodId: string,
+  recipeId: string,
+  foodInfo: IndividualShoppingListFoodInfo,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  const newFoodInfo: IndividualShoppingListFoodInfo = {
+    amount: foodInfo.substitution.amount,
+    substitution: { foodId: basicFoodId, amount: foodInfo.amount },
+    ...(foodInfo.isOptional ? { isOptional: true } : {}),
+  };
+  updateRequest(
+    {
+      [`${shoppingListPath}/${basicFoodId}/list/${recipeId}`]: null,
+      [`${shoppingListPath}/${foodInfo.substitution.foodId}/list/${recipeId}`]:
+        newFoodInfo,
+    },
+    onSuccess,
+    onFailure
   );
 };
