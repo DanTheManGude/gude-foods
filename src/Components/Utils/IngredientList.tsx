@@ -112,7 +112,7 @@ function IngredientList(props: {
     setNewIngredientId(null);
   };
 
-  const getRemoveIngredient = (ingredientId: string) => () => {
+  const removeIngredient = (ingredientId: string) => {
     updateIngredients((_ingredients) => {
       const { [ingredientId]: removedIngredient, ...restIngredients } =
         _ingredients;
@@ -432,11 +432,7 @@ function IngredientList(props: {
         open={!!menuAnchorEl && !!menuIngredientId}
         onClose={handleCloseMenu}
       >
-        <MenuItem
-          onClick={withCloseMenu(getRemoveIngredient(menuIngredientId))}
-        >
-          Remove
-        </MenuItem>
+        <MenuItem onClick={withCloseMenu(removeIngredient)}>Remove</MenuItem>
 
         {isOptional ? (
           <MenuItem onClick={withCloseMenu(getSetOptional(false))}>
@@ -462,6 +458,7 @@ function IngredientList(props: {
       </Menu>
     );
   };
+
   const renderContents = () => (
     <>
       <Stack spacing={editable ? 2 : 1}>
