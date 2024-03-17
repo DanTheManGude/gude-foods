@@ -116,6 +116,20 @@ export const transformCookbookFromImport = (
     return foodId;
   };
 
+  const findAndMaybeCreateTag = (tagName: string): string => {
+    const foundTagId =
+      recipeTagsList.find((tagId) => recipeTags[tagId] === tagName) ||
+      newTags[tagName];
+
+    let tagId = foundTagId;
+    if (!foundTagId) {
+      tagId = createKey();
+      newTags[tagName] = tagId;
+    }
+
+    return tagId;
+  };
+
   const formattedCookbook = Object.values(cookbookData).reduce<Cookbook>(
     (accumulator, recipeData) => {
       const {
@@ -131,31 +145,14 @@ export const transformCookbookFromImport = (
       }
 
       const ingredientsAsKeys = Object.keys(ingredients).reduce<Ingredients>(
-        (acc, ingredientName) => {
-          let ingredientId = findAndMaybeCreateFood(ingredientName);
-
-          return {
-            ...acc,
-            [ingredientId]: ingredients[ingredientName],
-          };
-        },
+        (acc, ingredientName) => ({
+          ...acc,
+          [findAndMaybeCreateFood(ingredientName)]: ingredients[ingredientName],
+        }),
         {}
       );
 
-      const tagsAsKeys: RecipeTagList = tags.map((tagName) => {
-        // TODO Optimize this
-        const foundTagId =
-          recipeTagsList.find((tagId) => recipeTags[tagId] === tagName) ||
-          newTags[tagName];
-
-        let tagId = foundTagId;
-        if (!foundTagId) {
-          tagId = createKey();
-          newTags[tagName] = tagId;
-        }
-
-        return tagId;
-      });
+      const tagsAsKeys: RecipeTagList = tags.map(findAndMaybeCreateTag);
 
       const supplementalInfoAsKeys: SupplementalIngredientInfo = Object.entries(
         supplementalIngredientInfo
