@@ -19,11 +19,12 @@ import {
   RecipeOrder,
   SharedRecipe,
   ShoppingList,
+  ShoppingListEntry,
   SupplementalIngredientInfo,
 } from "../types";
 import { NavigateFunction } from "react-router-dom";
 
-type Updates = { [key in string]: any };
+type Updates<V = any> = { [key in string]: V };
 
 export const updateRequest = (
   updates: Updates,
@@ -130,17 +131,19 @@ export const addRecipeToShoppingList = (
   }: Pick<DataPaths, "shoppingListPath" | "recipeOrderPath" | "menuPath">,
   addAlert: AddAlert
 ) => {
-  console.log(supplementalIngredientInfo); //TODO update request
-
   const menu = _menu || {};
 
   updateRequest(
     {
-      ...Object.keys(ingredients).reduce<Updates>(
+      ...Object.keys(ingredients).reduce<
+        Updates<ShoppingListEntry["list"][string]>
+      >(
         (updates, foodId) => ({
           ...updates,
-          [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
-            ingredients[foodId],
+          [`${shoppingListPath}/${foodId}/list/${recipeId}`]: {
+            amount: ingredients[foodId],
+            ...(supplementalIngredientInfo[foodId] || {}),
+          },
         }),
         {}
       ),

@@ -57,11 +57,12 @@ export type DataPaths = { [key in DataPathKey]: string };
 
 export type Ingredients = { [key in string]: string };
 export type RecipeTagList = string[];
+export type IndividualSupplementalIngredientInfo = {
+  isOptional?: boolean;
+  substitution?: { foodId: string; amount: string };
+};
 export type SupplementalIngredientInfo = {
-  [key in string]?: {
-    isOptional?: boolean;
-    substitution?: { foodId: string; amount: string };
-  };
+  [key in string]?: IndividualSupplementalIngredientInfo;
 };
 
 export type Recipe = {
@@ -78,7 +79,11 @@ export type Recipe = {
 export type ShoppingListEntry = {
   isChecked?: boolean;
   collatedAmount?: string;
-  list?: string[];
+  list?: {
+    [key in string]: {
+      amount: string;
+    } & IndividualSupplementalIngredientInfo;
+  };
 };
 
 export type BasicFoodTags = { [key in string]: string };
