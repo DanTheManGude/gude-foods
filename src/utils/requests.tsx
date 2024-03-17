@@ -638,7 +638,7 @@ export const saveRecipe = (
     instructions,
     ingredients = {},
     shareId,
-    supplementalIngredientInfo,
+    supplementalIngredientInfo = {},
   } = recipe;
   const isCreating: boolean = !_recipeId;
 
@@ -662,17 +662,21 @@ export const saveRecipe = (
   }
 
   const refinedSupplementalIngredientInfo: SupplementalIngredientInfo =
-    Object.keys(ingredients).reduce((acc, ingredientId) => {
-      let value = null;
-      if (
-        supplementalIngredientInfo.hasOwnProperty(ingredientId) &&
-        supplementalIngredientInfo[ingredientId].substitution &&
-        supplementalIngredientInfo[ingredientId].isOptional
-      ) {
-        value = supplementalIngredientInfo[ingredientId];
-      }
-      return { ...acc, [ingredientId]: value };
-    }, {});
+    Object.entries(supplementalIngredientInfo).reduce(
+      (acc, [ingredientId, individualInfo]) => {
+        if (!ingredients.hasOwnProperty(ingredientId)) {
+          return acc;
+        }
+        if (
+          individualInfo.substitution ||
+          supplementalIngredientInfo[ingredientId].isOptional
+        ) {
+          return { ...acc, [ingredientId]: individualInfo };
+        }
+        return acc;
+      },
+      {}
+    );
 
   recipe.supplementalIngredientInfo = refinedSupplementalIngredientInfo;
 
