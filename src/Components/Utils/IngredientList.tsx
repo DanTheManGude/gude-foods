@@ -248,6 +248,7 @@ function IngredientList(props: {
         sx={{
           fontWeight: "bold",
           fontStyle: isOptional ? "italic" : "inherit",
+          marginLeft: "0px !important",
         }}
       >
         {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
@@ -278,7 +279,9 @@ function IngredientList(props: {
   ) => (
     <>
       <SubdirectoryArrowRightOutlinedIcon />
-      <Typography sx={{ fontWeight: "bold", flexGrow: 1 }}>
+      <Typography
+        sx={{ fontWeight: "bold", flexGrow: 1, marginLeft: "0px !important" }}
+      >
         {glossary.basicFoods[foodId]}:
       </Typography>
       <TextField
