@@ -308,9 +308,6 @@ function IngredientList(props: {
   );
 
   const renderIngredientControls = (ingredientId: string) => {
-    const shouldUseMenu =
-      !isForShoppingList || supplementalIngredientInfo[ingredientId];
-
     const { isOptional, substitution } =
       supplementalIngredientInfo[ingredientId] || {};
 
@@ -337,22 +334,14 @@ function IngredientList(props: {
           sx={{ flexGrow: 1, minWidth: "130px", maxWidth: "50%" }}
         />
         <IconButton
-          onClick={
-            shouldUseMenu
-              ? (event: React.MouseEvent<HTMLButtonElement>) => {
-                  setMenuIngredientId(ingredientId);
-                  setMenuAnchorEl(event.currentTarget);
-                }
-              : getRemoveIngredient(ingredientId)
-          }
+          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+            setMenuIngredientId(ingredientId);
+            setMenuAnchorEl(event.currentTarget);
+          }}
           color="secondary"
           sx={{ padding: 0 }}
         >
-          {shouldUseMenu ? (
-            <ArrowDropDownCircleOutlinedIcon />
-          ) : (
-            <HighlightOffIcon />
-          )}
+          <ArrowDropDownCircleOutlinedIcon />
         </IconButton>
       </>,
     ];
@@ -454,27 +443,22 @@ function IngredientList(props: {
             Make not optional
           </MenuItem>
         ) : (
+          <MenuItem onClick={withCloseMenu(getSetOptional(true))}>
+            Make optional
+          </MenuItem>
+        )}
+
+        {substitution ? (
+          <MenuItem onClick={withCloseMenu(swapSubstitution)}>
+            Swap substitution
+          </MenuItem>
+        ) : (
           !isForShoppingList && (
-            <MenuItem onClick={withCloseMenu(getSetOptional(true))}>
-              Make optional
+            <MenuItem onClick={withCloseMenu(addSubstitutionControls)}>
+              Add substitution
             </MenuItem>
           )
         )}
-
-        {substitution
-          ? [
-              <MenuItem onClick={withCloseMenu(removeSubstitution)}>
-                Remove substitution
-              </MenuItem>,
-              <MenuItem onClick={withCloseMenu(swapSubstitution)}>
-                Swap substitution
-              </MenuItem>,
-            ]
-          : !isForShoppingList && (
-              <MenuItem onClick={withCloseMenu(addSubstitutionControls)}>
-                Add substitution
-              </MenuItem>
-            )}
       </Menu>
     );
   };
