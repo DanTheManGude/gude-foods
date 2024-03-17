@@ -157,10 +157,36 @@ export const transformCookbookFromImport = (
         return tagId;
       });
 
+      const supplementalInfoAsKeys: SupplementalIngredientInfo = Object.entries(
+        supplementalIngredientInfo
+      ).reduce<SupplementalIngredientInfo>(
+        (acc, [ingredientName, individualInfoAsNames]) => {
+          const individualInfoAsKeys = individualInfoAsNames;
+
+          if (individualInfoAsNames.substitution) {
+            individualInfoAsKeys.substitution = {
+              amount: individualInfoAsNames.substitution.amount,
+              foodId: findAndMaybeCreateFood(
+                individualInfoAsNames.substitution.foodId
+              ),
+            };
+          }
+
+          return {
+            ...acc,
+            [findAndMaybeCreateFood(ingredientName)]: individualInfoAsKeys,
+          };
+        },
+        {}
+      );
+
       const recipe: Recipe = {
         ...recipeData,
         ingredients: ingredientsAsKeys,
         tags: tagsAsKeys,
+        ...(Object.entries(supplementalInfoAsKeys).length
+          ? { supplementalIngredientInfo: supplementalInfoAsKeys }
+          : {}),
       };
 
       const recipeId = createKey();
