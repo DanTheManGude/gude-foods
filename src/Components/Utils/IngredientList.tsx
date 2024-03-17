@@ -113,7 +113,7 @@ function IngredientList(props: {
     setNewIngredientId(null);
   };
 
-  const removeIngredient = (ingredientId: string) => {
+  const getRemoveIngredient = (ingredientId: string) => () => {
     updateIngredients((_ingredients) => {
       const { [ingredientId]: removedIngredient, ...restIngredients } =
         _ingredients;
@@ -127,9 +127,6 @@ function IngredientList(props: {
       }
     );
   };
-
-  const getRemoveIngredient = (ingredientId: string) => () =>
-    removeIngredient(ingredientId);
 
   const getSetOptional = (newOptional: boolean) => (ingredientId: string) => {
     updateSupplementalIngredientInfo(
@@ -436,7 +433,11 @@ function IngredientList(props: {
         open={!!menuAnchorEl && !!menuIngredientId}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={withCloseMenu(getRemoveIngredient)}>Remove</MenuItem>
+        <MenuItem
+          onClick={withCloseMenu(getRemoveIngredient(menuIngredientId))}
+        >
+          Remove
+        </MenuItem>
 
         {isOptional ? (
           <MenuItem onClick={withCloseMenu(getSetOptional(false))}>
