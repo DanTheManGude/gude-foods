@@ -5,6 +5,7 @@ import {
   Cookbook,
   FormattedDataFromCookBookImport,
   Glossary,
+  IndividualSupplementalIngredientInfo,
   Ingredients,
   Recipe,
   RecipeTagList,
@@ -50,7 +51,9 @@ export const transformRecipeForExport = (
     supplementalIngredientInfo
   ).reduce<SupplementalIngredientInfo>(
     (acc, [ingredientKey, individualInfo]) => {
-      let individualInfoAsNames = individualInfo;
+      let individualInfoAsNames: IndividualSupplementalIngredientInfo =
+        individualInfo.isOptional ? { isOptional: true } : {};
+
       if (individualInfo.substitution) {
         individualInfoAsNames.substitution = {
           amount: individualInfo.substitution.amount,
@@ -158,7 +161,8 @@ export const transformCookbookFromImport = (
         supplementalIngredientInfo
       ).reduce<SupplementalIngredientInfo>(
         (acc, [ingredientName, individualInfoAsNames]) => {
-          const individualInfoAsKeys = individualInfoAsNames;
+          let individualInfoAsKeys: IndividualSupplementalIngredientInfo =
+            individualInfoAsNames.isOptional ? { isOptional: true } : {};
 
           if (individualInfoAsNames.substitution) {
             individualInfoAsKeys.substitution = {
