@@ -66,6 +66,7 @@ function Recipe(props) {
     isFavorite: false,
     notes: "",
     shareId: "",
+    supplementalIngredientInfo: {},
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -115,6 +116,13 @@ function Recipe(props) {
   const updateIngredients = (setter) => {
     updateRecipe((_recipeEntry) => ({
       ingredients: setter(_recipeEntry.ingredients),
+    }));
+  };
+  const updateSupplementalIngredientInfo = (setter) => {
+    updateRecipe((_recipeEntry) => ({
+      supplementalIngredientInfo: setter(
+        _recipeEntry.supplementalIngredientInfo || {}
+      ),
     }));
   };
   const updateInstructions = (setter) => {
@@ -367,8 +375,10 @@ function Recipe(props) {
           {renderDescription()}
           <IngredientList
             ingredients={recipeEntry.ingredients}
+            supplementalIngredientInfo={recipeEntry.supplementalIngredientInfo}
             editable={isEditing}
             updateIngredients={updateIngredients}
+            updateSupplementalIngredientInfo={updateSupplementalIngredientInfo}
           />
           <InstructionList
             instructions={recipeEntry.instructions || []}
@@ -394,7 +404,7 @@ function Recipe(props) {
         onClose={() => {
           setAddToShoppingListDialogOpen(false);
         }}
-        recipeId={recipeId}
+        recipeId={addToShoppingListDialogOpen && recipeId}
       />
       <ShareRecipeDialog
         open={openShareDialog}

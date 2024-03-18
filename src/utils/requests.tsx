@@ -13,16 +13,18 @@ import {
   DataPaths,
   FormattedDataFromCookBookImport,
   Glossary,
+  IndividualShoppingListFoodInfo,
   Ingredients,
   Menu,
   Recipe,
   RecipeOrder,
   SharedRecipe,
   ShoppingList,
+  SupplementalIngredientInfo,
 } from "../types";
 import { NavigateFunction } from "react-router-dom";
 
-type Updates = { [key in string]: any };
+type Updates<V = any> = { [key in string]: V };
 
 export const updateRequest = (
   updates: Updates,
@@ -120,6 +122,7 @@ export const addRecipeToShoppingList = (
   recipeId: string,
   count: number,
   ingredients: Ingredients = {},
+  supplementalIngredientInfo: SupplementalIngredientInfo = {},
   { recipeOrder, menu: _menu }: { recipeOrder: RecipeOrder; menu: Menu },
   {
     shoppingListPath,
@@ -132,11 +135,15 @@ export const addRecipeToShoppingList = (
 
   updateRequest(
     {
-      ...Object.keys(ingredients).reduce<Updates>(
+      ...Object.keys(ingredients).reduce<
+        Updates<IndividualShoppingListFoodInfo>
+      >(
         (updates, foodId) => ({
           ...updates,
-          [`${shoppingListPath}/${foodId}/list/${recipeId}`]:
-            ingredients[foodId],
+          [`${shoppingListPath}/${foodId}/list/${recipeId}`]: {
+            amount: ingredients[foodId],
+            ...(supplementalIngredientInfo[foodId] || {}),
+          },
         }),
         {}
       ),
@@ -629,7 +636,13 @@ export const saveRecipe = (
   maybeOldRecipe?: Recipe,
   maybeNotificationInfo?: { isAdmin: boolean; displayName: string }
 ) => {
-  const { name, instructions, ingredients = {}, shareId } = recipe;
+  const {
+    name,
+    instructions,
+    ingredients = {},
+    shareId,
+    supplementalIngredientInfo = {},
+  } = recipe;
   const isCreating: boolean = !_recipeId;
 
   if (
@@ -650,6 +663,25 @@ export const saveRecipe = (
   if (isCreating) {
     recipeId = createKey();
   }
+
+  const refinedSupplementalIngredientInfo: SupplementalIngredientInfo =
+    Object.entries(supplementalIngredientInfo).reduce(
+      (acc, [ingredientId, individualInfo]) => {
+        if (!ingredients.hasOwnProperty(ingredientId)) {
+          return acc;
+        }
+        if (
+          individualInfo.substitution ||
+          supplementalIngredientInfo[ingredientId].isOptional
+        ) {
+          return { ...acc, [ingredientId]: individualInfo };
+        }
+        return acc;
+      },
+      {}
+    );
+
+  recipe.supplementalIngredientInfo = refinedSupplementalIngredientInfo;
 
   const updates: Updates = {
     [`${cookbookPath}/${recipeId}`]: recipe,
@@ -887,5 +919,29 @@ export const updateFcmToken = (fcmToken: string, addAlert: AddAlert) => {
         alertProps: { severity: "error" },
       });
     }
+  );
+};
+
+export const swapSubstitutionInShoppingList = (
+  shoppingListPath: string,
+  basicFoodId: string,
+  recipeId: string,
+  foodInfo: IndividualShoppingListFoodInfo,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  const newFoodInfo: IndividualShoppingListFoodInfo = {
+    amount: foodInfo.substitution.amount,
+    substitution: { foodId: basicFoodId, amount: foodInfo.amount },
+    ...(foodInfo.isOptional ? { isOptional: true } : {}),
+  };
+  updateRequest(
+    {
+      [`${shoppingListPath}/${basicFoodId}/list/${recipeId}`]: null,
+      [`${shoppingListPath}/${foodInfo.substitution.foodId}/list/${recipeId}`]:
+        newFoodInfo,
+    },
+    onSuccess,
+    onFailure
   );
 };

@@ -5,9 +5,11 @@ import {
   Cookbook,
   FormattedDataFromCookBookImport,
   Glossary,
+  IndividualSupplementalIngredientInfo,
   Ingredients,
   Recipe,
   RecipeTagList,
+  SupplementalIngredientInfo,
 } from "../types";
 import { createKey } from "./requests";
 
@@ -27,7 +29,11 @@ export const transformRecipeForExport = (
   glossary: Glossary
 ): Recipe => {
   const { basicFoods, recipeTags } = glossary;
-  const { ingredients = {}, tags = [] } = recipe;
+  const {
+    ingredients = {},
+    tags = [],
+    supplementalIngredientInfo = {},
+  } = recipe;
 
   const ingredientsAsNames = Object.keys(ingredients).reduce<{
     [key in string]: string;
@@ -41,11 +47,31 @@ export const transformRecipeForExport = (
 
   const tagsAsNames = tags.map((tagKey) => recipeTags[tagKey]);
 
-  // TODO Substitute ingredient needs to be transformed
+  const supplementalIngredientInfoAsNames = Object.entries(
+    supplementalIngredientInfo
+  ).reduce<SupplementalIngredientInfo>(
+    (acc, [ingredientKey, individualInfo]) => {
+      let individualInfoAsNames: IndividualSupplementalIngredientInfo =
+        individualInfo.isOptional ? { isOptional: true } : {};
+
+      if (individualInfo.substitution) {
+        individualInfoAsNames.substitution = {
+          amount: individualInfo.substitution.amount,
+          foodId: basicFoods[individualInfo.substitution.foodId],
+        };
+      }
+      return { ...acc, [basicFoods[ingredientKey]]: individualInfoAsNames };
+    },
+    {}
+  );
+
   const recipeData: Recipe = {
     ...recipe,
     ingredients: ingredientsAsNames,
     tags: tagsAsNames,
+    ...(Object.entries(supplementalIngredientInfoAsNames).length
+      ? { supplementalIngredientInfo: supplementalIngredientInfoAsNames }
+      : {}),
   };
 
   return recipeData;
@@ -76,57 +102,92 @@ export const transformCookbookFromImport = (
   const newFoods: BasicFoods = {};
   const newTags: BasicFoodTags = {};
 
+  const basicFoodList = Object.keys(basicFoods);
+  const recipeTagsList = Object.keys(recipeTags);
+
+  const findAndMaybeCreateFood = (foodName: string): string => {
+    const foundFoodId =
+      basicFoodList.find((foodId) => basicFoods[foodId] === foodName) ||
+      newFoods[foodName];
+
+    let foodId = foundFoodId;
+    if (!foundFoodId) {
+      foodId = createKey();
+      newFoods[foodName] = foodId;
+    }
+
+    return foodId;
+  };
+
+  const findAndMaybeCreateTag = (tagName: string): string => {
+    const foundTagId =
+      recipeTagsList.find((tagId) => recipeTags[tagId] === tagName) ||
+      newTags[tagName];
+
+    let tagId = foundTagId;
+    if (!foundTagId) {
+      tagId = createKey();
+      newTags[tagName] = tagId;
+    }
+
+    return tagId;
+  };
+
   const formattedCookbook = Object.values(cookbookData).reduce<Cookbook>(
     (accumulator, recipeData) => {
-      const { ingredients = {}, tags = [], name, instructions } = recipeData;
+      const {
+        ingredients = {},
+        tags = [],
+        name,
+        instructions,
+        supplementalIngredientInfo,
+      } = recipeData;
 
       if (!name || !instructions || !ingredients) {
         throw Error("Some required fields missing on recipe");
       }
 
       const ingredientsAsKeys = Object.keys(ingredients).reduce<Ingredients>(
-        (acc, ingredientName) => {
-          // TODO optimimize this
-          const basicFoodList = Object.keys(basicFoods);
-          const foundFoodId =
-            basicFoodList.find(
-              (foodId) => basicFoods[foodId] === ingredientName
-            ) || newFoods[ingredientName];
+        (acc, ingredientName) => ({
+          ...acc,
+          [findAndMaybeCreateFood(ingredientName)]: ingredients[ingredientName],
+        }),
+        {}
+      );
 
-          let ingredientId = foundFoodId;
-          if (!foundFoodId) {
-            ingredientId = createKey();
-            newFoods[ingredientName] = ingredientId;
+      const tagsAsKeys: RecipeTagList = tags.map(findAndMaybeCreateTag);
+
+      const supplementalInfoAsKeys: SupplementalIngredientInfo = Object.entries(
+        supplementalIngredientInfo
+      ).reduce<SupplementalIngredientInfo>(
+        (acc, [ingredientName, individualInfoAsNames]) => {
+          let individualInfoAsKeys: IndividualSupplementalIngredientInfo =
+            individualInfoAsNames.isOptional ? { isOptional: true } : {};
+
+          if (individualInfoAsNames.substitution) {
+            individualInfoAsKeys.substitution = {
+              amount: individualInfoAsNames.substitution.amount,
+              foodId: findAndMaybeCreateFood(
+                individualInfoAsNames.substitution.foodId
+              ),
+            };
           }
 
           return {
             ...acc,
-            [ingredientId]: ingredients[ingredientName],
+            [findAndMaybeCreateFood(ingredientName)]: individualInfoAsKeys,
           };
         },
         {}
       );
 
-      const tagsAsKeys: RecipeTagList = tags.map((tagName) => {
-        // TODO Optimize this
-        const recipeTagsList = Object.keys(recipeTags);
-        const foundTagId =
-          recipeTagsList.find((tagId) => recipeTags[tagId] === tagName) ||
-          newTags[tagName];
-
-        let tagId = foundTagId;
-        if (!foundTagId) {
-          tagId = createKey();
-          newTags[tagName] = tagId;
-        }
-
-        return tagId;
-      });
-
       const recipe: Recipe = {
         ...recipeData,
         ingredients: ingredientsAsKeys,
         tags: tagsAsKeys,
+        ...(Object.entries(supplementalInfoAsKeys).length
+          ? { supplementalIngredientInfo: supplementalInfoAsKeys }
+          : {}),
       };
 
       const recipeId = createKey();

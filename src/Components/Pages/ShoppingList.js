@@ -19,12 +19,15 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveIcon from "@mui/icons-material/Remove";
 import UndoOutlinedIcon from "@mui/icons-material/UndoOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
+import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
 
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
 import {
@@ -39,6 +42,7 @@ import {
 import { constructTextFromShoppingMap } from "../../utils/foods";
 
 import DeleteDialog from "../Utils/Dialogs/DeleteDialog";
+import SwapSubstitutionDialog from "../Utils/Dialogs/SwapSubstitutionDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
 
 import {
@@ -105,6 +109,20 @@ function ShoppingList() {
     setDeleteDialog(null);
   };
 
+  const [swapSubstitutionDialog, setSwapSubstitutionDialog] = useState(false);
+  const openSwapSubstitutionDialog = () => setSwapSubstitutionDialog(true);
+  const closeSwapSubstitutionDialog = () => {
+    setSwapSubstitutionDialog(false);
+    setMenuFoodArgs({});
+  };
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [menuFoodArgs, setMenuFoodArgs] = useState({});
+
+  const handleCloseMenu = () => {
+    setMenuAnchorEl(null);
+  };
+
   useEffect(() => {
     if (!shoppingList) {
       setShoppingMap({ unchecked: {}, checked: {} });
@@ -134,6 +152,10 @@ function ShoppingList() {
 
     setShoppingMap(newShoppingMap);
   }, [shoppingList, basicFoodTagAssociation, glossary]);
+
+  const removeFood = ({ basicFoodId, recipeId }) => {
+    deleteRequest([`${shoppingListPath}/${basicFoodId}/list/${recipeId}`]);
+  };
 
   const decrementMenuRecipe = (recipeId) => {
     updateRecipeMenuCount(recipeId, menu[recipeId] - 1, menuPath);
@@ -172,7 +194,13 @@ function ShoppingList() {
 
     return (
       <Accordion key={basicFoodId} variant="outlined">
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary
+          expandIcon={
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          }
+        >
           <Stack direction="row" alignItems="center">
             <Checkbox
               color="primary"
@@ -198,7 +226,7 @@ function ShoppingList() {
           <Stack spacing={2} alignItems="left">
             <TransitionGroup>
               {Object.entries(recipeList).map(
-                ([recipeId, amount], index) =>
+                ([recipeId, { amount, isOptional, substitution }], index) =>
                   cookbook[recipeId] && (
                     <Collapse key={index}>
                       <Stack
@@ -208,13 +236,24 @@ function ShoppingList() {
                         alignItems="center"
                         justifyContent="space-between"
                       >
-                        <Typography sx={{ minWidth: "fit-content" }}>
+                        <Typography
+                          sx={{
+                            minWidth: "fit-content",
+                            fontStyle: isOptional ? "italic" : "inherit",
+                          }}
+                        >
                           {recipeList.hasOwnProperty(recipeId) &&
                             menu[recipeId] &&
                             `[${menu[recipeId]}] `}
                           {amount}:
                         </Typography>
-                        <Typography noWrap sx={{ width: "fill-available" }}>
+                        <Typography
+                          noWrap
+                          sx={{
+                            width: "fill-available",
+                            fontStyle: isOptional ? "italic" : "inherit",
+                          }}
+                        >
                           <Link
                             onClick={() => {
                               navigate(`/recipe/${recipeId}`);
@@ -225,13 +264,21 @@ function ShoppingList() {
                           </Link>
                         </Typography>
                         <IconButton
-                          onClick={() => {
-                            deleteRequest([
-                              `${shoppingListPath}/${basicFoodId}/list/${recipeId}`,
-                            ]);
-                          }}
+                          color="secondary"
+                          onClick={
+                            substitution
+                              ? (event) => {
+                                  setMenuFoodArgs({ basicFoodId, recipeId });
+                                  setMenuAnchorEl(event.currentTarget);
+                                }
+                              : () => removeFood({ basicFoodId, recipeId })
+                          }
                         >
-                          <ClearIcon color="secondary" />
+                          {substitution ? (
+                            <ArrowDropDownCircleOutlinedIcon />
+                          ) : (
+                            <ClearIcon />
+                          )}
                         </IconButton>
                       </Stack>
                     </Collapse>
@@ -654,7 +701,13 @@ function ShoppingList() {
           disabled={true}
           expanded={false}
         >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            expandIcon={
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+          >
             <Typography variant="h6" component={"em"}>
               Checked
             </Typography>
@@ -680,7 +733,13 @@ function ShoppingList() {
         ) : null}
 
         <Accordion key={"checked"} sx={{ width: "100%" }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            expandIcon={
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            }
+          >
             <Typography variant="h6" component={"em"}>
               Checked
             </Typography>
@@ -748,6 +807,26 @@ function ShoppingList() {
     );
   };
 
+  const withCloseMenu = (handler) => () => {
+    handler(menuFoodArgs);
+    handleCloseMenu();
+  };
+  const renderDropdownMenu = () => {
+    return (
+      <Menu
+        id="dropdown-menu"
+        anchorEl={menuAnchorEl}
+        open={!!menuAnchorEl}
+        onClose={handleCloseMenu}
+      >
+        <MenuItem onClick={withCloseMenu(removeFood)}>Remove</MenuItem>
+        <MenuItem onClick={withCloseMenu(openSwapSubstitutionDialog)}>
+          Use substitution
+        </MenuItem>
+      </Menu>
+    );
+  };
+
   return (
     <div>
       <Typography
@@ -771,7 +850,13 @@ function ShoppingList() {
             .filter((tagId) => shoppingMap.unchecked.hasOwnProperty(tagId))
             .map((tagId) => (
               <Accordion key={tagId} sx={{ width: "100%" }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary
+                  expandIcon={
+                    <IconButton>
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  }
+                >
                   {tagId === UNKNOWN_TAG ? (
                     <Typography variant="h6">{unknownSectionName}</Typography>
                   ) : (
@@ -816,6 +901,18 @@ function ShoppingList() {
           handleDelete();
         }}
       />
+      <SwapSubstitutionDialog
+        open={swapSubstitutionDialog}
+        onClose={closeSwapSubstitutionDialog}
+        basicFoodId={menuFoodArgs.basicFoodId}
+        recipeId={menuFoodArgs.recipeId}
+        foodInfo={
+          menuFoodArgs.basicFoodId &&
+          shoppingList.hasOwnProperty(menuFoodArgs.basicFoodId) &&
+          shoppingList[menuFoodArgs.basicFoodId].list[menuFoodArgs.recipeId]
+        }
+      />
+      {renderDropdownMenu()}
     </div>
   );
 }

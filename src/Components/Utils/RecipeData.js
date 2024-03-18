@@ -8,7 +8,14 @@ import { renderNotesContainer, renderTagList } from "../Utils/RecipeParts";
 function RecipeData(props) {
   const { recipe } = props;
 
-  const { name, description, ingredients, instructions = [], notes } = recipe;
+  const {
+    name,
+    description,
+    ingredients,
+    supplementalIngredientInfo,
+    instructions = [],
+    notes,
+  } = recipe;
 
   const renderTags = () => {
     const { tags = [], isFavorite = false } = recipe;
@@ -54,6 +61,7 @@ function RecipeData(props) {
       )}
       <IngredientList
         ingredients={ingredients}
+        supplementalIngredientInfo={supplementalIngredientInfo}
         editable={false}
         idsAsNames={true}
       />

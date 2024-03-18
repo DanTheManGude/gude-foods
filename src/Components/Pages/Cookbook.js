@@ -14,6 +14,7 @@ import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import IconButton from "@mui/material/IconButton/IconButton";
 
 import { removeRecipeFromMenuAndShoppingList } from "../../utils/requests";
 import {
@@ -160,7 +161,13 @@ function Cookbook(props) {
 
     return (
       <Accordion key={recipeId}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary
+          expandIcon={
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          }
+        >
           <Typography variant="h6">{name}</Typography>
         </AccordionSummary>
         <AccordionDetails>

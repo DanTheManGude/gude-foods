@@ -6,6 +6,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Chip from "@mui/material/Chip";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import IconButton from "@mui/material/IconButton/IconButton";
 
 import FavoriteTag from "../Utils/FavoriteTag";
 import { downloadData } from "../../utils/dataTransfer";
@@ -25,7 +26,13 @@ function OfflineCookbook(props: {
 
         return (
           <Accordion key={`recipe-${index}`}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary
+              expandIcon={
+                <IconButton>
+                  <ExpandMoreIcon />
+                </IconButton>
+              }
+            >
               <Typography variant="h6">{name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
