@@ -13,6 +13,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 
+import { ActingUser } from "../../types";
 import { aboutText } from "../../constants";
 import { setAllData, deleteRequest } from "../../utils/requests";
 import { downloadData } from "../../utils/dataTransfer";
@@ -29,7 +30,12 @@ import {
   UserContext,
 } from "../Contexts";
 
-function Settings(props) {
+function Settings(props: {
+  actingUser: ActingUser;
+  clearActingUser: () => void;
+  isAdmin: boolean;
+  enableUsingOffline: () => void;
+}) {
   const { actingUser, clearActingUser, isAdmin, enableUsingOffline } = props;
 
   let navigate = useNavigate();

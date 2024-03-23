@@ -24,7 +24,7 @@ import { uploadColors } from "../../utils/requests";
 
 const labelText = "Select theme";
 
-function ColorCard({ showingOnHome }) {
+function ColorCard({ showingOnHome = false }) {
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
