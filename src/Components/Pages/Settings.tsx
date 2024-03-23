@@ -22,6 +22,7 @@ import ImportFileButton from "../Utils/ImportFileButton";
 import UserCard from "../Utils/UserCard";
 import ColorCard from "../Utils/ColorCard";
 import PageTitle from "../Utils/PageTitle";
+import CollaborationCard from "../Utils/CollaborationCard";
 
 import {
   AddAlertContext,
@@ -146,6 +147,7 @@ function Settings(props: {
           />
         )}
         <ColorCard />
+        <CollaborationCard />
         <SettingsCard
           title={"About"}
           cardContent={

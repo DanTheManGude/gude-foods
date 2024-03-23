@@ -49,7 +49,8 @@ export type DatabasePathKey =
   | "cookbook"
   | "recipeOrder"
   | "colorKey"
-  | "basicFoodTagAssociation";
+  | "basicFoodTagAssociation"
+  | "collaboration";
 
 export type SpecificPathKey<Key extends DatabasePathKey> = `${Key}Path`;
 export type DataPathKey = SpecificPathKey<DatabasePathKey>;
@@ -105,6 +106,14 @@ export type Cookbook = { [key in string]: Recipe };
 export type RecipeOrder = string[];
 export type BasicFoodTagAssociation = { [key in string]: string };
 
+export type CollaborationKeys = "cookbook" | "shoppingList" | "glossary";
+export type CollaborationEntry = {
+  [key in CollaborationKeys]: boolean;
+};
+export type Collaboration = {
+  [uid in string]: { read: boolean; edit: CollaborationEntry };
+};
+
 export type Database = {
   menu?: Menu;
   glossary?: Glossary;
@@ -114,6 +123,7 @@ export type Database = {
   recipeOrder?: RecipeOrder;
   colorKey?: ColorKey;
   basicFoodTagAssociation?: BasicFoodTagAssociation;
+  collaboration?: Collaboration;
 };
 
 export type ExternalRecipe = Recipe & { ingredientText: string[] };

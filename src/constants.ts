@@ -1,5 +1,12 @@
 import { ThemeOptions } from "@mui/material/styles";
-import { AllColors, ColorKey, Page, DatabasePathKey, DataPaths } from "./types";
+import {
+  AllColors,
+  ColorKey,
+  Page,
+  DatabasePathKey,
+  DataPaths,
+  CollaborationKeys,
+} from "./types";
 
 export const emailConfig: {
   serviceId: string;
@@ -135,6 +142,7 @@ export const databasePaths: { [key in DatabasePathKey]: string } = {
   recipeOrder: "recipeOrder",
   menu: "menu",
   colorKey: "colorKey",
+  collaboration: "collaboration",
 };
 
 export const defaultDataPaths: DataPaths = {
@@ -146,6 +154,13 @@ export const defaultDataPaths: DataPaths = {
   recipeOrderPath: "",
   colorKeyPath: "",
   basicFoodTagAssociationPath: "",
+  collaborationPath: "",
+};
+
+export const collaborationNames: { [key in CollaborationKeys]: string } = {
+  cookbook: "Cookbook",
+  shoppingList: "Shopping List",
+  glossary: "Glossary",
 };
 
 export const UNKNOWN_TAG = "UNKNOWN_TAG";
