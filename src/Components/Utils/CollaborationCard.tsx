@@ -7,6 +7,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import IconButton from "@mui/material/IconButton/IconButton";
+import TextField from "@mui/material/TextField";
 
 import {
   AddAlertContext,
@@ -55,6 +56,17 @@ function CollaborationCard() {
                 <ContentCopyRoundedIcon />
               </IconButton>
             </Stack>
+            <TextField
+              size="small"
+              label="Enter UID"
+              variant={"outlined"}
+              // error={!!errorText}
+              // helperText={errorText}
+              // value={newUid}
+              // onChange={(event) => {
+              //   updateNewUid(event.target.value);
+              // }}
+            />
           </Stack>
         </CardContent>
       </Card>
