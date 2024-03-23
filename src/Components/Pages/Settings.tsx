@@ -30,6 +30,32 @@ import {
   UserContext,
 } from "../Contexts";
 
+const SettingsCard = ({
+  title,
+  cardContent,
+  cardActions,
+}: {
+  title: string;
+  cardContent?: React.JSX.Element;
+  cardActions?: any;
+}) => (
+  <Box sx={{ width: "95%" }}>
+    <Card variant="outlined">
+      <CardContent>
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          {title}
+        </Typography>
+        {cardContent}
+      </CardContent>
+      {cardActions && (
+        <CardActions sx={{ justifyContent: "flex-end" }}>
+          {cardActions}
+        </CardActions>
+      )}
+    </Card>
+  </Box>
+);
+
 function Settings(props: {
   actingUser: ActingUser;
   clearActingUser: () => void;
@@ -64,158 +90,6 @@ function Settings(props: {
     downloadData(data);
   };
 
-  const renderAdminCard = () => {
-    if (!isAdmin) {
-      return null;
-    }
-
-    return (
-      <Box sx={{ width: "95%" }}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Admin
-            </Typography>
-            <Typography>View Admin page and controls.</Typography>
-          </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() => navigate("/admin")}
-            >
-              <Typography>Go to Admin page</Typography>
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-    );
-  };
-
-  const renderAboutCard = () => {
-    return (
-      <Box sx={{ width: "95%" }}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              About
-            </Typography>
-            <Typography style={{ whiteSpace: "pre-line" }}>
-              {aboutText}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  };
-
-  const renderOfflineCard = () => {
-    return (
-      <Box sx={{ width: "95%" }}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Offline
-            </Typography>
-            <Typography>View the recipes saved for offline.</Typography>
-          </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button
-              color="secondary"
-              variant="outlined"
-              onClick={enableUsingOffline}
-            >
-              <Typography>Use offline mode</Typography>
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-    );
-  };
-
-  const renderDownloadData = () => {
-    return (
-      <Box sx={{ width: "95%" }}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Download Data
-            </Typography>
-            <Typography>
-              Download all data that is stored relating to your account.
-            </Typography>
-          </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button color="secondary" variant="outlined" onClick={onDownload}>
-              <Typography>Download</Typography>
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-    );
-  };
-
-  const renderImportData = () => {
-    return (
-      <Box sx={{ width: "95%" }}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Import Data
-            </Typography>
-            <Typography>
-              Import a previosuly dowloaded file of all your data. Note that
-              this will override your current data.
-            </Typography>
-          </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <ImportFileButton
-              customHandler={(fileData) =>
-                setAllData(fileData, dataPaths, addAlert)
-              }
-              shouldUseCustomHandler={true}
-              buttonProps={{
-                variant: "outlined",
-                color: "secondary",
-              }}
-              buttonText="Import"
-              id="settings"
-            />
-          </CardActions>
-        </Card>
-      </Box>
-    );
-  };
-
-  const renderDeleteData = () => {
-    return (
-      <Box sx={{ width: "95%" }}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Delete Data
-            </Typography>
-            <Typography>
-              Delete all data on your account. It is recomended to download a
-              copy for youself before deleting.
-            </Typography>
-          </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button
-              color="error"
-              variant="contained"
-              onClick={() => {
-                setOpenDeleteDialog(true);
-              }}
-            >
-              <Typography>Delete</Typography>
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-    );
-  };
-
   const renderDeleteDialog = () => (
     <Dialog
       sx={{ "& .MuiDialog-paper": { width: "80%" } }}
@@ -247,7 +121,7 @@ function Settings(props: {
   );
 
   return (
-    <div>
+    <>
       <PageTitle>Settings</PageTitle>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         <UserCard
@@ -256,16 +130,104 @@ function Settings(props: {
           actingUser={actingUser}
           clearActingUser={clearActingUser}
         />
-        {renderAdminCard()}
+        {isAdmin && (
+          <SettingsCard
+            title={"Admin"}
+            cardContent={<Typography>View Admin page and controls.</Typography>}
+            cardActions={
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => navigate("/admin")}
+              >
+                <Typography>Go to Admin page</Typography>
+              </Button>
+            }
+          />
+        )}
         <ColorCard />
-        {renderAboutCard()}
-        {renderOfflineCard()}
-        {renderDownloadData()}
-        {renderImportData()}
-        {renderDeleteData()}
+        <SettingsCard
+          title={"About"}
+          cardContent={
+            <Typography style={{ whiteSpace: "pre-line" }}>
+              {aboutText}
+            </Typography>
+          }
+        />
+        <SettingsCard
+          title={"Offline"}
+          cardContent={
+            <Typography>View the recipes saved for offline.</Typography>
+          }
+          cardActions={
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={enableUsingOffline}
+            >
+              <Typography>Use offline mode</Typography>
+            </Button>
+          }
+        />
+        <SettingsCard
+          title={"Download Data"}
+          cardContent={
+            <Typography>
+              Download all data that is stored relating to your account.
+            </Typography>
+          }
+          cardActions={
+            <Button color="secondary" variant="outlined" onClick={onDownload}>
+              <Typography>Download</Typography>
+            </Button>
+          }
+        />
+        <SettingsCard
+          title={"Import Data"}
+          cardContent={
+            <Typography>
+              Import a previosuly dowloaded file of all your data. Note that
+              this will override your current data.
+            </Typography>
+          }
+          cardActions={
+            <ImportFileButton
+              customHandler={(fileData) =>
+                setAllData(fileData, dataPaths, addAlert)
+              }
+              shouldUseCustomHandler={true}
+              buttonProps={{
+                variant: "outlined",
+                color: "secondary",
+              }}
+              buttonText="Import"
+              id="settings"
+            />
+          }
+        />
+        <SettingsCard
+          title={"Delete Data"}
+          cardContent={
+            <Typography>
+              Delete all data on your account. It is recomended to download a
+              copy for youself before deleting.
+            </Typography>
+          }
+          cardActions={
+            <Button
+              color="error"
+              variant="contained"
+              onClick={() => {
+                setOpenDeleteDialog(true);
+              }}
+            >
+              <Typography>Delete</Typography>
+            </Button>
+          }
+        />
       </Stack>
       {renderDeleteDialog()}
-    </div>
+    </>
   );
 }
 
