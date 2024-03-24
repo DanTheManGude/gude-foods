@@ -1,4 +1,4 @@
-import { getDatabase, ref, push, update } from "firebase/database";
+import { getDatabase, ref, push, update, child, get } from "firebase/database";
 import { User } from "firebase/auth";
 
 import Typography from "@mui/material/Typography";
@@ -949,12 +949,38 @@ export const swapSubstitutionInShoppingList = (
   );
 };
 
-export const giveReadAccesForCollaboration = (
+export const doesUserExistInDb = (uid: string) => {
+  return new Promise<boolean>((resolve) => {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `users/${uid}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          resolve(!!snapshot.val());
+        } else {
+          resolve(false);
+        }
+      })
+      .catch(() => {
+        resolve(false);
+      });
+  });
+};
+
+export const giveReadAccesForCollaboration = async (
   uid: string,
   collaborationPath: string,
   onSuccess: () => void,
   onFailure: AddAlert
 ) => {
+  const doesUserExist = await doesUserExistInDb(uid);
+  if (!doesUserExist) {
+    onFailure({
+      alertProps: { severity: "error" },
+      message: <Typography>This user does not exist.</Typography>,
+    });
+    return;
+  }
+
   updateRequest(
     {
       [`${collaborationPath}/${uid}/read`]: true,
@@ -970,17 +996,10 @@ export const revokeAccesForCollaboration = (
   onSuccess: () => void,
   onFailure: AddAlert
 ) => {
-  updateRequest(
-    {
-      [`${collaborationPath}/${uid}`]: null,
-    },
-    onSuccess,
-    () =>
-      onFailure({
-        alertProps: { severity: "error" },
-        message: (
-          <Typography>Was not able to remove access for {uid}</Typography>
-        ),
-      })
+  deleteRequest([`${collaborationPath}/${uid}`], onSuccess, () =>
+    onFailure({
+      alertProps: { severity: "error" },
+      message: <Typography>Was not able to remove access for {uid}</Typography>,
+    })
   );
 };

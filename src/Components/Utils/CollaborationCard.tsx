@@ -73,7 +73,7 @@ function CollaborationCard() {
           <Typography variant="h6" color="text.secondary" gutterBottom>
             Collaboration
           </Typography>
-          <Stack sx={{ width: "100%" }} spacing={3}>
+          <Stack sx={{ width: "100%" }} spacing={2}>
             <Typography>
               Alow other users to view/ edit your information. Paste their User
               ID to allow them to view your data. You can specify which parts
@@ -103,14 +103,16 @@ function CollaborationCard() {
                 size="small"
                 label="Enter UID"
                 variant={"outlined"}
-                // error={!!errorText}
-                // helperText={errorText}
                 value={newUid}
                 onChange={(event) => {
                   setNewUid(event.target.value);
                 }}
               />
-              <Button variant="outlined" onClick={onSubmitNewUid}>
+              <Button
+                variant="outlined"
+                onClick={onSubmitNewUid}
+                disabled={!newUid}
+              >
                 Give access
               </Button>
             </Stack>
