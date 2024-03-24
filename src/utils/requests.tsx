@@ -948,3 +948,39 @@ export const swapSubstitutionInShoppingList = (
     onFailure
   );
 };
+
+export const giveReadAccesForCollaboration = (
+  uid: string,
+  collaborationPath: string,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  updateRequest(
+    {
+      [`${collaborationPath}/${uid}/read`]: true,
+    },
+    onSuccess,
+    onFailure
+  );
+};
+
+export const revokeAccesForCollaboration = (
+  uid: string,
+  collaborationPath: string,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  updateRequest(
+    {
+      [`${collaborationPath}/${uid}`]: null,
+    },
+    onSuccess,
+    () =>
+      onFailure({
+        alertProps: { severity: "error" },
+        message: (
+          <Typography>Was not able to remove access for {uid}</Typography>
+        ),
+      })
+  );
+};

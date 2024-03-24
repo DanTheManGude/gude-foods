@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -8,6 +8,12 @@ import CardContent from "@mui/material/CardContent";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import IconButton from "@mui/material/IconButton/IconButton";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+
+import {
+  giveReadAccesForCollaboration,
+  revokeAccesForCollaboration,
+} from "../../utils/requests";
 
 import {
   AddAlertContext,
@@ -23,8 +29,42 @@ function CollaborationCard() {
   const addAlert = useContext(AddAlertContext);
 
   const { collaboration } = database;
+  const { collaborationPath } = dataPaths;
 
-  console.log(collaboration);
+  const [newUid, setNewUid] = useState<string>("");
+  const clearNewUid = () => setNewUid("");
+
+  const onSubmitNewUid = () => {
+    const givenUid = newUid;
+    giveReadAccesForCollaboration(
+      newUid,
+      collaborationPath,
+      () => {
+        addAlert({
+          alertProps: { severity: "success" },
+          message: <Typography>Successfully gave Read access.</Typography>,
+          undo: () => {
+            revokeAccesForCollaboration(
+              givenUid,
+              collaborationPath,
+              () =>
+                addAlert({
+                  alertProps: { severity: "success" },
+                  message: (
+                    <Typography>
+                      Successfully removed access for {givenUid}.
+                    </Typography>
+                  ),
+                }),
+              addAlert
+            );
+          },
+        });
+        clearNewUid();
+      },
+      addAlert
+    );
+  };
 
   return (
     <Box sx={{ width: "95%" }}>
@@ -56,17 +96,24 @@ function CollaborationCard() {
                 <ContentCopyRoundedIcon />
               </IconButton>
             </Stack>
-            <TextField
-              size="small"
-              label="Enter UID"
-              variant={"outlined"}
-              // error={!!errorText}
-              // helperText={errorText}
-              // value={newUid}
-              // onChange={(event) => {
-              //   updateNewUid(event.target.value);
-              // }}
-            />
+            <Stack direction={"row"} justifyContent="space-between" spacing={1}>
+              <TextField
+                id="collaboration-uid-input"
+                sx={{ flexGrow: 1 }}
+                size="small"
+                label="Enter UID"
+                variant={"outlined"}
+                // error={!!errorText}
+                // helperText={errorText}
+                value={newUid}
+                onChange={(event) => {
+                  setNewUid(event.target.value);
+                }}
+              />
+              <Button variant="outlined" onClick={onSubmitNewUid}>
+                Give access
+              </Button>
+            </Stack>
           </Stack>
         </CardContent>
       </Card>
