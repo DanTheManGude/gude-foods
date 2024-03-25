@@ -22,7 +22,6 @@ import ImportFileButton from "../Utils/ImportFileButton";
 import UserCard from "../Utils/UserCard";
 import ColorCard from "../Utils/ColorCard";
 import PageTitle from "../Utils/PageTitle";
-import CollaborationCard from "../Utils/CollaborationCard";
 
 import {
   AddAlertContext,
@@ -147,7 +146,24 @@ function Settings(props: {
           />
         )}
         <ColorCard />
-        <CollaborationCard />
+        <SettingsCard
+          title={"Collaboration"}
+          cardContent={
+            <Typography>
+              Give access to your account to someone else & view the account of
+              those who gave you access.
+            </Typography>
+          }
+          cardActions={
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() => navigate("/collaboration")}
+            >
+              <Typography>View and manage access</Typography>
+            </Button>
+          }
+        />
         <SettingsCard
           title={"About"}
           cardContent={

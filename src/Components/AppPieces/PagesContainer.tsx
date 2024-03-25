@@ -12,6 +12,7 @@ import {
   Accounts,
 } from "../../types";
 import { databasePaths } from "../../constants";
+import { getCreateFullPath } from "../../utils/requests";
 
 import OfflineCookbookUpdater from "../Offline/OfflineCookbookUpdater";
 
@@ -34,7 +35,7 @@ import {
   ColorKeyContext,
   UserContext,
 } from "../Contexts";
-import { getCreateFullPath } from "../../utils/requests";
+import Collaboration from "../Pages/Collaboration";
 
 function PagesContainer(props: {
   isAdmin: boolean;
@@ -212,6 +213,7 @@ function PagesContainer(props: {
               />
             }
           />
+          <Route path="collaboration" element={<Collaboration />} />
           {isAdmin && (
             <Route
               path="admin"
