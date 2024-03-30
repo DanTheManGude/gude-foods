@@ -7,7 +7,6 @@ import IconButton from "@mui/material/IconButton/IconButton";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
@@ -22,6 +21,7 @@ import {
   DatabaseContext,
   UserContext,
 } from "../Contexts";
+import PageTitle from "../Utils/PageTitle";
 
 const RenderedInfoCard = (
   <Box sx={{ width: "95%" }}>
@@ -154,16 +154,7 @@ function Collaboration() {
 
   return (
     <div>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Collaboration
-      </Typography>
+      <PageTitle>Collaboration</PageTitle>
       <Stack sx={{ paddingTop: "15px" }} spacing={2} alignItems="center">
         {RenderedInfoCard}
         <ShareCard uid={user.uid} />
