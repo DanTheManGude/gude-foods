@@ -5,6 +5,10 @@ import Stack from "@mui/material/Stack";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import IconButton from "@mui/material/IconButton/IconButton";
 import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
 import {
@@ -78,48 +82,76 @@ function Collaboration() {
         Collaboration
       </Typography>
       <Stack sx={{ paddingTop: "15px" }} spacing={2} alignItems="center">
-        <Typography>
-          Alow other users to view/ edit your account. You can specify which
-          parts they can edit. Also, view/ edit the account of those who have
-          gave you access.
-        </Typography>
-        <Stack direction={"row"} flexWrap={"wrap"} alignItems={"center"}>
-          <Typography>
-            Share your UID for somone else to give you access. &nbsp;
-          </Typography>
-          <Typography>
-            <code>{user.uid}</code>
-          </Typography>
-          <IconButton
-            size={"small"}
-            color="primary"
-            onClick={() => {
-              navigator.clipboard.writeText(user.uid);
-            }}
-          >
-            <ContentCopyRoundedIcon />
-          </IconButton>
-        </Stack>
-        <Stack direction={"row"} justifyContent="space-between" spacing={1}>
-          <TextField
-            id="collaboration-uid-input"
-            sx={{ flexGrow: 1 }}
-            size="small"
-            label="Enter UID"
-            variant={"outlined"}
-            value={newUid}
-            onChange={(event) => {
-              setNewUid(event.target.value);
-            }}
-          />
-          <Button
-            variant="outlined"
-            onClick={onSubmitNewUid}
-            disabled={!newUid}
-          >
-            Give access
-          </Button>
-        </Stack>
+        <Box sx={{ width: "95%" }}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography>
+                Alow other users to view & edit your account. You can specify
+                which parts they can edit. Also, view & edit the account of
+                those who have gave you access.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
+        <Box sx={{ width: "95%" }}>
+          <Card variant="outlined">
+            <CardContent>
+              <Stack direction={"row"} flexWrap={"wrap"} alignItems={"center"}>
+                <Typography>
+                  Share your UID for somone else to give you access. &nbsp;
+                </Typography>
+                <Typography>
+                  <code>{user.uid}</code>
+                </Typography>
+                <IconButton
+                  size={"small"}
+                  color="primary"
+                  onClick={() => {
+                    navigator.clipboard.writeText(user.uid);
+                  }}
+                >
+                  <ContentCopyRoundedIcon />
+                </IconButton>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Box>
+
+        <Box sx={{ width: "95%" }}>
+          <Card variant="outlined">
+            <CardContent>
+              <Stack spacing={1}>
+                <Typography>
+                  Enter someone's UID to give access to your account.
+                </Typography>
+                <Stack
+                  direction={"row"}
+                  justifyContent="space-between"
+                  spacing={1}
+                >
+                  <TextField
+                    id="collaboration-uid-input"
+                    sx={{ flexGrow: 1 }}
+                    size="small"
+                    label="Enter UID"
+                    variant={"outlined"}
+                    value={newUid}
+                    onChange={(event) => {
+                      setNewUid(event.target.value);
+                    }}
+                  />
+                  <Button
+                    variant="outlined"
+                    onClick={onSubmitNewUid}
+                    disabled={!newUid}
+                  >
+                    Give access
+                  </Button>
+                </Stack>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Box>
       </Stack>
     </div>
   );
