@@ -44,6 +44,7 @@ import { constructTextFromShoppingMap } from "../../utils/foods";
 import DeleteDialog from "../Utils/Dialogs/DeleteDialog";
 import SwapSubstitutionDialog from "../Utils/Dialogs/SwapSubstitutionDialog";
 import BasicFoodAutocomplete from "../Utils/BasicFoodAutocomplete";
+import PageTitle from "../Utils/PageTitle";
 
 import {
   DatabaseContext,
@@ -829,16 +830,7 @@ function ShoppingList() {
 
   return (
     <div>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Shopping List
-      </Typography>
+      <PageTitle>Shopping List</PageTitle>
       <Stack
         sx={{ width: "100%", paddingTop: "15px" }}
         spacing={3}

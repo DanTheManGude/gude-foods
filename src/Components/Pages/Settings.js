@@ -20,6 +20,7 @@ import { downloadData } from "../../utils/dataTransfer";
 import ImportFileButton from "../Utils/ImportFileButton";
 import UserCard from "../Utils/UserCard";
 import ColorCard from "../Utils/ColorCard";
+import PageTitle from "../Utils/PageTitle";
 
 import {
   AddAlertContext,
@@ -241,16 +242,7 @@ function Settings(props) {
 
   return (
     <div>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Settings
-      </Typography>
+      <PageTitle>Settings</PageTitle>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         <UserCard
           user={user}

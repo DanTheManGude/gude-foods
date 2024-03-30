@@ -97,7 +97,7 @@ function ExternalRecipe(props) {
 
   return (
     <Stack
-      sx={{ paddingTop: "15px", width: "100%" }}
+      sx={{ paddingTop: 3, width: "100%" }}
       spacing={0}
       alignItems="center"
     >
@@ -111,7 +111,7 @@ function ExternalRecipe(props) {
       >
         {renderEditingButtons(handleCancel, handleSave)}
       </Stack>
-      <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 3 }}>
+      <Stack key="contents" spacing={2} sx={{ width: "95%", marginTop: 2 }}>
         <Typography
           key="title"
           variant="h5"

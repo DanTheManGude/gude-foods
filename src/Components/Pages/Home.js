@@ -24,6 +24,7 @@ import {
 } from "../Contexts";
 
 import ColorCard from "../Utils/ColorCard";
+import PageTitle from "../Utils/PageTitle";
 
 function Home(props) {
   const { requestedUsers, themeIsNotSet } = props;
@@ -425,16 +426,7 @@ function Home(props) {
 
   return (
     <div>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Home
-      </Typography>
+      <PageTitle>Home</PageTitle>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderRequestedUsersCard()}
         {renderNewUserCard()}
