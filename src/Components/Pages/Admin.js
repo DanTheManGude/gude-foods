@@ -21,6 +21,7 @@ import { findLongestEntry } from "../../utils/utility";
 import { updateFcmToken } from "../../utils/requests";
 
 import { AddAlertContext } from "../Contexts";
+import PageTitle from "../Utils/PageTitle";
 
 function Settings(props) {
   const { accounts, userList } = props;
@@ -291,16 +292,7 @@ function Settings(props) {
 
   return (
     <div>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Admin
-      </Typography>
+      <PageTitle>Admin</PageTitle>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderUserManagmentCard()}
         {renderShareRecipeCard()}

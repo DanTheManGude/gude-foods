@@ -16,6 +16,7 @@ import { removeSharedRecipe } from "../../utils/requests";
 import { UserContext, AddAlertContext, DataPathsContext } from "../Contexts";
 
 import DeleteDialog from "../Utils/Dialogs/DeleteDialog";
+import PageTitle from "../Utils/PageTitle";
 
 function SharedRecipes(props) {
   const { sharedRecipes, accounts, setActingUserByUid } = props;
@@ -165,16 +166,7 @@ function SharedRecipes(props) {
 
   return (
     <div>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Shared Recipes
-      </Typography>
+      <PageTitle>Shared Recipes</PageTitle>
       <Stack spacing={2} alignItems="center">
         {renderSharedRecipes()}
       </Stack>

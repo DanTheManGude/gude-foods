@@ -19,13 +19,15 @@ import Box from "@mui/material/Box";
 
 import { updateRequest, createKey } from "../../utils/requests";
 import { unknownSectionName, UNKNOWN_TAG } from "../../constants";
-import DepartmentFormControl from "../Utils/DepartmentFormControl";
 
 import {
   AddAlertContext,
   DataPathsContext,
   DatabaseContext,
 } from "../Contexts";
+
+import DepartmentFormControl from "../Utils/DepartmentFormControl";
+import PageTitle from "../Utils/PageTitle";
 
 function Glossary(props) {
   const { setFilteringOptions } = props;
@@ -497,16 +499,7 @@ function Glossary(props) {
 
   return (
     <>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Glossary
-      </Typography>
+      <PageTitle>Glossary</PageTitle>
 
       <Stack
         sx={{ width: "100%", paddingTop: "15px" }}

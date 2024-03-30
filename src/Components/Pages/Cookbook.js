@@ -34,6 +34,7 @@ import {
   DataPathsContext,
   AddAlertContext,
 } from "../Contexts";
+import PageTitle from "../Utils/PageTitle";
 
 function Cookbook(props) {
   const {
@@ -342,16 +343,7 @@ function Cookbook(props) {
 
   return (
     <div>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Cookbook
-      </Typography>
+      <PageTitle>Cookbook</PageTitle>
       <Stack sx={{ paddingTop: "15px" }} spacing={3} alignItems="center">
         {renderSearchAndFilters()}
         {renderRecipeList()}

@@ -20,6 +20,7 @@ import {
 } from "../../utils/requests";
 
 import { UserContext } from "../Contexts";
+import PageTitle from "../Utils/PageTitle";
 
 function Users(props) {
   const {
@@ -155,16 +156,7 @@ function Users(props) {
 
   return (
     <div>
-      <Typography
-        variant="h4"
-        sx={{
-          color: "primary.main",
-          textAlign: "center",
-          paddingY: 2,
-        }}
-      >
-        Users
-      </Typography>
+      <PageTitle>Users</PageTitle>
       <Stack spacing={3} alignItems="center">
         {renderUserManagmentCard()}
         <Stack sx={{ width: "95%" }} spacing={0.5}>

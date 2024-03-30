@@ -156,12 +156,12 @@ function Cooking() {
   return (
     <>
       <Stack
-        sx={{ paddingTop: "15px", width: "100%" }}
+        sx={{ paddingTop: 1.5, width: "100%" }}
         spacing={0}
         alignItems="center"
       >
         {renderTopButtonControls()}
-        <Stack key="contents" spacing={1} sx={{ width: "95%", marginTop: 1 }}>
+        <Stack key="contents" spacing={1} sx={{ width: "95%", marginTop: 0.5 }}>
           {renderName()}
           {renderInstructions()}
         </Stack>
