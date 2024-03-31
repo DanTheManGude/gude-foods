@@ -107,11 +107,14 @@ export type RecipeOrder = string[];
 export type BasicFoodTagAssociation = { [key in string]: string };
 
 export type CollaborationKeys = "cookbook" | "shoppingList" | "glossary";
-export type CollaborationEntry = {
+export type CollaborationEdits = {
   [key in CollaborationKeys]: boolean;
 };
+export type CollaborationEntry = { read: boolean; edit: CollaborationEdits };
+export type CollaborationMap = { [uid in string]: CollaborationEntry };
 export type Collaboration = {
-  [uid in string]: { read: boolean; edit: CollaborationEntry };
+  givesAccessTo?: CollaborationMap;
+  hasAccessTo?: CollaborationMap;
 };
 
 export type Database = {

@@ -9,6 +9,12 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Switch from "@mui/material/Switch";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
   giveReadAccesForCollaboration,
@@ -22,6 +28,7 @@ import {
   UserContext,
 } from "../Contexts";
 import PageTitle from "../Utils/PageTitle";
+import { CollaborationEntry } from "../../types";
 
 const RenderedInfoCard = (
   <Box sx={{ width: "95%" }}>
@@ -111,14 +118,44 @@ const NewAccessCard = ({
   );
 };
 
+const renderGivesAccessUser = ([uid, { read, edit }]: [
+  string,
+  CollaborationEntry
+]) => {
+  return (
+    <Accordion key={uid} sx={{ width: "100%" }}>
+      <AccordionSummary
+        expandIcon={
+          <IconButton>
+            <ExpandMoreIcon />
+          </IconButton>
+        }
+      >
+        <Stack direction="row" spacing={2} alignItems={"flex-end"}>
+          <Typography variant="h6">Their name</Typography>
+        </Stack>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack spacing={1}>
+          <Typography>{uid}</Typography>
+          <Stack direction={"row"}>
+            <Typography>Read:</Typography>
+          </Stack>
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
+  );
+};
+
 function Collaboration() {
   const user = useContext(UserContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
   const addAlert = useContext(AddAlertContext);
 
-  const { collaboration } = database;
   const { collaborationPath } = dataPaths;
+  const { collaboration = {} } = database;
+  const { givesAccessTo = {}, hasAccessTo = {} } = collaboration;
 
   console.log(collaboration);
 
@@ -155,10 +192,13 @@ function Collaboration() {
   return (
     <div>
       <PageTitle>Collaboration</PageTitle>
-      <Stack sx={{ paddingTop: "15px" }} spacing={2} alignItems="center">
+      <Stack sx={{ paddingTop: 1 }} spacing={2} alignItems="center">
         {RenderedInfoCard}
         <ShareCard uid={user.uid} />
         <NewAccessCard onSubmitNewUid={onSubmitNewUid} />
+        <Stack sx={{ width: "95%" }}>
+          {Object.entries(givesAccessTo).map(renderGivesAccessUser)}
+        </Stack>
       </Stack>
     </div>
   );
