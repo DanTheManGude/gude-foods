@@ -5,7 +5,7 @@ import {
   Page,
   DatabasePathKey,
   DataPaths,
-  CollaborationKeys,
+  CollaborationEditKey,
 } from "./types";
 
 export const emailConfig: {
@@ -157,10 +157,10 @@ export const defaultDataPaths: DataPaths = {
   collaborationPath: "",
 };
 
-export const collaborationNames: { [key in CollaborationKeys]: string } = {
-  cookbook: "Cookbook",
-  shoppingList: "Shopping List",
-  glossary: "Glossary",
+export const collaborationNames: { [key in CollaborationEditKey]: string } = {
+  cookbook: "Edit Cookbook",
+  shoppingList: "Edit Shopping List",
+  glossary: "Edit Glossary",
 };
 
 export const UNKNOWN_TAG = "UNKNOWN_TAG";

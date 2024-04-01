@@ -28,7 +28,13 @@ import {
   UserContext,
 } from "../Contexts";
 import PageTitle from "../Utils/PageTitle";
-import { CollaborationEntry } from "../../types";
+import {
+  CollaborationEditKey,
+  CollaborationEdits,
+  CollaborationEntry,
+  GenericEntries,
+} from "../../types";
+import { collaborationNames } from "../../constants";
 
 const RenderedInfoCard = (
   <Box sx={{ width: "95%" }}>
@@ -118,35 +124,6 @@ const NewAccessCard = ({
   );
 };
 
-const renderGivesAccessUser = ([uid, { read, edit }]: [
-  string,
-  CollaborationEntry
-]) => {
-  return (
-    <Accordion key={uid} sx={{ width: "100%" }}>
-      <AccordionSummary
-        expandIcon={
-          <IconButton>
-            <ExpandMoreIcon />
-          </IconButton>
-        }
-      >
-        <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-          <Typography variant="h6">Their name</Typography>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Stack spacing={1}>
-          <Typography>{uid}</Typography>
-          <Stack direction={"row"}>
-            <Typography>Read:</Typography>
-          </Stack>
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
-  );
-};
-
 function Collaboration() {
   const user = useContext(UserContext);
   const dataPaths = useContext(DataPathsContext);
@@ -186,6 +163,61 @@ function Collaboration() {
         });
       },
       addAlert
+    );
+  };
+
+  const getOnChangeGiveAccessEdit =
+    (uid: string, editKey: CollaborationEditKey) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      console.log(uid, editKey, event.target.checked);
+    };
+
+  const getOnChangeGiveAccessRead =
+    (uid: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      console.log(uid, event.target.checked);
+    };
+
+  const renderGivesAccessUser = ([uid, { read, edit }]: [
+    string,
+    CollaborationEntry
+  ]) => {
+    return (
+      <Accordion key={uid} sx={{ width: "100%" }}>
+        <AccordionSummary
+          expandIcon={
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          }
+        >
+          <Stack direction="row" spacing={2} alignItems={"flex-end"}>
+            <Typography variant="h6">Their name</Typography>
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={1}>
+            <Typography>{uid}</Typography>
+            <Stack direction={"row"}>
+              <Typography>{`Read all`}</Typography>
+              <Switch
+                checked={read}
+                onChange={getOnChangeGiveAccessRead(uid)}
+              />
+            </Stack>
+            {(Object.entries(edit) as GenericEntries<CollaborationEdits>).map(
+              ([key, value]) => (
+                <Stack direction={"row"}>
+                  <Typography>{collaborationNames[key]}</Typography>
+                  <Switch
+                    checked={value}
+                    onChange={getOnChangeGiveAccessEdit(uid, key)}
+                  />
+                </Stack>
+              )
+            )}
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
     );
   };
 

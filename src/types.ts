@@ -1,6 +1,10 @@
 import { ThemeOptions } from "@mui/material";
 import { AlertProps } from "@mui/material/Alert";
 
+export type GenericEntries<T> = {
+  [K in keyof T]: [K, T[K]];
+}[keyof T][];
+
 export type SetSubsriber = (newSubscriber: () => void) => void;
 
 export type ColorKey = "default" | "dark" | "light";
@@ -106,9 +110,9 @@ export type Cookbook = { [key in string]: Recipe };
 export type RecipeOrder = string[];
 export type BasicFoodTagAssociation = { [key in string]: string };
 
-export type CollaborationKeys = "cookbook" | "shoppingList" | "glossary";
+export type CollaborationEditKey = "cookbook" | "shoppingList" | "glossary";
 export type CollaborationEdits = {
-  [key in CollaborationKeys]: boolean;
+  [key in CollaborationEditKey]: boolean;
 };
 export type CollaborationEntry = { read: boolean; edit: CollaborationEdits };
 export type CollaborationMap = { [uid in string]: CollaborationEntry };
