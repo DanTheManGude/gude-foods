@@ -140,6 +140,7 @@ function Collaboration() {
 
   const onSubmitNewUid = (newUid: string) => {
     giveReadAccesForCollaboration(
+      user.uid,
       newUid,
       collaborationPath,
       () => {
@@ -148,6 +149,7 @@ function Collaboration() {
           message: <Typography>Successfully gave Read access.</Typography>,
           undo: () => {
             revokeAccesForCollaboration(
+              user.uid,
               newUid,
               collaborationPath,
               () =>
@@ -172,6 +174,7 @@ function Collaboration() {
     (uid: string, editKey: CollaborationEditKey) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       updateEditAccessForCollaboration(
+        user.uid,
         uid,
         editKey,
         collaborationPath,
@@ -190,6 +193,7 @@ function Collaboration() {
     (uid: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.checked) {
         giveReadAccesForCollaboration(
+          user.uid,
           uid,
           collaborationPath,
           () => {
@@ -202,6 +206,7 @@ function Collaboration() {
         );
       } else {
         clearAccesForCollaboration(
+          user.uid,
           uid,
           collaborationPath,
           () => {
@@ -217,6 +222,7 @@ function Collaboration() {
 
   const getRemoveAccess = (uid: string) => () => {
     revokeAccesForCollaboration(
+      user.uid,
       uid,
       collaborationPath,
       () =>
@@ -227,6 +233,7 @@ function Collaboration() {
           ),
           undo: () =>
             giveReadAccesForCollaboration(
+              user.uid,
               uid,
               collaborationPath,
               () => {

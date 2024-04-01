@@ -968,6 +968,7 @@ export const doesUserExistInDb = (uid: string) => {
 };
 
 export const giveReadAccesForCollaboration = async (
+  myUid: string,
   uid: string,
   collaborationPath: string,
   onSuccess: () => void,
@@ -984,7 +985,9 @@ export const giveReadAccesForCollaboration = async (
 
   updateRequest(
     {
-      [`${collaborationPath}/givesAccessTo${uid}/read`]: true,
+      [`${collaborationPath}/givesAccessTo/${uid}/read`]: true,
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}`]:
+        true,
     },
     onSuccess,
     onFailure
@@ -992,6 +995,7 @@ export const giveReadAccesForCollaboration = async (
 };
 
 export const clearAccesForCollaboration = (
+  myUid: string,
   uid: string,
   collaborationPath: string,
   onSuccess: () => void,
@@ -1001,6 +1005,10 @@ export const clearAccesForCollaboration = (
     {
       [`${collaborationPath}/givesAccessTo${uid}/read`]: false,
       [`${collaborationPath}/givesAccessTo${uid}/edit`]: null,
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/read`]:
+        false,
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/edit`]:
+        null,
     },
     onSuccess,
     onFailure
@@ -1008,20 +1016,30 @@ export const clearAccesForCollaboration = (
 };
 
 export const revokeAccesForCollaboration = (
+  myUid: string,
   uid: string,
   collaborationPath: string,
   onSuccess: () => void,
   onFailure: AddAlert
 ) => {
-  deleteRequest([`${collaborationPath}/givesAccessTo/${uid}`], onSuccess, () =>
-    onFailure({
-      alertProps: { severity: "error" },
-      message: <Typography>Was not able to remove access for {uid}</Typography>,
-    })
+  deleteRequest(
+    [
+      `${collaborationPath}/givesAccessTo/${uid}`,
+      `accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}`,
+    ],
+    onSuccess,
+    () =>
+      onFailure({
+        alertProps: { severity: "error" },
+        message: (
+          <Typography>Was not able to remove access for {uid}</Typography>
+        ),
+      })
   );
 };
 
 export const updateEditAccessForCollaboration = (
+  myUid: string,
   uid: string,
   editKey: CollaborationEditKey,
   collaborationPath: string,
@@ -1032,6 +1050,8 @@ export const updateEditAccessForCollaboration = (
   updateRequest(
     {
       [`${collaborationPath}/givesAccessTo${uid}/edit/${editKey}`]: value,
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/edit/${editKey}`]:
+        value,
     },
     onSuccess,
     onFailure
