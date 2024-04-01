@@ -221,6 +221,50 @@ function Collaboration() {
     );
   };
 
+  const getHandleActAsUser = (uid: string) => () => {
+    console.log(uid);
+  };
+
+  const renderHasAccessToUser = ([uid, { read, edit }]: [
+    string,
+    CollaborationEntry
+  ]) => {
+    return (
+      <Accordion key={uid} sx={{ width: "100%" }}>
+        <AccordionSummary
+          expandIcon={
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          }
+        >
+          <Stack direction="row" spacing={2} alignItems={"flex-end"}>
+            <Typography variant="h6">Their name</Typography>
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={1}>
+            <Typography>{uid}</Typography>
+            <Stack direction={"row"}>
+              {read ? (
+                <Typography>{`Read all`}</Typography>
+              ) : (
+                <Typography>{`No read access`}</Typography>
+              )}
+              {(Object.entries(edit) as GenericEntries<CollaborationEdits>).map(
+                ([key, value]) =>
+                  value ? (
+                    <Typography>{collaborationNames[key]}</Typography>
+                  ) : null
+              )}
+            </Stack>
+            <Button onClick={getHandleActAsUser(uid)}>Act as user</Button>
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+    );
+  };
+
   return (
     <div>
       <PageTitle>Collaboration</PageTitle>
@@ -230,6 +274,9 @@ function Collaboration() {
         <NewAccessCard onSubmitNewUid={onSubmitNewUid} />
         <Stack sx={{ width: "95%" }}>
           {Object.entries(givesAccessTo).map(renderGivesAccessUser)}
+        </Stack>
+        <Stack sx={{ width: "95%" }}>
+          {Object.entries(hasAccessTo).map(renderHasAccessToUser)}
         </Stack>
       </Stack>
     </div>
