@@ -20,6 +20,7 @@ import {
   clearAccesForCollaboration,
   giveReadAccesForCollaboration,
   revokeAccesForCollaboration,
+  updateEditAccessForCollaboration,
 } from "../../utils/requests";
 
 import {
@@ -170,7 +171,19 @@ function Collaboration() {
   const getOnChangeGiveAccessEdit =
     (uid: string, editKey: CollaborationEditKey) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(uid, editKey, event.target.checked);
+      updateEditAccessForCollaboration(
+        uid,
+        editKey,
+        collaborationPath,
+        event.target.checked,
+        () => {
+          addAlert({
+            alertProps: { severity: "success" },
+            message: <Typography>Successfully updated edit access.</Typography>,
+          });
+        },
+        addAlert
+      );
     };
 
   const getOnChangeGiveAccessRead =

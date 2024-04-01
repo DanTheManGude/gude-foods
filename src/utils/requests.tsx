@@ -8,6 +8,7 @@ import { transformRecipeForExport } from "./dataTransfer";
 import { sendNotification } from "./utility";
 import {
   AddAlert,
+  CollaborationEditKey,
   ColorKey,
   Cookbook,
   DataPaths,
@@ -1017,5 +1018,22 @@ export const revokeAccesForCollaboration = (
       alertProps: { severity: "error" },
       message: <Typography>Was not able to remove access for {uid}</Typography>,
     })
+  );
+};
+
+export const updateEditAccessForCollaboration = (
+  uid: string,
+  editKey: CollaborationEditKey,
+  collaborationPath: string,
+  value: boolean,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  updateRequest(
+    {
+      [`${collaborationPath}/givesAccessTo${uid}/edit/${editKey}`]: value,
+    },
+    onSuccess,
+    onFailure
   );
 };
