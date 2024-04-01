@@ -204,16 +204,20 @@ function Collaboration() {
                 onChange={getOnChangeGiveAccessRead(uid)}
               />
             </Stack>
-            {(Object.entries(edit) as GenericEntries<CollaborationEdits>).map(
-              ([key, value]) => (
-                <Stack direction={"row"}>
-                  <Typography>{collaborationNames[key]}</Typography>
-                  <Switch
-                    checked={value}
-                    onChange={getOnChangeGiveAccessEdit(uid, key)}
-                  />
-                </Stack>
+            {read ? (
+              (Object.entries(edit) as GenericEntries<CollaborationEdits>).map(
+                ([key, value]) => (
+                  <Stack direction={"row"}>
+                    <Typography>{collaborationNames[key]}</Typography>
+                    <Switch
+                      checked={value}
+                      onChange={getOnChangeGiveAccessEdit(uid, key)}
+                    />
+                  </Stack>
+                )
               )
+            ) : (
+              <Button>Remove user from list</Button>
             )}
           </Stack>
         </AccordionDetails>
