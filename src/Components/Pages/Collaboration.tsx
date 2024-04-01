@@ -17,6 +17,7 @@ import Switch from "@mui/material/Switch";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
+  clearAccesForCollaboration,
   giveReadAccesForCollaboration,
   revokeAccesForCollaboration,
 } from "../../utils/requests";
@@ -174,7 +175,31 @@ function Collaboration() {
 
   const getOnChangeGiveAccessRead =
     (uid: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(uid, event.target.checked);
+      if (event.target.checked) {
+        giveReadAccesForCollaboration(
+          uid,
+          collaborationPath,
+          () => {
+            addAlert({
+              alertProps: { severity: "success" },
+              message: <Typography>Successfully gave Read access.</Typography>,
+            });
+          },
+          addAlert
+        );
+      } else {
+        clearAccesForCollaboration(
+          uid,
+          collaborationPath,
+          () => {
+            addAlert({
+              alertProps: { severity: "success" },
+              message: <Typography>Successfully cleared access.</Typography>,
+            });
+          },
+          addAlert
+        );
+      }
     };
 
   const getRemoveAccess = (uid: string) => () => {

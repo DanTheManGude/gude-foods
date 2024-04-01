@@ -990,6 +990,22 @@ export const giveReadAccesForCollaboration = async (
   );
 };
 
+export const clearAccesForCollaboration = (
+  uid: string,
+  collaborationPath: string,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  updateRequest(
+    {
+      [`${collaborationPath}/givesAccessTo${uid}/read`]: false,
+      [`${collaborationPath}/givesAccessTo${uid}/edit`]: null,
+    },
+    onSuccess,
+    onFailure
+  );
+};
+
 export const revokeAccesForCollaboration = (
   uid: string,
   collaborationPath: string,
