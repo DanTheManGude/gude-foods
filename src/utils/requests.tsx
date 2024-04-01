@@ -983,7 +983,7 @@ export const giveReadAccesForCollaboration = async (
 
   updateRequest(
     {
-      [`${collaborationPath}/${uid}/read`]: true,
+      [`${collaborationPath}/givesAccessTo${uid}/read`]: true,
     },
     onSuccess,
     onFailure
@@ -996,7 +996,7 @@ export const revokeAccesForCollaboration = (
   onSuccess: () => void,
   onFailure: AddAlert
 ) => {
-  deleteRequest([`${collaborationPath}/${uid}`], onSuccess, () =>
+  deleteRequest([`${collaborationPath}/givesAccessTo/${uid}`], onSuccess, () =>
     onFailure({
       alertProps: { severity: "error" },
       message: <Typography>Was not able to remove access for {uid}</Typography>,

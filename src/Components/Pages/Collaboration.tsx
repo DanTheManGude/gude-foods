@@ -177,6 +177,35 @@ function Collaboration() {
       console.log(uid, event.target.checked);
     };
 
+  const getRemoveAccess = (uid: string) => () => {
+    revokeAccesForCollaboration(
+      uid,
+      collaborationPath,
+      () =>
+        addAlert({
+          alertProps: { severity: "success" },
+          message: (
+            <Typography>Successfully removed access for {uid}.</Typography>
+          ),
+          undo: () =>
+            giveReadAccesForCollaboration(
+              uid,
+              collaborationPath,
+              () => {
+                addAlert({
+                  alertProps: { severity: "success" },
+                  message: (
+                    <Typography>Successfully gave Read access.</Typography>
+                  ),
+                });
+              },
+              addAlert
+            ),
+        }),
+      addAlert
+    );
+  };
+
   const renderGivesAccessUser = ([uid, { read, edit }]: [
     string,
     CollaborationEntry
@@ -217,7 +246,9 @@ function Collaboration() {
                 )
               )
             ) : (
-              <Button>Remove user from list</Button>
+              <Button onClick={getRemoveAccess(uid)}>
+                Remove user from list
+              </Button>
             )}
           </Stack>
         </AccordionDetails>
