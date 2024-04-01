@@ -140,7 +140,7 @@ export const transformCookbookFromImport = (
         tags = [],
         name,
         instructions,
-        supplementalIngredientInfo,
+        supplementalIngredientInfo = {},
       } = recipeData;
 
       if (!name || !instructions || !ingredients) {
