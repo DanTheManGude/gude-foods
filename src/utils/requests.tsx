@@ -26,6 +26,9 @@ import { NavigateFunction } from "react-router-dom";
 
 type Updates<V = any> = { [key in string]: V };
 
+export const getCreateFullPath = (uid: string) => (pathName: string) =>
+  `accounts/${uid}/${pathName}`;
+
 export const updateRequest = (
   updates: Updates,
   onSuccess: AddAlert = () => {},

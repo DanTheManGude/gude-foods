@@ -12,7 +12,6 @@ import {
   Accounts,
 } from "../../types";
 import { databasePaths } from "../../constants";
-import { updateRequest } from "../../utils/requests";
 
 import OfflineCookbookUpdater from "../Offline/OfflineCookbookUpdater";
 
@@ -35,9 +34,7 @@ import {
   ColorKeyContext,
   UserContext,
 } from "../Contexts";
-
-const getCreateFullPath = (uid: string) => (pathName: string) =>
-  `accounts/${uid}/${pathName}`;
+import { getCreateFullPath } from "../../utils/requests";
 
 function PagesContainer(props: {
   isAdmin: boolean;
@@ -121,10 +118,6 @@ function PagesContainer(props: {
         [`${key}Path`]: fullPath,
       }));
     });
-
-    if (!actingUser) {
-      updateRequest({ [createFullPath("name")]: user.displayName });
-    }
 
     return () => {
       onValueListerRemovers.forEach((listerRemover) => {

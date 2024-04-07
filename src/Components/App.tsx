@@ -19,8 +19,11 @@ import Typography from "@mui/material/Typography";
 import Button, { ButtonProps } from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
+import { Alert as GFAlert, RequestedUsers, SetSubsriber } from "../types";
 import { aboutText } from "../constants";
 import { getHasLoggedInBefore, sendNotification } from "../utils/utility";
+
+import { getCreateFullPath, updateRequest } from "../utils/requests";
 
 import PagesContainer from "./AppPieces/PagesContainer";
 import NavBar from "./AppPieces/NavBar";
@@ -33,7 +36,6 @@ import Loading from "./Utils/Loading";
 import OfflineMode from "./Offline/OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
-import { Alert as GFAlert, RequestedUsers, SetSubsriber } from "../types";
 
 type AlertWithId = GFAlert & { id: number };
 
@@ -179,6 +181,9 @@ function App(props: { setSubscriber: SetSubsriber }) {
         }
       })
       .catch(() => {
+        updateRequest({
+          [getCreateFullPath(user.uid)("name")]: user.displayName,
+        });
         sendNotification(
           { title: "User login", body: `${user.displayName} just logged in.` },
           () => {}
