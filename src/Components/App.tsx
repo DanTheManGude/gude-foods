@@ -148,19 +148,23 @@ function App(props: { setSubscriber: SetSubsriber }) {
     setAuthorizedLoading(true);
     stopInitialLoading();
 
-    get(child(ref(getDatabase()), `users/${user.uid}`))
-      .then((snapshot) => {
+    onValue(
+      ref(getDatabase(), `users/${user.uid}`),
+      (snapshot) => {
         const isAuthorizedInDb = snapshot.exists() && snapshot.val();
         if (isAuthorizedInDb) {
           setIsAuthorizedUser(true);
+        } else {
+          setIsAuthorizedUser(false);
         }
         setAuthorizedLoading(false);
-      })
-      .catch((error) => {
+      },
+      (error) => {
         console.warn(error);
         setIsAuthorizedUser(false);
         setAuthorizedLoading(false);
-      });
+      }
+    );
 
     onValue(ref(getDatabase(), `requestedUsers`), (snapshot) => {
       if (snapshot.exists()) {
