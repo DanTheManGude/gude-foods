@@ -19,8 +19,15 @@ import Typography from "@mui/material/Typography";
 import Button, { ButtonProps } from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
+import { Alert as GFAlert, RequestedUsers, SetSubsriber } from "../types";
 import { aboutText } from "../constants";
-import { getHasLoggedInBefore, sendNotification } from "../utils/utility";
+import {
+  getHasLoggedInBefore,
+  sendNotification,
+  isDevelopment,
+} from "../utils/utility";
+
+import { getCreateFullPath, updateRequest } from "../utils/requests";
 
 import PagesContainer from "./AppPieces/PagesContainer";
 import NavBar from "./AppPieces/NavBar";
@@ -33,7 +40,6 @@ import Loading from "./Utils/Loading";
 import OfflineMode from "./Offline/OfflineMode";
 import { AddAlertContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
-import { Alert as GFAlert, RequestedUsers, SetSubsriber } from "../types";
 
 type AlertWithId = GFAlert & { id: number };
 
@@ -142,19 +148,23 @@ function App(props: { setSubscriber: SetSubsriber }) {
     setAuthorizedLoading(true);
     stopInitialLoading();
 
-    get(child(ref(getDatabase()), `users/${user.uid}`))
-      .then((snapshot) => {
+    onValue(
+      ref(getDatabase(), `users/${user.uid}`),
+      (snapshot) => {
         const isAuthorizedInDb = snapshot.exists() && snapshot.val();
         if (isAuthorizedInDb) {
           setIsAuthorizedUser(true);
+        } else {
+          setIsAuthorizedUser(false);
         }
         setAuthorizedLoading(false);
-      })
-      .catch((error) => {
+      },
+      (error) => {
         console.warn(error);
         setIsAuthorizedUser(false);
         setAuthorizedLoading(false);
-      });
+      }
+    );
 
     onValue(ref(getDatabase(), `requestedUsers`), (snapshot) => {
       if (snapshot.exists()) {
@@ -179,10 +189,18 @@ function App(props: { setSubscriber: SetSubsriber }) {
         }
       })
       .catch(() => {
-        sendNotification(
-          { title: "User login", body: `${user.displayName} just logged in.` },
-          () => {}
-        );
+        updateRequest({
+          [getCreateFullPath(user.uid)("name")]: user.displayName,
+        });
+        if (!isDevelopment()) {
+          sendNotification(
+            {
+              title: "User login",
+              body: `${user.displayName} just logged in.`,
+            },
+            () => {}
+          );
+        }
       });
 
     addAlertRef.current({
