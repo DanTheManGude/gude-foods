@@ -21,7 +21,11 @@ import Stack from "@mui/material/Stack";
 
 import { Alert as GFAlert, RequestedUsers, SetSubsriber } from "../types";
 import { aboutText } from "../constants";
-import { getHasLoggedInBefore, sendNotification } from "../utils/utility";
+import {
+  getHasLoggedInBefore,
+  sendNotification,
+  isDevelopment,
+} from "../utils/utility";
 
 import { getCreateFullPath, updateRequest } from "../utils/requests";
 
@@ -184,10 +188,15 @@ function App(props: { setSubscriber: SetSubsriber }) {
         updateRequest({
           [getCreateFullPath(user.uid)("name")]: user.displayName,
         });
-        sendNotification(
-          { title: "User login", body: `${user.displayName} just logged in.` },
-          () => {}
-        );
+        if (!isDevelopment()) {
+          sendNotification(
+            {
+              title: "User login",
+              body: `${user.displayName} just logged in.`,
+            },
+            () => {}
+          );
+        }
       });
 
     addAlertRef.current({
