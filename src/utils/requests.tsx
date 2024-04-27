@@ -1003,8 +1003,8 @@ export const clearAccesForCollaboration = (
 ) => {
   updateRequest(
     {
-      [`${collaborationPath}/givesAccessTo${uid}/read`]: false,
-      [`${collaborationPath}/givesAccessTo${uid}/edit`]: null,
+      [`${collaborationPath}/givesAccessTo/${uid}/read`]: false,
+      [`${collaborationPath}/givesAccessTo/${uid}/edit`]: null,
       [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/read`]:
         false,
       [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/edit`]:
@@ -1049,7 +1049,7 @@ export const updateEditAccessForCollaboration = (
 ) => {
   updateRequest(
     {
-      [`${collaborationPath}/givesAccessTo${uid}/edit/${editKey}`]: value,
+      [`${collaborationPath}/givesAccessTo/${uid}/edit/${editKey}`]: value,
       [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/edit/${editKey}`]:
         value,
     },
