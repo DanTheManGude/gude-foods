@@ -133,7 +133,8 @@ function Collaboration() {
   const addAlert = useContext(AddAlertContext);
 
   const { collaborationPath } = dataPaths;
-  const { collaboration = {} } = database;
+  const { collaboration: collaboration_ } = database;
+  const collaboration = collaboration_ || {};
   const { givesAccessTo = {}, hasAccessTo = {} } = collaboration;
 
   console.log(collaboration);
