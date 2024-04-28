@@ -351,9 +351,18 @@ function Collaboration() {
         {RenderedInfoCard}
         <ShareCard uid={user.uid} />
         <NewAccessCard onSubmitNewUid={onSubmitNewUid} />
-        <Stack sx={{ width: "95%" }}>
-          {Object.entries(givesAccessTo).map(renderGivesAccessUser)}
-        </Stack>
+        <Box sx={{ width: "95%" }}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                Users that have access to your account
+              </Typography>
+              <Stack sx={{ width: "95%" }}>
+                {Object.entries(givesAccessTo).map(renderGivesAccessUser)}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Box>
         <Stack sx={{ width: "95%" }}>
           {Object.entries(hasAccessTo).map(renderHasAccessToUser)}
         </Stack>
