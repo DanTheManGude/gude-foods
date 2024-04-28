@@ -283,13 +283,13 @@ function Collaboration() {
                 <Stack key={editKey} direction={"row"}>
                   <Typography>{collaborationNames[editKey]}</Typography>
                   <Switch
-                    checked={editOptions[editKey]}
+                    checked={Boolean(editOptions[editKey])}
                     onChange={getOnChangeGiveAccessEdit(uid, editKey)}
                   />
                 </Stack>
               ))
             ) : (
-              <Button onClick={getRemoveAccess(uid)}>
+              <Button onClick={getRemoveAccess(uid)} variant="outlined">
                 Remove user from list
               </Button>
             )}
@@ -303,7 +303,7 @@ function Collaboration() {
     console.log(uid);
   };
 
-  const renderHasAccessToUser = ([uid, { read, edit }]: [
+  const renderHasAccessToUser = ([uid, { read, edit: editOptions = {} }]: [
     string,
     CollaborationEntry
   ]) => {
@@ -329,14 +329,19 @@ function Collaboration() {
               ) : (
                 <Typography>{`No read access`}</Typography>
               )}
-              {(Object.entries(edit) as GenericEntries<CollaborationEdits>).map(
-                ([key, value]) =>
-                  value ? (
-                    <Typography>{collaborationNames[key]}</Typography>
-                  ) : null
+              {(
+                Object.entries(
+                  editOptions
+                ) as GenericEntries<CollaborationEdits>
+              ).map(([key, value]) =>
+                value ? (
+                  <Typography key={key}>{collaborationNames[key]}</Typography>
+                ) : null
               )}
             </Stack>
-            <Button onClick={getHandleActAsUser(uid)}>Act as user</Button>
+            <Button onClick={getHandleActAsUser(uid)} variant="outlined">
+              Act as user
+            </Button>
           </Stack>
         </AccordionDetails>
       </Accordion>
