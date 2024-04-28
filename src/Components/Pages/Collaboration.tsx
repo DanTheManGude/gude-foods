@@ -363,9 +363,18 @@ function Collaboration() {
             </CardContent>
           </Card>
         </Box>
-        <Stack sx={{ width: "95%" }}>
-          {Object.entries(hasAccessTo).map(renderHasAccessToUser)}
-        </Stack>
+        <Box sx={{ width: "95%" }}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                User acounts that you have access to
+              </Typography>
+              <Stack sx={{ width: "95%" }}>
+                {Object.entries(hasAccessTo).map(renderHasAccessToUser)}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Box>
       </Stack>
     </div>
   );
