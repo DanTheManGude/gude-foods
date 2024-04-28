@@ -157,6 +157,12 @@ export const defaultDataPaths: DataPaths = {
   collaborationPath: "",
 };
 
+export const collaborationEditKeys = [
+  "cookbook",
+  "shoppingList",
+  "glossary",
+] as const;
+
 export const collaborationNames: { [key in CollaborationEditKey]: string } = {
   cookbook: "Edit Cookbook",
   shoppingList: "Edit Shopping List",

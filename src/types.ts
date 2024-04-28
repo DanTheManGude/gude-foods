@@ -1,5 +1,6 @@
 import { ThemeOptions } from "@mui/material";
 import { AlertProps } from "@mui/material/Alert";
+import { collaborationEditKeys } from "./constants";
 
 export type GenericEntries<T> = {
   [K in keyof T]: [K, T[K]];
@@ -110,11 +111,11 @@ export type Cookbook = { [key in string]: Recipe };
 export type RecipeOrder = string[];
 export type BasicFoodTagAssociation = { [key in string]: string };
 
-export type CollaborationEditKey = "cookbook" | "shoppingList" | "glossary";
+export type CollaborationEditKey = (typeof collaborationEditKeys)[number];
 export type CollaborationEdits = {
-  [key in CollaborationEditKey]: boolean;
+  [key in CollaborationEditKey]?: boolean;
 };
-export type CollaborationEntry = { read: boolean; edit: CollaborationEdits };
+export type CollaborationEntry = { read: boolean; edit?: CollaborationEdits };
 export type CollaborationMap = { [uid in string]: CollaborationEntry };
 export type Collaboration = {
   givesAccessTo?: CollaborationMap;

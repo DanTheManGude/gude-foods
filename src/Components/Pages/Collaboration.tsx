@@ -36,7 +36,7 @@ import {
   CollaborationEntry,
   GenericEntries,
 } from "../../types";
-import { collaborationNames } from "../../constants";
+import { collaborationEditKeys, collaborationNames } from "../../constants";
 
 const RenderedInfoCard = (
   <Box sx={{ width: "95%" }}>
@@ -252,7 +252,7 @@ function Collaboration() {
     );
   };
 
-  const renderGivesAccessUser = ([uid, { read, edit }]: [
+  const renderGivesAccessUser = ([uid, { read, edit: editOptions = {} }]: [
     string,
     CollaborationEntry
   ]) => {
@@ -280,17 +280,15 @@ function Collaboration() {
               />
             </Stack>
             {read ? (
-              (Object.entries(edit) as GenericEntries<CollaborationEdits>).map(
-                ([key, value]) => (
-                  <Stack direction={"row"}>
-                    <Typography>{collaborationNames[key]}</Typography>
-                    <Switch
-                      checked={value}
-                      onChange={getOnChangeGiveAccessEdit(uid, key)}
-                    />
-                  </Stack>
-                )
-              )
+              collaborationEditKeys.map((editKey) => (
+                <Stack key={editKey} direction={"row"}>
+                  <Typography>{collaborationNames[editKey]}</Typography>
+                  <Switch
+                    checked={editOptions[editKey]}
+                    onChange={getOnChangeGiveAccessEdit(uid, editKey)}
+                  />
+                </Stack>
+              ))
             ) : (
               <Button onClick={getRemoveAccess(uid)}>
                 Remove user from list
