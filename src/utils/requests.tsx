@@ -986,7 +986,7 @@ export const giveReadAccesForCollaboration = async (
   updateRequest(
     {
       [`${collaborationPath}/givesAccessTo/${uid}/read`]: true,
-      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}`]:
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/read`]:
         true,
     },
     onSuccess,
