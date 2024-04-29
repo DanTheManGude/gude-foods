@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, JSX } from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -14,6 +14,12 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Switch from "@mui/material/Switch";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
+import MenuBookSharpIcon from "@mui/icons-material/MenuBookSharp";
+import FormatListBulletedSharpIcon from "@mui/icons-material/FormatListBulletedSharp";
+import SvgIcon from "@mui/material/SvgIcon";
 
 import {
   clearAccesForCollaboration,
@@ -50,6 +56,22 @@ const RenderedInfoCard = (
     </Card>
   </Box>
 );
+
+const renderAccessLabel = (Icon: typeof SvgIcon, text: string) => (
+  <Stack direction={"row"} spacing={1}>
+    <Icon /> <Typography>{text}</Typography>
+  </Stack>
+);
+
+const editAccessLabelIcons: { [key in CollaborationEditKey]: typeof SvgIcon } =
+  {
+    cookbook: MenuBookSharpIcon,
+    shoppingList: FormatListBulletedSharpIcon,
+    glossary: DescriptionSharpIcon,
+  };
+
+const renderEditAccessLabel = (key: CollaborationEditKey) =>
+  renderAccessLabel(editAccessLabelIcons[key], collaborationNames[key]);
 
 const ShareCard = ({ uid }: { uid: string }) => (
   <Box sx={{ width: "95%" }}>
@@ -323,23 +345,25 @@ function Collaboration() {
         <AccordionDetails>
           <Stack spacing={1}>
             <Typography>{uid}</Typography>
-            <Stack direction={"row"}>
-              {read ? (
-                <Typography>{`Read all`}</Typography>
-              ) : (
-                <Typography>{`No read access`}</Typography>
-              )}
-              {(
-                Object.entries(
-                  editOptions
-                ) as GenericEntries<CollaborationEdits>
-              ).map(([key, value]) =>
-                value ? (
-                  <Typography key={key}>{collaborationNames[key]}</Typography>
-                ) : null
-              )}
-            </Stack>
-            <Button onClick={getHandleActAsUser(uid)} variant="outlined">
+            {read ? (
+              <Stack>
+                {renderAccessLabel(VisibilityIcon, "View all")}
+                {(
+                  Object.entries(
+                    editOptions
+                  ) as GenericEntries<CollaborationEdits>
+                ).map(([key, value]) =>
+                  value ? renderEditAccessLabel(key) : null
+                )}
+              </Stack>
+            ) : (
+              renderAccessLabel(VisibilityOffIcon, "NO Access")
+            )}
+            <Button
+              onClick={getHandleActAsUser(uid)}
+              variant="outlined"
+              disabled={!read}
+            >
               Act as user
             </Button>
           </Stack>
