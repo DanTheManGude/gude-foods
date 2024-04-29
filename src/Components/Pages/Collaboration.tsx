@@ -293,7 +293,6 @@ function Collaboration() {
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={1}>
-            <Typography>{uid}</Typography>
             <Stack direction={"row"}>
               <Typography>{`Read all`}</Typography>
               <Switch
@@ -345,7 +344,6 @@ function Collaboration() {
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={1}>
-            <Typography>{uid}</Typography>
             {read ? (
               <Stack spacing={0.5}>
                 {renderAccessLabel("read", VisibilityIcon, "View all")}
