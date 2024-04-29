@@ -57,8 +57,8 @@ const RenderedInfoCard = (
   </Box>
 );
 
-const renderAccessLabel = (Icon: typeof SvgIcon, text: string) => (
-  <Stack direction={"row"} spacing={1}>
+const renderAccessLabel = (key: string, Icon: typeof SvgIcon, text: string) => (
+  <Stack direction={"row"} spacing={1} key={key}>
     <Icon /> <Typography>{text}</Typography>
   </Stack>
 );
@@ -71,7 +71,7 @@ const editAccessLabelIcons: { [key in CollaborationEditKey]: typeof SvgIcon } =
   };
 
 const renderEditAccessLabel = (key: CollaborationEditKey) =>
-  renderAccessLabel(editAccessLabelIcons[key], collaborationNames[key]);
+  renderAccessLabel(key, editAccessLabelIcons[key], collaborationNames[key]);
 
 const ShareCard = ({ uid }: { uid: string }) => (
   <Box sx={{ width: "95%" }}>
@@ -346,18 +346,14 @@ function Collaboration() {
           <Stack spacing={1}>
             <Typography>{uid}</Typography>
             {read ? (
-              <Stack>
-                {renderAccessLabel(VisibilityIcon, "View all")}
-                {(
-                  Object.entries(
-                    editOptions
-                  ) as GenericEntries<CollaborationEdits>
-                ).map(([key, value]) =>
-                  value ? renderEditAccessLabel(key) : null
+              <Stack spacing={0.5}>
+                {renderAccessLabel("read", VisibilityIcon, "View all")}
+                {collaborationEditKeys.map((editKey) =>
+                  editOptions[editKey] ? renderEditAccessLabel(editKey) : null
                 )}
               </Stack>
             ) : (
-              renderAccessLabel(VisibilityOffIcon, "NO Access")
+              renderAccessLabel("no-read", VisibilityOffIcon, "NO Access")
             )}
             <Button
               onClick={getHandleActAsUser(uid)}
