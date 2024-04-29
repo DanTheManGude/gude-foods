@@ -36,12 +36,13 @@ import {
 } from "../Contexts";
 import PageTitle from "../Utils/PageTitle";
 import {
+  Collaboration as CollaborationType,
   CollaborationEditKey,
-  CollaborationEdits,
   CollaborationEntry,
-  GenericEntries,
 } from "../../types";
 import { collaborationEditKeys, collaborationNames } from "../../constants";
+
+const unknownName = "Unknown name";
 
 const RenderedInfoCard = (
   <Box sx={{ width: "95%" }}>
@@ -155,8 +156,8 @@ function Collaboration() {
 
   const { collaborationPath } = dataPaths;
   const { collaboration: collaboration_ } = database;
-  const collaboration = collaboration_ || {};
-  const { givesAccessTo = {}, hasAccessTo = {} } = collaboration;
+  const collaboration: CollaborationType = collaboration_ || {};
+  const { givesAccessTo = {}, hasAccessTo = {}, names = {} } = collaboration;
 
   console.log(collaboration);
 
@@ -287,7 +288,7 @@ function Collaboration() {
           }
         >
           <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-            <Typography variant="h6">Their name</Typography>
+            <Typography variant="h6">{names[uid] || unknownName}</Typography>
           </Stack>
         </AccordionSummary>
         <AccordionDetails>
@@ -339,7 +340,7 @@ function Collaboration() {
           }
         >
           <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-            <Typography variant="h6">Their name</Typography>
+            <Typography variant="h6">{names[uid] || unknownName}</Typography>
           </Stack>
         </AccordionSummary>
         <AccordionDetails>

@@ -120,6 +120,7 @@ export type CollaborationMap = { [uid in string]: CollaborationEntry };
 export type Collaboration = {
   givesAccessTo?: CollaborationMap;
   hasAccessTo?: CollaborationMap;
+  names?: { [key: string]: string };
 };
 
 export type Database = {

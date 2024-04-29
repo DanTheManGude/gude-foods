@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, child, get } from "firebase/database";
 
 import {
   DataPaths,
@@ -10,6 +10,8 @@ import {
   ActingUser,
   SharedRecipes as SharedRecipesType,
   Accounts,
+  DatabasePathKey,
+  Collaboration as CollaborationType,
 } from "../../types";
 import { databasePaths } from "../../constants";
 import { getCreateFullPath } from "../../utils/requests";
@@ -98,14 +100,55 @@ function PagesContainer(props: {
     );
     onValueListerRemovers.push(colorKeyListerRemover);
 
-    Object.keys(databasePaths).forEach((key) => {
+    Object.keys(databasePaths).forEach(async (key: DatabasePathKey) => {
       const pathName = databasePaths[key];
       const fullPath = createFullPath(pathName);
 
       const individualDbListerRemover = onValue(
         ref(db, fullPath),
-        (snapshot) => {
-          const value = snapshot.val();
+        async (snapshot) => {
+          let value = snapshot.val();
+
+          if (key === "collaboration") {
+            const otherUids = new Set<string>();
+            const { givesAccessTo, hasAccessTo } = value as CollaborationType;
+            if (givesAccessTo) {
+              Object.keys(givesAccessTo).forEach((uid) => {
+                otherUids.add(uid);
+              });
+            }
+            if (hasAccessTo) {
+              Object.keys(hasAccessTo).forEach((uid) => {
+                otherUids.add(uid);
+              });
+            }
+
+            const otherUserNames: { [key: string]: string } = {};
+
+            const namesResults = await Promise.allSettled(
+              Array.from(otherUids).map((otherUid) =>
+                get(
+                  child(ref(getDatabase()), `accounts/${otherUid}/name`)
+                ).then((snapshot) => {
+                  let name = "";
+                  if (snapshot.exists()) {
+                    name = snapshot.val();
+                  }
+                  return { uid: otherUid, name: snapshot.val() };
+                })
+              )
+            );
+
+            namesResults.forEach((result) => {
+              if (result.status === "fulfilled") {
+                const { uid, name } = result.value;
+                otherUserNames[uid] = name;
+              }
+            });
+
+            value = { ...value, names: otherUserNames };
+          }
+
           setDatabase((_database) => ({
             ..._database,
             [key]: value,
@@ -128,7 +171,7 @@ function PagesContainer(props: {
   }, [user, actingUser, setColorKey]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !isAdmin) {
       return;
     }
     const db = getDatabase();
