@@ -134,7 +134,7 @@ function PagesContainer(props: {
                   if (snapshot.exists()) {
                     name = snapshot.val();
                   }
-                  return { uid: otherUid, name: snapshot.val() };
+                  return { uid: otherUid, name };
                 })
               )
             );
@@ -171,7 +171,7 @@ function PagesContainer(props: {
   }, [user, actingUser, setColorKey]);
 
   useEffect(() => {
-    if (!user || !isAdmin) {
+    if (!user) {
       return;
     }
     const db = getDatabase();
