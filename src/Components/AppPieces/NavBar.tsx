@@ -9,7 +9,6 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import { pages, presentationNames } from "../../constants";
-import { isDevelopment } from "../../utils/utility";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 

@@ -17,7 +17,7 @@ import Link from "@mui/material/Link";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import { longestEntryPathDelimiter } from "../../constants";
-import { findLongestEntry } from "../../utils/utility";
+import { findLongestEntry, isDevelopment } from "../../utils/utility";
 import { updateFcmToken } from "../../utils/requests";
 
 import { AddAlertContext } from "../Contexts";
@@ -123,6 +123,11 @@ function Settings(props) {
           </Typography>
           <Typography>
             Current version: <strong>{process.env.REACT_APP_VERSION}</strong>
+          </Typography>
+          <Typography>
+            Currently in&nbsp;
+            <strong>{isDevelopment() ? "development" : "production"}</strong>
+            &nbsp;environment.
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
