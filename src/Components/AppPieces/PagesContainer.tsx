@@ -263,7 +263,13 @@ function PagesContainer(props: {
           />
           <Route
             path="collaboration"
-            element={<Collaboration setActingUser={setActingUser} />}
+            element={
+              <Collaboration
+                actingUser={actingUser}
+                setActingUser={setActingUser}
+                clearActingUser={clearActingUser}
+              />
+            }
           />
           {isAdmin && (
             <Route

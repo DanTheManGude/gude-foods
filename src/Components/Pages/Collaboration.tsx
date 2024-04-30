@@ -150,9 +150,11 @@ const NewAccessCard = ({
 };
 
 function Collaboration(props: {
+  actingUser: ActingUser;
   setActingUser: (actingUser: ActingUser) => void;
+  clearActingUser: () => void;
 }) {
-  const { setActingUser } = props;
+  const { actingUser, setActingUser, clearActingUser } = props;
   const user = useContext(UserContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
@@ -162,8 +164,6 @@ function Collaboration(props: {
   const { collaboration: collaboration_ } = database;
   const collaboration: CollaborationType = collaboration_ || {};
   const { givesAccessTo = {}, hasAccessTo = {}, names = {} } = collaboration;
-
-  console.log(collaboration);
 
   const onSubmitNewUid = (newUid: string) => {
     giveReadAccesForCollaboration(
@@ -361,13 +361,19 @@ function Collaboration(props: {
             ) : (
               renderAccessLabel("no-read", VisibilityOffIcon, "NO Access")
             )}
-            <Button
-              onClick={getHandleActAsUser(uid)}
-              variant="outlined"
-              disabled={!read}
-            >
-              Act as user
-            </Button>
+            {actingUser && actingUser.uid === uid ? (
+              <Button onClick={clearActingUser} variant="contained">
+                Stop acting as user
+              </Button>
+            ) : (
+              <Button
+                onClick={getHandleActAsUser(uid)}
+                variant="outlined"
+                disabled={!read}
+              >
+                Act as user
+              </Button>
+            )}
           </Stack>
         </AccordionDetails>
       </Accordion>
