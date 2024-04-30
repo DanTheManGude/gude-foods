@@ -48,6 +48,8 @@ function App(props: { setSubscriber: SetSubsriber }) {
 
   const setSubscriberRef = useRef(setSubscriber);
 
+  const [isActingAsUser, setIsActingAsUser] = useState<boolean>(false);
+
   const [alertList, setAlertList] = useState<AlertWithId[]>([]);
   const [user, setUser] = useState<User>();
   const [isAuthorizedUser, setIsAuthorizedUser] = useState<boolean>(false);
@@ -277,7 +279,7 @@ function App(props: { setSubscriber: SetSubsriber }) {
     return (
       <>
         {renderMessages()}
-        <NavBar isAuthorized={true} />
+        <NavBar isAuthorized={true} isActingAsUser={isActingAsUser} />
         <AddAlertContext.Provider value={addAlertRef.current}>
           <UserContext.Provider value={user}>
             <PagesContainer
@@ -285,6 +287,7 @@ function App(props: { setSubscriber: SetSubsriber }) {
               requestedUsers={requestedUsers}
               allowUnrestrictedUsers={allowUnrestrictedUsers}
               enableUsingOffline={enableUsingOffline}
+              setIsActingAsUser={setIsActingAsUser}
             />
           </UserContext.Provider>
         </AddAlertContext.Provider>

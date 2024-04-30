@@ -45,12 +45,14 @@ function PagesContainer(props: {
   requestedUsers: any;
   allowUnrestrictedUsers: boolean;
   enableUsingOffline: () => void;
+  setIsActingAsUser: (isActingAsUser: boolean) => void;
 }) {
   const {
     isAdmin,
     requestedUsers,
     allowUnrestrictedUsers,
     enableUsingOffline,
+    setIsActingAsUser,
   } = props;
 
   const user = useContext(UserContext);
@@ -66,6 +68,10 @@ function PagesContainer(props: {
   const [sharedRecipes, setSharedRecipes] = useState<SharedRecipesType>();
 
   const [themeIsNotSet, setThemeIsNotSet] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsActingAsUser(Boolean(actingUser));
+  }, [setIsActingAsUser, actingUser]);
 
   const setActingUserByUid = (uid: string) => {
     const newUser = userList.find((userEntry) => userEntry.uid === uid);
