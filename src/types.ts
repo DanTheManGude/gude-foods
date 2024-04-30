@@ -175,6 +175,11 @@ export type FilteringOptions = Partial<{
 export type ActingUser = {
   uid: string;
   displayName: string;
+};
+
+export type OtherUser = {
+  uid: string;
+  displayName: string;
   isAuthorized: boolean;
   basicFoodsCount: number;
   recipeCount: number;

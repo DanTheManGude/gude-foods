@@ -329,9 +329,6 @@ function Collaboration(props: {
     setActingUser({
       uid,
       displayName: collaborationNames[uid],
-      isAuthorized: true,
-      basicFoodsCount: -1,
-      recipeCount: -1,
     });
   };
 
