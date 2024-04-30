@@ -256,7 +256,10 @@ function PagesContainer(props: {
               />
             }
           />
-          <Route path="collaboration" element={<Collaboration />} />
+          <Route
+            path="collaboration"
+            element={<Collaboration setActingUser={setActingUser} />}
+          />
           {isAdmin && (
             <Route
               path="admin"

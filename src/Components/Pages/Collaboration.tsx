@@ -39,6 +39,7 @@ import {
   Collaboration as CollaborationType,
   CollaborationEditKey,
   CollaborationEntry,
+  ActingUser,
 } from "../../types";
 import { collaborationEditKeys, collaborationNames } from "../../constants";
 
@@ -148,7 +149,10 @@ const NewAccessCard = ({
   );
 };
 
-function Collaboration() {
+function Collaboration(props: {
+  setActingUser: (actingUser: ActingUser) => void;
+}) {
+  const { setActingUser } = props;
   const user = useContext(UserContext);
   const dataPaths = useContext(DataPathsContext);
   const database = useContext(DatabaseContext);
@@ -322,7 +326,13 @@ function Collaboration() {
   };
 
   const getHandleActAsUser = (uid: string) => () => {
-    console.log(uid);
+    setActingUser({
+      uid,
+      displayName: collaborationNames[uid],
+      isAuthorized: true,
+      basicFoodsCount: -1,
+      recipeCount: -1,
+    });
   };
 
   const renderHasAccessToUser = ([uid, { read, edit: editOptions = {} }]: [
