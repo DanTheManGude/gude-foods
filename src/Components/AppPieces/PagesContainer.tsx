@@ -88,20 +88,24 @@ function PagesContainer(props: {
 
     const onValueListerRemovers = [];
 
-    const colorKeyListerRemover = onValue(
-      ref(db, createFullPath(databasePaths.colorKey)),
-      (snapshot) => {
-        const snapshotValue = snapshot.val();
-        if (snapshotValue) {
-          setColorKey(snapshotValue);
-        } else {
-          setThemeIsNotSet(true);
+    if (!actingUser) {
+      const colorKeyListerRemover = onValue(
+        ref(db, createFullPath(databasePaths.colorKey)),
+        (snapshot) => {
+          const snapshotValue = snapshot.val();
+          if (snapshotValue) {
+            setColorKey(snapshotValue);
+          } else {
+            setThemeIsNotSet(true);
+          }
         }
-      }
-    );
-    onValueListerRemovers.push(colorKeyListerRemover);
+      );
+      onValueListerRemovers.push(colorKeyListerRemover);
+    }
 
     Object.keys(databasePaths).forEach(async (key: DatabasePathKey) => {
+      if (key === "collaboration" && actingUser) return;
+
       const pathName = databasePaths[key];
       const fullPath = createFullPath(pathName);
 
