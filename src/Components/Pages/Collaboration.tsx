@@ -166,6 +166,14 @@ function Collaboration(props: {
   const { givesAccessTo = {}, hasAccessTo = {}, names = {} } = collaboration;
 
   const onSubmitNewUid = (newUid: string) => {
+    if (user.uid === newUid) {
+      addAlert({
+        alertProps: { severity: "warning" },
+        message: <Typography>Can not give yourself access.</Typography>,
+      });
+      return;
+    }
+
     giveReadAccesForCollaboration(
       user.uid,
       newUid,
