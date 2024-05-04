@@ -336,7 +336,7 @@ function Collaboration(props: {
   const getHandleActAsUser = (uid: string) => () => {
     setActingUser({
       uid,
-      displayName: collaborationNames[uid],
+      displayName: names[uid],
     });
   };
 
