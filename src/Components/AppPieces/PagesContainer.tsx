@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, child, get } from "firebase/database";
 
 import {
   DataPaths,
@@ -10,8 +10,12 @@ import {
   ActingUser,
   SharedRecipes as SharedRecipesType,
   Accounts,
+  DatabasePathKey,
+  Collaboration as CollaborationType,
+  OtherUser,
 } from "../../types";
 import { databasePaths } from "../../constants";
+import { getCreateFullPath } from "../../utils/requests";
 
 import OfflineCookbookUpdater from "../Offline/OfflineCookbookUpdater";
 
@@ -34,19 +38,21 @@ import {
   ColorKeyContext,
   UserContext,
 } from "../Contexts";
-import { getCreateFullPath } from "../../utils/requests";
+import Collaboration from "../Pages/Collaboration";
 
 function PagesContainer(props: {
   isAdmin: boolean;
   requestedUsers: any;
   allowUnrestrictedUsers: boolean;
   enableUsingOffline: () => void;
+  setIsActingAsUser: (isActingAsUser: boolean) => void;
 }) {
   const {
     isAdmin,
     requestedUsers,
     allowUnrestrictedUsers,
     enableUsingOffline,
+    setIsActingAsUser,
   } = props;
 
   const user = useContext(UserContext);
@@ -57,11 +63,15 @@ function PagesContainer(props: {
   const [filteringOptions, setFilteringOptions] = useState<FilteringOptions>();
   const [externalRecipe, setExternalRecipe] = useState<ExternalRecipeType>();
   const [actingUser, setActingUser] = useState<ActingUser>();
-  const [userList, setUserList] = useState<ActingUser[]>([]);
+  const [userList, setUserList] = useState<OtherUser[]>([]);
   const [accounts, setAccounts] = useState<Accounts>();
   const [sharedRecipes, setSharedRecipes] = useState<SharedRecipesType>();
 
   const [themeIsNotSet, setThemeIsNotSet] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsActingAsUser(Boolean(actingUser));
+  }, [setIsActingAsUser, actingUser]);
 
   const setActingUserByUid = (uid: string) => {
     const newUser = userList.find((userEntry) => userEntry.uid === uid);
@@ -84,27 +94,72 @@ function PagesContainer(props: {
 
     const onValueListerRemovers = [];
 
-    const colorKeyListerRemover = onValue(
-      ref(db, createFullPath(databasePaths.colorKey)),
-      (snapshot) => {
-        const snapshotValue = snapshot.val();
-        if (snapshotValue) {
-          setColorKey(snapshotValue);
-        } else {
-          setThemeIsNotSet(true);
+    if (!actingUser) {
+      const colorKeyListerRemover = onValue(
+        ref(db, createFullPath(databasePaths.colorKey)),
+        (snapshot) => {
+          const snapshotValue = snapshot.val();
+          if (snapshotValue) {
+            setColorKey(snapshotValue);
+          } else {
+            setThemeIsNotSet(true);
+          }
         }
-      }
-    );
-    onValueListerRemovers.push(colorKeyListerRemover);
+      );
+      onValueListerRemovers.push(colorKeyListerRemover);
+    }
 
-    Object.keys(databasePaths).forEach((key) => {
+    Object.keys(databasePaths).forEach(async (key: DatabasePathKey) => {
+      if (key === "collaboration" && actingUser) return;
+
       const pathName = databasePaths[key];
       const fullPath = createFullPath(pathName);
 
       const individualDbListerRemover = onValue(
         ref(db, fullPath),
-        (snapshot) => {
-          const value = snapshot.val();
+        async (snapshot) => {
+          let value = snapshot.val();
+
+          if (key === "collaboration" && value) {
+            const otherUids = new Set<string>();
+            const { givesAccessTo, hasAccessTo } = value as CollaborationType;
+            if (givesAccessTo) {
+              Object.keys(givesAccessTo).forEach((uid) => {
+                otherUids.add(uid);
+              });
+            }
+            if (hasAccessTo) {
+              Object.keys(hasAccessTo).forEach((uid) => {
+                otherUids.add(uid);
+              });
+            }
+
+            const otherUserNames: { [key: string]: string } = {};
+
+            const namesResults = await Promise.allSettled(
+              Array.from(otherUids).map((otherUid) =>
+                get(
+                  child(ref(getDatabase()), `accounts/${otherUid}/name`)
+                ).then((snapshot) => {
+                  let name = "";
+                  if (snapshot.exists()) {
+                    name = snapshot.val();
+                  }
+                  return { uid: otherUid, name };
+                })
+              )
+            );
+
+            namesResults.forEach((result) => {
+              if (result.status === "fulfilled") {
+                const { uid, name } = result.value;
+                otherUserNames[uid] = name;
+              }
+            });
+
+            value = { ...value, names: otherUserNames };
+          }
+
           setDatabase((_database) => ({
             ..._database,
             [key]: value,
@@ -209,6 +264,16 @@ function PagesContainer(props: {
                 actingUser={actingUser}
                 clearActingUser={clearActingUser}
                 enableUsingOffline={enableUsingOffline}
+              />
+            }
+          />
+          <Route
+            path="collaboration"
+            element={
+              <Collaboration
+                actingUser={actingUser}
+                setActingUser={setActingUser}
+                clearActingUser={clearActingUser}
               />
             }
           />

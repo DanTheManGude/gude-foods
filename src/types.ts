@@ -1,5 +1,10 @@
 import { ThemeOptions } from "@mui/material";
 import { AlertProps } from "@mui/material/Alert";
+import { collaborationEditKeys } from "./constants";
+
+export type GenericEntries<T> = {
+  [K in keyof T]: [K, T[K]];
+}[keyof T][];
 
 export type SetSubsriber = (newSubscriber: () => void) => void;
 
@@ -49,7 +54,8 @@ export type DatabasePathKey =
   | "cookbook"
   | "recipeOrder"
   | "colorKey"
-  | "basicFoodTagAssociation";
+  | "basicFoodTagAssociation"
+  | "collaboration";
 
 export type SpecificPathKey<Key extends DatabasePathKey> = `${Key}Path`;
 export type DataPathKey = SpecificPathKey<DatabasePathKey>;
@@ -105,6 +111,18 @@ export type Cookbook = { [key in string]: Recipe };
 export type RecipeOrder = string[];
 export type BasicFoodTagAssociation = { [key in string]: string };
 
+export type CollaborationEditKey = (typeof collaborationEditKeys)[number];
+export type CollaborationEdits = {
+  [key in CollaborationEditKey]?: boolean;
+};
+export type CollaborationEntry = { read: boolean; edit?: CollaborationEdits };
+export type CollaborationMap = { [uid in string]: CollaborationEntry };
+export type Collaboration = {
+  givesAccessTo?: CollaborationMap;
+  hasAccessTo?: CollaborationMap;
+  names?: { [key: string]: string };
+};
+
 export type Database = {
   menu?: Menu;
   glossary?: Glossary;
@@ -114,6 +132,7 @@ export type Database = {
   recipeOrder?: RecipeOrder;
   colorKey?: ColorKey;
   basicFoodTagAssociation?: BasicFoodTagAssociation;
+  collaboration?: Collaboration;
 };
 
 export type ExternalRecipe = Recipe & { ingredientText: string[] };
@@ -154,6 +173,11 @@ export type FilteringOptions = Partial<{
 }>;
 
 export type ActingUser = {
+  uid: string;
+  displayName: string;
+};
+
+export type OtherUser = {
   uid: string;
   displayName: string;
   isAuthorized: boolean;

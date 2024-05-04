@@ -1,4 +1,4 @@
-import { getDatabase, ref, push, update } from "firebase/database";
+import { getDatabase, ref, push, update, child, get } from "firebase/database";
 import { User } from "firebase/auth";
 
 import Typography from "@mui/material/Typography";
@@ -8,6 +8,7 @@ import { transformRecipeForExport } from "./dataTransfer";
 import { sendNotification } from "./utility";
 import {
   AddAlert,
+  CollaborationEditKey,
   ColorKey,
   Cookbook,
   DataPaths,
@@ -943,6 +944,114 @@ export const swapSubstitutionInShoppingList = (
       [`${shoppingListPath}/${basicFoodId}/list/${recipeId}`]: null,
       [`${shoppingListPath}/${foodInfo.substitution.foodId}/list/${recipeId}`]:
         newFoodInfo,
+    },
+    onSuccess,
+    onFailure
+  );
+};
+
+export const doesUserExistInDb = (uid: string) => {
+  return new Promise<boolean>((resolve) => {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `users/${uid}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          resolve(!!snapshot.val());
+        } else {
+          resolve(false);
+        }
+      })
+      .catch(() => {
+        resolve(false);
+      });
+  });
+};
+
+export const giveReadAccesForCollaboration = async (
+  myUid: string,
+  uid: string,
+  collaborationPath: string,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  const doesUserExist = await doesUserExistInDb(uid);
+  if (!doesUserExist) {
+    onFailure({
+      alertProps: { severity: "error" },
+      message: <Typography>This user does not exist.</Typography>,
+    });
+    return;
+  }
+
+  updateRequest(
+    {
+      [`${collaborationPath}/givesAccessTo/${uid}/read`]: true,
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/read`]:
+        true,
+    },
+    onSuccess,
+    onFailure
+  );
+};
+
+export const clearAccesForCollaboration = (
+  myUid: string,
+  uid: string,
+  collaborationPath: string,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  updateRequest(
+    {
+      [`${collaborationPath}/givesAccessTo/${uid}/read`]: false,
+      [`${collaborationPath}/givesAccessTo/${uid}/edit`]: null,
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/read`]:
+        false,
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/edit`]:
+        null,
+    },
+    onSuccess,
+    onFailure
+  );
+};
+
+export const revokeAccesForCollaboration = (
+  myUid: string,
+  uid: string,
+  collaborationPath: string,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  deleteRequest(
+    [
+      `${collaborationPath}/givesAccessTo/${uid}`,
+      `accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}`,
+    ],
+    onSuccess,
+    () =>
+      onFailure({
+        alertProps: { severity: "error" },
+        message: (
+          <Typography>Was not able to remove access for {uid}</Typography>
+        ),
+      })
+  );
+};
+
+export const updateEditAccessForCollaboration = (
+  myUid: string,
+  uid: string,
+  editKey: CollaborationEditKey,
+  collaborationPath: string,
+  value: boolean,
+  onSuccess: () => void,
+  onFailure: AddAlert
+) => {
+  updateRequest(
+    {
+      [`${collaborationPath}/givesAccessTo/${uid}/edit/${editKey}`]: value,
+      [`accounts/${uid}/${databasePaths.collaboration}/hasAccessTo/${myUid}/edit/${editKey}`]:
+        value,
     },
     onSuccess,
     onFailure

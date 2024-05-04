@@ -9,15 +9,18 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import { pages, presentationNames } from "../../constants";
-import { isDevelopment } from "../../utils/utility";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
-const NavBar = ({ isAuthorized }: { isAuthorized: boolean }) => {
+const NavBar = ({
+  isAuthorized,
+  isActingAsUser = false,
+}: {
+  isAuthorized: boolean;
+  isActingAsUser?: boolean;
+}) => {
   let navigate = useNavigate();
   const theme = useTheme();
-
-  const inDevelopment = isDevelopment();
 
   const otherStripe = `${theme.palette.background.paper
     .split("")
@@ -39,7 +42,7 @@ const NavBar = ({ isAuthorized }: { isAuthorized: boolean }) => {
           maxWidth="xl"
           sx={{
             height: "68px",
-            ...(inDevelopment
+            ...(isActingAsUser
               ? {
                   background: `repeating-linear-gradient(-45deg, ${otherStripe}, ${otherStripe} 10px, ${stripeColor} 10px, ${stripeColor} 20px)`,
                 }
