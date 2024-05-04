@@ -120,7 +120,7 @@ function PagesContainer(props: {
         async (snapshot) => {
           let value = snapshot.val();
 
-          if (key === "collaboration") {
+          if (key === "collaboration" && value) {
             const otherUids = new Set<string>();
             const { givesAccessTo, hasAccessTo } = value as CollaborationType;
             if (givesAccessTo) {
