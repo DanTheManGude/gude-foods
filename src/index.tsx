@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
+import { Analytics } from "@vercel/analytics/react";
+
 import "./styles/index.css";
 
 import { SetSubsriber } from "./types";
@@ -45,6 +47,7 @@ if (rootElement) {
       <BrowserRouter>
         <App setSubscriber={setSubscriber} />
       </BrowserRouter>
+      <Analytics />
     </React.StrictMode>
   );
 }
