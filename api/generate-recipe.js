@@ -36,7 +36,7 @@ async function sendPrompt(searchParams) {
       Authorization: `Bearer ${openAIKey}`,
     },
     body: JSON.stringify({
-      model: "gpt-3.5-turbo-instruct",
+      model: "gpt-4o-mini",
       prompt: promptText,
       temperature: 0,
       max_tokens: Number(maxTokens),
