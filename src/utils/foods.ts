@@ -73,8 +73,20 @@ export const constructTextFromShoppingMap = (
             collatedAmount ||
             Object.entries(list)
               .map(
-                ([recipeId, recipeAmount]) =>
-                  `[${recipeAmount}: ${cookbook[recipeId].name}]`
+                ([recipeId, recipeAmountInfo]) =>
+                  `[${recipeAmountInfo.isOptional ? "'optional' " : ""}${
+                    recipeAmountInfo.amount
+                  }: ${cookbook[recipeId].name}${
+                    recipeAmountInfo.substitution
+                      ? ` (substitute ${
+                          recipeAmountInfo.substitution.amount
+                        } of ${
+                          glossary.basicFoods[
+                            recipeAmountInfo.substitution.foodId
+                          ]
+                        }`
+                      : ""
+                  }]`
               )
               .join(" & ")
           }\n`,
