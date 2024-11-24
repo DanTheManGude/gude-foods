@@ -73,8 +73,8 @@ export const constructTextFromShoppingMap = (
             collatedAmount ||
             Object.entries(list)
               .map(
-                ([recipeId, recipeAmount]) =>
-                  `[${recipeAmount}: ${cookbook[recipeId].name}]`
+                ([recipeId, recipeAmountInfo]) =>
+                  `[${recipeAmountInfo.amount}: ${cookbook[recipeId].name}]`
               )
               .join(" & ")
           }\n`,
