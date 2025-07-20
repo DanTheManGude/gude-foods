@@ -60,7 +60,6 @@ function ExternalRecipe(props) {
   };
 
   const handleSave = () => {
-    debugger;
     if (
       (newFoods && Object.keys(newFoods).length) ||
       (newTags && Object.keys(newTags).length)
