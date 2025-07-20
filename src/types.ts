@@ -135,7 +135,12 @@ export type Database = {
   collaboration?: Collaboration;
 };
 
-export type ExternalRecipe = Recipe & { ingredientText: string[] };
+export type ExternalRecipe = Recipe & { ingredientText?: string[] };
+export type ExternalRecipeWithNewValues = {
+  externalRecipe: ExternalRecipe;
+  newFoods?: BasicFoods;
+  newTags?: RecipeTags;
+};
 
 export type ShoppingMapChecked = any;
 export type ShoppingMapUnchecked = {
@@ -150,7 +155,7 @@ export type ShoppingMap = {
 export type FormattedDataFromCookBookImport = {
   formattedCookbook: Cookbook;
   newFoods: BasicFoods;
-  newTags: BasicFoodTags;
+  newTags: RecipeTags;
 };
 
 export type RequestedUsers = { [uid in string]: string };

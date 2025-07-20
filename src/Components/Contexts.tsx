@@ -11,3 +11,4 @@ export const ColorKeyContext = createContext<(colorKey: ColorKey) => void>(
   () => defaultColorKey
 );
 export const UserContext = createContext<User>(undefined);
+export const AdminContext = createContext<boolean>(false);

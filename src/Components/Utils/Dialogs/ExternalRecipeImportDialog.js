@@ -64,7 +64,7 @@ function ExternalRecipeImportDialog(props) {
           externalRecipe.tags.unshift(importedTag);
         }
 
-        setExternalRecipe(externalRecipe);
+        setExternalRecipe({ externalRecipe });
         navigate("/externalRecipe");
       })
       .catch((error) => {

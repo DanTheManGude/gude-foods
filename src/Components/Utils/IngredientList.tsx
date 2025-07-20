@@ -16,6 +16,7 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SubdirectoryArrowRightOutlinedIcon from "@mui/icons-material/SubdirectoryArrowRightOutlined";
 
 import {
+  BasicFoods,
   BasicFoodTagAssociation,
   BasicFoodTagOrder,
   Ingredients,
@@ -67,6 +68,7 @@ function IngredientList(props: {
   ) => void;
   isForShoppingList: boolean;
   idsAsNames: boolean;
+  additionalBasicFoods?: BasicFoods;
 }) {
   const {
     ingredients = {},
@@ -76,11 +78,16 @@ function IngredientList(props: {
     updateSupplementalIngredientInfo,
     isForShoppingList = false,
     idsAsNames = false,
+    additionalBasicFoods = {},
   } = props;
   const supplementalIngredientInfo = __supplementalIngredientInfo || {};
 
   const database = useContext(DatabaseContext);
   const { basicFoodTagAssociation, basicFoodTagOrder, glossary } = database;
+  const basicFoods = {
+    ...((glossary && glossary.basicFoods) || {}),
+    ...additionalBasicFoods,
+  };
 
   const [newIngredientId, setNewIngredientId] = useState<string>(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement>(null);
@@ -247,7 +254,7 @@ function IngredientList(props: {
           marginLeft: "0px !important",
         }}
       >
-        {idsAsNames ? foodId : glossary.basicFoods[foodId]}:
+        {idsAsNames ? foodId : basicFoods[foodId]}:
       </Typography>
       <Typography>{amount}</Typography>
     </>
@@ -278,7 +285,7 @@ function IngredientList(props: {
       <Typography
         sx={{ fontWeight: "bold", flexGrow: 1, marginLeft: "0px !important" }}
       >
-        {glossary.basicFoods[foodId]}:
+        {basicFoods[foodId]}:
       </Typography>
       <TextField
         id={`${foodId}-amount-input-substitution`}
@@ -316,7 +323,7 @@ function IngredientList(props: {
             fontStyle: isOptional ? "italic" : "inherit",
           }}
         >
-          {glossary.basicFoods[ingredientId]}:
+          {basicFoods[ingredientId]}:
         </Typography>
         <TextField
           id={`${ingredientId}-amount-input`}

@@ -424,9 +424,6 @@ function Glossary(props) {
     const basicFoodMap = Object.keys(glossary.basicFoods).reduce(
       (acc, foodId) => {
         const tagId = basicFoodTagAssociation[foodId] || UNKNOWN_TAG;
-        if (!acc[tagId]) {
-          debugger;
-        }
         return { ...acc, [tagId]: acc[tagId].concat(foodId) };
       },
       basicFoodTagsList.reduce((acc, tagId) => ({ ...acc, [tagId]: [] }), {})

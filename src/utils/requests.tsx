@@ -364,6 +364,33 @@ export const updateRecipeMenuCount = (
   updateRequest({ [`${menuPath}/${recipeId}`]: count });
 };
 
+const getFoodAndTagUpdatesForCookbookImport = ({
+  newFoods,
+  newTags,
+  glossaryPath,
+}) => {
+  const foodUpdates: Updates = Object.keys(newFoods).reduce(
+    (acc, foodName) => ({
+      ...acc,
+      [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: foodName,
+    }),
+    {}
+  );
+
+  const tagUpdates: Updates = Object.keys(newTags).reduce(
+    (acc, tagName) => ({
+      ...acc,
+      [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: tagName,
+    }),
+    {}
+  );
+
+  return {
+    foodUpdates,
+    tagUpdates,
+  };
+};
+
 export const updateFromCookbookImport = (
   transformedData: FormattedDataFromCookBookImport,
   {
@@ -385,21 +412,11 @@ export const updateFromCookbookImport = (
     {}
   );
 
-  const foodUpdates: Updates = Object.keys(newFoods).reduce(
-    (acc, foodName) => ({
-      ...acc,
-      [`${glossaryPath}/basicFoods/${newFoods[foodName]}`]: foodName,
-    }),
-    {}
-  );
-
-  const tagUpdates: Updates = Object.keys(newTags).reduce(
-    (acc, tagName) => ({
-      ...acc,
-      [`${glossaryPath}/recipeTags/${newTags[tagName]}`]: tagName,
-    }),
-    {}
-  );
+  const { foodUpdates, tagUpdates } = getFoodAndTagUpdatesForCookbookImport({
+    newFoods,
+    newTags,
+    glossaryPath,
+  });
 
   const allUpdates: Updates = {
     ...cookbookUpdates,
@@ -485,6 +502,25 @@ export const updateFromCookbookImport = (
   };
 
   makeUpdates();
+};
+
+export const updateFoodAndTagsFromImport = ({
+  newFoods,
+  newTags,
+  glossaryPath,
+}) => {
+  const { foodUpdates, tagUpdates } = getFoodAndTagUpdatesForCookbookImport({
+    newFoods,
+    newTags,
+    glossaryPath,
+  });
+
+  const allUpdates: Updates = {
+    ...foodUpdates,
+    ...tagUpdates,
+  };
+
+  updateRequest(allUpdates);
 };
 
 export const setAllData = (

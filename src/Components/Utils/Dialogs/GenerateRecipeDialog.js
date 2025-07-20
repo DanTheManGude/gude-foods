@@ -22,9 +22,16 @@ import {
   parseResponse,
   reportAiError,
 } from "../../../utils/ai";
-import { DatabaseContext, AddAlertContext, UserContext } from "../../Contexts";
+import { transformCookbookFromImport } from "../../../utils/dataTransfer";
+import {
+  DatabaseContext,
+  AddAlertContext,
+  UserContext,
+  AdminContext,
+} from "../../Contexts";
 import BasicFoodMultiSelect from "../BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "../RecipeTagsMultiSelect";
+import { sendNotification } from "../../../utils/utility";
 
 const PromptTypography = (props) => <Typography component="span" {...props} />;
 const promptPrefix = (
@@ -39,6 +46,7 @@ function GenerateRecipeDialog(props) {
   const database = useContext(DatabaseContext);
   const { glossary, basicFoodTagOrder, basicFoodTagAssociation } = database;
   const user = useContext(UserContext);
+  const isAdmin = useContext(AdminContext);
 
   let navigate = useNavigate();
 
@@ -143,6 +151,13 @@ function GenerateRecipeDialog(props) {
         try {
           const generatedRecipe = parseResponse(_responseText);
 
+          if (!isAdmin) {
+            sendNotification({
+              title: `AI interaction`,
+              body: `${user.displayName} used AI to generate a recipe, "${generatedRecipe.name}"`,
+            });
+          }
+
           const aiTag =
             glossary.recipeTags &&
             Object.keys(glossary.recipeTags).find(
@@ -154,34 +169,30 @@ function GenerateRecipeDialog(props) {
             tagsList.unshift(aiTag);
           }
 
-          const saltIngredient = Object.keys(glossary.basicFoods).find(
+          const saltIngredientId = Object.keys(glossary.basicFoods).find(
             (foodId) => ["salt", "Salt"].includes(glossary.basicFoods[foodId])
           );
 
-          const ingredients = ingredientsList.reduce(
-            (acc, ingredientId) => ({ ...acc, [ingredientId]: "" }),
-            {}
-          );
-          if (saltIngredient) {
-            ingredients[saltIngredient] = "a grain";
+          if (saltIngredientId) {
+            generatedRecipe.ingredients[glossary.basicFoods[saltIngredientId]] =
+              "a grain";
           }
 
-          const notes = `${additionalNotes}\n${generatedRecipe.ingredientText.join(
-            `\n`
-          )}`;
-
-          const maybeDescription =
-            recipeName && generatedRecipe.name !== recipeName
-              ? { description: recipeName }
-              : {};
+          const transformedData = transformCookbookFromImport(
+            {
+              recipe: {
+                ...generatedRecipe,
+                tags: tagsList.map((tagId) => glossary.recipeTags[tagId]),
+              },
+            },
+            glossary
+          );
 
           handleClose();
           setExternalRecipe({
-            ...generatedRecipe,
-            tags: tagsList,
-            ingredients,
-            notes,
-            ...maybeDescription,
+            externalRecipe: Object.values(transformedData.formattedCookbook)[0],
+            newFoods: transformedData.newFoods,
+            newTags: transformedData.newTags,
           });
           navigate("/externalRecipe");
         } catch (error) {
