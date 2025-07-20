@@ -38,7 +38,7 @@ import ShareRecipe from "./Pages/ShareRecipe";
 import Loading from "./Utils/Loading";
 
 import OfflineMode from "./Offline/OfflineMode";
-import { AddAlertContext, UserContext } from "./Contexts";
+import { AddAlertContext, AdminContext, UserContext } from "./Contexts";
 import withTheme from "./withTheme";
 
 type AlertWithId = GFAlert & { id: number };
@@ -282,13 +282,14 @@ function App(props: { setSubscriber: SetSubsriber }) {
         <NavBar isAuthorized={true} isActingAsUser={isActingAsUser} />
         <AddAlertContext.Provider value={addAlertRef.current}>
           <UserContext.Provider value={user}>
-            <PagesContainer
-              isAdmin={isAdmin}
-              requestedUsers={requestedUsers}
-              allowUnrestrictedUsers={allowUnrestrictedUsers}
-              enableUsingOffline={enableUsingOffline}
-              setIsActingAsUser={setIsActingAsUser}
-            />
+            <AdminContext.Provider value={isAdmin}>
+              <PagesContainer
+                requestedUsers={requestedUsers}
+                allowUnrestrictedUsers={allowUnrestrictedUsers}
+                enableUsingOffline={enableUsingOffline}
+                setIsActingAsUser={setIsActingAsUser}
+              />
+            </AdminContext.Provider>
           </UserContext.Provider>
         </AddAlertContext.Provider>
         <BottomNav />

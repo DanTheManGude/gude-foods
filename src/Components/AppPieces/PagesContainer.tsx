@@ -6,7 +6,6 @@ import {
   DataPaths,
   Database,
   FilteringOptions,
-  ExternalRecipe as ExternalRecipeType,
   ActingUser,
   SharedRecipes as SharedRecipesType,
   Accounts,
@@ -38,18 +37,17 @@ import {
   DataPathsContext,
   ColorKeyContext,
   UserContext,
+  AdminContext,
 } from "../Contexts";
 import Collaboration from "../Pages/Collaboration";
 
 function PagesContainer(props: {
-  isAdmin: boolean;
   requestedUsers: any;
   allowUnrestrictedUsers: boolean;
   enableUsingOffline: () => void;
   setIsActingAsUser: (isActingAsUser: boolean) => void;
 }) {
   const {
-    isAdmin,
     requestedUsers,
     allowUnrestrictedUsers,
     enableUsingOffline,
@@ -58,6 +56,7 @@ function PagesContainer(props: {
 
   const user = useContext(UserContext);
   const setColorKey = useContext(ColorKeyContext);
+  const isAdmin = useContext(AdminContext);
 
   const [database, setDatabase] = useState<Database>({});
   const [dataPaths, setDataPaths] = useState<Partial<DataPaths>>({});

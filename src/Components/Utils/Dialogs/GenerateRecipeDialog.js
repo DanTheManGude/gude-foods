@@ -23,9 +23,15 @@ import {
   reportAiError,
 } from "../../../utils/ai";
 import { transformCookbookFromImport } from "../../../utils/dataTransfer";
-import { DatabaseContext, AddAlertContext, UserContext } from "../../Contexts";
+import {
+  DatabaseContext,
+  AddAlertContext,
+  UserContext,
+  AdminContext,
+} from "../../Contexts";
 import BasicFoodMultiSelect from "../BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "../RecipeTagsMultiSelect";
+import { sendNotification } from "../../../utils/utility";
 
 const PromptTypography = (props) => <Typography component="span" {...props} />;
 const promptPrefix = (
@@ -40,6 +46,7 @@ function GenerateRecipeDialog(props) {
   const database = useContext(DatabaseContext);
   const { glossary, basicFoodTagOrder, basicFoodTagAssociation } = database;
   const user = useContext(UserContext);
+  const isAdmin = useContext(AdminContext);
 
   let navigate = useNavigate();
 
@@ -143,6 +150,13 @@ function GenerateRecipeDialog(props) {
       (_responseText) => {
         try {
           const generatedRecipe = parseResponse(_responseText);
+
+          if (!isAdmin) {
+            sendNotification({
+              title: `AI interaction`,
+              body: `${user.displayName} used AI to generate a recipe, "${generatedRecipe.name}"`,
+            });
+          }
 
           const aiTag =
             glossary.recipeTags &&
