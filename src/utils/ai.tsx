@@ -40,7 +40,23 @@ export const generateRecipe = async (
 };
 
 export const parseResponse = (textResponse: string) => {
-  const recipe: Recipe = JSON.parse(textResponse);
+  const openedBracketIndex = textResponse.indexOf("{");
+  if (openedBracketIndex === -1) {
+    throw Error("Parsing text - no opening bracket found");
+  }
+  const closedBracketIndex = textResponse.lastIndexOf("}");
+  if (closedBracketIndex === -1) {
+    throw Error("Parsing text - no closing bracket found");
+  }
+  const jsonString = textResponse.substring(
+    openedBracketIndex,
+    closedBracketIndex + 1
+  );
+  if (!jsonString) {
+    throw Error("Parsing text - no JSON string found");
+  }
+
+  const recipe: Recipe = JSON.parse(jsonString);
 
   const errorText = "Parsing text";
   if (Object.keys(recipe.ingredients).length === 0) {

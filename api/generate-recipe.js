@@ -24,7 +24,7 @@ async function verifyUser(uid, accessToken, appCheckToken) {
 
 const additionalPromptInstructions = `
 Be sure to keep the recipe concise and clear.
-The response must be formatted in the follow JSON structure:
+The response must be formatted in the follow JSON structure. Do not respond with anything other than this JSON structure.
 {
   "name": "Recipe Title",
   "description": "A brief description of the recipe",

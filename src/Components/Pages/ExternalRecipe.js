@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
-import { saveRecipe } from "../../utils/requests";
+import { saveRecipe, updateFoodAndTagsFromImport } from "../../utils/requests";
 
 import {
   renderEditingButtons,
@@ -38,6 +38,8 @@ function ExternalRecipe(props) {
   const recipeOrder = _recipeOrder || [];
   const userDisplayName = user ? user.displayName : "";
 
+  const { externalRecipe, newFoods = {}, newTags = {} } = givenRecipe;
+
   const {
     name,
     description = "",
@@ -47,7 +49,7 @@ function ExternalRecipe(props) {
     notes,
     ingredientText = [],
     supplementalIngredientInfo,
-  } = givenRecipe;
+  } = externalRecipe;
 
   let navigate = useNavigate();
 
@@ -58,6 +60,18 @@ function ExternalRecipe(props) {
   };
 
   const handleSave = () => {
+    debugger;
+    if (
+      (newFoods && Object.keys(newFoods).length) ||
+      (newTags && Object.keys(newTags).length)
+    ) {
+      updateFoodAndTagsFromImport({
+        newFoods,
+        newTags,
+        glossaryPath: dataPaths.glossaryPath,
+      });
+    }
+
     saveRecipe(
       { name, ingredients, instructions, tags, isFavorite, notes, description },
       undefined,
@@ -71,7 +85,7 @@ function ExternalRecipe(props) {
     );
   };
 
-  const renderGivenInstructions = () => (
+  const renderGivenIngredients = () => (
     <Box sx={{ width: "100%" }}>
       <Card variant="outlined">
         <CardContent>
@@ -93,7 +107,16 @@ function ExternalRecipe(props) {
     </Box>
   );
 
-  const glossaryRecipeTags = (glossary && glossary.recipeTags) || [];
+  const glossaryRecipeTags = {
+    ...((glossary && glossary.recipeTags) || {}),
+    ...Object.entries(newTags).reduce(
+      (acc, [tagName, tagId]) => ({
+        ...acc,
+        [tagId]: tagName,
+      }),
+      {}
+    ),
+  };
 
   return (
     <Stack
@@ -138,11 +161,18 @@ function ExternalRecipe(props) {
             {description}
           </Typography>
         )}
-        {renderGivenInstructions()}
+        {ingredientText.length && renderGivenIngredients()}
         <IngredientList
           ingredients={ingredients}
           editable={false}
           supplementalIngredientInfo={supplementalIngredientInfo}
+          additionalBasicFoods={Object.entries(newFoods).reduce(
+            (acc, [foodName, foodId]) => ({
+              ...acc,
+              [foodId]: foodName,
+            }),
+            {}
+          )}
         />
         <InstructionList instructions={instructions} editable={false} />
         {renderNotesContainer(

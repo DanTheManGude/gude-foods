@@ -164,23 +164,22 @@ function GenerateRecipeDialog(props) {
               "a grain";
           }
 
-          const notes = `${additionalNotes}\n${generatedRecipe.notes || ""}`;
-
           const transformedData = transformCookbookFromImport(
             {
               recipe: {
                 ...generatedRecipe,
-                tags: tagsList,
-                notes,
+                tags: tagsList.map((tagId) => glossary.recipeTags[tagId]),
               },
             },
             glossary
           );
 
           handleClose();
-          setExternalRecipe(
-            Object.values(transformedData.formattedCookbook)[0]
-          );
+          setExternalRecipe({
+            externalRecipe: Object.values(transformedData.formattedCookbook)[0],
+            newFoods: transformedData.newFoods,
+            newTags: transformedData.newTags,
+          });
           navigate("/externalRecipe");
         } catch (error) {
           setResponseText(_responseText);

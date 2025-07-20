@@ -9,6 +9,7 @@ import {
   Ingredients,
   Recipe,
   RecipeTagList,
+  RecipeTags,
   SupplementalIngredientInfo,
 } from "../types";
 import { createKey } from "./requests";
@@ -100,7 +101,7 @@ export const transformCookbookFromImport = (
 ): FormattedDataFromCookBookImport => {
   const { basicFoods, recipeTags } = glossary;
   const newFoods: BasicFoods = {};
-  const newTags: BasicFoodTags = {};
+  const newTags: RecipeTags = {};
 
   const basicFoodList = Object.keys(basicFoods);
   const recipeTagsList = Object.keys(recipeTags);

@@ -13,6 +13,7 @@ import {
   DatabasePathKey,
   Collaboration as CollaborationType,
   OtherUser,
+  ExternalRecipeWithNewValues,
 } from "../../types";
 import { databasePaths } from "../../constants";
 import { getCreateFullPath } from "../../utils/requests";
@@ -61,7 +62,8 @@ function PagesContainer(props: {
   const [database, setDatabase] = useState<Database>({});
   const [dataPaths, setDataPaths] = useState<Partial<DataPaths>>({});
   const [filteringOptions, setFilteringOptions] = useState<FilteringOptions>();
-  const [externalRecipe, setExternalRecipe] = useState<ExternalRecipeType>();
+  const [externalRecipe, setExternalRecipe] =
+    useState<ExternalRecipeWithNewValues>();
   const [actingUser, setActingUser] = useState<ActingUser>();
   const [userList, setUserList] = useState<OtherUser[]>([]);
   const [accounts, setAccounts] = useState<Accounts>();
