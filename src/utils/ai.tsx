@@ -2,7 +2,7 @@ import emailjs from "@emailjs/browser";
 import Typography from "@mui/material/Typography";
 
 import { emailConfig } from "../constants";
-import { AddAlert, ExternalRecipe, ReportErrorValues } from "../types";
+import { AddAlert, Recipe, ReportErrorValues } from "../types";
 
 export const generateRecipe = async (
   params: { [key: string]: string | number | boolean },
@@ -40,59 +40,17 @@ export const generateRecipe = async (
 };
 
 export const parseResponse = (textResponse: string) => {
-  type LookingFor = "name" | "instructions" | "ingredients";
-
-  const recipe: ExternalRecipe = {
-    name: "",
-    ingredientText: [],
-    instructions: [],
-    ingredients: {},
-  };
-  let lookingFor: LookingFor = "name";
-
-  const textResponseLines = textResponse.split("\n");
-  textResponseLines.forEach((line) => {
-    if (!line) {
-      return;
-    }
-
-    if (line.includes("Instructions:")) {
-      lookingFor = "instructions";
-      return;
-    }
-
-    if (line.includes("Ingredients:")) {
-      lookingFor = "ingredients";
-      return;
-    }
-
-    if (lookingFor === "name") {
-      recipe.name = line;
-      return;
-    }
-
-    if (lookingFor === "ingredients") {
-      recipe.ingredientText.push(line);
-      return;
-    }
-
-    const maybeInstructionMatch = line.match(/\d+\. (.+)/);
-    if (
-      lookingFor === "instructions" &&
-      maybeInstructionMatch &&
-      maybeInstructionMatch.length === 2
-    ) {
-      recipe.instructions.push(maybeInstructionMatch[1]);
-      return;
-    }
-  });
+  const recipe: Recipe = JSON.parse(textResponse);
 
   const errorText = "Parsing text";
-  if (recipe.ingredientText.length === 0) {
+  if (Object.keys(recipe.ingredients).length === 0) {
     throw Error(`${errorText}- no ingredients`);
   }
   if (recipe.instructions.length === 0) {
     throw Error(`${errorText}- no instructions`);
+  }
+  if (!recipe.name) {
+    throw Error(`${errorText}- no name`);
   }
 
   return recipe;

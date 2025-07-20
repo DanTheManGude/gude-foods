@@ -22,12 +22,34 @@ async function verifyUser(uid, accessToken, appCheckToken) {
   }
 }
 
+const additionalPromptInstructions = `
+Be sure to keep the recipe concise and clear.
+The response must be formatted in the follow JSON structure:
+{
+  "name": "Recipe Title",
+  "description": "A brief description of the recipe",
+  "ingredients": {
+    "Food name 1": "amount",
+    "Food name 2": "amount",
+    "Food name 3": "amount"
+  },
+  "instructions": [
+    "First step",
+    "Second step",
+    "third step"
+  ],
+  "notes": "Any additional notes or tips for the recipe"
+}
+`;
+
 async function sendPrompt(searchParams) {
   const openAIKey = process.env.OPENAI_KEY;
 
   const { promptText, length: maxTokens = "600" } = Object.fromEntries(
     searchParams.entries()
   );
+
+  const prompt = `${promptText}\n\n${additionalPromptInstructions}`;
 
   const requestOptions = {
     method: "POST",
@@ -37,7 +59,7 @@ async function sendPrompt(searchParams) {
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
-      prompt: promptText,
+      prompt,
       temperature: 0,
       max_tokens: Number(maxTokens),
     }),

@@ -45,7 +45,7 @@ function ExternalRecipe(props) {
     instructions,
     tags,
     notes,
-    ingredientText,
+    ingredientText = [],
     supplementalIngredientInfo,
   } = givenRecipe;
 

@@ -135,7 +135,7 @@ export type Database = {
   collaboration?: Collaboration;
 };
 
-export type ExternalRecipe = Recipe & { ingredientText: string[] };
+export type ExternalRecipe = Recipe & { ingredientText?: string[] };
 
 export type ShoppingMapChecked = any;
 export type ShoppingMapUnchecked = {

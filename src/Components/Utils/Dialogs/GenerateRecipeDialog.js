@@ -22,6 +22,7 @@ import {
   parseResponse,
   reportAiError,
 } from "../../../utils/ai";
+import { transformCookbookFromImport } from "../../../utils/dataTransfer";
 import { DatabaseContext, AddAlertContext, UserContext } from "../../Contexts";
 import BasicFoodMultiSelect from "../BasicFoodMultiSelect";
 import RecipeTagsMultiSelect from "../RecipeTagsMultiSelect";
@@ -154,35 +155,32 @@ function GenerateRecipeDialog(props) {
             tagsList.unshift(aiTag);
           }
 
-          const saltIngredient = Object.keys(glossary.basicFoods).find(
+          const saltIngredientId = Object.keys(glossary.basicFoods).find(
             (foodId) => ["salt", "Salt"].includes(glossary.basicFoods[foodId])
           );
 
-          const ingredients = ingredientsList.reduce(
-            (acc, ingredientId) => ({ ...acc, [ingredientId]: "" }),
-            {}
-          );
-          if (saltIngredient) {
-            ingredients[saltIngredient] = "a grain";
+          if (saltIngredientId) {
+            generatedRecipe.ingredients[glossary.basicFoods[saltIngredientId]] =
+              "a grain";
           }
 
-          const notes = `${additionalNotes}\n${generatedRecipe.ingredientText.join(
-            `\n`
-          )}`;
+          const notes = `${additionalNotes}\n${generatedRecipe.notes || ""}`;
 
-          const maybeDescription =
-            recipeName && generatedRecipe.name !== recipeName
-              ? { description: recipeName }
-              : {};
+          const transformedData = transformCookbookFromImport(
+            {
+              recipe: {
+                ...generatedRecipe,
+                tags: tagsList,
+                notes,
+              },
+            },
+            glossary
+          );
 
           handleClose();
-          setExternalRecipe({
-            ...generatedRecipe,
-            tags: tagsList,
-            ingredients,
-            notes,
-            ...maybeDescription,
-          });
+          setExternalRecipe(
+            Object.values(transformedData.formattedCookbook)[0]
+          );
           navigate("/externalRecipe");
         } catch (error) {
           setResponseText(_responseText);
